@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>자연어 검색(AI 챗봇) 동작 프로토타입 — 정책서 v0.1 기준</title>
+<style>
+/* ─────────────────────────────────────────────
+   자연어 검색 챗봇 동작 프로토타입
+   - 기준 정책서: 자연어검색_정책서_v0.1
+   - 대화창 4 산출물 (시연·검증용, 실제 API/LLM 없음)
+   - 색상: 중립 플레이스홀더 (브랜드 색 미확정 → 무채색)
+   ───────────────────────────────────────────── */
+:root{
+  --brand:#475569;        /* 중립 강조색(슬레이트) — 브랜드 색 확정 후 교체 */
+  --brand-d:#334155;
+  --ink:#1a1f2e;
+  --line:#e5e7eb;
+  --bg:#f8f8f6;
+  --mut:#9ca3af;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased;}
+body{
+  font-family:"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  background:#22262e; color:var(--ink); padding:28px 36px;
+  display:grid; grid-template-columns:max-content 300px minmax(440px,1fr); gap:28px; align-items:start;
+}
+
+/* ── 모바일 디바이스 프레임 ── */
+.device{
+  width:375px; background:#1a1f2e; border-radius:44px; padding:10px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.08), 0 20px 50px rgba(0,0,0,.5);
+  flex-shrink:0; justify-self:center;
+}
+.notch{height:22px;background:#111;border-radius:11px 11px 0 0;display:flex;align-items:center;justify-content:center;}
+.notch-pill{width:68px;height:13px;background:#111;border-radius:7px;}
+.screen{
+  background:var(--bg); height:680px; overflow:hidden;
+  border-radius:0 0 6px 6px; font-size:13px; position:relative;
+  display:flex; flex-direction:column;
+}
+
+/* ── 배경: M01 메인 모사 ── */
+.bg-main{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg);}
+.bg-gnb{height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:#fff;border-bottom:1px solid var(--line);}
+.bg-logo{font-size:15px;font-weight:800;color:var(--ink);}
+.bg-gnb-icons{display:flex;gap:10px;align-items:center;font-size:16px;color:#64748b;}
+.bg-star{cursor:pointer;font-size:18px;}
+.bg-hero{padding:24px 16px 16px;background:#fff;}
+.bg-hero-t{font-size:18px;font-weight:800;line-height:1.4;margin-bottom:14px;}
+.bg-searchbar{background:#f3f4f6;border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;font-size:13px;color:var(--mut);}
+.bg-sec{padding:16px;}
+.bg-sec-t{font-size:13px;font-weight:700;margin-bottom:10px;}
+.bg-card{height:120px;background:linear-gradient(135deg,#cbd5e1,#94a3b8);border-radius:12px;margin-bottom:10px;display:flex;align-items:flex-end;padding:10px;color:#fff;font-weight:700;font-size:12px;}
+
+/* ── 메인 검색폼 (M01-A 동일 구성) ── */
+.home-hero{background:linear-gradient(180deg,#eff6ff 0%,#fff 80%);padding:14px 14px 0;}
+.home-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.brand{font-size:18px;font-weight:800;color:var(--ink);letter-spacing:-.5px;cursor:pointer;}
+.brand em{color:#2563eb;font-style:normal;}
+.brand-dot{color:#f59e0b;}
+.h-icons{display:flex;gap:6px;align-items:center;}
+.h-btn{height:28px;padding:0 10px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;color:#374151;}
+.h-btn.primary{background:#2563eb;color:#fff;border-color:#2563eb;}
+.hero-tag{font-size:10px;color:#2563eb;font-weight:700;margin-bottom:4px;}
+.hero-title{font-size:18px;font-weight:800;color:#111;line-height:1.3;margin-bottom:14px;}
+.hero-title b{color:#2563eb;}
+.search-card{background:#fff;border-radius:14px;box-shadow:0 4px 16px rgba(37,99,235,.14);overflow:visible;}
+.f-row{display:flex;align-items:center;padding:11px 13px;gap:10px;border-bottom:1px solid #f0f0f0;cursor:pointer;}
+.f-row:last-of-type{border-bottom:none;}
+.f-icon{font-size:14px;flex-shrink:0;color:#9ca3af;}
+.f-info{flex:1;}
+.f-label{font-size:10px;color:#9ca3af;}
+.f-val{font-size:13px;font-weight:600;color:#111;}
+.f-val.ph{color:#9ca3af;font-weight:400;}
+.f-2col{display:flex;border-bottom:1px solid #f0f0f0;}
+.f-2col .f-row{flex:1;border-bottom:none;}
+.f-2col .f-row:first-child{border-right:1px solid #f0f0f0;}
+.search-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:calc(100% - 20px);margin:10px;padding:13px;background:#2563eb;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;}
+.home-sec{padding:14px;}
+.home-sec-title{font-size:13px;font-weight:700;color:#111;margin-bottom:8px;}
+.recent-row{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#f8fafc;border-radius:10px;margin-bottom:6px;border:1px solid #f0f0f0;cursor:pointer;}
+.r-icon{font-size:14px;color:#9ca3af;}
+.r-info{flex:1;}
+.r-dest{font-size:12px;font-weight:600;color:#111;}
+.r-detail{font-size:10px;color:#9ca3af;margin-top:1px;}
+.r-del{font-size:13px;color:#d1d5db;cursor:pointer;}
+
+/* ── FAB + 말풍선 (말풍선 = FAB 왼쪽) ── */
+.fab-wrap{position:absolute;right:16px;bottom:80px;z-index:30;display:flex;flex-direction:row;align-items:center;gap:8px;}
+.fab-bubble{
+  background:#fff;border:1px solid var(--line);border-radius:14px 14px 4px 14px;
+  padding:9px 12px;font-size:11px;color:#374151;box-shadow:0 4px 14px rgba(0,0,0,.14);
+  width:184px;min-height:38px;display:flex;align-items:center;line-height:1.35;cursor:pointer;position:relative;
+  opacity:0; pointer-events:none; transform:translateY(8px) scale(.96);
+  transition:opacity .45s ease, transform .45s ease;
+}
+.fab-bubble.show{ opacity:1; pointer-events:auto; transform:none; }
+.bubble-txt{ transition:opacity .3s ease; }
+.bubble-txt.fade{ opacity:0; }
+.fab-bubble::after{content:"임시";position:absolute;top:-7px;left:-6px;background:#f59e0b;color:#fff;font-size:8px;font-weight:700;padding:1px 5px;border-radius:8px;}
+.fab{
+  width:58px;height:58px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;
+  box-shadow:0 6px 18px rgba(0,0,0,.3);cursor:pointer;
+  animation:fab-glow 2.4s ease-in-out infinite;
+}
+.fab-star{font-size:20px;line-height:1;}
+.fab-ai{font-size:9px;font-weight:800;letter-spacing:.5px;margin-top:1px;}
+@keyframes fab-glow{0%,100%{box-shadow:0 6px 18px rgba(0,0,0,.3),0 0 0 0 rgba(37,99,235,.7);}50%{box-shadow:0 6px 18px rgba(0,0,0,.3),0 0 0 13px rgba(37,99,235,0);}}
+
+/* ── GNB "✦ AI" 진입 버튼 (눈에 띄게, 색은 미확정→슬레이트 임시) ── */
+.ai-entry{
+  display:inline-flex;align-items:center;gap:3px;cursor:pointer;
+  font-size:12px;font-weight:800;color:#fff;letter-spacing:.3px;
+  background:linear-gradient(135deg,#3b82f6,#2563eb);
+  padding:5px 10px;border-radius:13px;box-shadow:0 1px 5px rgba(0,0,0,.18);
+  animation:ai-pulse 2.4s ease-in-out infinite;
+}
+.ai-entry .st{font-size:13px;}
+@keyframes ai-pulse{0%,100%{box-shadow:0 1px 5px rgba(0,0,0,.18),0 0 0 0 rgba(37,99,235,.6);}50%{box-shadow:0 1px 5px rgba(0,0,0,.18),0 0 0 7px rgba(37,99,235,0);}}
+
+/* ── 챗봇 오버레이(바텀시트) ── */
+.dim{position:absolute;inset:0;background:rgba(0,0,0,.35);z-index:40;opacity:0;pointer-events:none;transition:opacity .25s;}
+.dim.open{opacity:1;pointer-events:auto;}
+.chat{
+  position:absolute;left:0;right:0;bottom:0;height:96%;z-index:41;background:var(--bg);
+  border-radius:18px 18px 0 0;display:flex;flex-direction:column;overflow:hidden;
+  transform:translateY(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1);
+}
+.chat.open{transform:none;}
+
+/* ── 챗봇 GNB ── */
+.chat-gnb{flex-shrink:0;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:#fff;border-bottom:1px solid #ebebeb;position:relative;z-index:10;}
+.chat-gnb-title{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:800;color:var(--ink);}
+.ai-star{font-size:16px;color:var(--brand);}
+.tag-temp{font-size:8px;font-weight:700;background:#fef3c7;color:#92400e;padding:1px 5px;border-radius:8px;margin-left:2px;}
+.chat-gnb-actions{display:flex;gap:6px;}
+.chat-gnb-btn{width:32px;height:32px;border:1px solid var(--line);background:#f9f9f9;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#374151;}
+.chat-gnb-btn.close-btn{background:#fef2f2;border-color:#fca5a5;color:#e53e3e;}
+
+/* ── 채팅 바디 ── */
+.chat-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;}
+.chat-body::-webkit-scrollbar{display:none;}
+
+/* ── 초기화면 ── */
+.chat-init{display:flex;flex-direction:column;align-items:center;width:100%;gap:14px;padding-top:4px;}
+.chat-init-hero{text-align:center;padding:10px 0 4px;}
+.chat-init-star{font-size:38px;color:var(--brand);margin-bottom:8px;line-height:1;}
+.chat-init-headline{font-size:15px;font-weight:800;color:var(--ink);line-height:1.4;margin-bottom:4px;}
+.chat-init-sub{font-size:11px;color:var(--mut);}
+.chat-section{width:100%;}
+.chat-section-label{font-size:11px;font-weight:700;color:#6b7280;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;}
+.sec-tools{display:flex;gap:6px;}
+.sec-tool{font-size:10px;color:#6b7280;background:#fff;border:1px solid var(--line);border-radius:12px;padding:3px 9px;cursor:pointer;font-weight:600;}
+.city-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;}
+.city-chip{background:#f3f4f6;border:1px solid var(--line);border-radius:16px;padding:7px 4px;text-align:center;font-size:11px;font-weight:600;color:#374151;cursor:pointer;white-space:nowrap;}
+.city-chip:active{background:#e5e7eb;}
+.suggest-list{display:flex;flex-direction:column;gap:6px;width:100%;}
+.suggest-item{display:flex;align-items:flex-start;gap:7px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:9px 10px;cursor:pointer;font-size:12px;color:#374151;line-height:1.45;}
+.suggest-item:active{background:#f3f4f6;}
+
+/* ── 메시지 버블 ── */
+.msg-user{align-self:flex-end;max-width:80%;background:var(--brand);color:#fff;border-radius:14px 14px 2px 14px;padding:9px 12px;font-size:12px;line-height:1.5;}
+.msg-ai-wrap{display:flex;gap:8px;align-items:flex-start;align-self:flex-start;max-width:96%;}
+.msg-ai-avatar{width:26px;height:26px;background:var(--brand);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:2px;color:#fff;}
+.msg-ai-bubble{background:#fff;border:1px solid var(--line);border-radius:2px 12px 12px 12px;padding:10px 12px;font-size:12px;line-height:1.65;color:var(--ink);flex:1;}
+
+/* ── 로딩 점 ── */
+.loading-dots{display:inline-flex;gap:3px;padding:4px 0;align-items:center;}
+.loading-dots span{width:5px;height:5px;background:var(--mut);border-radius:50%;animation:dot-bounce .9s ease-in-out infinite;}
+.loading-dots span:nth-child(2){animation-delay:.18s;}
+.loading-dots span:nth-child(3){animation-delay:.36s;}
+@keyframes dot-bounce{0%,80%,100%{opacity:.3;transform:scale(.8);}40%{opacity:1;transform:scale(1.1);}}
+
+/* ── 결과 카드 ── */
+.result-cards{display:flex;flex-direction:column;gap:8px;margin-top:8px;}
+.result-card{background:#fff;border:1px solid var(--line);border-radius:10px;display:flex;overflow:hidden;cursor:pointer;}
+.result-card:active{background:#f9fafb;}
+.result-card-img{width:80px;flex-shrink:0;background:linear-gradient(135deg,#c3d4ea,#94a9c4);display:flex;align-items:center;justify-content:center;font-size:22px;}
+.result-card-info{flex:1;padding:9px 10px 8px;}
+.result-card-name{font-size:12px;font-weight:800;color:#111;line-height:1.35;margin-bottom:3px;}
+.result-card-stars{color:#f59e0b;font-size:10px;}
+.result-card-meta{font-size:11px;color:#6b7280;margin-top:2px;}
+.result-card-price{font-size:13px;font-weight:800;color:var(--brand);margin-top:5px;}
+.result-card-price small{font-size:10px;font-weight:400;color:var(--mut);}
+.result-cta{width:100%;padding:11px;background:var(--brand);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;text-align:center;margin-top:8px;}
+.result-cta:active{background:var(--brand-d);}
+
+/* ── 추천검색어 ── */
+.rec-intro{margin-top:10px;font-size:12px;color:#374151;line-height:1.5;}
+.rec-queries{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
+.rec-query{font-size:12px;color:var(--brand);cursor:pointer;line-height:1.5;display:flex;gap:4px;font-weight:600;}
+.rec-query::before{content:"→";flex-shrink:0;}
+.rec-query:active{opacity:.6;}
+
+/* ── 되묻기 도시칩 ── */
+.reask-cities{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px;}
+.reask-cities .city-chip{font-size:10px;padding:6px 2px;}
+
+/* ── 재시도 버튼 ── */
+.retry-btn{margin-top:8px;width:100%;padding:10px;background:#fff;border:1.5px solid var(--brand);color:var(--brand);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;}
+
+/* ── 입력창 ── */
+.chat-input-area{flex-shrink:0;padding:8px 14px 12px;background:#fff;border-top:1px solid #f0f0f0;}
+.chat-input-row{display:flex;align-items:center;gap:6px;background:#f3f4f6;border:1.5px solid var(--line);border-radius:22px;padding:6px 6px 6px 14px;}
+.chat-input{flex:1;border:none;background:transparent;font-size:12px;color:var(--ink);outline:none;font-family:inherit;}
+.chat-input::placeholder{color:var(--mut);}
+.chat-input-icon{width:28px;height:28px;border:none;background:transparent;font-size:15px;color:var(--mut);cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;}
+.chat-send{width:30px;height:30px;background:#d1d5db;border:none;border-radius:50%;font-size:14px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+.chat-send.active{background:var(--brand);}
+.char-count{text-align:right;font-size:9px;color:var(--mut);padding:3px 6px 0;}
+
+/* ── 더보기 드롭다운 ── */
+.chat-dropdown{position:absolute;top:50px;right:50px;z-index:50;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.14);min-width:150px;overflow:hidden;display:none;}
+.chat-dropdown.open{display:block;}
+.chat-dropdown-item{display:flex;align-items:center;gap:10px;padding:12px 16px;font-size:13px;color:var(--ink);cursor:pointer;}
+.chat-dropdown-item:active{background:#f3f4f6;}
+.chat-dropdown-item+.chat-dropdown-item{border-top:1px solid #f3f4f6;}
+
+/* ── 대화이력 화면 ── */
+.chat-history{flex:1;overflow-y:auto;padding:14px;display:none;}
+.chat-history.open{display:block;}
+.chat-history::-webkit-scrollbar{display:none;}
+.hist-head{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;margin-bottom:14px;}
+.hist-label{font-size:11px;font-weight:700;color:var(--mut);margin-bottom:8px;}
+.hist-item{display:flex;align-items:center;justify-content:space-between;padding:12px;background:#fff;border:1px solid var(--line);border-radius:8px;margin-bottom:6px;cursor:pointer;}
+.hist-title{font-size:13px;color:var(--ink);flex:1;}
+.hist-del{width:30px;height:30px;background:transparent;border:none;font-size:14px;color:#cbd5e1;cursor:pointer;}
+.hist-empty{text-align:center;color:var(--mut);font-size:12px;padding:40px 10px;line-height:1.6;}
+
+/* ── 확인 팝업 ── */
+.confirm{position:absolute;inset:0;z-index:60;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.4);}
+.confirm.open{display:flex;}
+.confirm-box{background:#fff;border-radius:14px;padding:20px 18px;width:80%;text-align:center;}
+.confirm-msg{font-size:13px;font-weight:700;margin-bottom:16px;}
+.confirm-btns{display:flex;gap:8px;}
+.confirm-btns button{flex:1;padding:10px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:none;}
+.btn-cancel{background:#f3f4f6;color:#374151;}
+.btn-del{background:#ef4444;color:#fff;}
+
+/* ── 우측 안내 패널 ── */
+.guide{width:100%;max-width:760px;background:#2c313b;color:#cbd5e1;border-radius:14px;padding:26px 30px;font-size:13px;line-height:1.7;}
+.guide li b{color:#fff;}
+/* 가운데: 체험 버튼 패널 */
+.play{background:#2c313b;color:#cbd5e1;border-radius:14px;padding:22px 20px;align-self:start;position:sticky;top:20px;}
+.play-title{font-size:15px;font-weight:800;color:#fff;margin-bottom:4px;}
+.play-sub{font-size:11.5px;color:#94a3b8;line-height:1.55;margin-bottom:14px;}
+.guide h2{font-size:17px;color:#fff;margin-bottom:4px;}
+.guide .sub{color:#94a3b8;font-size:11px;margin-bottom:16px;}
+.guide h3{font-size:13px;color:#fff;margin:20px 0 9px;border-left:3px solid #2563eb;padding-left:9px;}
+.guide ul{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.guide ul li{padding-left:2px;}
+.guide li{padding-left:12px;position:relative;}
+.guide li::before{content:"·";position:absolute;left:2px;color:#64748b;}
+.try{background:#1f242c;border-radius:9px;padding:11px 13px;margin-bottom:8px;cursor:pointer;border:1px solid #3a414d;color:#e2e8f0;font-size:12px;transition:background .15s,border-color .15s;}
+.try:hover{background:#353c47;border-color:#2563eb;}
+.try b{color:#fff;display:block;font-size:12.5px;}
+.guide .warn{background:#3a2f1a;border:1px solid #6b5424;color:#fcd9a0;border-radius:8px;padding:8px 10px;font-size:11px;margin-top:8px;}
+.guide .ver{margin-top:16px;font-size:10px;color:#64748b;border-top:1px solid #3a414d;padding-top:10px;}
+/* 단계(시연 순서) 목록 */
+.guide ol{list-style:none;counter-reset:step;display:flex;flex-direction:column;gap:8px;}
+.guide ol li{counter-increment:step;padding-left:28px;position:relative;line-height:1.55;}
+.guide ol li::before{content:counter(step);position:absolute;left:0;top:1px;width:19px;height:19px;background:#2563eb;color:#fff;border-radius:50%;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+.try .desc{display:block;color:#94a3b8;font-size:10.5px;margin-top:3px;font-weight:400;line-height:1.5;}
+.guide .note{background:#1f242c;border:1px solid #3a414d;border-radius:8px;padding:9px 11px;font-size:11px;color:#cbd5e1;line-height:1.6;margin-top:4px;}
+.guide .note b{color:#fff;}
+.guide .lead{color:#cbd5e1;font-size:12px;line-height:1.6;margin-bottom:4px;}
+/* ── 진입 방식 A/B 탭 ── */
+.left{justify-self:center;display:flex;flex-direction:column;align-items:center;gap:14px;position:sticky;top:20px;align-self:start;}
+.entry-tabs{display:flex;gap:6px;background:#1a1f2e;padding:5px;border-radius:12px;}
+.etab{padding:8px 16px;border:none;background:transparent;color:#94a3b8;font-size:12px;font-weight:700;border-radius:8px;cursor:pointer;font-family:inherit;}
+.etab.active{background:#2563eb;color:#fff;}
+
+/* ── B안: 검색창 내 ✦ 버튼 ── */
+.sc-ai-btn{position:relative;display:none;width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;cursor:pointer;animation:ai-pulse 2.4s ease-in-out infinite;}
+body.mode-b .sc-ai-btn{display:flex;}
+body.mode-b .fab-wrap{display:none;}   /* B안에서는 FAB 숨김 */
+/* ✦ 위 'AI검색' 말풍선 뱃지 (바운스 강조) */
+.sc-ai-tip{position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);background:#2563eb;color:#fff;font-size:9px;font-weight:800;white-space:nowrap;padding:3px 8px;border-radius:10px;box-shadow:0 2px 8px rgba(37,99,235,.4);animation:tip-bounce 1.5s ease-in-out infinite;}
+.sc-ai-tip::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:#2563eb;}
+.sc-ai-tip::before{content:"임시";position:absolute;top:-7px;right:-10px;background:#f59e0b;color:#fff;font-size:7px;font-weight:700;padding:0 4px;border-radius:6px;}
+@keyframes tip-bounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-3px);}}
+
+/* ── B안: 자연어 입력 모드 ── */
+.search-card.nl-active .f-row,.search-card.nl-active .f-2col,.search-card.nl-active .search-btn{display:none;}
+.sc-nl{display:none;padding:12px 13px;}
+.search-card.nl-active .sc-nl{display:block;}
+.nl-row{display:flex;align-items:center;gap:8px;background:#eff6ff;border:1.5px solid #2563eb;border-radius:12px;padding:8px 10px;}
+.nl-ai{color:#2563eb;font-size:15px;flex-shrink:0;}
+.nl-input{flex:1;min-width:0;border:none;background:transparent;font-size:13px;outline:none;font-family:inherit;color:#111;}
+.nl-send{width:28px;height:28px;border:none;border-radius:50%;background:#2563eb;color:#fff;font-size:14px;cursor:pointer;flex-shrink:0;}
+.nl-close{border:none;background:transparent;color:#9ca3af;font-size:15px;cursor:pointer;flex-shrink:0;}
+.nl-label{font-size:10px;color:#9ca3af;font-weight:700;margin:12px 0 6px;}
+.nl-cities{display:flex;flex-wrap:wrap;gap:5px;}
+.nl-city{background:#f3f4f6;border:1px solid #e5e7eb;border-radius:14px;padding:5px 10px;font-size:11px;font-weight:600;color:#374151;cursor:pointer;}
+.nl-suggests{display:flex;flex-direction:column;gap:5px;margin-top:6px;}
+.nl-sg{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:8px 10px;font-size:11px;color:#374151;cursor:pointer;}
+
+/* ── B안: S01-A 재검색 검색폼 오버레이 ── */
+.s01a-overlay{position:absolute;inset:0;z-index:35;display:none;pointer-events:none;}
+.s01a-overlay.open{display:block;}
+.s01a-dim{position:absolute;top:50px;left:0;right:0;bottom:0;background:rgba(0,0,0,.38);pointer-events:auto;}
+.s01a-form{position:absolute;top:50px;left:0;right:0;padding:12px;background:#f1f3f5;box-shadow:0 10px 24px rgba(0,0,0,.22);max-height:calc(100% - 50px);overflow-y:auto;pointer-events:auto;}
+.s01a-form::-webkit-scrollbar{display:none;}
+.s01a-form .search-card{box-shadow:0 2px 10px rgba(0,0,0,.1);}
+
+/* ── C안: FAB 미사용 ── */
+.fab-wrap{display:none !important;}
+
+/* ── C안: 검색버튼 하단 AI 배너 ── */
+.ai-banner{display:flex;align-items:center;gap:9px;margin-top:11px;padding:11px 14px;background:#fff;border:1.5px solid #2563eb;border-radius:24px;cursor:pointer;box-shadow:0 2px 10px rgba(37,99,235,.15);position:relative;animation:ai-banner-glow 2.4s ease-in-out infinite;}
+.ai-banner-ico{color:#2563eb;font-size:16px;flex-shrink:0;}
+.ai-banner-txt{flex:1;font-size:12px;color:#374151;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:opacity .3s;}
+.ai-banner-txt.fade{opacity:0;}
+.ai-banner-arr{width:26px;height:26px;border-radius:50%;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.ai-banner-tip{position:absolute;top:-8px;left:12px;background:#f59e0b;color:#fff;font-size:8px;font-weight:700;padding:1px 5px;border-radius:8px;}
+@keyframes ai-banner-glow{0%,100%{box-shadow:0 2px 10px rgba(37,99,235,.15),0 0 0 0 rgba(37,99,235,.5);}50%{box-shadow:0 2px 10px rgba(37,99,235,.15),0 0 0 6px rgba(37,99,235,0);}}
+
+/* ── C안/D안 메인 영역 토글 ── */
+.hero-d{display:none;}
+body.mode-d .hero-c{display:none;}
+body.mode-d .hero-d{display:block;}
+
+/* ── D안: [AI 검색 | 일반 검색] 탭 ── */
+.search-tabs{display:flex;gap:0;background:#eef2f7;border-radius:12px;padding:4px;margin-bottom:12px;}
+.stab{flex:1;padding:9px;border:none;background:transparent;font-size:12px;font-weight:700;color:#6b7280;border-radius:9px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:4px;}
+.stab.active{background:#fff;color:#2563eb;box-shadow:0 1px 4px rgba(0,0,0,.1);}
+.stab .st{color:#2563eb;}
+.ai-search-box{display:flex;align-items:center;gap:9px;background:#fff;border:2px solid #2563eb;border-radius:14px;padding:12px 14px;box-shadow:0 4px 16px rgba(37,99,235,.18);position:relative;}
+.ai-search-box .ai-banner-ico{color:#2563eb;font-size:17px;flex-shrink:0;}
+.ai-search-input{flex:1;min-width:0;border:none;outline:none;font-size:12px;font-family:inherit;color:#111;background:transparent;}
+.ai-search-send{width:30px;height:30px;border:none;border-radius:50%;background:#2563eb;color:#fff;font-size:14px;cursor:pointer;flex-shrink:0;}
+.ai-sg-label{font-size:11px;color:#9ca3af;font-weight:700;margin:14px 0 8px;}
+.ai-sg-chips{display:flex;flex-direction:column;gap:6px;}
+.ai-sg-chip{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:10px 12px;font-size:12px;color:#374151;cursor:pointer;display:flex;align-items:center;gap:7px;}
+.ai-sg-chip:active{background:#f3f4f6;}
+.stab-normal{display:none;}
+
+/* ── C안: 검색결과 [AI 필터] 칩 강조 ── */
+.s01-chip.ai{background:#fff;color:#2563eb;border:1.5px solid #2563eb;font-weight:800;animation:ai-chip-glow 1.8s ease-in-out infinite;}
+@keyframes ai-chip-glow{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.55);}50%{box-shadow:0 0 0 5px rgba(37,99,235,0);}}
+
+/* ── C안: 스마트 필터 바텀시트 ── */
+.sf-sheet{position:absolute;inset:0;z-index:45;display:none;}
+.sf-sheet.open{display:block;}
+.sf-dim{position:absolute;inset:0;background:rgba(0,0,0,.4);}
+.sf-panel{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:18px 18px 0 0;padding:18px 16px 16px;}
+.sf-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;}
+.sf-title{font-size:14px;font-weight:800;color:#1a1f2e;display:flex;align-items:center;gap:6px;}
+.sf-title .st{color:#2563eb;}
+.sf-close{border:none;background:transparent;font-size:16px;color:#9ca3af;cursor:pointer;}
+.sf-sub{font-size:11px;color:#9ca3af;margin-bottom:12px;}
+.sf-input{width:100%;border:1.5px solid #e5e7eb;border-radius:12px;padding:12px;font-size:12px;font-family:inherit;outline:none;line-height:1.5;color:#111;box-sizing:border-box;}
+.sf-input:focus{border-color:#2563eb;}
+.sf-ex{font-size:10px;color:#9ca3af;margin-top:9px;line-height:1.7;}
+.sf-apply{width:100%;margin-top:12px;padding:13px;background:#2563eb;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;}
+.sf-toast{position:absolute;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(26,31,46,.92);color:#fff;font-size:11px;padding:9px 15px;border-radius:20px;white-space:nowrap;z-index:55;opacity:0;transition:opacity .3s;pointer-events:none;text-align:center;}
+.sf-toast.show{opacity:1;}
+
+/* ── 주석: 확정 논의 항목 표 ── */
+.disc-box{background:#1f2937;border:1px solid #facc15;border-radius:12px;padding:16px;margin:14px 0 6px;}
+.disc-hdr{font-size:14px;font-weight:800;color:#fbbf24;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.disc-table{width:100%;border-collapse:collapse;font-size:11.5px;}
+.disc-table td{padding:8px;border-top:1px solid #374151;vertical-align:top;color:#cbd5e1;line-height:1.55;}
+.disc-table tr:first-child td{border-top:none;}
+.disc-num{color:#fbbf24;font-weight:800;width:20px;}
+.disc-name{color:#fff;font-weight:700;width:96px;}
+
+@media(max-width:1240px){body{grid-template-columns:1fr;}.left,.play,.guide{justify-self:center;}.play,.guide{max-width:560px;width:100%;}.left,.play{position:static;}}
+
+/* ════ S01 검색결과 뷰 ════ */
+.s01-view{position:absolute;inset:0;background:var(--bg);display:none;flex-direction:column;overflow:hidden;z-index:5;}
+.s01-view.open{display:flex;}
+.s01-gnb{flex-shrink:0;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;background:#fff;border-bottom:1px solid var(--line);}
+.s01-logo{font-size:15px;font-weight:800;color:var(--ink);cursor:pointer;}
+.s01-logo em{color:var(--brand);font-style:normal;}
+.s01-gnb-right{display:flex;gap:6px;align-items:center;}
+.s01-gnb-btn{height:30px;padding:0 10px;border:1px solid var(--line);background:#fff;border-radius:8px;font-size:11px;font-weight:700;color:#374151;cursor:pointer;display:flex;align-items:center;}
+.s01-gnb-btn.primary{background:var(--brand);color:#fff;border-color:var(--brand);}
+.s01-gnb-star{font-size:18px;color:var(--brand);cursor:pointer;padding:0 2px;}
+.s01-bar{flex-shrink:0;padding:8px 12px;background:#fff;border-bottom:1px solid #f0f0f0;}
+.s01-bar-inner{display:flex;align-items:center;gap:8px;background:#f3f4f6;border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer;}
+.s01-bar-dest{font-size:13px;font-weight:700;color:var(--ink);}
+.s01-bar-detail{font-size:10px;color:var(--mut);}
+.s01-filter{flex-shrink:0;display:flex;gap:6px;padding:8px 12px;background:#fff;border-bottom:1px solid #f0f0f0;overflow-x:auto;}
+.s01-filter::-webkit-scrollbar{display:none;}
+.s01-chip{flex-shrink:0;font-size:11px;font-weight:600;color:#374151;background:#fff;border:1px solid var(--line);border-radius:14px;padding:5px 10px;white-space:nowrap;cursor:pointer;}
+.s01-chip.active{background:var(--brand);color:#fff;border-color:var(--brand);}
+.s01-rescount{flex-shrink:0;padding:10px 14px 4px;}
+.s01-rescount-t{font-size:13px;font-weight:800;color:var(--ink);}
+.s01-rescount-s{font-size:11px;color:var(--mut);margin-top:2px;}
+.s01-list{flex:1;overflow-y:auto;padding:10px 12px 14px;display:flex;flex-direction:column;gap:10px;}
+.s01-list::-webkit-scrollbar{display:none;}
+.hcard{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;flex-shrink:0;}
+.hcard.hl{border:2px solid var(--brand);box-shadow:0 2px 10px rgba(71,85,105,.18);}
+.hcard-hl-tag{background:var(--brand);color:#fff;font-size:10px;font-weight:700;padding:4px 10px;display:flex;align-items:center;gap:4px;}
+.hcard-top{display:flex;gap:10px;padding:10px;}
+.hcard-img{width:64px;height:64px;flex-shrink:0;border-radius:8px;background:linear-gradient(135deg,#c3d4ea,#94a9c4);display:flex;align-items:center;justify-content:center;font-size:26px;}
+.hcard-info{flex:1;min-width:0;}
+.hcard-name{font-size:13px;font-weight:800;color:#111;line-height:1.3;}
+.hcard-stars{color:#f59e0b;font-size:10px;}
+.hcard-meta{font-size:11px;color:#6b7280;margin-top:3px;}
+.hcard-meta b{color:#374151;}
+.hcard-pv{display:flex;align-items:center;gap:8px;padding:8px 10px;border-top:1px solid #f3f4f6;}
+.pv-logo{width:24px;height:24px;border-radius:6px;color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pv-name{font-size:11px;color:#374151;font-weight:600;}
+.pv-price{font-size:14px;font-weight:800;color:#111;}
+.pv-go{font-size:11px;font-weight:700;color:#fff;background:var(--brand);border:none;border-radius:7px;padding:7px 12px;cursor:pointer;}
+.hcard-badges{display:flex;flex-wrap:wrap;gap:4px;padding:0 10px 10px;}
+.hbadge{font-size:9px;font-weight:600;border-radius:6px;padding:3px 6px;}
+.hbadge.free{background:#ecfdf5;color:#047857;}
+.hbadge.cb{background:#fdf2f8;color:#be185d;}
+.s01-more{margin:4px 0;width:100%;padding:11px;border:1.5px solid #d1d5db;border-radius:10px;background:#fff;font-size:12px;font-weight:600;color:#374151;cursor:pointer;flex-shrink:0;}
+.s01-zero-banner{margin:12px;padding:14px;background:#fef3c7;border:1px solid #f59e0b;border-radius:10px;display:flex;align-items:flex-start;gap:10px;}
+.s01-zero-banner .ic{font-size:18px;}
+.s01-zero-msg{flex:1;font-size:12px;font-weight:600;color:#92400e;line-height:1.5;}
+.s01-zero-cta{margin-top:8px;font-size:11px;font-weight:700;color:var(--brand);background:#fff;border:1px solid var(--brand);border-radius:7px;padding:7px 12px;cursor:pointer;}
+.s01-zero-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--mut);font-size:12px;text-align:center;line-height:1.7;padding:30px;}
+</style>
+</head>
+<body>
+
+<!-- ════════ 진입 방식 탭(C/D) + 모바일 디바이스 ════════ -->
+<div class="left">
+  <div class="entry-tabs">
+    <button class="etab active" data-mode="C">C안 · 하단 배너</button>
+    <button class="etab" data-mode="D">D안 · AI검색 탭</button>
+  </div>
+  <div class="device">
+  <div class="notch"><div class="notch-pill"></div></div>
+  <div class="screen" id="screen">
+
+    <!-- 배경: M01-A 메인 홈 (검색폼 동일) -->
+    <div class="bg-main" id="viewMain">
+      <div class="home-hero">
+        <div class="home-topbar">
+          <div class="brand">allmy<em>meta</em><span class="brand-dot">.</span></div>
+          <div class="h-icons">
+            <span class="ai-entry" id="gnbStar" title="AI 검색 열기"><span class="st">✦</span>AI</span>
+            <button class="h-btn primary">로그인</button>
+            <button class="h-btn">☰</button>
+          </div>
+        </div>
+        <div class="hero-tag">🌏 570만+ 호텔 실시간 가격비교</div>
+        <div class="hero-title">전세계 호텔<br><b>최저가</b>를 한눈에</div>
+        <!-- C안 영역: 구조화 검색폼 + 하단 AI 배너 -->
+        <div class="hero-c">
+          <div class="search-card">
+            <div class="f-row"><span class="f-icon">📍</span><div class="f-info"><div class="f-label">목적지</div><div class="f-val ph">어디로 가시나요?</div></div></div>
+            <div class="f-2col">
+              <div class="f-row"><span class="f-icon">📅</span><div class="f-info"><div class="f-label">체크인</div><div class="f-val">7월 2일 (수)</div></div></div>
+              <div class="f-row"><span class="f-icon">📅</span><div class="f-info"><div class="f-label">체크아웃</div><div class="f-val">7월 3일 (목)</div></div></div>
+            </div>
+            <div class="f-row"><span class="f-icon">👤</span><div class="f-info"><div class="f-label">인원 · 객실</div><div class="f-val">성인 2명 · 객실 1개</div></div></div>
+            <button class="search-btn">🔍 검색</button>
+          </div>
+          <div class="ai-banner" id="aiBannerMain">
+            <span class="ai-banner-ico">✦</span>
+            <span class="ai-banner-txt" id="aiBannerTxt">강남 2인 1박 호텔 찾아줘</span>
+            <span class="ai-banner-arr">→</span>
+            <span class="ai-banner-tip">임시</span>
+          </div>
+        </div>
+
+        <!-- D안 영역: [AI 검색 | 일반 검색] 탭 (기본 AI 검색) -->
+        <div class="hero-d">
+          <div class="search-tabs">
+            <button class="stab active" data-stab="ai"><span class="st">✦</span> AI 검색</button>
+            <button class="stab" data-stab="normal">일반 검색</button>
+          </div>
+          <div class="stab-panel stab-ai">
+            <div class="ai-search-box">
+              <span class="ai-banner-ico">✦</span>
+              <input class="ai-search-input" placeholder="가고 싶은 숙소를 AI로 취향껏 검색하세요">
+              <button class="ai-search-send">→</button>
+              <span class="ai-banner-tip">임시</span>
+            </div>
+            <div class="ai-sg-label">이렇게 물어보세요</div>
+            <div class="ai-sg-chips"></div>
+          </div>
+          <div class="stab-panel stab-normal">
+            <div class="search-card">
+              <div class="f-row"><span class="f-icon">📍</span><div class="f-info"><div class="f-label">목적지</div><div class="f-val ph">어디로 가시나요?</div></div></div>
+              <div class="f-2col">
+                <div class="f-row"><span class="f-icon">📅</span><div class="f-info"><div class="f-label">체크인</div><div class="f-val">7월 2일 (수)</div></div></div>
+                <div class="f-row"><span class="f-icon">📅</span><div class="f-info"><div class="f-label">체크아웃</div><div class="f-val">7월 3일 (목)</div></div></div>
+              </div>
+              <div class="f-row"><span class="f-icon">👤</span><div class="f-info"><div class="f-label">인원 · 객실</div><div class="f-val">성인 2명 · 객실 1개</div></div></div>
+              <button class="search-btn">🔍 검색</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 최근 검색 -->
+      <div class="home-sec">
+        <div class="home-sec-title">최근 검색</div>
+        <div class="recent-row">
+          <span class="r-icon">🕐</span>
+          <div class="r-info">
+            <div class="r-dest">서울</div>
+            <div class="r-detail">7/2 – 7/3 · 성인 2명 · 객실 1개</div>
+          </div>
+          <span class="r-del">✕</span>
+        </div>
+        <div class="recent-row">
+          <span class="r-icon">🕐</span>
+          <div class="r-info">
+            <div class="r-dest">오사카, 일본</div>
+            <div class="r-detail">7/2 – 7/5 · 성인 2명 · 객실 1개</div>
+          </div>
+          <span class="r-del">✕</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- S01 검색결과 뷰 (JS로 렌더) -->
+    <div class="s01-view" id="viewS01"></div>
+
+    <!-- FAB + 말풍선 -->
+    <div class="fab-wrap" id="fabWrap">
+      <div class="fab-bubble" id="fabBubble"><span class="bubble-txt" id="bubbleTxt">강남에서 2인 1박 호텔 찾아줘</span></div>
+      <div class="fab" id="fab"><span class="fab-star">✦</span><span class="fab-ai">AI</span></div>
+    </div>
+
+    <!-- B안: S01 재검색바 탭 → S01-A 검색폼 오버레이 (검색폼은 메인과 동일) -->
+    <div class="s01a-overlay" id="s01aOverlay">
+      <div class="s01a-dim" id="s01aDim"></div>
+      <div class="s01a-form">
+        <!-- C안: 구조화 검색폼 + 하단 AI 배너 -->
+        <div class="hero-c">
+          <div class="search-card">
+            <div class="f-row"><span class="f-icon">📍</span><div class="f-info"><div class="f-label">목적지</div><div class="f-val">부산</div></div></div>
+            <div class="f-2col">
+              <div class="f-row"><span class="f-icon">📅</span><div class="f-info"><div class="f-label">체크인</div><div class="f-val">7월 2일 (수)</div></div></div>
+              <div class="f-row"><span class="f-icon">📅</span><div class="f-info"><div class="f-label">체크아웃</div><div class="f-val">7월 3일 (목)</div></div></div>
+            </div>
+            <div class="f-row"><span class="f-icon">👤</span><div class="f-info"><div class="f-label">인원 · 객실</div><div class="f-val">성인 2명 · 객실 1개</div></div></div>
+            <button class="search-btn">🔍 검색</button>
+          </div>
+          <div class="ai-banner" id="aiBannerS01a">
+            <span class="ai-banner-ico">✦</span>
+            <span class="ai-banner-txt">강남 2인 1박 호텔 찾아줘</span>
+            <span class="ai-banner-arr">→</span>
+            <span class="ai-banner-tip">임시</span>
+          </div>
+        </div>
+        <!-- D안: [AI 검색 | 일반 검색] 탭 (메인과 동일) -->
+        <div class="hero-d">
+          <div class="search-tabs">
+            <button class="stab active" data-stab="ai"><span class="st">✦</span> AI 검색</button>
+            <button class="stab" data-stab="normal">일반 검색</button>
+          </div>
+          <div class="stab-panel stab-ai">
+            <div class="ai-search-box">
+              <span class="ai-banner-ico">✦</span>
+              <input class="ai-search-input" placeholder="가고 싶은 숙소를 AI로 취향껏 검색하세요">
+              <button class="ai-search-send">→</button>
+              <span class="ai-banner-tip">임시</span>
+            </div>
+            <div class="ai-sg-label">이렇게 물어보세요</div>
+            <div class="ai-sg-chips"></div>
+          </div>
+          <div class="stab-panel stab-normal">
+            <div class="search-card">
+              <div class="f-row"><span class="f-icon">📍</span><div class="f-info"><div class="f-label">목적지</div><div class="f-val">부산</div></div></div>
+              <div class="f-2col">
+                <div class="f-row"><span class="f-icon">📅</span><div class="f-info"><div class="f-label">체크인</div><div class="f-val">7월 2일 (수)</div></div></div>
+                <div class="f-row"><span class="f-icon">📅</span><div class="f-info"><div class="f-label">체크아웃</div><div class="f-val">7월 3일 (목)</div></div></div>
+              </div>
+              <div class="f-row"><span class="f-icon">👤</span><div class="f-info"><div class="f-label">인원 · 객실</div><div class="f-val">성인 2명 · 객실 1개</div></div></div>
+              <button class="search-btn">🔍 검색</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C안: 스마트 필터(AI 필터) 바텀시트 -->
+    <div class="sf-sheet" id="sfSheet">
+      <div class="sf-dim" id="sfDim"></div>
+      <div class="sf-panel">
+        <div class="sf-hdr">
+          <div class="sf-title"><span class="st">✦</span> AI 필터</div>
+          <button class="sf-close" id="sfClose">✕</button>
+        </div>
+        <div class="sf-sub">AI가 답변합니다 · 원하는 조건을 자유롭게 입력하세요</div>
+        <input class="sf-input" id="sfInput" placeholder="예: 수영장 있는 5성급 / 조식 포함 20만원 이하">
+        <div class="sf-ex">· <b style="color:#2563eb;">결과 안에서 거르기</b> — 성급·가격·편의시설(수영장·조식)·평점·브랜드<br>· <b style="color:#2563eb;">새로 검색(AI 채팅)</b> — 지역·날짜·인원 변경 등은 채팅으로 넘어갑니다</div>
+        <button class="sf-apply" id="sfApply">필터 적용</button>
+      </div>
+    </div>
+    <div class="sf-toast" id="sfToast"></div>
+
+    <!-- 챗봇 딤 + 오버레이 -->
+    <div class="dim" id="dim"></div>
+    <div class="chat" id="chat">
+      <!-- GNB -->
+      <div class="chat-gnb">
+        <div class="chat-gnb-title">
+          <span class="ai-star">✦</span><span>AI 검색</span><span class="tag-temp">임시</span>
+        </div>
+        <div class="chat-gnb-actions">
+          <button class="chat-gnb-btn" id="moreBtn">···</button>
+          <button class="chat-gnb-btn close-btn" id="closeBtn">✕</button>
+        </div>
+      </div>
+
+      <!-- 더보기 드롭다운 -->
+      <div class="chat-dropdown" id="dropdown">
+        <div class="chat-dropdown-item" id="newChatBtn">＋ 새 대화창</div>
+        <div class="chat-dropdown-item" id="histBtn">🕐 대화 이력</div>
+      </div>
+
+      <!-- 채팅 바디 -->
+      <div class="chat-body" id="chatBody"></div>
+
+      <!-- 대화 이력 화면 -->
+      <div class="chat-history" id="chatHistory"></div>
+
+      <!-- 입력창 -->
+      <div class="chat-input-area" id="inputArea">
+        <div class="chat-input-row">
+          <input class="chat-input" id="chatInput" maxlength="300" placeholder="어디 호텔을 찾아드릴까요?">
+          <button class="chat-input-icon" id="micBtn" title="음성 입력(MVP 제외)">🎤</button>
+          <button class="chat-send" id="sendBtn">→</button>
+        </div>
+        <div class="char-count"><span id="charCount">0</span>/300</div>
+      </div>
+
+      <!-- 삭제 확인 팝업 -->
+      <div class="confirm" id="confirm">
+        <div class="confirm-box">
+          <div class="confirm-msg">이 대화를 삭제할까요?</div>
+          <div class="confirm-btns">
+            <button class="btn-cancel" id="confirmCancel">취소</button>
+            <button class="btn-del" id="confirmDel">삭제</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div><!-- /.left -->
+
+<!-- ════════ 가운데: 체험 버튼 패널 ════════ -->
+<div class="play">
+  <h2 class="play-title">👉 버튼만 눌러 바로 체험</h2>
+  <div class="play-sub">아래 버튼을 누르면 해당 상황이 자동으로 재생됩니다.</div>
+  <div class="try" data-q="12개월 아기와 가기 좋은 영월 펜션 추천해줘"><b>① 기본 추천 흐름</b><span class="desc">"12개월 아기와 가기 좋은 영월 펜션 추천해줘" → AI가 <b>지역(영월)·동행(아기)·숙소유형(펜션)</b>을 파악하고, 빠진 날짜·인원은 기본값으로 채워 후기 좋은 펜션 3곳을 추천합니다.</span></div>
+  <div class="try" data-q="오사카 3박 가성비 호텔 추천해줘"><b>② 해외·숙박일수 인식</b><span class="desc">"오사카 3박 가성비 호텔" → 해외 도시와 <b>3박</b>까지 알아듣고, 가격대를 고려한 호텔을 추천합니다.</span></div>
+  <div class="try" data-q="수영장 있는 풀빌라 추천해줘"><b>③ 되물어보기</b><span class="desc">도시 없이 조건만 말하면 → AI가 <b>"어느 도시인가요?"</b> 하고 되묻고, 인기 도시 버튼을 보여줍니다.</span></div>
+  <div class="try" data-q="제주도 맛집 추천해줘"><b>④ 호텔 외 질문 처리</b><span class="desc">"맛집 추천"처럼 호텔과 무관한 질문엔 → <b>호텔 검색만 돕는다</b>고 정중히 안내하고 다시 유도합니다.</span></div>
+  <div class="try" data-q="울릉도 1박 호텔 찾아줘"><b>⑤ 결과가 없을 때</b><span class="desc">매물이 없는 조건 → <b>"다시 검색해 보세요"</b> 안내. 챗봇을 닫으면 검색결과 페이지도 '결과 없음' 화면으로 보입니다.</span></div>
+  <div class="try" data-q="서버오류 테스트"><b>⑥ 오류 상황</b><span class="desc">검색이 원활하지 않을 때 → 사과 메시지와 <b>[다시 시도]</b> 버튼을 보여줍니다.</span></div>
+</div>
+
+<!-- ════════ 오른쪽: 안내(주석) 패널 ════════ -->
+<div class="guide">
+  <h2>자연어 검색 챗봇 — 동작 시연본</h2>
+
+  <div class="disc-box">
+    <div class="disc-hdr">📌 확정 논의 항목 (대표님 컨펌 요청)</div>
+    <table class="disc-table">
+      <tr><td class="disc-num">1</td><td class="disc-name">챗봇 진입 UI 범위</td><td>메인·검색결과 <b>C안 확정</b> + 숙소상세(S02) 적용 방식<br><span style="color:#fbbf24;">💡 PO 의견: S02는 검색 챗봇이 아니라 <b>그 숙소 전용 'AI 문의'</b>(어메니티·정책·리뷰 등 응답)로 분화. 검색결과 AI필터처럼 <b>숙소상세 전용 채팅</b>을 두고, 기존 검색 챗봇은 GNB [✦ AI] 버튼으로.</span><br><span style="color:#94a3b8;">(논의: 문의 답변 데이터 소스·MVP 범위 → Phase 단계 가능성)</span></td></tr>
+      <tr><td class="disc-num">2</td><td class="disc-name">AI 필터 분기 정책</td><td>결과 내 필터(성급·<b>가격</b>·편의시설·평점·브랜드) / 지역·날짜·인원·필터불가 → 챗봇 인계. <b>이 분기로 확정?</b></td></tr>
+      <tr><td class="disc-num">3</td><td class="disc-name">메인 AI 진입 — C안 vs D안</td><td><b>C안)</b> 구조화 검색폼 + 검색버튼 하단 AI 배너 (일반 검색 우선, AI는 보조)<br><b>D안)</b> [AI 검색 | 일반 검색] 탭, <b>기본 AI 검색</b> (AI 우선 노출, 쇼케이싱 강)<br><span style="color:#94a3b8;">좌측 위 탭으로 직접 비교 — 어느 쪽으로 확정할지</span></td></tr>
+      <tr><td class="disc-num">4</td><td class="disc-name">AI 추천 결과 강조</td><td>챗봇 추천 호텔을 검색결과 최상단 <b>"✦ AI 추천"</b>으로 강조 유지할지</td></tr>
+      <tr><td class="disc-num">5</td><td class="disc-name">지역 필수·되묻기 처리</td><td><b>A안)</b> 미입력 시 검색 불가 → 되묻기(2회) 후 <b>인기도시 목록 클릭 유도</b><br><b>B안)</b> 미입력 시 인기도시를 API 검색어로 자동 전송 → 유저는 랜덤 지역 결과</td></tr>
+    </table>
+  </div>
+
+  <div class="sub">검색창에 키워드를 넣는 대신, <b>말하듯이 한 문장</b>으로 호텔을 찾는 AI 챗봇입니다. 아래 순서대로 직접 눌러 체험해 보세요.<br>※ 실제 서버에 연결되지 않은 시연본으로, 미리 준비한 예시 안에서 동작합니다.</div>
+
+  <div class="note" style="margin-top:12px;">
+    <b>🔀 AI 진입 2가지 — 챗봇 / AI 필터</b><br>
+    · <b>AI 챗봇(새 검색)</b> — 메인: 검색 버튼 아래 <b>[✦ AI 배너]</b> 또는 우상단 <b>[✦ AI]</b> / 검색결과: 우상단 <b>[✦ AI]</b>·상단 검색바<br>
+    · <b>AI 필터(결과 좁히기)</b> — 검색결과 필터바의 <b>[✦ AI 필터]</b>. 성급·가격·편의시설 등으로 현재 결과를 거릅니다.<br>
+    <span style="color:#93c5fd;">AI 필터에 지역·날짜·인원을 입력하면 자동으로 AI 챗봇(새 검색)으로 넘어갑니다.</span><br>
+    <span style="color:#fbbf24;">🔍 왼쪽 위 [C안][D안] 탭 — 메인 진입 비교 (C: 검색폼 + 하단 AI 배너 / D: [AI 검색|일반 검색] 탭, 기본 AI 검색)</span>
+  </div>
+
+  <h3>🎬 추천 시연 순서</h3>
+  <ol>
+    <li>메인에서 <b>[✦ AI 배너]</b>(C안) 또는 <b>[AI 검색] 탭</b>(D안), 우상단 <b>[✦ AI]</b> 중 하나를 누르면 챗봇 대화창이 열립니다.</li>
+    <li>대화창에 보이는 <b>"인기 여행지"</b>나 <b>"이렇게 물어보세요"</b> 예시를 누르면 → 입력창에 문장이 자동으로 채워집니다. (바로 검색되지 않으니 직접 고쳐도 됩니다)</li>
+    <li>입력창의 문장을 <b>[→] 버튼이나 Enter</b>로 보내면 → "찾는 중 → 검색결과 반영중" 안내 후, AI가 조건을 알아듣고 <b>호텔 3곳을 추천</b>합니다.</li>
+    <li><b>추천 호텔 카드</b>를 누르면 → 검색결과 페이지로 넘어가며, 그 호텔이 <b>맨 위에 강조</b>되어 보입니다.</li>
+    <li>챗봇을 닫으면(<b>✕</b> 또는 <b>[전체 결과 보기]</b>) → 검색결과 페이지가 그대로 나타납니다.<br><span style="color:#93c5fd;">핵심: 챗봇 검색과 검색결과 페이지는 항상 함께 움직입니다.</span></li>
+    <li>검색결과 페이지에서 다시 <b>[✦ AI]</b>를 누르면 → 조금 전 대화가 이어진 채 챗봇이 다시 열립니다.</li>
+    <li>검색결과 필터바의 <b>[✦ AI 필터]</b>를 누르고 "수영장 있는 5성급"처럼 입력하면 → 현재 결과를 그 조건으로 좁힙니다. (지역·날짜·인원을 넣으면 AI 챗봇 검색으로 넘어갑니다)</li>
+  </ol>
+
+  <h3>✨ 주요 기능</h3>
+  <ul>
+    <li><b>자연어 이해</b> — 한 문장에서 <b>도시·날짜·인원·예산·취향(조식·풀빌라 등)</b>을 자동으로 뽑아냅니다. 검색 조건을 항목별로 입력할 필요가 없습니다.</li>
+    <li><b>빠진 정보 자동 채우기</b> — 날짜·인원을 말하지 않으면 기본값(오늘 기준 <b>7일 뒤·1박·성인 2인</b>)으로 채워 검색하고, 어떤 기준으로 찾았는지 답변에 알려줍니다.</li>
+    <li><b>되물어보기</b> — 도시처럼 꼭 필요한 정보가 빠지면 AI가 다시 물어봅니다. (도시를 끝까지 안 정하면 인기 도시를 골라 주도록 안내)</li>
+    <li><b>이어서 좁히기</b> — 결과를 본 뒤 "조식 포함으로", "20만원대로"처럼 <b>조건만 바꿔 다시</b> 찾을 수 있습니다. 이때 앞서 정한 도시는 그대로 유지됩니다.</li>
+    <li><b>추천 질문 제안</b> — 결과마다 다음에 물어볼 만한 질문 4개를 AI가 함께 제안해 탐색을 돕습니다.</li>
+    <li><b>검색결과 페이지 연동</b> — 챗봇으로 찾는 순간, 일반 <b>검색결과 페이지도 똑같이 채워집니다.</b> 챗봇을 닫으면 그 결과 페이지가 바로 보입니다.</li>
+    <li><b>여러 OTA 가격 비교</b> — 검색결과 페이지에서 호텔마다 여러 예약처(Booking·Agoda 등)의 가격과 캐시백 혜택을 한눈에 비교합니다.</li>
+    <li><b>AI 필터(스마트 필터)</b> — 검색결과에서 "수영장·조식·5성급"처럼 말하면 결과를 그 조건으로 좁힙니다. 지역·날짜·인원을 바꾸면 자동으로 AI 챗봇 검색으로 넘어갑니다.</li>
+    <li><b>대화 이력</b> — 챗봇 상단 <b>[···]</b>에서 지난 대화를 다시 열거나, 새 대화를 시작할 수 있습니다.</li>
+  </ul>
+
+  <h3>📋 검색결과 페이지에서 보이는 것</h3>
+  <ul>
+    <li><b>호텔 카드</b> — 호텔마다 가장 싼 예약처 1곳을 대표로 보여주고, "가격비교 N곳"으로 다른 예약처도 있음을 표시합니다.</li>
+    <li><b>가격·혜택 비교</b> — 예약처 로고·가격과 함께 무료취소·캐시백 같은 혜택 배지를 한눈에 보여줍니다.</li>
+    <li><b>AI 추천 강조</b> — 챗봇 결과 카드를 눌러서 들어오면 그 호텔이 목록 맨 위에 <b>"✦ AI가 추천한 숙소"</b>로 강조됩니다.</li>
+    <li><b>AI 필터</b> — 필터바 <b>[✦ AI 필터]</b>로 현재 결과를 성급·가격·편의시설 등으로 좁힙니다. (범위 밖 입력은 AI 챗봇으로 인계)</li>
+    <li><b>재검색</b> — 상단 검색바를 누르면 검색폼이 열리고, 그 아래 AI 배너로 새로 검색할 수 있습니다.</li>
+    <li><b>메인으로</b> — 좌측 상단 <b>allmymeta</b> 로고를 누르면 언제든 메인으로 돌아갑니다.</li>
+  </ul>
+
+  <h3>⚠ 아직 정해지지 않은 부분</h3>
+  <div class="warn">브랜드명 <b>"✦ AI 검색"</b>, 버튼 색·디자인, 말풍선 문구는 모두 <b>임시값</b>입니다. (보이는 곳에 <b>"임시"</b> 표시) 마케팅·디자인 확정 후 최종 반영됩니다.</div>
+
+  <h3>ℹ️ 참고 — 시연본 범위</h3>
+  <div class="note">
+    · 실제 예약·결제는 동작하지 않는 <b>화면 흐름 시연본</b>입니다.<br>
+    · 호텔·가격·캐시백은 <b>예시 데이터</b>이며 실제 검색 결과가 아닙니다.<br>
+    · 일부 보조 버튼(로그인·☰·지도 등)은 이번 시연 범위에 포함되지 않았습니다.
+  </div>
+
+  <div class="ver">기준: 자연어검색 정책서 v0.1 (2026-06-24) · 모바일 화면 기준<br>산출물: 대화창 4 / context/신규정책/prototype/</div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════
+   시나리오 시드 — 입력 문장 → 응답 데이터
+   실제 LLM/API 대신 키워드 매칭으로 분기
+   ══════════════════════════════════════════════ */
+
+// 도시별 결과 카드 세트 (정상 결과)
+const CITY_RESULTS = {
+  "영월": {brief:"12개월 아기와 함께 가기엔 후기 평점이 좋고 아늑한 펜션 위주로 찾아봤어요. 7월 2일~7월 3일 1박, 성인 2인 기준이에요.",
+    cards:[["🏡","영월 강마루펜션","★★★★","9.2","20만원"],["🏞️","영월 동강뷰 펜션","★★★★","8.9","17만원"],["🌲","영월 숲속아이펜션","★★★","8.6","14만원"]],
+    recs:["무료 조식 제공 펜션으로 다시 찾아줘","반려동물 동반 가능한 곳만 보여줘","예산을 30만원으로 올리면?","날짜를 다음 주로 바꿔서 찾아줘"]},
+  "오사카": {brief:"오사카에서 가성비 좋은 호텔 위주로 찾아봤어요. 7월 2일~7월 5일 3박, 성인 2인 기준이에요.",
+    cards:[["🏨","오사카 난바 스테이호텔","★★★","8.8","9만원"],["🌃","도톤보리 센트럴호텔","★★★","8.5","11만원"],["🏙️","우메다 스카이호텔","★★★★","9.0","14만원"]],
+    recs:["조식 포함 호텔로 다시 찾아줘","4성급 이상만 보여줘","예산을 더 낮춰서 찾아줘","날짜를 주말로 바꿔서 찾아줘"]},
+  "제주": {brief:"제주에서 후기 좋은 숙소 위주로 찾아봤어요. 7월 2일~7월 3일 1박, 성인 2인 기준이에요.",
+    cards:[["🌊","제주 함덕 오션뷰","★★★★","9.1","18만원"],["🏖️","서귀포 중문 리조트","★★★★★","9.4","26만원"],["🏡","애월 감성 풀빌라","★★★★","9.0","31만원"]],
+    recs:["풀빌라만 다시 찾아줘","조식 포함으로 보여줘","예산을 20만원 이하로","2박으로 바꿔서 찾아줘"]},
+  "부산": {brief:"부산 해운대·광안리 인근 인기 호텔 위주로 찾아봤어요. 7월 2일~7월 3일 1박, 성인 2인 기준이에요.",
+    cards:[["🌉","해운대 마린뷰호텔","★★★★","9.0","19만원"],["🏖️","광안리 오션테라스","★★★★","8.8","16만원"],["🏙️","서면 비즈니스호텔","★★★","8.4","11만원"]],
+    recs:["오션뷰만 보여줘","4성급 이상으로 다시","조식 포함으로 찾아줘","주말 날짜로 바꿔줘"]},
+  "서울": {brief:"서울 시내 인기 호텔 위주로 찾아봤어요. 7월 2일~7월 3일 1박, 성인 2인 기준이에요.",
+    cards:[["🏙️","강남 비즈니스호텔","★★★★","8.9","21만원"],["🌆","명동 시티호텔","★★★","8.5","15만원"],["🏨","홍대 부티크호텔","★★★★","8.7","17만원"]],
+    recs:["20만원대로 맞춰줘","조식 포함으로 보여줘","5성급 호텔만 보여줘","주말로 바꿔서 찾아줘"]},
+  "도쿄": {brief:"도쿄 신주쿠 인근 호텔 위주로 찾아봤어요. 7월 2일~7월 5일 3박, 성인 2인 기준이에요.",
+    cards:[["🗼","신주쿠 그랜드호텔","★★★★","9.1","16만원"],["🏙️","시부야 스테이","★★★","8.6","13만원"],["🌃","우에노 시티호텔","★★★","8.4","11만원"]],
+    recs:["조식 포함으로 다시","4성급 이상만","예산을 낮춰서 찾아줘","날짜를 주말로 바꿔줘"]},
+  "방콕": {brief:"방콕 시내 인기 호텔 위주로 찾아봤어요. 7월 2일~7월 3일 1박, 성인 2인 기준이에요.",
+    cards:[["🛕","수쿰빗 리버뷰","★★★★","9.0","8만원"],["🏙️","아속 센트럴호텔","★★★","8.5","6만원"],["🌴","카오산 게스트호텔","★★★","8.2","4만원"]],
+    recs:["수영장 있는 곳만","4성급 이상으로","조식 포함으로 찾아줘","2박으로 바꿔줘"]},
+  "싱가포르": {brief:"싱가포르 마리나베이 인근 호텔 위주로 찾아봤어요. 7월 2일~7월 3일 1박, 성인 2인 기준이에요.",
+    cards:[["🌇","마리나베이 뷰호텔","★★★★★","9.5","32만원"],["🏙️","차이나타운 부티크","★★★★","8.9","19만원"],["🌆","오차드 시티호텔","★★★","8.6","16만원"]],
+    recs:["수영장 있는 곳만","예산을 낮춰서 찾아줘","조식 포함으로 보여줘","2박으로 바꿔줘"]},
+  "다낭": {brief:"다낭 미케비치 인근 리조트 위주로 찾아봤어요. 7월 2일~7월 3일 1박, 성인 2인 기준이에요.",
+    cards:[["🏖️","미케비치 리조트","★★★★","9.2","12만원"],["🌊","다낭 오션 풀빌라","★★★★★","9.4","18만원"],["🌴","한강뷰 호텔","★★★","8.5","7만원"]],
+    recs:["풀빌라만 보여줘","조식 포함으로 찾아줘","5성급 이상으로","2박으로 바꿔줘"]},
+  "파리": {brief:"파리 에펠탑 인근 호텔 위주로 찾아봤어요. 7월 2일~7월 4일 2박, 성인 2인 기준이에요.",
+    cards:[["🗼","에펠탑뷰 부티크","★★★★","9.0","29만원"],["🏛️","루브르 인근 호텔","★★★★","8.8","25만원"],["🌃","몽마르트 스테이","★★★","8.4","18만원"]],
+    recs:["4성급 이상만","조식 포함으로 보여줘","예산을 낮춰서 찾아줘","3박으로 바꿔줘"]},
+  "뉴욕": {brief:"뉴욕 맨해튼 인근 호텔 위주로 찾아봤어요. 7월 2일~7월 5일 3박, 성인 2인 기준이에요.",
+    cards:[["🗽","맨해튼 미드타운호텔","★★★★","9.0","38만원"],["🌆","타임스스퀘어 스테이","★★★★","8.7","33만원"],["🏙️","브루클린 부티크","★★★","8.5","24만원"]],
+    recs:["4성급 이상만","예산을 낮춰서 찾아줘","조식 포함으로 보여줘","2박으로 바꿔줘"]}
+};
+
+// 인기 여행지 10개 (정책서 7-3절 순서: 국내→아시아→장거리)
+const CITIES = ["제주","부산","서울","오사카","도쿄","방콕","싱가포르","다낭","파리","뉴욕"];
+
+// 추천질문 풀 15개 (정책서 7-1절)
+const SUGGEST_POOL = [
+  "서울 강남 2인 1박 20만원대 호텔 추천해줘","제주도 주말 풀빌라 2박 찾아줘","부산 해운대 근처 4성급 호텔 있어?",
+  "강원도 커플 1박 펜션 추천해줘","서울 시내 비즈니스 호텔 1박 찾아줘","도쿄 신주쿠 2인 3박 호텔 추천해줘",
+  "오사카 도톤보리 근처 숙소 찾아줘","방콕 수완나품 공항 근처 1박 호텔","발리 우붓 허니문 풀빌라 2박 추천해줘",
+  "싱가포르 마리나베이 뷰 호텔 찾아줘","파리 에펠탑 근처 4성급 2박 호텔","뉴욕 맨해튼 4성급 2인 3박",
+  "바르셀로나 해변 근처 호텔 찾아줘","런던 히드로 공항 근처 1박 호텔","조식 포함 서울 호텔 2인 주말 1박"
+];
+
+// 말풍선 순환 카피 (정책서 4-1절, 마케팅팀 확정 전 임시)
+const BUBBLE_COPY = ["강남에서 2인 1박 호텔 찾아줘","오사카 3박 가성비 호텔 추천해줘","제주 주말 풀빌라 찾아줘","조식 포함 서울 호텔 있어?"];
+
+// 범위 외 키워드 (정책서 8-3절)
+const OUT_KEYWORDS = ["맛집","항공","비행기","렌터카","렌트카","관광","명소","교통","지하철","버스","기차","식당","카페"];
+// 매물 없는(0개) 트리거 도시
+const ZERO_CITIES = ["울릉도","독도","오지마을"];
+
+// S01 동기화용 — 공급사 풀 / 도시별 결과 수(시연용 가짜값) / 만원→원 변환
+const PROVIDERS = [["Booking.com","#003580","B"],["Agoda","#e2521f","A"],["Hotels.com","#f5a623","H"],["Expedia","#16367e","E"]];
+const CITY_COUNT = {영월:128,오사카:932,제주:1045,부산:843,서울:1320,도쿄:1187,방콕:760,싱가포르:540,다낭:410,파리:690,뉴욕:880};
+function wonOf(manwon){ const n=parseInt(manwon)*10000; return "₩"+(n||0).toLocaleString(); }
+
+/* ════════ 상태 ════════ */
+let state = {
+  view:"main",          // main | chat | s01
+  chatView:"init",      // init | conversation | history
+  messages:[],          // 현재 대화 메시지
+  noRegionCount:0,      // 되묻기 횟수
+  lastCity:null,        // 직전 목적지(누적조건 초기화 판단)
+  started:false,        // 대화 시작 여부
+  pendingDelId:null,    // 삭제 대상 대화 id
+  lastSearch:null       // S01 동기화 데이터 (정책서 5-4절)
+};
+let suggestExpanded = false;
+let suggestShown = [];
+
+/* ════════ DOM ════════ */
+const $ = id => document.getElementById(id);
+const chatBody = $("chatBody"), chatInput = $("chatInput"), sendBtn = $("sendBtn");
+
+/* ════════ 챗봇 열기/닫기 ════════ */
+function openChat(){
+  $("dim").classList.add("open");
+  $("chat").classList.add("open");
+  state.view="chat";
+  closeDropdown();
+  if(!state.started){ renderInit(); }
+  else { state.chatView="conversation"; showConversation(); }
+}
+function closeChat(){
+  // ✕ 닫기·전체결과보기 = 채팅창만 닫기 (대화 보존, 재진입 시 이어짐 5-5절).
+  // 검색 시 S01이 이미 배경에 동기화돼 있어(5-4절) 닫으면 그 S01이 보임.
+  $("dim").classList.remove("open");
+  $("chat").classList.remove("open");
+  closeDropdown();
+  state.view = $("viewS01").classList.contains("open") ? "s01" : "main";
+}
+$("fab").onclick = openChat;
+$("fabBubble").onclick = openChat;
+$("gnbStar").onclick = openChat;
+$("closeBtn").onclick = closeChat;
+$("dim").onclick = closeChat;
+
+/* ════════ 말풍선 — 노출 동안 문구 1초씩 순환 → 숨김 → 반복 ════════ */
+// ▼ 시간(ms). PO 확인 후 조정 가능.
+const BUBBLE_TEXT_MS = 2000;  // 문구 1개 노출 시간 (문구 수 × 이 값 = 말풍선 노출 시간. 현재 4개 → 8초)
+const BUBBLE_HIDE_MS = 3000;  // 말풍선이 사라져 있는 시간
+let bubbleTimer = null;
+function setBubbleText(t){
+  const el = $("bubbleTxt");
+  el.classList.add("fade");                       // 현재 글자 흐려짐
+  setTimeout(()=>{ el.textContent = t; el.classList.remove("fade"); }, 280); // 교체 후 다시 또렷
+}
+function bubbleCycle(){
+  const box = $("fabBubble");
+  box.classList.add("show");                       // 말풍선 노출(페이드인)
+  let i = 0;
+  (function step(){
+    setBubbleText(BUBBLE_COPY[i]);                 // 문구 자연스럽게 교체
+    i++;
+    if(i < BUBBLE_COPY.length){
+      bubbleTimer = setTimeout(step, BUBBLE_TEXT_MS);     // 다음 문구
+    } else {
+      bubbleTimer = setTimeout(()=>{
+        box.classList.remove("show");              // 마지막 문구 후 말풍선 숨김(페이드아웃)
+        bubbleTimer = setTimeout(bubbleCycle, BUBBLE_HIDE_MS); // 3초 뒤 다시 노출
+      }, BUBBLE_TEXT_MS);
+    }
+  })();
+}
+bubbleCycle();
+
+/* ════════ 더보기 드롭다운 ════════ */
+function closeDropdown(){ $("dropdown").classList.remove("open"); }
+$("moreBtn").onclick = (e)=>{ e.stopPropagation(); $("dropdown").classList.toggle("open"); };
+$("newChatBtn").onclick = ()=>{ saveCurrentConversation(); resetConversation(); renderInit(); closeDropdown(); };
+$("histBtn").onclick = ()=>{ renderHistory(); closeDropdown(); };
+
+/* ════════ 입력창 ════════ */
+chatInput.addEventListener("input", ()=>{
+  $("charCount").textContent = chatInput.value.length;
+  sendBtn.classList.toggle("active", chatInput.value.trim().length>0);
+});
+chatInput.addEventListener("keydown", e=>{ if(e.key==="Enter" && chatInput.value.trim()) send(); });
+sendBtn.onclick = ()=>{ if(chatInput.value.trim()) send(); };
+$("micBtn").onclick = ()=> alert("음성 입력은 MVP 제외입니다. (정책서 4-4절 / 미결 #4)\n실제 동작 없음 — UI만 표시");
+
+function fillInput(text){
+  showInputArea(true);
+  chatInput.value = text;
+  $("charCount").textContent = text.length;
+  sendBtn.classList.add("active");
+  chatInput.focus();
+}
+
+/* ════════ 초기화면 렌더 ════════ */
+function pickSuggests(){
+  const pool=[...SUGGEST_POOL];
+  // 현재 표시 제외하고 랜덤 5개
+  const avail = pool.filter(q=>!suggestShown.includes(q));
+  const base = avail.length>=5 ? avail : pool;
+  const shuffled = base.sort(()=>Math.random()-0.5).slice(0,5);
+  suggestShown = shuffled;
+  return shuffled;
+}
+function renderInit(){
+  state.chatView="init";
+  $("chatHistory").classList.remove("open");
+  chatBody.style.display="flex";
+  showInputArea(true);
+  chatInput.placeholder="어디 호텔을 찾아드릴까요?";
+  const sgs = suggestExpanded ? SUGGEST_POOL : pickSuggests();
+  chatBody.innerHTML = `
+    <div class="chat-init">
+      <div class="chat-init-hero">
+        <div class="chat-init-star">✦</div>
+        <div class="chat-init-headline">원하는 호텔 조건을 말해보세요</div>
+        <div class="chat-init-sub">AI가 최적의 호텔을 찾아드려요 · 문구는 마케팅팀 확정 전 임시</div>
+      </div>
+      <div class="chat-section">
+        <div class="chat-section-label">인기 여행지</div>
+        <div class="city-grid">${CITIES.map(c=>`<div class="city-chip" data-city="${c}">${c}</div>`).join("")}</div>
+      </div>
+      <div class="chat-section">
+        <div class="chat-section-label">이렇게 물어보세요
+          <span class="sec-tools">
+            <span class="sec-tool" id="refreshSg">🔄 새로고침</span>
+            <span class="sec-tool" id="moreSg">${suggestExpanded?"접기":"더보기"}</span>
+          </span>
+        </div>
+        <div class="suggest-list">${sgs.map(q=>`<div class="suggest-item" data-q="${q}"><span>🔍</span>${q}</div>`).join("")}</div>
+      </div>
+    </div>`;
+  // 바인딩
+  chatBody.querySelectorAll(".city-chip").forEach(el=> el.onclick=()=> fillInput(`${el.dataset.city} 호텔 찾아줘`));
+  chatBody.querySelectorAll(".suggest-item").forEach(el=> el.onclick=()=> fillInput(el.dataset.q));
+  $("refreshSg").onclick=()=>{ suggestExpanded=false; renderInit(); };
+  $("moreSg").onclick=()=>{ suggestExpanded=!suggestExpanded; renderInit(); };
+}
+
+/* ════════ 대화 렌더 ════════ */
+function showConversation(){
+  $("chatHistory").classList.remove("open");
+  chatBody.style.display="flex";
+  showInputArea(true);
+  chatBody.innerHTML="";
+  state.messages.forEach(m=> appendMessageDom(m));
+  scrollBottom();
+}
+function appendMessageDom(m){
+  if(m.role==="user"){
+    const d=document.createElement("div"); d.className="msg-user"; d.textContent=m.text; chatBody.appendChild(d);
+  } else {
+    const w=document.createElement("div"); w.className="msg-ai-wrap";
+    w.innerHTML=`<div class="msg-ai-avatar">✦</div><div class="msg-ai-bubble">${m.html}</div>`;
+    chatBody.appendChild(w);
+    bindAiActions(w);
+  }
+}
+function bindAiActions(wrap){
+  // 카드 탭 → S01 + 클릭 숙소 최상단(5-3절) / 전체 결과 보기 → 채팅창만 닫기
+  wrap.querySelectorAll(".result-card").forEach(el=> el.onclick=()=> openS01(el.dataset.hotel));
+  wrap.querySelectorAll(".result-cta").forEach(el=> el.onclick=()=> closeChat());
+  wrap.querySelectorAll(".rec-query").forEach(el=> el.onclick=()=> runQuery(el.dataset.q));
+  wrap.querySelectorAll(".reask-cities .city-chip").forEach(el=> el.onclick=()=> runQuery(`${el.dataset.city} 호텔 찾아줘`));
+  const retry = wrap.querySelector(".retry-btn");
+  if(retry) retry.onclick=()=>{ if(state.lastFailQuery) runQuery(state.lastFailQuery); };
+}
+
+/* ════════ 메시지 전송 ════════ */
+function send(){
+  const text = chatInput.value.trim();
+  chatInput.value=""; $("charCount").textContent="0"; sendBtn.classList.remove("active");
+  runQuery(text);
+}
+function runQuery(text){
+  if(!state.started){ state.started=true; state.firstQuery=text; }
+  state.chatView="conversation";
+  showConversation();
+  // 사용자 메시지
+  state.messages.push({role:"user",text});
+  appendMessageDom({role:"user",text}); scrollBottom();
+  chatInput.placeholder="후속 질문을 입력하세요";
+  // 로딩 — 2단계 표시 (찾는 중 → 검색결과 페이지에도 반영중), 총 3초 (프로토타입 고정값)
+  const dots = `<span class="loading-dots"><span></span><span></span><span></span></span>`;
+  const loadWrap=document.createElement("div"); loadWrap.className="msg-ai-wrap";
+  loadWrap.innerHTML=`<div class="msg-ai-avatar">✦</div><div class="msg-ai-bubble" style="color:#9ca3af;">찾는 중 ${dots}</div>`;
+  chatBody.appendChild(loadWrap); scrollBottom();
+  // 1.5초 후 2단계 문구로 전환
+  setTimeout(()=>{
+    const b=loadWrap.querySelector(".msg-ai-bubble");
+    if(b){ b.innerHTML=`검색결과 페이지에도 결과 반영중 ${dots}`; scrollBottom(); }
+  }, 1500);
+  // 3초 후 결과 표시
+  setTimeout(()=>{ loadWrap.remove(); respond(text); }, 3000);
+}
+
+/* ════════ 응답 분기 (정책서 8·10절) ════════ */
+function detectCity(text){
+  // 0개 트리거 도시 우선
+  for(const z of ZERO_CITIES){ if(text.includes(z)) return {city:z, zero:true}; }
+  for(const c of Object.keys(CITY_RESULTS)){ if(text.includes(c)) return {city:c, zero:false}; }
+  // 강원/강남 등 → 영월/서울로 매핑 예시
+  if(text.includes("강원")||text.includes("영월")) return {city:"영월", zero:false};
+  if(text.includes("강남")||text.includes("명동")||text.includes("홍대")) return {city:"서울", zero:false};
+  return null;
+}
+function respond(text){
+  // 1) API 오류 트리거
+  if(text.includes("서버오류")||text.includes("오류테스트")){
+    state.lastFailQuery=text;
+    pushAi(`<div>잠시 검색이 원활하지 않아요. 다시 시도해 주세요.</div><button class="retry-btn">🔄 다시 시도</button>`);
+    return;
+  }
+  // 2) 범위 외 질문 (단, 도시+호텔 의도 없는 순수 범위외)
+  const isOut = OUT_KEYWORDS.some(k=>text.includes(k));
+  const hasHotelIntent = text.includes("호텔")||text.includes("펜션")||text.includes("숙소")||text.includes("풀빌라")||text.includes("리조트");
+  if(isOut && !hasHotelIntent){
+    pushAi(`<div>저는 호텔 검색만 도와드릴 수 있어요.<br>어느 도시 호텔을 찾아드릴까요?</div>`);
+    return;
+  }
+  // 3) 지역 감지
+  let found = detectCity(text);
+  // 도시 없는 후속 질문 + 현재 대화에 도시가 이미 있으면 그 도시 유지(되묻지 않음)
+  // 정책서 8-4절: 목적지 외 조건(가격·조식 등)만 변경 시 기존 도시·조건 유지
+  if(!found && state.lastCity && CITY_RESULTS[state.lastCity]){
+    found = {city:state.lastCity, zero:false};
+  }
+  if(!found){
+    // 되묻기
+    state.noRegionCount++;
+    if(state.noRegionCount>=3){
+      pushAi(`<div>위 지역을 먼저 선택해 주세요.</div>${reaskCitiesHtml()}`);
+    } else {
+      pushAi(`<div>어느 도시 호텔을 찾으시나요?<br>아래에서 고르거나, 도시명을 직접 입력해 주세요.</div>${reaskCitiesHtml()}`);
+    }
+    return;
+  }
+  // 지역 찾음 → 되묻기 카운트 초기화
+  state.noRegionCount=0;
+  // 목적지 변경 시 누적조건 초기화 (정책서 8-4절) — 프로토타입에서는 안내만
+  state.lastCity = found.city;
+  // 4) 결과 0개
+  if(found.zero){
+    state.lastSearch = {city:found.city, zero:true, highlight:null}; // S01 0개 동기화
+    syncS01();
+    pushAi(`<div>조건에 맞는 호텔을 찾지 못했어요.<br>날짜나 예산을 조금 바꿔볼까요?</div>
+      <div class="rec-queries">
+        <div class="rec-query" data-q="${found.city} 날짜를 다음 주로 바꿔서 찾아줘">${found.city} 날짜를 다음 주로 바꿔서 찾아줘</div>
+        <div class="rec-query" data-q="${found.city} 예산을 30만원으로 높여서 찾아줘">${found.city} 예산을 30만원으로 높여서 찾아줘</div>
+      </div>`);
+    return;
+  }
+  // 5) 정상 결과
+  const r = CITY_RESULTS[found.city];
+  // S01 동기화(정책서 5-4절): 챗봇 검색 시점에 S01 결과도 배경에 준비됨
+  state.lastSearch = {city:found.city, zero:false, cards:r.cards, highlight:null};
+  syncS01();
+  const cardsHtml = r.cards.map(c=>`
+    <div class="result-card" data-hotel="${c[1]}">
+      <div class="result-card-img">${c[0]}</div>
+      <div class="result-card-info">
+        <div class="result-card-name">${c[1]}</div>
+        <div class="result-card-stars">${c[2]} <span style="color:#374151">⭐ ${c[3]}</span></div>
+        <div class="result-card-price">${c[4]} <small>~</small></div>
+      </div>
+    </div>`).join("");
+  const recsHtml = r.recs.map(q=>`<div class="rec-query" data-q="${q}">${q}</div>`).join("");
+  pushAi(`<div>${r.brief}</div>
+    <div class="result-cards">${cardsHtml}</div>
+    <button class="result-cta">전체 결과 보기 →</button>
+    <div class="rec-intro">원하시면 조건을 더 좁혀서 다시 찾아드릴 수 있어요.</div>
+    <div class="rec-queries">${recsHtml}</div>`);
+}
+function reaskCitiesHtml(){
+  return `<div class="reask-cities">${CITIES.map(c=>`<div class="city-chip" data-city="${c}">${c}</div>`).join("")}</div>`;
+}
+function pushAi(html){
+  state.messages.push({role:"ai",html});
+  appendMessageDom({role:"ai",html});
+  scrollBottom();
+}
+function scrollBottom(){ requestAnimationFrame(()=> chatBody.scrollTop=chatBody.scrollHeight); }
+
+/* ════════ 뷰 전환 (메인 ↔ S01) ════════ */
+function showView(v){
+  state.view = v;
+  $("viewMain").style.display = (v==="main") ? "flex" : "none";
+  $("viewS01").classList.toggle("open", v==="s01");
+}
+// 정책서 5-4절: 챗봇에서 검색하면 S01도 동시 동기화 → 배경에 S01을 렌더해 둠
+// (챗봇 오버레이는 그 위에 계속 떠 있음. 닫으면 이 S01이 보임)
+function syncS01(){
+  if(!state.lastSearch) return;
+  renderS01();
+  $("viewMain").style.display="none";
+  $("viewS01").classList.add("open");
+}
+
+/* ════════ S01 검색결과 화면 ════════ */
+function openS01(highlight){
+  if(!state.lastSearch){ showView("main"); return; }
+  if(highlight!==undefined) state.lastSearch.highlight = highlight; // 카드클릭=호텔명 / 전체보기·닫기=null
+  $("dim").classList.remove("open");
+  $("chat").classList.remove("open");
+  closeDropdown();
+  renderS01();
+  showView("s01");
+}
+function s01Header(){
+  // GNB + 재검색바 (✦ 탭 → 챗봇 재오픈, 대화 유지 5-5절)
+  const ls = state.lastSearch;
+  return `
+    <div class="s01-gnb">
+      <div class="s01-logo" id="s01Logo">allmy<em>meta</em></div>
+      <div class="s01-gnb-right">
+        <span class="ai-entry" id="s01Star" title="AI 검색 다시 열기"><span class="st">✦</span>AI</span>
+        <button class="s01-gnb-btn primary">로그인</button>
+        <button class="s01-gnb-btn">☰</button>
+      </div>
+    </div>
+    <div class="s01-bar">
+      <div class="s01-bar-inner" id="s01Bar">
+        <span>📍</span>
+        <div style="flex:1;">
+          <div class="s01-bar-dest">${ls.city}</div>
+          <div class="s01-bar-detail">7/2(수) → 7/3(목) · 성인 2명</div>
+        </div>
+        <span style="color:#9ca3af;">▾</span>
+      </div>
+    </div>`;
+}
+function renderS01(){
+  const ls = state.lastSearch;
+  const v = $("viewS01");
+  if(ls.zero){
+    // S01-D-zero 레이아웃과 동일 + 문구만 변경 + [필터 초기화] 버튼 미노출 (PO 지시)
+    v.innerHTML = s01Header() + `
+      <div class="s01-filter">
+        <div class="s01-chip ai" data-aifilter>✦ AI 필터</div>
+        <div class="s01-chip active">⊟ 전체</div>
+        <div class="s01-chip">인기순 ↕</div>
+        <div class="s01-chip">1박 가격</div>
+        <div class="s01-chip">성급</div>
+        <div class="s01-chip">평점 7.0+</div>
+      </div>
+      <div class="s01-zero-banner">
+        <span class="ic">⚠️</span>
+        <div class="s01-zero-msg">'${ls.city}' 조건에 맞는 숙소를 찾지 못했어요.<br>날짜나 예산을 바꿔서 다시 검색해 보세요.</div>
+      </div>
+      <div class="s01-list">
+        <div class="hcard">
+          <div class="hcard-top">
+            <div class="hcard-img">🏨</div>
+            <div class="hcard-info">
+              <div class="hcard-name">${ls.city} 시티호텔</div>
+              <div class="hcard-stars">★★★★ <span style="color:#374151;">⭐ 8.6</span></div>
+              <div class="hcard-meta">📍 ${ls.city}</div>
+            </div>
+          </div>
+          <div class="hcard-pv">
+            <div class="pv-logo" style="background:#003580;">B</div>
+            <div class="pv-name">Booking.com</div>
+            <div style="flex:1;text-align:right;"><div class="pv-price">₩210,000</div></div>
+            <button class="pv-go" style="pointer-events:none;">이동 →</button>
+          </div>
+        </div>
+      </div>`;
+  } else {
+    // 카드 정렬: 하이라이트 호텔 최상단(5-3절)
+    let cards = ls.cards.slice();
+    if(ls.highlight){
+      const i = cards.findIndex(c=>c[1]===ls.highlight);
+      if(i>0){ const [hit]=cards.splice(i,1); cards.unshift(hit); }
+    }
+    const cardsHtml = cards.map((c,idx)=>{
+      const isHl = ls.highlight && c[1]===ls.highlight;
+      const pv = PROVIDERS[idx % PROVIDERS.length];
+      return `
+      <div class="hcard ${isHl?'hl':''}">
+        ${isHl?`<div class="hcard-hl-tag">✦ AI가 추천한 숙소</div>`:''}
+        <div class="hcard-top">
+          <div class="hcard-img">${c[0]}</div>
+          <div class="hcard-info">
+            <div class="hcard-name">${c[1]}</div>
+            <div class="hcard-stars">${c[2]} <span style="color:#374151;">⭐ ${c[3]}</span></div>
+            <div class="hcard-meta">📍 ${ls.city} · <b>가격비교 ${3+idx}곳</b></div>
+          </div>
+        </div>
+        <div class="hcard-pv">
+          <div class="pv-logo" style="background:${pv[1]};">${pv[2]}</div>
+          <div class="pv-name">${pv[0]}</div>
+          <div style="flex:1;text-align:right;"><div class="pv-price">${wonOf(c[4])}</div></div>
+          <button class="pv-go">이동 →</button>
+        </div>
+        <div class="hcard-badges">
+          <span class="hbadge free">✅ 무료취소</span>
+          <span class="hbadge cb">💸 캐시백 최대 5%</span>
+        </div>
+      </div>`;
+    }).join("");
+    v.innerHTML = s01Header() + `
+      <div class="s01-filter">
+        <div class="s01-chip ai" data-aifilter>✦ AI 필터</div>
+        <div class="s01-chip active">⊟ 전체</div>
+        <div class="s01-chip">인기순 ↕</div>
+        <div class="s01-chip">1박 가격</div>
+        <div class="s01-chip">성급</div>
+        <div class="s01-chip">평점 7.0+</div>
+      </div>
+      <div class="s01-rescount">
+        <div class="s01-rescount-t">${ls.city} · 총 ${ (CITY_COUNT[ls.city]||120).toLocaleString() }개 숙소</div>
+        <div class="s01-rescount-s">7월 2일(수) — 3일(목) · 성인 2명 · 1박</div>
+      </div>
+      <div class="s01-list">
+        ${cardsHtml}
+        <button class="s01-more">목록 더보기</button>
+      </div>`;
+  }
+  // 공통: ✦ / 재검색바 → 챗봇 재오픈 (대화 유지)
+  const lo = v.querySelector("#s01Logo"); if(lo) lo.onclick = goMain;   // 로고 → 메인
+  const star = v.querySelector("#s01Star"); if(star) star.onclick = openChatFromS01;
+  const bar = v.querySelector("#s01Bar"); if(bar) bar.onclick = openS01A;   // C안: 재검색바 → S01-A 검색폼
+  v.querySelectorAll("[data-aifilter]").forEach(el=> el.onclick = openSmartFilter);  // [✦ AI 필터] → 스마트 필터
+}
+function openChatFromS01(){
+  // S01 → ✦/재검색바 탭 → 챗봇 대화 유지된 채 재오픈(5-5절)
+  $("dim").classList.add("open");
+  $("chat").classList.add("open");
+  state.view="chat";
+  if(state.started){ showConversation(); } else { renderInit(); }
+}
+
+/* ════════ 대화 이력 (localStorage) ════════ */
+const HIST_KEY="amt_chat_history";
+function loadHistory(){ try{ return JSON.parse(localStorage.getItem(HIST_KEY)||"[]"); }catch(e){ return []; } }
+function saveHistory(arr){ localStorage.setItem(HIST_KEY, JSON.stringify(arr)); }
+function makeTitle(q){
+  // 첫 질문 기반 간이 요약 (실제는 LLM)
+  let t=q.replace(/추천해줘|찾아줘|있어\?|보여줘|호텔|숙소/g,"").trim();
+  if(t.length>14) t=t.slice(0,14);
+  return t||"호텔 검색";
+}
+function saveCurrentConversation(){
+  if(!state.started || state.messages.length===0) return;
+  const arr=loadHistory();
+  const entry={ id:String(state.convId||(Date.now())), title:makeTitle(state.firstQuery||"호텔 검색"),
+    ts:Date.now(), messages:state.messages };
+  // 동일 id 있으면 갱신
+  const i=arr.findIndex(e=>e.id===entry.id);
+  if(i>=0) arr[i]=entry; else arr.unshift(entry);
+  // 최대 20개, 7일 (프로토타입: 개수만 적용)
+  saveHistory(arr.slice(0,20));
+}
+function resetConversation(){
+  state.messages=[]; state.started=false; state.noRegionCount=0; state.lastCity=null;
+  state.convId=Date.now(); state.firstQuery=null; state.lastSearch=null;
+  chatInput.placeholder="어디 호텔을 찾아드릴까요?";
+  // 새 대화 → 배경 동기화 해제(메인으로)
+  $("viewMain").style.display="flex"; $("viewS01").classList.remove("open");
+}
+function renderHistory(){
+  saveCurrentConversation();
+  state.chatView="history";
+  chatBody.style.display="none";
+  showInputArea(false);
+  const arr=loadHistory();
+  const hist=$("chatHistory"); hist.classList.add("open");
+  if(arr.length===0){
+    hist.innerHTML=`<div class="hist-head">🕐 대화 이력</div><div class="hist-empty">아직 대화 이력이 없어요.<br>호텔을 검색하면 여기에 기록돼요.</div>
+      <button class="retry-btn" id="histBack">← 대화로 돌아가기</button>`;
+  } else {
+    hist.innerHTML=`<div class="hist-head">🕐 대화 이력</div>
+      <div class="hist-label">지난 7일 (최대 20개)</div>
+      ${arr.map(e=>`<div class="hist-item" data-id="${e.id}"><span class="hist-title">${e.title}</span><button class="hist-del" data-del="${e.id}">🗑</button></div>`).join("")}
+      <button class="retry-btn" id="histBack" style="margin-top:14px;">← 대화로 돌아가기</button>`;
+  }
+  hist.querySelectorAll(".hist-item").forEach(el=> el.onclick=(e)=>{
+    if(e.target.dataset.del) return;
+    openConversationFromHistory(el.dataset.id);
+  });
+  hist.querySelectorAll(".hist-del").forEach(el=> el.onclick=(e)=>{ e.stopPropagation(); askDelete(el.dataset.del); });
+  $("histBack").onclick=()=>{ hist.classList.remove("open"); if(state.started){ showConversation(); } else { renderInit(); } };
+}
+function openConversationFromHistory(id){
+  const arr=loadHistory(); const e=arr.find(x=>x.id===id); if(!e) return;
+  state.messages=e.messages; state.started=true; state.convId=e.id; state.firstQuery=e.title;
+  $("chatHistory").classList.remove("open");
+  showConversation();
+}
+function askDelete(id){ state.pendingDelId=id; $("confirm").classList.add("open"); }
+$("confirmCancel").onclick=()=>{ $("confirm").classList.remove("open"); state.pendingDelId=null; };
+$("confirmDel").onclick=()=>{
+  const arr=loadHistory().filter(e=>e.id!==state.pendingDelId);
+  saveHistory(arr); $("confirm").classList.remove("open"); state.pendingDelId=null; renderHistory();
+};
+
+/* ════════ 입력창 표시 토글 ════════ */
+function showInputArea(show){ $("inputArea").style.display = show ? "block" : "none"; }
+
+/* ════════ 우측 안내 패널 시나리오 버튼 ════════ */
+document.querySelectorAll(".play .try").forEach(el=> el.onclick=()=>{
+  if(state.view!=="chat") openChat();
+  if(!state.started) { /* init에서 바로 검색 */ }
+  runQuery(el.dataset.q);
+});
+
+/* ════════ 진입 방식 C/D 전환 (메인 AI 버튼 위치 비교) ════════ */
+function applyEntryMode(mode){
+  document.body.classList.toggle("mode-d", mode==="D");   // C안=기본(하단배너) / D안=상단배너+2버튼
+  document.querySelectorAll(".etab").forEach(t=> t.classList.toggle("active", t.dataset.mode===mode));
+}
+document.querySelectorAll(".etab").forEach(t=> t.onclick=()=> applyEntryMode(t.dataset.mode));
+
+/* B안: 검색창 ✦ → 자연어 입력 모드 (메인·S01-A 검색폼 공용, 이벤트 위임) */
+function renderNlPanel(card){
+  card.querySelector(".nl-cities").innerHTML = CITIES.map(c=>`<span class="nl-city" data-city="${c}">${c}</span>`).join("");
+  const sg = SUGGEST_POOL.slice().sort(()=>Math.random()-0.5).slice(0,3);
+  card.querySelector(".nl-suggests").innerHTML = sg.map(q=>`<div class="nl-sg" data-q="${q}">🔍 ${q}</div>`).join("");
+}
+function nlSubmitFrom(card){
+  const inp = card.querySelector(".nl-input");
+  const t = (inp.value||"").trim(); if(!t) return;
+  card.classList.remove("nl-active"); inp.value="";
+  closeS01A();              // S01-A 검색폼이 열려 있으면 닫기
+  openChat();               // 기존 챗봇 화면으로 전개 (이후 프로세스 A안과 동일)
+  runQuery(t);              // 검색 진행(기존 로직 그대로)
+}
+document.addEventListener("click",(e)=>{
+  const ai=e.target.closest(".sc-ai-btn");
+  if(ai){ const c=ai.closest(".search-card"); c.classList.add("nl-active"); renderNlPanel(c); c.querySelector(".nl-input").focus(); return; }
+  const cl=e.target.closest(".nl-close");
+  if(cl){ cl.closest(".search-card").classList.remove("nl-active"); return; }
+  const sd=e.target.closest(".nl-send");
+  if(sd){ nlSubmitFrom(sd.closest(".search-card")); return; }
+  const ct=e.target.closest(".nl-city");
+  if(ct){ const i=ct.closest(".search-card").querySelector(".nl-input"); i.value=`${ct.dataset.city} 호텔 찾아줘`; i.focus(); return; }
+  const sg2=e.target.closest(".nl-sg");
+  if(sg2){ const i=sg2.closest(".search-card").querySelector(".nl-input"); i.value=sg2.dataset.q; i.focus(); return; }
+});
+document.addEventListener("keydown",(e)=>{
+  if(e.key==="Enter" && e.target.classList && e.target.classList.contains("nl-input")){
+    nlSubmitFrom(e.target.closest(".search-card"));
+  }
+});
+/* B안: S01 재검색바 → S01-A 검색폼 오버레이 */
+function openS01A(){ $("s01aOverlay").classList.add("open"); }
+function closeS01A(){
+  const o=$("s01aOverlay"); if(!o) return;
+  o.classList.remove("open");
+  const c=o.querySelector(".search-card"); if(c) c.classList.remove("nl-active");
+}
+/* GNB 로고(allmymeta) 탭 → 메인으로 이동 (A·B안 공통) */
+function goMain(){
+  closeS01A();
+  $("dim").classList.remove("open");
+  $("chat").classList.remove("open");
+  closeDropdown();
+  showView("main");
+}
+
+$("s01aDim").onclick = closeS01A;   // S01-A 딤 탭 → 닫기
+const brandEl = document.querySelector(".brand"); if(brandEl) brandEl.onclick = goMain;  // 메인 로고 → 메인
+
+/* ════ C안: AI 배너(챗봇 진입) + 문구 순환 ════ */
+["aiBannerMain","aiBannerS01a"].forEach(id=>{ const el=$(id); if(el) el.onclick=()=>{ closeS01A(); openChat(); }; });
+
+/* D안: 검색 모드 탭(AI/일반) + AI 입력 + 추천칩 — 메인·S01-A 공용(이벤트 위임) */
+document.querySelectorAll(".search-tabs").forEach(tabs=>{
+  tabs.querySelectorAll(".stab").forEach(t=> t.onclick=()=>{
+    tabs.querySelectorAll(".stab").forEach(x=> x.classList.toggle("active", x===t));
+    const wrap=tabs.parentElement, ai=t.dataset.stab==="ai";
+    const a=wrap.querySelector(".stab-ai"), n=wrap.querySelector(".stab-normal");
+    if(a) a.style.display=ai?"block":"none";
+    if(n) n.style.display=ai?"none":"block";
+  });
+});
+function aiSearchDo(box){ const i=box.querySelector(".ai-search-input"); const t=(i.value||"").trim(); if(!t) return; i.value=""; closeS01A(); openChat(); runQuery(t); }
+document.addEventListener("click",(e)=>{
+  const send=e.target.closest(".ai-search-send"); if(send){ aiSearchDo(send.closest(".ai-search-box")); return; }
+  const chip=e.target.closest(".ai-sg-chip"); if(chip){ closeS01A(); openChat(); runQuery(chip.dataset.q); return; }
+});
+document.addEventListener("keydown",(e)=>{ if(e.key==="Enter" && e.target.classList && e.target.classList.contains("ai-search-input")){ aiSearchDo(e.target.closest(".ai-search-box")); } });
+function renderAiSgChips(){
+  document.querySelectorAll(".ai-sg-chips").forEach(el=>{
+    const sg=SUGGEST_POOL.slice().sort(()=>Math.random()-0.5).slice(0,4);
+    el.innerHTML=sg.map(q=>`<div class="ai-sg-chip" data-q="${q}">🔍 ${q}</div>`).join("");
+  });
+}
+renderAiSgChips();
+
+let bannerIdx=0;
+function bannerLoop(){
+  const el=$("aiBannerTxt");
+  if(el){ el.classList.add("fade"); setTimeout(()=>{ el.textContent=BUBBLE_COPY[bannerIdx]; el.classList.remove("fade"); },280); }
+  bannerIdx=(bannerIdx+1)%BUBBLE_COPY.length;
+  setTimeout(bannerLoop,2400);
+}
+bannerLoop();
+
+/* ════ C안: 스마트 필터(AI 필터) ════ */
+// 결과 내 필터로 처리할 키워드 (성급·가격·편의시설·평점·숙소유형·브랜드) — 가격 포함
+const SF_FILTER_KW=["성급","5성","4성","3성","수영장","조식","무료취소","반려","평점","풀빌라","리조트","오션뷰","뷰","스파","주차","비즈니스","부티크","만원","원대","예산","가격","싼","저렴","이하","이상","무료","금연"];
+// 챗봇 인계 신호 (지역·날짜·인원 변경 등 현재 결과와 안 맞는 정보) — 모호한 '박/월/일' 단독은 제외
+const SF_NEWSEARCH_KW=["서울","부산","제주","오사카","도쿄","방콕","싱가포르","다낭","파리","뉴욕","울릉도","다음주","주말","날짜","체크인","체크아웃","인원","명","박으로","몇박","바꿔","변경","지역","도시"];
+function openSmartFilter(){ $("sfSheet").classList.add("open"); $("sfInput").value=""; $("sfInput").focus(); }
+function closeSmartFilter(){ $("sfSheet").classList.remove("open"); }
+function smartFilterApply(){
+  const t=$("sfInput").value.trim(); if(!t) return;
+  const isNew = SF_NEWSEARCH_KW.some(k=>t.includes(k));
+  const isFilter = SF_FILTER_KW.some(k=>t.includes(k));
+  closeSmartFilter();
+  // 지역·날짜·인원 변경이면 챗봇 인계 / 그 외 필터 키워드 있으면 결과 내 필터 / 둘 다 없으면 챗봇
+  if(isNew || !isFilter){
+    openChat(); runQuery(t);          // 챗봇 인계(새 검색)
+  } else {
+    sfToast("✓ 필터가 적용되었습니다");   // 결과 내 필터 적용(시뮬)
+  }
+}
+function sfToast(msg){ const el=$("sfToast"); el.textContent=msg; el.classList.add("show"); setTimeout(()=>el.classList.remove("show"),2400); }
+$("sfClose").onclick=closeSmartFilter;
+$("sfDim").onclick=closeSmartFilter;
+$("sfApply").onclick=smartFilterApply;
+$("sfInput").addEventListener("keydown",e=>{ if(e.key==="Enter") smartFilterApply(); });
+
+/* 초기 상태 */
+resetConversation();
+showView("main");
+applyEntryMode("C");
+</script>
+</body>
+</html>
