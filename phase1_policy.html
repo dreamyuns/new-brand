@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phase 1 (MVP) 정책서 v0.33 — allmytour meta</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"Malgun Gothic","Apple SD Gothic Neo","Segoe UI",sans-serif;
+  background:#f8fafc;color:#1e293b;min-height:100vh;
+  padding-top:44px;
+}
+
+/* ── 헤더 ── */
+.p1-header{background:#0f172a;color:#fff;padding:40px 48px 32px}
+.p1-header-label{font-size:11px;font-weight:700;letter-spacing:.12em;color:#a5b4fc;margin-bottom:8px;text-transform:uppercase}
+.p1-header-title{font-size:28px;font-weight:800;letter-spacing:-.5px;margin-bottom:6px}
+.p1-header-title .phase{color:#818cf8}
+.p1-header-meta{font-size:13px;color:rgba(255,255,255,.4);margin-bottom:14px}
+.p1-header-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(99,102,241,.18);border:1px solid rgba(165,180,252,.3);
+  color:#a5b4fc;font-size:12px;font-weight:700;padding:5px 14px;border-radius:6px;
+}
+.p1-header-badge span{color:#fff;font-weight:800}
+
+/* ── 레이아웃 ── */
+.p1-body{display:flex;max-width:1280px;margin:0 auto;padding:32px 24px;gap:28px;align-items:flex-start}
+
+/* ── 목차 ── */
+.p1-toc{
+  width:240px;flex-shrink:0;position:sticky;top:20px;
+  background:#fff;border:1px solid #e2e8f0;border-radius:10px;
+  padding:16px 0;max-height:calc(100vh - 48px);overflow-y:auto;
+}
+.p1-toc-hdr{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94a3b8;padding:0 16px 10px;border-bottom:1px solid #f1f5f9;margin-bottom:8px}
+.p1-toc-art{display:block;font-size:12px;font-weight:700;color:#334155;padding:5px 16px;text-decoration:none;transition:background .12s,color .12s;border-left:3px solid transparent}
+.p1-toc-art:hover{background:#eef2ff;color:#4338ca}
+.p1-toc-art.active{background:#e0e7ff;color:#4338ca;border-left-color:#6366f1}
+.p1-toc-sub{display:block;font-size:11px;color:#64748b;padding:3px 16px 3px 26px;text-decoration:none;transition:background .12s,color .12s;border-left:3px solid transparent}
+.p1-toc-sub:hover{background:#f8fafc;color:#4338ca}
+.p1-toc-sub.active{color:#4338ca;border-left-color:#c7d2fe}
+.p1-toc-divider{height:1px;background:#f1f5f9;margin:6px 0}
+
+/* ── 본문 ── */
+.p1-content{flex:1;min-width:0}
+.p1-section{background:#fff;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:20px;overflow:hidden}
+.p1-section-hdr{background:#eef2ff;border-bottom:1px solid #c7d2fe;padding:16px 24px;display:flex;align-items:center;gap:10px}
+.p1-art-badge{background:#6366f1;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:4px;white-space:nowrap;letter-spacing:.05em}
+.p1-section-hdr h2{font-size:16px;font-weight:700;color:#312e81;letter-spacing:-.3px}
+.p1-section-body{padding:20px 24px}
+.p1-sub{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid #f1f5f9}
+.p1-sub:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.p1-sub-title{font-size:14px;font-weight:700;color:#1e293b;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.p1-sub-num{font-size:11px;font-weight:700;color:#4338ca;background:#e0e7ff;padding:2px 8px;border-radius:3px}
+.p1-text{font-size:13px;color:#475569;line-height:1.8}
+.p1-text p{margin-bottom:8px}
+.p1-text p:last-child{margin-bottom:0}
+.p1-text strong{color:#1e293b;font-weight:700}
+.p1-text ul{padding-left:18px;margin:6px 0}
+.p1-text li{margin-bottom:5px}
+.p1-text code{font-family:'SFMono-Regular',Consolas,monospace;font-size:12px;background:#f1f5f9;color:#4338ca;padding:1px 5px;border-radius:3px}
+
+/* ── 테이블 ── */
+.p1-table-wrap{overflow-x:auto;margin:10px 0}
+.p1-table{width:100%;border-collapse:collapse;font-size:13px}
+.p1-table th{background:#e0e7ff;color:#3730a3;font-weight:700;padding:9px 14px;text-align:left;border-bottom:2px solid #c7d2fe;white-space:nowrap}
+.p1-table td{padding:8px 14px;border-bottom:1px solid #f1f5f9;color:#475569;vertical-align:top;line-height:1.65}
+.p1-table tr:last-child td{border-bottom:none}
+.p1-table tr:hover td{background:#fafbfc}
+
+/* ── 강조 박스 ── */
+.p1-notice{background:#eff6ff;border:1px solid #bfdbfe;border-left:3px solid #3b82f6;border-radius:6px;padding:12px 14px;margin:12px 0;font-size:13px;color:#1d4ed8;line-height:1.7}
+.p1-warn{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #f59e0b;border-radius:6px;padding:12px 14px;margin:12px 0;font-size:13px;color:#92400e;line-height:1.7}
+.p1-warn strong,.p1-notice strong{font-weight:700}
+
+/* ── 태그 ── */
+.tag-ok{display:inline-block;font-size:10px;font-weight:700;background:#d1fae5;color:#065f46;padding:1px 6px;border-radius:3px;margin-left:4px}
+.tag-ex{display:inline-block;font-size:10px;font-weight:700;background:#fee2e2;color:#991b1b;padding:1px 6px;border-radius:3px;margin-left:4px}
+.tag-p2{display:inline-block;font-size:10px;font-weight:700;background:#dbeafe;color:#1d4ed8;padding:1px 6px;border-radius:3px;margin-left:4px}
+.tag-pend{display:inline-block;font-size:10px;font-weight:700;background:#fef3c7;color:#b45309;padding:1px 6px;border-radius:3px;margin-left:4px}
+
+/* ── 변경이력 ── */
+.p1-history-section .p1-section-hdr{background:#f8fafc;border-bottom-color:#e2e8f0}
+.p1-history-section .p1-art-badge{background:#64748b}
+.p1-history-section h2{color:#334155}
+.p1-hist-item{padding:10px 0;border-bottom:1px solid #f1f5f9;display:flex;gap:12px;align-items:flex-start}
+.p1-hist-item:last-child{border-bottom:none}
+.p1-hist-ver{font-size:11px;font-weight:800;color:#4338ca;background:#e0e7ff;padding:2px 8px;border-radius:4px;min-width:42px;text-align:center;flex-shrink:0;margin-top:2px}
+.p1-hist-body{flex:1}
+.p1-hist-date{font-size:11px;color:#94a3b8;margin-bottom:3px}
+.p1-hist-text{font-size:12px;color:#475569;line-height:1.65}
+
+/* ── 미결 사항 ── */
+.p1-issue-section .p1-section-hdr{background:#fff7ed;border-bottom-color:#fed7aa}
+.p1-issue-section .p1-art-badge{background:#ea580c}
+.p1-issue-section h2{color:#7c2d12}
+.p1-issue-item{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid #f1f5f9}
+.p1-issue-item:last-child{border-bottom:none}
+.p1-issue-num{background:#fef3c7;color:#92400e;font-size:11px;font-weight:700;min-width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.p1-issue-body{flex:1}
+.p1-issue-title{font-size:13px;font-weight:700;color:#1e293b;margin-bottom:3px;line-height:1.5}
+.p1-issue-owner{font-size:11px;color:#94a3b8}
+
+/* ── GNB ── */
+.page-nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:44px;background:#0f172a;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;border-bottom:1px solid rgba(255,255,255,.08);
+}
+.pn-l{display:flex;align-items:center;min-width:0}
+.pn-back{
+  display:inline-flex;align-items:center;gap:4px;flex-shrink:0;
+  border:1px solid #6366f1;color:#a5b4fc;
+  padding:4px 10px;border-radius:4px;font-weight:700;font-size:11px;
+  text-decoration:none;transition:background .15s;
+}
+.pn-back:hover{background:rgba(99,102,241,.15)}
+.pn-sep{color:rgba(255,255,255,.18);margin:0 12px;flex-shrink:0}
+.pn-code{font-weight:800;color:#fff;font-size:12px;font-family:monospace;white-space:nowrap}
+.pn-name{color:rgba(255,255,255,.7);margin-left:5px;font-size:12px;font-weight:600;white-space:nowrap}
+.pn-route{color:rgba(255,255,255,.3);margin-left:8px;font-size:11px;white-space:nowrap}
+.pn-r{display:flex;gap:6px;flex-shrink:0;margin-left:16px}
+.pn-btn{
+  display:inline-block;padding:4px 11px;
+  border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.45);
+  font-size:11px;font-weight:700;border-radius:4px;
+  text-decoration:none;transition:background .15s,color .15s;white-space:nowrap;
+}
+.pn-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+.pn-btn.disabled{opacity:.28;pointer-events:none;cursor:default}
+
+/* ── 푸터 ── */
+.p1-footer{text-align:center;font-size:12px;color:#94a3b8;padding:32px 24px 48px;border-top:1px solid #e2e8f0;margin:0 24px;line-height:1.8}
+</style>
+</head>
+<body>
+
+<!-- ── GNB ── -->
+<div class="page-nav">
+  <div class="pn-l">
+    <a class="pn-back" href="index.html">← 목록으로</a>
+    <span class="pn-sep">|</span>
+    <span class="pn-code">POLICY-P1</span>
+    <span class="pn-name">— Phase 1 (MVP) 정책서</span>
+    <span class="pn-route">/ v0.33</span>
+  </div>
+  <div class="pn-r">
+    <span class="pn-btn disabled">← 이전</span>
+    <a class="pn-btn" href="p2_policy.html">다음 →</a>
+  </div>
+</div>
+
+<!-- ── 헤더 ── -->
+<div class="p1-header">
+  <div class="p1-header-label">allmytour meta — Phase 1 (MVP)</div>
+  <div class="p1-header-title"><span class="phase">Phase 1</span> 정책서 — 신규 메타서치 MVP</div>
+  <div class="p1-header-meta">KAYAK API 기반 메타서치+OTA 하이브리드 신규 서비스 · 개발자확인용 · v0.33</div>
+  <div class="p1-header-badge">기준 정책서 <span>v0.33</span> — context/신규정책/phase1정책/신규_mvp_메타서치_v0.33.md</div>
+</div>
+
+<!-- ── 바디 ── -->
+<div class="p1-body">
+
+  <!-- ── 목차 ── -->
+  <nav class="p1-toc">
+    <div class="p1-toc-hdr">목차</div>
+    <a class="p1-toc-art" href="#sec-1">제1조 목적·MVP 범위</a>
+    <a class="p1-toc-sub" href="#sec-1-1">1-1. 서비스 목적</a>
+    <a class="p1-toc-sub" href="#sec-1-3">1-3. MVP 제외 항목</a>
+    <a class="p1-toc-sub" href="#sec-1-4">1-4. 수익 구조</a>
+    <a class="p1-toc-art" href="#sec-2">제2조 용어 정의</a>
+    <a class="p1-toc-art" href="#sec-3">제3조 MVP 화면 플로우</a>
+    <a class="p1-toc-art" href="#sec-4">제4조 검색 정책</a>
+    <a class="p1-toc-sub" href="#sec-4-2">4-2. 자동완성 노출 순서</a>
+    <a class="p1-toc-sub" href="#sec-4-5">4-5. 자동완성 선택 동작</a>
+    <a class="p1-toc-sub" href="#sec-4-7">4-7. 검색 파라미터</a>
+    <a class="p1-toc-sub" href="#sec-4-9">4-9. 인원·객실 설정</a>
+    <a class="p1-toc-art" href="#sec-5">제5조 검색결과 목록 (S01)</a>
+    <a class="p1-toc-sub" href="#sec-5-2">5-2. 호텔 카드 구성</a>
+    <a class="p1-toc-sub" href="#sec-5-6">5-6. 필터 옵션</a>
+    <a class="p1-toc-sub" href="#sec-5-8">5-8. 로딩·더보기</a>
+    <a class="p1-toc-sub" href="#sec-5-11">5-11. 지도 검색</a>
+    <a class="p1-toc-art" href="#sec-6">제6조 숙소상세 (S02)</a>
+    <a class="p1-toc-sub" href="#sec-6-2">6-2. 5탭 구성</a>
+    <a class="p1-toc-sub" href="#sec-6-3">6-3. 가격비교 탭</a>
+    <a class="p1-toc-art" href="#sec-7">제7조 아웃링크</a>
+    <a class="p1-toc-art" href="#sec-8">제8조 회원·인증</a>
+    <a class="p1-toc-sub" href="#sec-8-2">8-2. 이메일 인증코드</a>
+    <a class="p1-toc-sub" href="#sec-8-6">8-6. 기능별 접근 정책</a>
+    <a class="p1-toc-art" href="#sec-9">제9조 캐시백</a>
+    <a class="p1-toc-sub" href="#sec-9-7">9-7. 배지 UI</a>
+    <a class="p1-toc-art" href="#sec-10">제10조 마이페이지</a>
+    <a class="p1-toc-art" href="#sec-11">제11조 다국어·통화</a>
+    <a class="p1-toc-art" href="#sec-12">제12조 API 매핑</a>
+    <a class="p1-toc-art" href="#sec-13">제13조 쿠키 동의</a>
+    <div class="p1-toc-divider"></div>
+    <a class="p1-toc-art" href="#sec-14" style="color:#ea580c">⚠ 제14조 미결 사항</a>
+    <a class="p1-toc-art" href="#sec-app-a">부록 A — 지도 동기화</a>
+    <div class="p1-toc-divider"></div>
+    <a class="p1-toc-art" href="#sec-history" style="color:#94a3b8">별첨 — 변경이력 (v0.20~)</a>
+  </nav>
+
+  <!-- ── 본문 ── -->
+  <div class="p1-content">
+
+    <!-- 제1조 -->
+    <div id="sec-1" class="p1-section">
+      <div class="p1-section-hdr"><span class="p1-art-badge">제1조</span><h2>목적 및 MVP 범위</h2></div>
+      <div class="p1-section-body">
+        <div id="sec-1-1" class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">1-1·1-2</span>서비스 목적 · MVP 핵심 가치</div>
+          <div class="p1-text">
+            <p>KAYAK API를 통한 다중 OTA 호텔 가격 비교 제공. 로그인 회원 기반 캐시백 적립 및 월 정산 후 고객 직접 지급.</p>
+            <ul>
+              <li><strong>수익 구조:</strong> KAYAK CPA 100% 의존 (자사 OTA 수익 없음 — MVP 한정)</li>
+              <li><strong>수익 배분:</strong> 자사 60% : KAYAK 40%</li>
+              <li><strong>언어:</strong> 한국어(기본) + 영어·일본어·중국어</li>
+              <li><strong>통화:</strong> 원화(기본) + KAYAK Constants API 기반 전체 통화 지원</li>
+            </ul>
+          </div>
+        </div>
+        <div id="sec-1-3" class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">1-3</span>MVP 제외 항목</div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>제외 항목</th><th>예정</th></tr></thead>
+              <tbody>
+                <tr><td>올마이투어 자사 상품 노출 (S01/S02)</td><td><span class="tag-p2">Phase 2 (매핑 완성 후)</span></td></tr>
+                <tr><td>찜하기(즐겨찾기)</td><td><span class="tag-p2">Phase 2</span></td></tr>
+                <tr><td>방식 2 — 고객 B2C 캐시백 직접 지급</td><td><span class="tag-p2">Phase 2</span></td></tr>
+                <tr><td>올마이투어 캐시백 어드민 관리</td><td><strong>MVP 제외</strong> — KAYAK이 직접 관리</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 제2조 -->
+    <div id="sec-2" class="p1-section">
+      <div class="p1-section-hdr"><span class="p1-art-badge">제2조</span><h2>용어 정의</h2></div>
+      <div class="p1-section-body">
+        <div class="p1-table-wrap">
+          <table class="p1-table">
+            <thead><tr><th>용어</th><th>정의</th></tr></thead>
+            <tbody>
+              <tr><td><code>bookUri</code></td><td>KAYAK API가 제공하는 타 OTA 예약 딥링크. CPA 발생 경로</td></tr>
+              <tr><td><code>userTrackId</code></td><td>KAYAK API에 전달하는 사용자 세션 고유 식별자. CPA 추적. 로그인 여부 무관 항상 생성</td></tr>
+              <tr><td><code>khotel ID</code></td><td>KAYAK API 내 호텔 고유 식별자 (예: khotel:12345)</td></tr>
+              <tr><td><code>kplace ID</code></td><td>KAYAK 도시·지역 고유 ID (서울 = kplace:22028, 2026-06-10 실 확인)</td></tr>
+              <tr><td><code>entityKey</code></td><td>Autocomplete API 응답값. Hotels Search API의 destination 파라미터로 직접 사용</td></tr>
+              <tr><td><code>kpolygon</code></td><td>지도 뷰포트 다각형 좌표 EntityKey. 최소 3포인트, envelope 200km 제한</td></tr>
+              <tr><td>S01</td><td>검색결과 목록 화면. GET /hotels API. 카드 내 최저가 1개 표시</td></tr>
+              <tr><td>S01-MAP</td><td>지도 뷰. S01 URL + ?layout=map 파라미터. /hotels 응답 좌표 재사용</td></tr>
+              <tr><td>S02</td><td>숙소 상세. S01 카드 탭 시 새탭 진입. GET /hotel API. 5탭(기본: 호텔정보)</td></tr>
+              <tr><td>방식 1</td><td>KAYAK이 자사에 지급하는 캐시백. KAYAK 어드민 설정. MY02 고객 노출. MVP 운영</td></tr>
+              <tr><td>방식 2</td><td>방식 1 수익 일부를 회원에게 환급. ADM04 설정. Phase 2</td></tr>
+              <tr><td>CPA</td><td>KAYAK 딥링크 경유 타 OTA 예약 완료 시 발생하는 수익. 자사 60% : KAYAK 40%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 제3조 -->
+    <div id="sec-3" class="p1-section">
+      <div class="p1-section-hdr"><span class="p1-art-badge">제3조</span><h2>MVP 화면 플로우</h2></div>
+      <div class="p1-section-body">
+        <div class="p1-text">
+          <p><strong>기본 플로우:</strong> M01(메인) → S01(검색결과) → S02(숙소상세, 새탭) → OUT01(아웃링크 이동중) → 타 OTA</p>
+          <p><strong>지도 진입:</strong> S01 [지도] 탭 → S01-MAP(?layout=map) → 핀 선택 → S02 새탭</p>
+          <p><strong>GNB 패턴 원칙 (v0.13 확정):</strong></p>
+          <ul>
+            <li><strong>랜딩형 (M01·S01):</strong> 로고 패턴 (비로그인: 로고+[로그인]+[☰] / 로그인: 로고+[☰])</li>
+            <li><strong>세부탐색형 (S02·AUTH·OUT01):</strong> ← 뒤로가기 + [로그인] + [☰]</li>
+            <li><strong>마이페이지 하위 (MY01~MY03):</strong> ← 뒤로가기만 (로그인·전체메뉴 없음)</li>
+            <li><strong>[☰ 전체메뉴]:</strong> 마이페이지(MY01) 직접 진입 (별도 드롭다운 없음)</li>
+          </ul>
+          <p><strong>S01→S02 이동:</strong> <code>window.open()</code> 새탭. S02 GNB ← = <code>window.close()</code>, 실패 시 M01 fallback</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 제4조 -->
+    <div id="sec-4" class="p1-section">
+      <div class="p1-section-hdr"><span class="p1-art-badge">제4조</span><h2>검색 정책</h2></div>
+      <div class="p1-section-body">
+
+        <div class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">4-1</span>자동완성 개요</div>
+          <div class="p1-text">
+            <ul>
+              <li><strong>API:</strong> <code>GET /api/affiliate/autocomplete/v1/hotels</code></li>
+              <li><strong>최대 결과:</strong> 6개</li>
+              <li><strong>트리거:</strong> 완전한 음절 1자 이상. 자음·모음 단독(ㅅ, ㅓ 등)은 트리거 안 함</li>
+              <li><strong>placeType:</strong> airport / city / country / hotel / trainstation / region / touristregion / neighborhood / landmark / nationalpark / island</li>
+              <li>✅ Autocomplete API 화이트리스트 등록 완료 (2026-06-10)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="sec-4-2" class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">4-2</span>자동완성 노출 순서 (클라이언트 정렬)</div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>우선순위</th><th>primaryPlaceType</th><th>비고</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td><code>city</code></td><td>최상단 고정</td></tr>
+                <tr><td>2</td><td><code>region</code></td><td>city 다음</td></tr>
+                <tr><td>3</td><td>나머지 placeType 값 전체<br><small style="color:#64748b;font-weight:400">airport · country · trainstation · touristregion · neighborhood · landmark · nationalpark · island · hotel 등</small></td><td>API 인기순 그대로</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p1-text"><p>API에 정렬 파라미터 없음 → 클라이언트 측 처리 필수. <code>displayPlaceType</code> 배지: 미표시 확정.</p></div>
+        </div>
+
+        <div id="sec-4-5" class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">4-5</span>자동완성 선택 동작</div>
+          <div class="p1-text">
+            <p>항목 선택 → 검색폼 목적지 필드에 입력됨 → 사용자가 [검색] 버튼 탭 → S01 이동 (M01 및 S01 재검색바 공통 적용)</p>
+            <ul>
+              <li>도시·지역 선택 → 해당 지역 전체 호텔 목록</li>
+              <li>호텔 선택 → 선택 호텔 최상단 + 동일 지역 목록</li>
+              <li>아이콘: <code>primaryPlaceType</code> 기반 자체 아이콘 세트 (city/region = 지명, hotel = 숙박, airport = 공항, landmark = 명소)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="sec-4-7" class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">4-7</span>검색 파라미터 기준값</div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>파라미터</th><th>기본값</th></tr></thead>
+              <tbody>
+                <tr><td><code>currencyCode</code></td><td>KRW (사용자 선택 가능)</td></tr>
+                <tr><td><code>languageCode</code></td><td>ko_KR (사용자 선택 가능)</td></tr>
+                <tr><td><code>includeTaxesInTotal</code></td><td>true (세금 포함 최종가)</td></tr>
+                <tr><td><code>includeLocalTaxesInTotal</code></td><td>true</td></tr>
+                <tr><td><code>onlyIfComplete</code></td><td>false (부분 응답 즉시 표시)</td></tr>
+                <tr><td><code>sortField</code></td><td>popularity (기본 인기순)</td></tr>
+                <tr><td><code>checkIn</code></td><td>오늘 + 7일 (v0.29 추가)</td></tr>
+                <tr><td><code>checkOut</code></td><td>체크인 + 1일 (v0.29 추가)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="sec-4-9" class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">4-9</span>인원·객실 설정 정책</div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>항목</th><th>기본값</th><th>최소</th><th>최대</th></tr></thead>
+              <tbody>
+                <tr><td>객실 수</td><td>1객실</td><td>1</td><td>8객실</td></tr>
+                <tr><td>객실당 성인</td><td>2명</td><td>1명</td><td>제한 없음</td></tr>
+                <tr><td>객실당 아동</td><td>0명</td><td>0명</td><td>4명</td></tr>
+                <tr><td>객실당 총 인원</td><td>—</td><td>—</td><td>8명</td></tr>
+                <tr><td>아동 나이</td><td>—</td><td>0세(영아)</td><td>17세</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p1-text">
+            <p><strong>rooms 파라미터 형식:</strong> 성인 수 + 아동 나이 조합. 예: <code>rooms=2:4,10</code> (성인2, 아동2 [4세, 10세]). 다객실: <code>rooms=2|1:8</code></p>
+            <p>객실 1은 제거 불가. 아동 나이 미선택 시 0세 전송. 최대 초과 시 [+객실추가] 비활성.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제5조 -->
+    <div id="sec-5" class="p1-section">
+      <div class="p1-section-hdr"><span class="p1-art-badge">제5조</span><h2>검색결과 목록 정책 — S01</h2></div>
+      <div class="p1-section-body">
+
+        <div id="sec-5-2" class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">5-2·5-3</span>호텔 카드 구성 · 공급사 가격 표시</div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>요소</th><th>표시</th><th>API 필드</th></tr></thead>
+              <tbody>
+                <tr><td>호텔명</td><td><span class="tag-ok">✅</span></td><td><code>name / translatedName</code></td></tr>
+                <tr><td>대표 이미지</td><td><span class="tag-ok">✅</span></td><td><code>images[]</code></td></tr>
+                <tr><td>성급</td><td><span class="tag-ok">✅</span></td><td><code>starRating</code></td></tr>
+                <tr><td>게스트 평점·리뷰 수</td><td><span class="tag-ok">✅</span></td><td><code>guestRating / numberOfReviews</code></td></tr>
+                <tr><td>공급사 최저가 1개</td><td><span class="tag-ok">✅</span></td><td><code>isCheapestRate:true</code> 기준 (topRates 중 최저가 식별)</td></tr>
+                <tr><td>캐시백 배지</td><td><span class="tag-ok">✅</span></td><td><code>providers[].cashback</code></td></tr>
+                <tr><td>식사 포함 배지</td><td><span class="tag-ok">✅</span></td><td><code>topRates[].inclusions[]</code></td></tr>
+                <tr><td>나중에 결제 배지</td><td><span class="tag-ok">✅</span></td><td><code>topRates[].canPayLater</code></td></tr>
+                <tr><td>잔여 객실 (≤3개)</td><td><span class="tag-ok">✅</span></td><td><code>topRates[].availableRooms</code></td></tr>
+                <tr><td>isGreatValue 특가 배지</td><td><span class="tag-ex">❌</span></td><td>Phase 2</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p1-notice"><strong>주의:</strong> topRates는 KAYAK 추천 알고리즘 기반 subset으로 최저가 순서 보장 안 함. S01 최저가는 반드시 <code>isCheapestRate: true</code> 필드로 식별.</div>
+        </div>
+
+        <div id="sec-5-6" class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">5-6</span>필터 옵션 (5개 확정 — v0.29)</div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>#</th><th>필터</th><th>API 파라미터</th><th>UI</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>가격 슬라이더</td><td><code>minPrice / maxPrice</code></td><td>양방향 슬라이더 · ₩5,000 단위 · 동적 min/max</td></tr>
+                <tr><td>2</td><td>성급</td><td><code>starRating</code></td><td>다중 선택 칩 (0~5성)</td></tr>
+                <tr><td>3</td><td>숙소유형</td><td><code>propertyTypes</code></td><td>다중 체크박스 · 초기 5개 → [더보기] 나머지 전체 노출</td></tr>
+                <tr><td>4</td><td>브랜드·체인</td><td><code>chains</code></td><td>다중 체크박스 · 초기 5개 → [더보기] 나머지 전체 노출</td></tr>
+                <tr><td>5</td><td>평점 7.0+</td><td><code>guestRatings=7|8|9|10</code></td><td>단일 토글 (정수만 허용, 소수점 불가)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p1-text"><p>무료취소 필터 제외 확정 — <code>hasFreeCancellation</code> 필드 /hotels 응답에 없음. 결과 0개: 기존 목록 유지 + 안내 배너 + [필터 초기화] 버튼.</p></div>
+        </div>
+
+        <div id="sec-5-8" class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">5-8</span>검색결과 로딩 · 더보기 (v0.29 수정)</div>
+          <div class="p1-text">
+            <ul>
+              <li><strong>초기 로딩:</strong> 50개 (<code>pageSize=50</code>). 스켈레톤 shimmer 표시. 기본 인기순.</li>
+              <li><strong>[목록 더보기] 버튼:</strong> pageIndex 증가 방식, 1회 50개 추가. 목록 하단 고정.</li>
+              <li><strong>종료 처리:</strong> pageIndex × pageSize ≥ totalResults 시 버튼 숨김 + "총 N개 모두 표시" 문구.</li>
+              <li><strong>갱신 트리거:</strong> ① 검색 조건 변경 ② 필터·정렬 변경 ③ 재검색바 재검색 (TTL 자동 갱신 없음 — v0.28 삭제)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="sec-5-11" class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">5-11</span>지도 검색 (S01-MAP) — MVP 포함</div>
+          <div class="p1-text">
+            <ul>
+              <li><strong>진입:</strong> S01 [목록|지도] 토글 → [지도] 선택. URL: S01 URL + <code>?layout=map</code></li>
+              <li><strong>핀 데이터:</strong> /hotels 응답 <code>latitude/longitude</code> 재사용 (/hotels/basic 별도 호출 불필요)</li>
+              <li><strong>뷰포트 검색:</strong> kpolygon EntityKey, pageSize=50, envelope 200km 제한</li>
+              <li><strong>[이 지역 검색]:</strong> 현재 지도 뷰포트 기준 /hotels 재호출. 목록 결과와 동기화 <strong>안 함</strong>.</li>
+              <li><strong>미니카드:</strong> 핀 탭 시 하단 노출 (호텔명·평점·최저가). 탭 시 S02 새탭.</li>
+              <li><strong>필터:</strong> S01과 동일 5개 (가격·성급·숙소유형·브랜드·평점)</li>
+              <li><strong>X 버튼:</strong> ?layout=map 파라미터 제거 → 목록 뷰 복귀</li>
+              <li><strong>200km 초과:</strong> 오류 메시지 표시, 핀 미표시</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제6조 -->
+    <div id="sec-6" class="p1-section">
+      <div class="p1-section-hdr"><span class="p1-art-badge">제6조</span><h2>숙소상세·공급사목록 정책 — S02</h2></div>
+      <div class="p1-section-body">
+
+        <div class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">6-1</span>패널 구성</div>
+          <div class="p1-text">
+            <ul>
+              <li><strong>진입:</strong> S01 호텔 카드 탭 → 새탭(<code>window.open()</code>)</li>
+              <li><strong>API:</strong> <code>GET /hotel</code> (단일 검색). 폴링 구조 (<code>isComplete</code> 필드)</li>
+              <li><strong>GNB:</strong> ← 뒤로가기(<code>window.close()</code>, 실패 시 M01 fallback) + [로그인] + [☰]</li>
+              <li><strong>Sticky:</strong> GNB + 5탭바만 상단 고정. 날짜·인원바·필터칩은 인라인.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="sec-6-2" class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">6-2</span>5탭 구성 (기본 활성: 호텔정보)</div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>탭</th><th>주요 내용</th></tr></thead>
+              <tbody>
+                <tr><td><strong>호텔정보</strong> (기본)</td><td>호텔명·성급·평점·주소·편의시설(대표6개/전체 바텀시트)·설명</td></tr>
+                <tr><td>가격비교</td><td>전체 공급사 목록 · 날짜·인원바 · 필터칩 4개 · accordion 더보기</td></tr>
+                <tr><td>사진</td><td>이미지 균등 2열 그리드. images[].tag 기반 카테고리</td></tr>
+                <tr><td>지도</td><td>Google Maps 임베드. 호텔 좌표 핀. 주변 명소 없음(데이터 없음 확인)</td></tr>
+                <tr><td>리뷰</td><td>KAYAK 리뷰 데이터 표시</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p1-text">
+            <p><strong>편의시설:</strong> 대표 6개 = <code>facilities[].tag</code> (17개 코드). 전체 바텀시트 = <code>featureSummary</code> 텍스트 (아이콘 없이 텍스트만).</p>
+            <p><strong>평점 레이블:</strong> 9.0+ 완벽 / 8.0+ 매우 좋음 / 7.0+ 좋음 / 6.0+ 괜찮음 / 6.0 미만 보통</p>
+          </div>
+        </div>
+
+        <div id="sec-6-3" class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">6-3</span>가격비교 탭 — 공급사 목록</div>
+          <div class="p1-text">
+            <ul>
+              <li><strong>필터 칩 4개:</strong> 무료취소 / 조식포함 / 나중에 결제 / 💸 캐시백 (클라이언트 필터)</li>
+              <li><strong>더보기 방식:</strong> Accordion 펼치기 (A안 확정)</li>
+              <li><strong>잔여 객실:</strong> <code>availableRooms</code> 있으면 표시, 없으면 미표시</li>
+              <li><strong>날짜·인원 바:</strong> 가격비교 탭 내 인라인. 수정 후 동일 호텔 재조회. S01 목록 갱신 없음.</li>
+              <li><strong>올마이투어 자사 상품:</strong> MVP 미노출 (Phase 2)</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제7조 -->
+    <div id="sec-7" class="p1-section">
+      <div class="p1-section-hdr"><span class="p1-art-badge">제7조</span><h2>아웃링크 정책</h2></div>
+      <div class="p1-section-body">
+        <div class="p1-text">
+          <p><strong>동작 흐름:</strong></p>
+          <ol style="padding-left:18px;margin:6px 0">
+            <li style="margin-bottom:5px">S02 [이동→] 버튼 탭</li>
+            <li style="margin-bottom:5px">비로그인: 로그인 유도 모달 표시 (캐시백 혜택 강조) → [건너뛰기] 허용</li>
+            <li style="margin-bottom:5px">OUT01 (이동 중 페이지) 표시</li>
+            <li style="margin-bottom:5px">새탭으로 타 OTA 이동 (<code>window.open(bookUri)</code>)</li>
+          </ol>
+          <p><strong>OUT01 필수 요소:</strong> 프로그레스 바 / 호텔명·공급사명 / 캐시백 안내 ("투숙완료 확인 시 캐시백이 지급됩니다") / 면책 고지문 / [건너뛰기] 버튼</p>
+          <p><strong>OUT01 GNB:</strong> ← 탭 시 <code>window.close()</code>, 실패 시 S02 fallback</p>
+          <p><strong>userTrackId:</strong> 로그인 여부 무관 항상 생성. 세션 단위 UUID. 로그인 회원은 memberId 추가 전송.</p>
+          <p><strong>건너뛰기 원칙:</strong> 비로그인 사용자도 아웃링크 이동 허용. 캐시백만 미적립.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 제8조 -->
+    <div id="sec-8" class="p1-section">
+      <div class="p1-section-hdr"><span class="p1-art-badge">제8조</span><h2>회원·인증 정책</h2></div>
+      <div class="p1-section-body">
+
+        <div class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">8-1</span>로그인/회원가입 UI 구조</div>
+          <div class="p1-text">
+            <ul>
+              <li><strong>통합 바텀시트:</strong> 로그인과 회원가입을 하나의 화면으로 통합 (별도 분리 없음)</li>
+              <li><strong>진입:</strong> GNB [로그인] 탭 / 아웃링크 모달 [회원가입/로그인] 탭</li>
+              <li><strong>SNS:</strong> 애플·구글 아이콘 표시 (MVP에서 실제 동작 없음 — Phase 2)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="sec-8-2" class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">8-2·8-3</span>이메일 인증코드 방식 (비밀번호 없음)</div>
+          <div class="p1-text">
+            <p>이메일 입력 → [인증코드 받기] → 6자리 박스 입력 → <strong>6자리 완성 즉시 자동 확인</strong></p>
+            <ul>
+              <li><strong>유효시간:</strong> 5분</li>
+              <li><strong>재전송:</strong> 횟수 제한 없음</li>
+              <li><strong>기존 회원:</strong> 즉시 로그인 완료, 바텀시트 닫힘</li>
+              <li><strong>신규 회원:</strong> 약관 동의 슬라이드다운 → [가입완료] → 바텀시트 닫힘</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="sec-8-6" class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">8-5·8-6</span>약관 동의 · 기능별 접근 정책</div>
+          <div class="p1-text">
+            <p><strong>약관 동의:</strong> 개인정보 수집·이용 <strong>필수</strong> (미체크 시 [가입완료] 비활성) / 마케팅 수신 <strong>선택</strong></p>
+          </div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>기능</th><th>비로그인</th><th>로그인</th></tr></thead>
+              <tbody>
+                <tr><td>검색·가격조회·숙소상세</td><td><span class="tag-ok">허용</span></td><td><span class="tag-ok">허용</span></td></tr>
+                <tr><td>아웃링크 이동 (건너뛰기)</td><td><span class="tag-ok">허용</span></td><td><span class="tag-ok">허용</span></td></tr>
+                <tr><td>캐시백 귀속·마이페이지</td><td><span class="tag-ex">차단</span> (로그인 유도)</td><td><span class="tag-ok">허용</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p1-text">
+            <p><strong>세션 유지:</strong> 로그인 후 30일 자동 유지. <strong>로그인 완료:</strong> 직전 페이지 유지. <strong>로그아웃:</strong> M01 이동.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제9조 -->
+    <div id="sec-9" class="p1-section">
+      <div class="p1-section-hdr"><span class="p1-art-badge">제9조</span><h2>캐시백 정책</h2></div>
+      <div class="p1-section-body">
+
+        <div class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">9-1·9-2</span>캐시백 구조 (2레이어)</div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>구분</th><th>방식</th><th>대상</th><th>MVP</th></tr></thead>
+              <tbody>
+                <tr><td><strong>방식 1</strong></td><td>KAYAK → 자사 지급 (B2B)</td><td>고객 MY02 노출</td><td><span class="tag-ok">✅ MVP 운영</span></td></tr>
+                <tr><td><strong>방식 2</strong></td><td>자사 어썸캐시 등으로 전환</td><td>자사 상품 연동 후</td><td><span class="tag-ex">❌ Phase 2</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p1-text"><p><strong>프론트 반영 원칙:</strong> KAYAK <code>providers[].cashback</code> 데이터 그대로 UI 반영. 자사 재계산 없음.</p></div>
+        </div>
+
+        <div class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">9-4</span>예약 상태별 캐시백 처리</div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>KAYAK 상태</th><th>배지</th></tr></thead>
+              <tbody>
+                <tr><td>Waiting (체크아웃 전)</td><td>적립예정</td></tr>
+                <tr><td>Cancelled (취소)</td><td>취소·만료</td></tr>
+                <tr><td>Approved (KAYAK 확인 완료)</td><td>지급완료</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">9-5</span>캐시백 고객 귀속 — Label 필드 연계</div>
+          <div class="p1-text">
+            <div class="p1-notice" style="margin-bottom:10px"><strong>✅ 연계 방법 확인 완료 (2026-06-19)</strong> — MY02에 고객별 적립 내역을 표시하기 위한 회원 식별 연계 방식이 확정되었다.</div>
+            <p><strong>딥링크 삽입 방법:</strong> <code>p=</code> 파라미터에 라벨 값(회원ID 등) 전달</p>
+            <ul>
+              <li>예: <code>bookUri?p=USER_12345</code></li>
+              <li>참고: KAYAK Getting Started — Tracking 문서</li>
+            </ul>
+            <p><strong>Reporting API 조회:</strong> <code>labels</code> 쿼리 파라미터로 특정 회원 식별자 필터링 가능</p>
+            <ul>
+              <li>특정 회원의 예약 내역만 별도 조회 가능 → MY02 캐시백 귀속 구현에 활용</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="sec-9-7" class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">9-7</span>캐시백 배지 UI (S01·S02)</div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>cashback.type</th><th>배지 표시</th></tr></thead>
+              <tbody>
+                <tr><td>PERCENTAGE</td><td>💸 캐시백 최대 N%</td></tr>
+                <tr><td>FLAT</td><td>💸 캐시백 최대 ₩N</td></tr>
+                <tr><td>NONE</td><td>배지 미표시</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p1-text"><p>타 OTA 아웃링크 공급사에만 표시. 비회원·로그인 회원 동일. ✅ KAYAK 담당자 확인 완료 (2026-06-11) — 공급사별 캐시백률 수정 가능.</p></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제10조 -->
+    <div id="sec-10" class="p1-section">
+      <div class="p1-section-hdr"><span class="p1-art-badge">제10조</span><h2>마이페이지 정책 — MY01</h2></div>
+      <div class="p1-section-body">
+
+        <div class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">10-1</span>MY01 마이페이지 구성</div>
+          <div class="p1-text"><p><strong>진입:</strong> GNB [☰ 전체메뉴] 탭 → 전체화면. GNB: ← 뒤로가기만 (로그인·전체메뉴 없음).</p></div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>상태</th><th>상단</th><th>메뉴</th></tr></thead>
+              <tbody>
+                <tr><td>비로그인</td><td>[회원가입/로그인] 버튼</td><td>언어 변환 / 통화 변환 / 약관</td></tr>
+                <tr><td>로그인</td><td>이름·이메일 프로필</td><td>계정관리(MY03) / 캐시백 내역(MY02) / 언어 변환 / 통화 변환 / 약관 + 하단 [로그아웃]</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p1-text"><p>내 예약·알림·고객지원: ❌ MVP 제외</p></div>
+        </div>
+
+        <div class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">10-2</span>캐시백 내역 (MY02)</div>
+          <div class="p1-text">
+            <ul>
+              <li><strong>상단 고정:</strong> 총 적립금액 (지급완료 기준 누적 합계) + [캐시백 사용처 안내] 텍스트 버튼</li>
+              <li><strong>목록:</strong> 전체 한 번에 표시, 지급완료일 최신순, 카드형</li>
+              <li><strong>카드 항목:</strong> 예약날짜·체크인아웃·호텔명·도시명·예약OTA·예약ID·예약금액·적립금액·지급월</li>
+              <li><strong>상태 배지:</strong> 적립예정 / 지급완료 / 취소·만료</li>
+              <li><strong>빈 상태 문구:</strong> "아직 적립된 캐시백이 없어요. 호텔을 예약하고 첫 캐시백을 받아보세요!"</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">10-3</span>개인 계정관리 (MY03)</div>
+          <div class="p1-text">
+            <ul>
+              <li><strong>입력 필드:</strong> 이름(영문, 선택) / 성(영문, 선택) / 이메일(읽기전용, 인증완료 표시) / 국적(바텀시트) / 전화번호(+82 + 번호)</li>
+              <li><strong>마케팅 토글:</strong> ON/OFF. 초기값 = 회원가입 시 선택값. [마케팅 약관 전문 보기] 바텀시트.</li>
+              <li><strong>하단 [저장]:</strong> 필드별 유효성 검사. 오류 시 해당 필드 에러 메시지.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제11조 -->
+    <div id="sec-11" class="p1-section">
+      <div class="p1-section-hdr"><span class="p1-art-badge">제11조</span><h2>다국어·통화 정책</h2></div>
+      <div class="p1-section-body">
+        <div class="p1-text">
+          <p><strong>지원 언어:</strong> 한국어(기본) · 영어 · 일본어 · 중국어 (간체). MY01에서 수동 변경 가능.</p>
+          <p><strong>지원 통화:</strong> KRW(기본). KAYAK Constants API(<code>/api/4.0/constants-mapping</code>) 전체 통화 동적 사용 — 고정 목록 없음. 앱 초기화 시 캐싱.</p>
+          <p><strong>11-3절 IP 기반 언어 자동 감지 (A안 — 개발팀 확인사항):</strong> 앱 초기화 시 IP 기반 언어 자동 설정. localStorage 수동 변경값 우선. 불가 시 Phase 2.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 제12조 -->
+    <div id="sec-12" class="p1-section">
+      <div class="p1-section-hdr"><span class="p1-art-badge">제12조</span><h2>API 매핑 정책</h2></div>
+      <div class="p1-section-body">
+        <div class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">12-1</span>화면별 API 연결</div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>화면</th><th>API</th></tr></thead>
+              <tbody>
+                <tr><td>M01 자동완성</td><td>GET /api/affiliate/autocomplete/v1/hotels</td></tr>
+                <tr><td>S01 검색결과</td><td>GET /hotels (pageSize=50)</td></tr>
+                <tr><td>S01-MAP 지도</td><td>/hotels 응답 좌표 재사용 (kpolygon entityKey)</td></tr>
+                <tr><td>S02 숙소상세</td><td>GET /hotel (폴링, isComplete)</td></tr>
+                <tr><td>MY02 캐시백 내역</td><td>Reporting API v2.0 (Transaction Report)</td></tr>
+                <tr><td>통화 목록</td><td>GET /api/4.0/constants-mapping</td></tr>
+                <tr><td>호텔 정적 데이터</td><td>Static Data Feeds API (hotelfeed, placefeed)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">12-2</span>S01 검색 핵심 파라미터</div>
+          <div class="p1-text"><p><code>destination</code> (entityKey) · <code>checkIn</code> · <code>checkOut</code> · <code>rooms</code> · <code>currencyCode</code> · <code>languageCode</code> · <code>pageSize=50</code> · <code>pageIndex</code> · <code>sortField</code> · <code>includeTaxesInTotal=true</code> · <code>onlyIfComplete=false</code> · <code>responseOptions=filter</code> · <code>userTrackId</code></p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 제13조 -->
+    <div id="sec-13" class="p1-section">
+      <div class="p1-section-hdr"><span class="p1-art-badge">제13조</span><h2>쿠키 동의 정책 (v0.22 신설)</h2></div>
+      <div class="p1-section-body">
+        <div class="p1-text">
+          <ul>
+            <li><strong>배너 (A안):</strong> 최초 진입 시 하단 배너 — [전체 동의] / [거부] 2버튼</li>
+            <li><strong>저장:</strong> localStorage (키: <code>cookie_consent</code>, 유효기간: 30일)</li>
+            <li><strong>쿠키 유형:</strong> 필수 / 기능성 / 분석 / 마케팅</li>
+            <li><strong>GDPR:</strong> EU/영국 IP 기반 적용. 그 외 지역: 로컬법 기준 (MVP 한국만 운영)</li>
+            <li><strong>Phase 2:</strong> 세부 카테고리(필수/기능/분석/마케팅) 선택 배너로 전환</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 제14조 미결 -->
+    <div id="sec-14" class="p1-section p1-issue-section">
+      <div class="p1-section-hdr"><span class="p1-art-badge">⚠</span><h2>제14조 미결 사항</h2></div>
+      <div class="p1-section-body">
+        <div class="p1-issue-item" style="opacity:.6"><div class="p1-issue-num" style="background:#d1fae5;color:#065f46">✅</div><div class="p1-issue-body"><div class="p1-issue-title" style="text-decoration:line-through;color:#94a3b8">cid / label 딥링크 연계 — KAYAK Reporting API Transaction Report에서 우리 userTrackId/회원ID와 label 필드 연계 가능 여부</div><div class="p1-issue-owner" style="color:#10b981;font-weight:700">✅ 해결 (2026-06-19) — 딥링크 <code>p=</code> 파라미터로 라벨(회원ID 등) 전달. Reporting API <code>labels</code> 파라미터로 회원별 필터링 가능. 9-5절 참조.</div></div></div>
+        <div class="p1-issue-item"><div class="p1-issue-num">2</div><div class="p1-issue-body"><div class="p1-issue-title">Approved 상태 전환 기준 — paymentMonth 추정 기반. KAYAK의 정확한 Approved 전환 시점 확인 필요</div><div class="p1-issue-owner">담당: KAYAK 문의</div></div></div>
+        <div class="p1-issue-item"><div class="p1-issue-num">3</div><div class="p1-issue-body"><div class="p1-issue-title">다통화 설정 — Constants API 응답 통화 목록 전수 표시 시 UX 처리 방안 (100개+ 통화)</div><div class="p1-issue-owner">담당: 윤성균 PO</div></div></div>
+        <div class="p1-notice" style="margin-top:8px"><strong>전체 미결 사항은 v0.33.md 제14조 참조</strong></div>
+      </div>
+    </div>
+
+    <!-- 부록 A -->
+    <div id="sec-app-a" class="p1-section">
+      <div class="p1-section-hdr"><span class="p1-art-badge">부록 A</span><h2>S01 목록 ↔ S01-MAP 지도 동기화 시나리오</h2></div>
+      <div class="p1-section-body">
+        <div class="p1-text">
+          <p><strong>동기화 원칙:</strong> S01과 S01-MAP은 동일 검색 조건 공유. 검색 파라미터(목적지·날짜·인원·정렬) 공유. 필터는 독립 (지도 필터 변경이 목록에 영향 안 줌).</p>
+          <ul>
+            <li>목록 → 지도 전환: 기존 /hotels 결과 좌표 핀으로 즉시 표시. 재호출 없음.</li>
+            <li>지도 → 목록 전환 (X 버튼): ?layout=map 제거. [이 지역 검색] 여부와 무관하게 기존 목록 결과 유지.</li>
+            <li>[이 지역 검색]: 지도 독립 재호출. 목록 결과 갱신 안 함.</li>
+            <li>검색 조건 변경: 목록·지도 모두 재호출.</li>
+          </ul>
+          <p><strong>전체 시나리오(7개)는 v0.33.md 부록 A 참조.</strong></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 별첨 — 변경이력 -->
+    <div id="sec-history" class="p1-section p1-history-section">
+      <div class="p1-section-hdr"><span class="p1-art-badge">별첨</span><h2>변경이력 (v0.20 이후 — 전체 이력은 v0.33.md 참조)</h2></div>
+      <div class="p1-section-body">
+        <div class="p1-hist-item"><div class="p1-hist-ver">v0.20</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-15</div><div class="p1-hist-text">MY01·MY03 아바타 이미지 삭제 — 마케팅팀 요청 시 추가 예정</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver">v0.21</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-15</div><div class="p1-hist-text">캐시백 구조 재정의 — 방식 1(KAYAK→자사) MY02 고객 노출 확정 / 방식 2(자체 포인트) Phase 2 이후</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver">v0.22</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-15</div><div class="p1-hist-text">11-3절 IP 기반 언어 자동 감지(A안) 신설 / 제13조 쿠키 동의 신설 / 방식 A/B → 1/2 통일</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver">v0.23</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-15</div><div class="p1-hist-text">5-9절 가격 범위 슬라이더 확정 — 동적 범위, ₩5,000 단위, 초기값 전체 범위</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver">v0.24</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-15</div><div class="p1-hist-text">canPayLater MVP 포함 / availableRooms ≤3개 조건부 표시 / inclusions[] 식사 배지 전체 매핑</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver">v0.25</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-15</div><div class="p1-hist-text">지도 검색 MVP 포함(대표님 지시) / S01 [목록|지도] 토글 신설 / S01→S02 새탭 이동 변경</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver">v0.26</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-15</div><div class="p1-hist-text">/hotels/basic 실 응답 기반 정정 — latitude/longitude 필드명 수정 / 무료취소 필터 삭제</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver">v0.27</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-15</div><div class="p1-hist-text">지도 아키텍처 확정 — URL 파라미터 방식(?layout=map) / 재검색 A안(연동) 확정</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver">v0.28</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-16</div><div class="p1-hist-text">S01 TTL 자동 갱신 삭제 / 스크롤 위치 복원 삭제 — 명시적 갱신 트리거 3개만 유지</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver">v0.29</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-16</div><div class="p1-hist-text">날짜 기본값 추가 / 5-6절 필터 전면 재작성 5개 확정 / 5-8절 pageSize=50+더보기버튼 / 지도 /hotels 응답 좌표 재사용</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver">v0.30</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-19</div><div class="p1-hist-text">① 1-2절 통화 정책 수정 — Constants API 기반 전체 통화 지원 / ② 1-3절 어썸멤버십·광고 영역(preferredHotels)·Inline/CompareTo 광고 항목 삭제 / ③ 4-2절 자동완성 우선순위 3번 — 나머지 placeType 값 전체로 수정 (11개 타입 명시) / ④ 9-5절 Label 연계 방법 확정 — p= 파라미터, Reporting API labels 필터링 / ⑤ 14조 1번 해결 처리</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver">v0.31</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-22</div><div class="p1-hist-text">① 4-7절 최대 박수 30박·캘린더 렌더링 범위(오늘~오늘+365일)·과거날짜 비활성 추가 / ② 5-6-4절 필터 0개 문구 수정 / ③ 5-6-5절 필터 이중 상태(A/B) 관리 정책 + 재검색 시 필터 초기화 토스트 신설 / ④ 5-11-3~5절 가격 없는 핀 정책 수정 — S02 진입 허용, 회색·비활성 스타일 / ⑤ 6-1절 S02 진입 시 가격 로딩 스피너 정책 추가 / ⑥ 7-1절 OUT01 즉시 오픈 방식 명시</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver">v0.32</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-23</div><div class="p1-hist-text">① 3-3절 신설 — PC 화면 대응 전략 확정 (모바일 단일 + PC 래핑 채택, 출시 직후 적응형 PC 전용 전환) / ② 7-1절·7-4절 수정 — OUT01 이동 방식 변경 (즉시 오픈 → 의도적 2초 딜레이 후 OTA 새탭 오픈, 브랜드 혜택·주요 메시지 2초 노출 목적)</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver" style="background:#e0e7ff;color:#3730a3;font-weight:900;">v0.33</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-23</div><div class="p1-hist-text">① 3-3절 보완 — PC 래핑 왼쪽 패널 상세 정책 신설 (구성 순서·sticky 고정·CTA 동작·바텀시트 노출 위치·언어통화 선택 UX·헤드카피 미확정 명시·적용 범위·하단 푸터 미결)</div></div></div>
+      </div>
+    </div>
+
+  </div><!-- /p1-content -->
+</div><!-- /p1-body -->
+
+<div class="p1-footer">
+  allmytour meta. Phase 1 (MVP) 정책서 v0.33 · 2026-06-23 · 대화창 2 산출물<br>
+  전체 내용: context/신규정책/phase1정책/신규_mvp_메타서치_v0.33.md · 경로: context/신규정책/new_wireframe/phase1_policy.html
+</div>
+
+<script>
+(function(){
+  const links = document.querySelectorAll('.p1-toc a[href^="#"]');
+  const sections = [];
+  links.forEach(a => {
+    const el = document.querySelector(a.getAttribute('href'));
+    if(el) sections.push({el, a});
+  });
+  function update(){
+    let active = null;
+    sections.forEach(({el}) => { if(el.getBoundingClientRect().top <= 80) active = el; });
+    links.forEach(a => a.classList.remove('active'));
+    if(active){ const m = sections.find(s => s.el === active); if(m) m.a.classList.add('active'); }
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+
+</body>
+</html>

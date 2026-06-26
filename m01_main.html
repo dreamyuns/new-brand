@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M01 — 메인 화면 | allmy meta 화면기획서</title>
+<link rel="stylesheet" href="./wf-styles.css">
+<style>
+/* ── two-col override: 모바일 프레임 480px + 주석 나머지 ── */
+.two-col { grid-template-columns: 480px 1fr; gap: 28px; }
+
+/* ── 모바일 디바이스 프레임 ── */
+.mobile-wrap {
+  display: flex; justify-content: center; align-items: flex-start;
+  padding: 20px 16px; background: #2a2a2a; border-radius: 8px; min-height: 560px;
+}
+.mobile-device {
+  width: 375px; background: #1a1f2e; border-radius: 44px; padding: 10px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 20px 50px rgba(0,0,0,.5);
+}
+.m-notch {
+  height: 22px; background: #111; border-radius: 11px 11px 0 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.m-notch-pill { width: 68px; height: 13px; background: #111; border-radius: 7px; }
+.m-screen {
+  background: #fff; height: 640px; overflow-y: auto;
+  overflow-x: hidden; border-radius: 0 0 6px 6px; font-size: 13px;
+}
+.m-screen::-webkit-scrollbar { display: none; }
+
+/* ── 앱 내부 공통 ── */
+.app-bar {
+  display: flex; align-items: center; padding: 10px 14px;
+  background: #fff; border-bottom: 1px solid #f0f0f0;
+  position: sticky; top: 0; z-index: 10;
+}
+.back-btn {
+  width: 30px; height: 30px; border: none; background: #f4f4f2;
+  border-radius: 8px; font-size: 16px; cursor: pointer; color: #333;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-right: 8px;
+}
+.bar-title { font-size: 14px; font-weight: 700; flex: 1; color: #111; }
+.bar-right { display: flex; gap: 6px; }
+.bar-icon {
+  width: 30px; height: 30px; border: none; background: #f4f4f2;
+  border-radius: 8px; font-size: 14px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── M01-A 홈 ── */
+.home-hero { background: linear-gradient(180deg, #eef2ff 0%, #fff 80%); padding: 14px 14px 0; }
+.home-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.brand { font-size: 18px; font-weight: 800; color: #4f46e5; letter-spacing: -0.5px; }
+.brand em { color: #111; font-style: normal; }
+.brand-dot { color: #f59e0b; }
+.h-icons { display: flex; gap: 6px; }
+.h-btn {
+  height: 28px; padding: 0 10px;
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 8px;
+  font-size: 11px; font-weight: 600; cursor: pointer;
+  display: flex; align-items: center; gap: 4px;
+}
+.h-btn.primary { background: #4f46e5; color: #fff; border-color: #4f46e5; }
+
+.hero-tag { font-size: 10px; color: #4f46e5; font-weight: 700; margin-bottom: 4px; }
+.hero-title { font-size: 18px; font-weight: 800; color: #111; line-height: 1.3; margin-bottom: 14px; }
+.hero-title b { color: #4f46e5; }
+
+.search-card {
+  background: #fff; border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(79,70,229,.14); overflow: hidden;
+}
+.f-row {
+  display: flex; align-items: center; padding: 11px 13px;
+  gap: 10px; border-bottom: 1px solid #f0f0f0; cursor: pointer;
+}
+.f-row:last-of-type { border-bottom: none; }
+.f-icon { font-size: 14px; flex-shrink: 0; color: #9ca3af; }
+.f-info { flex: 1; }
+.f-label { font-size: 10px; color: #9ca3af; }
+.f-val { font-size: 13px; font-weight: 600; color: #111; }
+.f-val.ph { color: #9ca3af; font-weight: 400; }
+.f-2col { display: flex; border-bottom: 1px solid #f0f0f0; }
+.f-2col .f-row { flex: 1; border-bottom: none; }
+.f-2col .f-row:first-child { border-right: 1px solid #f0f0f0; }
+.search-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  width: calc(100% - 20px); margin: 10px;
+  padding: 13px; background: #4f46e5; color: white;
+  border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer;
+}
+
+.home-sec { padding: 14px 14px 6px; }
+.home-sec-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.home-sec-title { font-size: 13px; font-weight: 700; color: #111; }
+.home-sec-more { font-size: 11px; color: #4f46e5; }
+.recent-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; background: #f8fafc; border-radius: 10px;
+  margin-bottom: 6px; border: 1px solid #f0f0f0; cursor: pointer;
+}
+.r-icon { font-size: 14px; color: #9ca3af; }
+.r-info { flex: 1; }
+.r-dest { font-size: 12px; font-weight: 600; color: #111; }
+.r-detail { font-size: 10px; color: #9ca3af; margin-top: 1px; }
+.r-del { font-size: 13px; color: #d1d5db; cursor: pointer; }
+
+.rec-scroll {
+  display: flex; gap: 10px; overflow-x: auto;
+  padding: 4px 14px 14px; margin-left: -14px; padding-left: 14px;
+}
+.rec-scroll::-webkit-scrollbar { display: none; }
+.rec-card {
+  flex-shrink: 0; width: 148px; background: #fff;
+  border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb;
+}
+.rec-img { height: 96px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+.ri1 { background: linear-gradient(135deg,#667eea,#764ba2); }
+.ri2 { background: linear-gradient(135deg,#f093fb,#f5576c); }
+.ri3 { background: linear-gradient(135deg,#4facfe,#00f2fe); }
+.rec-body { padding: 8px 10px; }
+.rc-name { font-size: 12px; font-weight: 600; margin-bottom: 2px; line-height: 1.3; }
+.rc-loc { font-size: 10px; color: #9ca3af; margin-bottom: 4px; }
+.rc-orig { font-size: 10px; color: #9ca3af; text-decoration: line-through; }
+.rc-price { font-size: 13px; font-weight: 700; color: #4f46e5; }
+.pad-bottom { height: 20px; }
+
+/* ── M01-B 자동완성 ── */
+.ac-bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-bottom: 1px solid #f0f0f0;
+  position: sticky; top: 0; background: #fff; z-index: 10;
+}
+.ac-inp-wrap {
+  flex: 1; display: flex; align-items: center; gap: 8px;
+  background: #f4f4f2; border-radius: 8px; padding: 8px 12px;
+}
+.ac-inp {
+  flex: 1; border: none; background: none; font-size: 13px;
+  font-family: inherit; outline: none; color: #111;
+}
+.ac-x { font-size: 11px; color: #9ca3af; background: none; border: none; cursor: pointer; }
+.ac-sec-hdr {
+  padding: 10px 14px 4px;
+  font-size: 10px; font-weight: 700; color: #9ca3af;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.ac-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; border-bottom: 1px solid #f9fafb; cursor: pointer;
+}
+.ac-row:hover { background: #f8fafc; }
+.ac-ibox {
+  width: 32px; height: 32px; border-radius: 8px; background: #f4f4f2;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.ac-info { flex: 1; }
+.ac-name { font-size: 13px; font-weight: 500; color: #111; }
+.ac-name strong { color: #4f46e5; }
+.ac-sub { font-size: 11px; color: #9ca3af; margin-top: 1px; }
+.ac-type-badge {
+  font-size: 10px; color: #64748b; background: #f1f5f9;
+  padding: 2px 8px; border-radius: 10px; flex-shrink: 0; white-space: nowrap;
+}
+.ac-divider { height: 8px; background: #f4f4f2; }
+.ac-recent-hdr {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 14px 4px;
+  font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.ac-recent-clear { font-size: 11px; color: #4f46e5; font-weight: 600; text-transform: none; letter-spacing: 0; cursor: pointer; }
+.ac-recent-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 14px; border-bottom: 1px solid #f9fafb; cursor: pointer;
+}
+.rh-icon { font-size: 12px; color: #9ca3af; }
+.rh-info { flex: 1; }
+.rh-dest { font-size: 12px; font-weight: 500; color: #374151; }
+.rh-detail { font-size: 10px; color: #9ca3af; margin-top: 1px; }
+
+/* ── M01-C 캘린더 ── */
+.cal-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px; border-bottom: 1px solid #f0f0f0;
+  position: sticky; top: 0; background: #fff; z-index: 10;
+}
+.cal-close { font-size: 20px; background: none; border: none; cursor: pointer; color: #333; }
+.cal-t { font-size: 14px; font-weight: 700; }
+.cal-done { font-size: 13px; font-weight: 700; color: #4f46e5; background: none; border: none; cursor: pointer; }
+.cal-body { padding: 12px 14px; }
+.cal-month { font-size: 13px; font-weight: 700; text-align: center; margin-bottom: 8px; }
+.cal-wds { display: grid; grid-template-columns: repeat(7,1fr); text-align: center; margin-bottom: 4px; }
+.cal-wd { font-size: 10px; color: #9ca3af; padding: 2px 0; }
+.cal-days { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; }
+.d { aspect-ratio:1; display:flex; align-items:center; justify-content:center; font-size:12px; border-radius:8px; cursor:pointer; color:#374151; }
+.d.empty { pointer-events:none; }
+.d.sel { background:#4f46e5; color:#fff; font-weight:700; }
+.d.rs { background:#4f46e5; color:#fff; font-weight:700; border-radius:8px 0 0 8px; }
+.d.re { background:#4f46e5; color:#fff; font-weight:700; border-radius:0 8px 8px 0; }
+.d.ir { background:#eef2ff; color:#4f46e5; border-radius:0; }
+.cal-footer {
+  padding: 12px 14px; border-top: 1px solid #f0f0f0;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; bottom: 0; background: #fff;
+}
+.cal-info { font-size: 12px; color: #374151; font-weight: 500; }
+.cal-apply {
+  background: #4f46e5; color: #fff; border: none;
+  padding: 9px 20px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer;
+}
+
+/* ── M01-D 인원/객실 ── */
+.g-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px; border-bottom: 1px solid #f0f0f0;
+  position: sticky; top: 0; background: #fff; z-index: 10;
+}
+.g-title { font-size: 14px; font-weight: 700; }
+.g-reset { font-size: 12px; color: #9ca3af; background: none; border: none; cursor: pointer; }
+.g-body { padding: 0 14px; }
+.g-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 0; border-bottom: 1px solid #f9fafb;
+}
+.g-row:last-of-type { border-bottom: none; }
+.g-label-t { font-size: 13px; font-weight: 500; color: #111; }
+.g-label-s { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+.counter { display: flex; align-items: center; gap: 12px; }
+.c-btn {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1.5px solid #e5e7eb; background: #fff;
+  font-size: 16px; line-height: 1; cursor: pointer; color: #374151;
+  display: flex; align-items: center; justify-content: center;
+}
+.c-btn.off { color: #e5e7eb; cursor: default; }
+.c-val { font-size: 15px; font-weight: 700; min-width: 20px; text-align: center; }
+.c-val.dim { color: #9ca3af; }
+.age-sel {
+  width: 100%; margin-top: 8px; padding: 7px 10px;
+  border: 1px solid #e5e7eb; border-radius: 8px; font-size: 12px; background: #fff;
+}
+.g-footer { padding: 14px; }
+.g-apply {
+  width: 100%; padding: 13px; background: #4f46e5; color: #fff;
+  border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<!-- ── 상단 네비 ── -->
+<nav class="page-nav">
+  <a class="page-nav-back" href="index.html">← 목록으로</a>
+  <span class="page-nav-sep">|</span>
+  <span class="page-nav-title">M01 — 메인 화면</span>
+  <span class="page-nav-route">/  ·  검색 진입 화면</span>
+  <div class="page-nav-nav">
+    <span class="page-nav-pager-disabled">← 이전</span>
+    <a class="page-nav-pager" href="s01_search.html">다음 →</a>
+  </div>
+</nav>
+
+<!-- ── 목차 (TOC) ── -->
+<nav class="toc">
+  <div class="toc-inner">
+    <span class="toc-label">목차</span>
+    <a href="#m01-a" class="toc-link">M01-A 메인</a>
+    <span class="toc-sep"></span>
+    <a href="#m01-b" class="toc-link">M01-B 자동완성</a>
+    <span class="toc-sep"></span>
+    <a href="#m01-c" class="toc-link">M01-C 달력</a>
+    <span class="toc-sep"></span>
+    <a href="#m01-d" class="toc-link">M01-D 인원설정</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- ════════════════════════════════════════════════
+  M01-A  메인 홈 — 기본 상태
+════════════════════════════════════════════════ -->
+<div id="m01-a" class="sec-title">
+  <span class="sec-badge">M01-A</span>메인 홈 — 기본 상태
+  <span style="font-size:12px;font-weight:400;color:#888">— 비로그인 기준</span>
+</div>
+<div class="sec-sub">
+  서비스 진입 시 최초 노출 화면. 검색 폼(목적지·날짜·인원) + 최근 검색 + 추천 호텔 구성.<br>
+  플로우: 목적지 탭 → M01-B(자동완성) / 날짜 탭 → M01-C(캘린더) / 인원 탭 → M01-D(인원설정) / [검색] → S01
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — M01 메인 화면 전체</div>
+  <ul class="sec-policy-list">
+    <li><strong>GNB 패턴</strong>: 로고 중앙. 비로그인=[로그인]+[☰] / 로그인=[☰]만. [☰]=마이페이지 직접 진입 (5-1절)</li>
+    <li><strong>날짜 기본값</strong>: 체크인=오늘+7일, 체크아웃=체크인+1일 (4-7절)</li>
+    <li><strong>검색 실행</strong>: [검색] 버튼 탭 → S01 이동 (4-5절)</li>
+    <li><strong>비로그인 허용</strong>: 검색·가격조회 모두 가능 (8-6절)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.29 4-5절·4-7절·5-1절·8-6절</div>
+</div>
+
+<div class="two-col">
+  <!-- 모바일 프레임 -->
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+        <!-- 히어로 + 검색폼 -->
+        <div class="home-hero">
+          <div class="home-topbar">
+            <div class="brand">allmy<em> meta</em><span class="brand-dot">.</span> <span class="wf-cn">1</span></div>
+            <div class="h-icons">
+              <button class="h-btn primary">로그인 <span class="wf-cn">2</span></button>
+              <button class="h-btn">☰ <span class="wf-cn">2</span></button>
+            </div>
+          </div>
+          <div class="hero-tag">🌏 570만+ 호텔 실시간 가격비교</div>
+          <div class="hero-title">전세계 호텔<br><b>최저가</b>를 한눈에</div>
+          <div class="search-card">
+            <div class="f-row">
+              <span class="f-icon">📍</span>
+              <div class="f-info">
+                <div class="f-label">목적지</div>
+                <div class="f-val ph">어디로 가시나요?</div>
+              </div>
+              <span class="wf-cn">3</span>
+            </div>
+            <div class="f-2col">
+              <div class="f-row">
+                <span class="f-icon">📅</span>
+                <div class="f-info">
+                  <div class="f-label">체크인</div>
+                  <div class="f-val">6월 18일 (목)</div>
+                </div>
+                <span class="wf-cn">4</span>
+              </div>
+              <div class="f-row">
+                <span class="f-icon">📅</span>
+                <div class="f-info">
+                  <div class="f-label">체크아웃</div>
+                  <div class="f-val">6월 19일 (금)</div>
+                </div>
+                <span class="wf-cn">5</span>
+              </div>
+            </div>
+            <div class="f-row">
+              <span class="f-icon">👤</span>
+              <div class="f-info">
+                <div class="f-label">인원 · 객실</div>
+                <div class="f-val">성인 2명 · 객실 1개</div>
+              </div>
+              <span class="wf-cn">6</span>
+            </div>
+            <button class="search-btn">🔍 검색 <span class="wf-cn">7</span></button>
+          </div>
+        </div>
+        <!-- 최근 검색 -->
+        <div class="home-sec">
+          <div class="home-sec-hdr">
+            <div class="home-sec-title">최근 검색 <span class="wf-cn">8</span></div>
+          </div>
+          <div class="recent-row">
+            <span class="r-icon">🕐</span>
+            <div class="r-info">
+              <div class="r-dest">서울</div>
+              <div class="r-detail">6/18 – 6/19 · 성인 2명 · 객실 1개</div>
+            </div>
+            <span class="r-del">✕ <span class="wf-cn">9</span></span>
+          </div>
+          <div class="recent-row">
+            <span class="r-icon">🕐</span>
+            <div class="r-info">
+              <div class="r-dest">도쿄, 일본</div>
+              <div class="r-detail">8/1 – 8/3 · 성인 2명 · 객실 1개</div>
+            </div>
+            <span class="r-del">✕</span>
+          </div>
+        </div>
+        <!-- 추천 호텔 -->
+        <div class="home-sec">
+          <div class="home-sec-hdr">
+            <div class="home-sec-title">지금 인기 숙소 <span class="wf-cn">10</span></div>
+            <div class="home-sec-more">모두 보기 →</div>
+          </div>
+          <div class="rec-scroll">
+            <div class="rec-card">
+              <div class="rec-img ri1">🏨</div>
+              <div class="rec-body">
+                <div class="rc-name">서울 가든 호텔</div>
+                <div class="rc-loc">📍 도화동, 서울</div>
+                <div class="rc-orig">₩167,699</div>
+                <div class="rc-price">₩122,972</div>
+              </div>
+            </div>
+            <div class="rec-card">
+              <div class="rec-img ri2">🏨</div>
+              <div class="rec-body">
+                <div class="rc-name">코리아나 호텔</div>
+                <div class="rc-loc">📍 중구, 서울</div>
+                <div class="rc-orig">₩370,910</div>
+                <div class="rc-price">₩276,245</div>
+              </div>
+            </div>
+            <div class="rec-card">
+              <div class="rec-img ri3">🏨</div>
+              <div class="rec-body">
+                <div class="rc-name">롯데호텔 서울</div>
+                <div class="rc-loc">📍 중구, 서울</div>
+                <div class="rc-orig">₩1,200,000</div>
+                <div class="rc-price">₩925,650</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pad-bottom"></div>
+      </div><!-- /m-screen -->
+    </div>
+  </div><!-- /mobile-wrap -->
+
+  <!-- 주석 패널 -->
+  <div class="ann">
+    <h3>화면 주석 — M01-A</h3>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">브랜드 로고</div>
+        <div class="ann-desc"><ul><li>서비스명 "allmy meta" 텍스트 로고.</li><li>탭 시 메인 화면(M01-A) 새로고침(스크롤 최상단 복귀 포함).</li><li>sticky GNB 내 좌측 고정 배치.</li><li>GNB는 모든 화면 최상단에 <code>position: sticky; z-index</code> 최상위로 고정.</li></ul></div>
+        <div class="ann-rule">리브랜딩 확정 전까지 "allmy meta" 임시 사용. 로고 디자인은 디자이너 작업.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">[로그인] + [☰ 전체메뉴] 버튼 — 로그인 상태별</div>
+        <div class="ann-desc"><ul><li><b>비로그인 상태:</b> [로그인] 버튼(primary, 보라색) + [☰] 버튼 동시 노출. [로그인] 탭 시 로그인 바텀시트(auth_login.html) 진입.</li><li><b>로그인 완료 상태:</b> [로그인] 버튼 미노출. [☰] 버튼만 표시.</li><li><b>[☰ 전체메뉴] 탭 동작:</b> 별도 드롭다운 없이 마이페이지(MY01) 전체화면으로 직접 이동.</li></ul></div>
+        <div class="ann-rule">정책서 5-1절. GNB 랜딩형(M01·S01) 패턴: 로고 + [로그인] + [☰]. 세부화면(S02·AUTH)은 ← 뒤로가기 + [로그인] + [☰]. MY01~MY03(마이페이지 하위)은 ← 뒤로가기만 표시.</div>
+        <div class="ann-case">MY01 화면 구성 상세: 비로그인 = [회원가입/로그인] 버튼 + 언어·통화·약관 메뉴 / 로그인 = 프로필(이름+이메일) + 계정관리·캐시백 내역·언어·통화·약관 + [로그아웃].</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">목적지 입력 필드</div>
+        <div class="ann-desc"><ul><li>기본 상태: 플레이스홀더 "어디로 가시나요?" 표시.</li><li>탭 시 M01-B(자동완성) 전체화면으로 전환.</li><li>M01-B에서 항목 선택 후 복귀하면 선택된 지명이 이 필드에 표시됨.</li><li>목적지 미선택 상태에서 [검색] 탭 시 이 필드에 포커스 이동 + 토스트 에러 "목적지를 입력해주세요." 표시.</li></ul></div>
+        <div class="ann-front">← Autocomplete API 선택값: <code>fullname</code> (표시용 지명) / <code>entityKey</code> (검색 파라미터 <code>destination</code> 값으로 사용)</div>
+        <div class="ann-rule">정책서 4-1절. 목적지 미선택 시 [검색] 버튼 비활성 또는 탭 시 유효성 오류 처리. 둘 중 하나로 구현 (개발팀 결정).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">체크인 날짜</div>
+        <div class="ann-desc"><ul><li>탭 시 M01-C(날짜 선택 캘린더) 전체화면으로 전환.</li><li>기본값: 오늘 날짜 + 7일 (앱 실행 시점 기준 자동 계산).</li><li>표시 형식: "M월 D일 (요일)" (예: 6월 18일 (목)).</li></ul></div>
+        <div class="ann-front">← API 파라미터: <code>checkIn=YYYY-MM-DD</code></div>
+        <div class="ann-rule">정책서 4-7절. 오늘 이전 날짜 선택 불가 (캘린더에서 비활성 처리). 체크인 변경 시 체크아웃이 체크인보다 같거나 이전이면 체크아웃 자동 재조정 (체크인 + 1일).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">5</div>
+      <div class="ann-body">
+        <div class="ann-title">체크아웃 날짜</div>
+        <div class="ann-desc"><ul><li>탭 시 M01-C(날짜 선택 캘린더) 전체화면으로 전환.</li><li>기본값: 체크인 날짜 + 1일.</li><li>표시 형식: "M월 D일 (요일)" (예: 6월 19일 (금)).</li><li>박수(nights)는 필드에 직접 표시하지 않고 캘린더 하단 선택 정보 바에서만 표시.</li></ul></div>
+        <div class="ann-front">← API 파라미터: <code>checkOut=YYYY-MM-DD</code></div>
+        <div class="ann-rule">정책서 4-7절. 체크아웃 > 체크인 강제. 체크아웃 = 체크인 선택 시 자동으로 체크인 + 1일로 조정. 체크아웃 < 체크인인 날짜는 캘린더에서 선택 불가 처리. 세금 포함 최종가 기준(<code>includeTaxesInTotal=true</code>, <code>includeLocalTaxesInTotal=true</code>)으로 검색 파라미터 전송.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">6</div>
+      <div class="ann-body">
+        <div class="ann-title">인원 · 객실 필드</div>
+        <div class="ann-desc"><ul><li>탭 시 M01-D(인원·객실 설정) 전체화면으로 전환.</li><li>기본값: 객실 1개 / 성인 2명 / 아동 0명.</li><li>표시 형식: "성인 N명 · 객실 N개" (아동 있을 경우: "성인 N명 · 아동 N명 · 객실 N개").</li><li>M01-D에서 [검색] 탭 시 값 확정 후 이 필드 업데이트.</li></ul></div>
+        <div class="ann-front">← API 파라미터: <code>rooms</code>. 단일객실 성인2=<code>"2"</code>, 성인2+아동(8세)=<code>"2:8"</code>, 다객실(성인2 | 성인1+아동5세)=<code>"2|1:5"</code></div>
+        <div class="ann-rule">정책서 4-9절. 객실당 성인 최소 1명. 객실당 아동 최대 4명(만 0~17세). 객실당 총 인원(성인+아동) 최대 8명. 최대 8객실.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">7</div>
+      <div class="ann-body">
+        <div class="ann-title">[검색] 버튼</div>
+        <div class="ann-desc"><ul><li>목적지 선택 필수.</li><li>날짜·인원은 기본값이 자동 적용되므로 별도 선택 없이도 탭 가능.</li><li>탭 시 입력값을 로컬 스토리지에 최근 검색으로 저장 후 S01(검색결과) 화면으로 이동.</li><li>목적지 미선택 시 S01로 이동하지 않고 유효성 오류 처리.</li></ul></div>
+        <div class="ann-front">← <code>GET /api/affiliate/search/v1/hotels</code> 호출. 파라미터: <code>destination</code>(entityKey), <code>checkIn</code>, <code>checkOut</code>, <code>rooms</code>, <code>currencyCode=KRW</code>, <code>languageCode=ko_KR</code>, <code>includeTaxesInTotal=true</code>, <code>includeLocalTaxesInTotal=true</code>, <code>sortField=popularity</code></div>
+        <div class="ann-rule">정책서 4-7절. [검색] 탭 시 최근 검색 로컬 스토리지 저장: 최대 10개, 초과 시 가장 오래된 항목 삭제. 저장 항목: 목적지명 + entityKey + 체크인·체크아웃 날짜 + rooms 파라미터.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">8</div>
+      <div class="ann-body">
+        <div class="ann-title">최근 검색 섹션</div>
+        <div class="ann-desc"><ul><li>로컬 스토리지 기반 최근 검색 이력 표시.</li><li>저장 항목: 목적지명 + <code>entityKey</code> + 체크인·체크아웃 날짜 + <code>rooms</code> 파라미터(인원 구성 포함).</li><li>각 항목 탭 시 해당 조건이 검색폼(목적지·날짜·인원)에 그대로 복원됨 — 복원 후 자동 검색하지 않고 사용자가 [검색] 버튼을 직접 탭해야 S01로 이동.</li><li>최근 검색이 0건일 경우 이 섹션 미표시.</li></ul></div>
+        <div class="ann-rule">정책서 4-8절. 최대 10개. 최근 검색 순 정렬(최신이 최상단). 로컬 스토리지 저장으로 서버 동기화 없음(MVP). 기기 변경 시 초기화 (Phase 2 서버 동기화 검토).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">9</div>
+      <div class="ann-body">
+        <div class="ann-title">최근 검색 개별 삭제 (✕)</div>
+        <div class="ann-desc"><ul><li>각 최근 검색 항목 우측의 ✕ 버튼.</li><li>탭 시 해당 항목만 로컬 스토리지에서 즉시 삭제하고 UI에서 제거.</li><li>삭제 확인 다이얼로그 없음(즉시 처리).</li><li>전체 삭제는 M01-B(자동완성) 화면의 [전체 삭제] 버튼 사용.</li></ul></div>
+        <div class="ann-rule">정책서 4-8절. 개별 삭제 후 남은 항목은 순서 유지. 0건이 되면 최근 검색 섹션 전체 미표시.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">10</div>
+      <div class="ann-body">
+        <div class="ann-title">추천 호텔 가로 스크롤</div>
+        <div class="ann-desc"><ul><li>가로 스크롤 카드 형태로 인기 호텔 노출.</li><li>각 카드 탭 시 해당 호텔의 S02(숙소 상세) 화면으로 이동 (현재 검색폼 날짜·인원 조건 유지).</li><li>카드 표시 항목: 호텔 대표 이미지 / 호텔명 / 위치(도시·지역) / 원가(취소선) / 최저가(KRW).</li><li>MVP에서는 어드민에서 직접 지정한 호텔 목록 고정 노출 방식 사용.</li></ul></div>
+        <div class="ann-rule">MVP: 어드민 지정 호텔 목록 정적 노출. 실시간 가격 연동은 Phase 2 검토. 호텔 이미지는 hotelfeed 썸네일 URL 사용.</div>
+        <div class="ann-case">카드 정보: 호텔명 / 위치(도시·지역명) / 원가(취소선 표시) / 최저가. "모두 보기 →" 탭 동작은 MVP 미결 — 기본 검색폼 조건으로 S01 이동 또는 미구현 중 결정 필요.</div>
+      </div>
+    </div>
+  </div><!-- /ann -->
+</div><!-- /two-col M01-A -->
+
+<hr class="sec-divider">
+
+<!-- ════════════════════════════════════════════════
+  M01-B  목적지 자동완성
+════════════════════════════════════════════════ -->
+<div id="m01-b" class="sec-title">
+  <span class="sec-badge">M01-B</span>목적지 자동완성
+  <span style="font-size:12px;font-weight:400;color:#888">— 목적지 필드 탭 후 전환</span>
+</div>
+<div class="sec-sub">
+  전체 화면 오버레이. <strong>완전한 음절 1자 이상 입력 시</strong> 실시간 자동완성 결과 표시.<br>
+  노출 순서: <strong>city 최상단 고정 → neighborhood/region → hotel/airport 등 (클라이언트 정렬)</strong>. 최대 6개 노출.<br>
+  항목 선택 시: 검색폼 목적지 필드에 입력됨 → [검색] 버튼 탭 시 S01 이동 (직접 이동 없음)
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — M01-B 자동완성</div>
+  <ul class="sec-policy-list">
+    <li><strong>API</strong>: <code>GET /api/affiliate/autocomplete/v1/hotels</code> (4-1절)</li>
+    <li><strong>트리거</strong>: 완전한 음절 1자 이상. 자음·모음 단독 입력 트리거 안 함 (4-1절)</li>
+    <li><strong>최대 결과</strong>: 6개. 클라이언트 정렬: <code>city</code> → <code>region</code> → <code>hotel/resort/기타</code> 순 (4-1·4-2절)</li>
+    <li><strong>표시 형식</strong>: 도시=<code>fullname</code> 1행. 호텔=<code>hotelName</code>+<code>places[]</code> 2행. <code>displayPlaceType</code> 배지 미표시 (4-3절)</li>
+    <li><strong>아이콘</strong>: API 응답에 없음 → <code>primaryPlaceType</code> 기반 자체 아이콘 세트 필요 (4-6절)</li>
+    <li><strong>결과 없음</strong>: "검색 결과가 없습니다" 드롭다운 표시 (4-6절)</li>
+    <li><strong>포커스 + 빈 입력</strong>: 드롭다운 없음. 최근검색 있으면 최근검색 표시 (4-6·4-8절)</li>
+    <li><strong>현위치 조회</strong>: MVP 제외, UI 미노출 (4-6절)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.29 4-1절~4-6절·4-8절</div>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+        <div class="ac-bar">
+          <button class="back-btn">← <span class="wf-cn">1</span></button>
+          <div class="ac-inp-wrap">
+            <span style="font-size:13px;color:#9ca3af;">📍</span>
+            <input class="ac-inp" value="서울" placeholder="도시, 호텔명 검색">
+            <button class="ac-x">✕ <span class="wf-cn">2</span></button>
+          </div>
+        </div>
+
+        <!-- 자동완성 결과 -->
+        <div class="ac-sec-hdr">검색 결과</div>
+
+        <!-- city — 최상단 고정 -->
+        <div class="ac-row">
+          <div class="ac-ibox" style="background:#eef2ff;">🗺️</div>
+          <div class="ac-info">
+            <div class="ac-name"><strong>서울</strong>, 서울특별시, 대한민국 <span class="wf-cn">3</span></div>
+            <div class="ac-sub">서울특별시, 대한민국</div>
+          </div>
+        </div>
+
+        <!-- neighborhood -->
+        <div class="ac-row">
+          <div class="ac-ibox" style="background:#f0fdf4;">📌</div>
+          <div class="ac-info">
+            <div class="ac-name">명동 <span class="wf-cn">4</span></div>
+            <div class="ac-sub"><strong>서울</strong>, 대한민국</div>
+          </div>
+        </div>
+        <div class="ac-row">
+          <div class="ac-ibox" style="background:#f0fdf4;">📌</div>
+          <div class="ac-info">
+            <div class="ac-name">홍대거리</div>
+            <div class="ac-sub"><strong>서울</strong>, 대한민국</div>
+          </div>
+        </div>
+
+        <!-- hotel -->
+        <div class="ac-row">
+          <div class="ac-ibox" style="background:#fff7ed;">🏨</div>
+          <div class="ac-info">
+            <div class="ac-name"><strong>서울</strong> 가든 호텔 <span class="wf-cn">5</span></div>
+            <div class="ac-sub">도화동, 서울, 대한민국</div>
+          </div>
+        </div>
+
+        <!-- airport -->
+        <div class="ac-row" style="border-bottom:8px solid #f4f4f2;">
+          <div class="ac-ibox" style="background:#fef9c3;">✈️</div>
+          <div class="ac-info">
+            <div class="ac-name"><strong>서울</strong> (ICN-인천국제공항) <span class="wf-cn">6</span></div>
+            <div class="ac-sub">인천, 대한민국</div>
+          </div>
+        </div>
+
+        <!-- 최근 검색 기록 (하단 고정, 독립 스크롤) -->
+        <div class="ac-recent-hdr" style="position:sticky;top:0;background:#fff;z-index:5;">
+          <span>최근 검색 <span class="wf-cn">7</span></span>
+          <span class="ac-recent-clear">전체 삭제 <span class="wf-cn">8</span></span>
+        </div>
+        <div style="max-height:200px;overflow-y:auto;">
+          <div class="ac-recent-row">
+            <span class="rh-icon">🕐</span>
+            <div class="rh-info">
+              <div class="rh-dest">서울</div>
+              <div class="rh-detail">6/18 – 6/19 · 성인 2명</div>
+            </div>
+          </div>
+          <div class="ac-recent-row">
+            <span class="rh-icon">🕐</span>
+            <div class="rh-info">
+              <div class="rh-dest">도쿄, 일본</div>
+              <div class="rh-detail">8/1 – 8/3 · 성인 2명</div>
+            </div>
+          </div>
+          <div class="ac-recent-row">
+            <span class="rh-icon">🕐</span>
+            <div class="rh-info">
+              <div class="rh-dest">오사카, 일본</div>
+              <div class="rh-detail">9/5 – 9/7 · 성인 2명</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <h3>화면 주석 — M01-B</h3>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">뒤로가기 (←)</div>
+        <div class="ann-desc"><ul><li>탭 시 M01-A(메인 홈)으로 복귀.</li><li>현재 자동완성 입력값(검색어)은 초기화됨.</li><li>단, 검색폼의 목적지 필드는 M01-B 진입 이전에 이미 선택된 값이 있었다면 그 값을 그대로 유지 (새로 선택 시도 중 취소한 경우).</li><li>자동완성 드롭다운 닫힘.</li></ul></div>
+        <div class="ann-rule">정책서 4-1절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">입력 박스 · 클리어(✕) · 트리거 조건</div>
+        <div class="ann-desc"><ul><li><b>트리거 조건:</b> 완전한 음절 1자 이상 입력 시 API 호출 및 드롭다운 표시. 자음·모음 단독(ㅅ, ㅓ 등) 입력은 API 호출 트리거 안 함.</li><li><b>포커스 후 빈 입력:</b> 드롭다운 미표시. 최근 검색 섹션(cn7)만 노출.</li><li><b>디바운스:</b> 300ms 적용 권장 (입력 중 불필요한 API 과호출 방지).</li><li><b>✕ 탭:</b> 입력값만 지워지고 드롭다운 닫힘. 포커스는 입력 박스에 유지.</li><li><b>결과 없음:</b> "검색 결과가 없습니다" 드롭다운 표시.</li></ul></div>
+        <div class="ann-front">← Autocomplete API: <code>GET /api/affiliate/autocomplete/v1/hotels?query={입력값}&languageCode=ko_KR</code> (최대 결과 6개 반환)</div>
+        <div class="ann-rule">정책서 4-1~4-6절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">city 타입 결과 — 최상단 고정</div>
+        <div class="ann-desc"><ul><li>API 반환 순서에 관계없이 <code>primaryPlaceType = "city"</code>인 결과를 항상 드롭다운 최상단에 배치 (클라이언트 정렬).</li><li>표시: 1행만 — <code>fullname</code> 필드 사용 (예: "서울, 서울특별시, 대한민국").</li><li><code>displayPlaceType</code> 배지(Hotel/Resort 등)는 MVP 미표시.</li><li>항목 탭 시 해당 <code>entityKey</code>가 검색 파라미터 <code>destination</code>으로 설정되고 검색폼 목적지 필드에 지명 표시됨 — 자동 검색 없이 사용자가 [검색] 버튼을 직접 탭해야 S01로 이동.</li></ul></div>
+        <div class="ann-front">← <code>result[].primaryPlaceType</code> 기반 클라이언트 정렬: city(1순위) → region/neighborhood(2순위) → hotel/resort/기타(3순위). 저장값: <code>result[].entityKey</code></div>
+        <div class="ann-rule">정책서 4-3~4-5절. 지명 언어: placefeed <code>languageCode=ko</code>로 한국어명 캐시 목표 — DB 구축 전까지 영어 지명 표시 허용.</div>
+        <div class="ann-case">API에서 city 타입이 반환되지 않은 경우, region → neighborhood → hotel 순으로 최상단 배치. 총 노출 개수는 API 반환값 전체(최대 6개).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">neighborhood / region 타입 결과</div>
+        <div class="ann-desc"><ul><li>city 다음 두 번째 우선순위로 표시.</li><li>구·동·지역·행정구역 단위.</li><li>표시: 1행만 — <code>fullname</code> 필드 사용 (예: "명동, 서울, 대한민국").</li><li>항목 탭 시 해당 <code>entityKey</code>가 검색 파라미터 <code>destination</code>으로 설정되고 검색폼 목적지 필드에 지명 표시됨 — 사용자가 [검색] 버튼 탭 시 S01 이동.</li></ul></div>
+        <div class="ann-front">← <code>result[].primaryPlaceType = "neighborhood"</code> 또는 <code>"region"</code>. 저장값: <code>result[].entityKey</code></div>
+        <div class="ann-rule">정책서 4-3~4-5절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">5</div>
+      <div class="ann-body">
+        <div class="ann-title">hotel / resort 타입 결과</div>
+        <div class="ann-desc"><ul><li>호텔·리조트 직접 검색 결과.</li><li>city·region·neighborhood보다 하위 우선순위.</li><li>표시: 1행 = <code>hotelName</code>, 2행 = <code>places[]</code> 배열이 있으면 해당 값, 없으면 <code>cityName, regionName, countryName</code> 조합으로 표시.</li><li>항목 탭 시 해당 <code>hotelId</code>(khotel ID)와 <code>entityKey</code>가 설정되고 검색폼 목적지 필드에 호텔명 표시됨 — 사용자가 [검색] 버튼 탭 시 S01 이동 (해당 호텔 최상단 표시).</li></ul></div>
+        <div class="ann-front">← <code>result[].primaryPlaceType = "hotel"</code> 또는 <code>"resort"</code>. 저장값: <code>result[].entityKey</code>, <code>result[].hotelId</code>(있는 경우)</div>
+        <div class="ann-rule">정책서 4-3~4-6절. displayPlaceType 배지(Hotel/Resort 등) MVP 미표시.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">6</div>
+      <div class="ann-body">
+        <div class="ann-title">airport 타입 결과</div>
+        <div class="ann-desc"><ul><li>공항 검색 결과.</li><li>표시: 1행 = 공항명 + 공항코드(IATA, 예: ICN-인천국제공항), 2행 = <code>cityName, countryName</code>.</li><li>항목 탭 시 해당 <code>entityKey</code>가 검색 파라미터 <code>destination</code>으로 설정되고 검색폼 목적지 필드에 공항명 표시됨 — 사용자가 [검색] 버튼 탭 시 공항 인근 호텔 목록으로 S01 이동.</li></ul></div>
+        <div class="ann-front">← <code>result[].primaryPlaceType = "airport"</code>. 저장값: <code>result[].entityKey</code></div>
+        <div class="ann-rule">정책서 4-3~4-5절.</div>
+      </div>
+    </div>
+    <div class="ann-item" style="background:#f0fdf4;border-left-color:#22c55e;">
+      <div class="cn" style="background:#22c55e;">i</div>
+      <div class="ann-body">
+        <div class="ann-title">아이콘 처리 정책</div>
+        <div class="ann-desc"><ul><li>Autocomplete API 응답에 아이콘 이미지 URL 없음.</li><li><code>primaryPlaceType</code> 값 기반으로 자체 아이콘 세트 클라이언트에서 매핑 필요 (디자이너 SVG 아이콘 제작 후 적용).</li></ul></div>
+        <div class="ann-rule">정책서 4-6절.</div>
+        <div class="ann-case">
+          city/region → 지역/지도 아이콘 / neighborhood → 핀 아이콘<br>
+          hotel/resort/b&amp;b → 호텔 아이콘 / airport → 공항 아이콘<br>
+          세부 분류 필요 시: <code>displayPlaceType.type</code> 활용 (hotel/resort/bb/city/neighborhood 등 상세 타입 제공)
+        </div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">7</div>
+      <div class="ann-body">
+        <div class="ann-title">최근 검색 섹션 — 자동완성 드롭다운 하단 고정</div>
+        <div class="ann-desc"><ul><li>자동완성 결과 영역 하단에 항상 노출.</li><li>입력값이 없을 때(포커스 직후 빈 상태)에도 표시.</li><li>자동완성 결과 6개가 모두 표시될 때도 그 아래 표시.</li><li>최근 검색 목록 영역은 독립 스크롤 (최대 높이 설정 후 내부 <code>overflow-y: auto</code>).</li><li>각 항목 탭 시 해당 조건(목적지명 + <code>entityKey</code> + 체크인·체크아웃 날짜 + <code>rooms</code> 파라미터)을 검색폼에 그대로 복원 → 자동 검색 없이 M01-A로 복귀, 사용자가 [검색] 버튼 직접 탭해야 S01 이동.</li></ul></div>
+        <div class="ann-front">← 로컬 스토리지 key 예: <code>recentSearches</code>, JSON 배열, 최대 10개</div>
+        <div class="ann-rule">정책서 4-8절. 최대 10개, 최근 검색 순(최신이 최상단). 로컬 스토리지 저장으로 서버 동기화 없음(MVP). 기기 변경 시 초기화.</div>
+        <div class="ann-case">최근 검색 0건 시 섹션 헤더("최근 검색")와 목록 영역 모두 미표시.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">8</div>
+      <div class="ann-body">
+        <div class="ann-title">전체 삭제</div>
+        <div class="ann-desc"><ul><li>최근 검색 섹션 헤더 우측 "전체 삭제" 탭 시 로컬 스토리지의 최근 검색 전체 삭제.</li><li>삭제 확인 다이얼로그 없음(즉시 처리).</li><li>삭제 후 최근 검색 섹션(헤더 포함) 즉시 미표시로 전환.</li></ul></div>
+        <div class="ann-rule">정책서 4-8절.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════════════════════════════════════════════════
+  M01-C  날짜 선택 캘린더
+════════════════════════════════════════════════ -->
+<div id="m01-c" class="sec-title">
+  <span class="sec-badge">M01-C</span>날짜 선택 캘린더
+  <span style="font-size:12px;font-weight:400;color:#888">— 날짜 필드 탭 후 전환</span>
+</div>
+<div class="sec-sub">
+  전체 화면 캘린더. 1탭=체크인, 2탭=체크아웃 선택. 범위 하이라이트. 하단 [적용] 탭 시 M01-A 복귀.
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — M01-C 날짜 선택</div>
+  <ul class="sec-policy-list">
+    <li><strong>기본값</strong>: 체크인=오늘+7일, 체크아웃=체크인+1일 (4-7절)</li>
+    <li><strong>최대 박수</strong>: 30박 (체크인~체크아웃 최대 30박. 초과 선택 불가) (4-7절)</li>
+    <li><strong>캘린더 렌더링 범위</strong>: 오늘 ~ 오늘+365일 (365일 이후 날짜 미표시) (4-7절)</li>
+    <li><strong>과거 날짜</strong>: 오늘 이전 날짜 비활성 처리 — 선택 불가 (4-7절)</li>
+    <li><strong>컴포넌트 공유</strong>: S02 재검색 시 동일 컴포넌트 재사용 (6-5절)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.33 4-7절·6-5절</div>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+        <div class="cal-hdr">
+          <button class="cal-close">← <span class="wf-cn">1</span></button>
+          <span class="cal-t">날짜 선택</span>
+        </div>
+        <div style="overflow-y:auto; height:570px; padding-bottom:60px;">
+          <div class="cal-body">
+            <div class="cal-month">2026년 6월</div>
+            <div class="cal-wds">
+              <div class="cal-wd">일</div><div class="cal-wd">월</div>
+              <div class="cal-wd">화</div><div class="cal-wd">수</div>
+              <div class="cal-wd">목</div><div class="cal-wd">금</div>
+              <div class="cal-wd">토</div>
+            </div>
+            <div class="cal-days">
+              <div class="d empty"></div>
+              <div class="d">1</div><div class="d">2</div><div class="d">3</div>
+              <div class="d">4</div><div class="d">5</div><div class="d">6</div>
+              <div class="d">7</div><div class="d">8</div><div class="d">9</div>
+              <div class="d">10</div><div class="d">11</div><div class="d">12</div>
+              <div class="d">13</div><div class="d">14</div><div class="d">15</div>
+              <div class="d">16</div><div class="d">17</div>
+              <div class="d rs">18 <span class="wf-cn">2</span></div>
+              <div class="d re">19 <span class="wf-cn">3</span></div>
+              <div class="d">20</div>
+              <div class="d">21</div><div class="d">22</div><div class="d">23</div>
+              <div class="d">24</div><div class="d">25</div><div class="d">26</div>
+              <div class="d">27</div><div class="d">28</div><div class="d">29</div>
+              <div class="d">30</div>
+            </div>
+          </div>
+          <div class="cal-body" style="padding-top:4px;">
+            <div class="cal-month">2026년 7월</div>
+            <div class="cal-wds">
+              <div class="cal-wd">일</div><div class="cal-wd">월</div>
+              <div class="cal-wd">화</div><div class="cal-wd">수</div>
+              <div class="cal-wd">목</div><div class="cal-wd">금</div>
+              <div class="cal-wd">토</div>
+            </div>
+            <div class="cal-days">
+              <div class="d empty"></div><div class="d empty"></div>
+              <div class="d empty"></div>
+              <div class="d">1</div><div class="d">2</div>
+              <div class="d">3</div><div class="d">4</div>
+              <div class="d">5</div><div class="d">6</div>
+            </div>
+          </div>
+        </div>
+        <!-- 하단 고정 영역 (sticky bottom) -->
+        <div class="cal-footer">
+          <div class="cal-info">6월 18일 (목) → 6월 19일 (금) · 1박 <span class="wf-cn">4</span></div>
+          <button class="cal-apply">적용 <span class="wf-cn">5</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <h3>화면 주석 — M01-C</h3>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">뒤로가기 (←) · 닫기</div>
+        <div class="ann-desc"><ul><li>탭 시 날짜 선택 취소 후 M01-A(메인 홈)으로 복귀.</li><li>캘린더 진입 이전에 이미 적용된 날짜값은 그대로 유지 (새로 선택 시도 중 취소한 경우).</li><li>[완료] 버튼 없음 — 날짜 확정은 하단 [적용] 버튼으로만 처리.</li></ul></div>
+        <div class="ann-rule">정책서 4-7절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">체크인 날짜 (range-start)</div>
+        <div class="ann-desc"><ul><li>캘린더에서 첫 번째로 탭한 날짜가 체크인으로 설정됨.</li><li>퍼플 원형(#4f46e5)으로 강조 표시.</li><li>체크인 선택 후 두 번째 탭 대기 상태 — 체크인 이후 날짜만 선택 가능하도록 이전 날짜 비활성화.</li><li>오늘 이전 날짜는 항상 비활성(선택 불가).</li></ul></div>
+        <div class="ann-front">← API 파라미터: <code>checkIn=YYYY-MM-DD</code> (예: <code>checkIn=2026-06-18</code>)</div>
+        <div class="ann-rule">정책서 4-7절. 기본값: 오늘 날짜 + 7일. 체크인 재선택(두 번째 선택 시작) 시 기존 범위 리셋 후 새 체크인으로 설정.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">체크아웃 날짜 (range-end)</div>
+        <div class="ann-desc"><ul><li>체크인 선택 후 두 번째로 탭한 날짜가 체크아웃으로 설정됨.</li><li>퍼플 원형(#4f46e5)으로 강조.</li><li>체크인~체크아웃 사이 날짜는 범위 하이라이트(연보라, #eef2ff)로 표시.</li><li>체크인과 동일한 날짜 탭 시 체크아웃을 체크인 + 1일로 자동 조정 (당일 예약 불가).</li><li>체크인보다 이전 날짜는 선택 불가.</li><li><b>최대 박수 제한:</b> 체크인 기준으로 최대 30일 이후까지만 선택 가능. 30박 초과 날짜는 비활성 처리.</li></ul></div>
+        <div class="ann-front">← API 파라미터: <code>checkOut=YYYY-MM-DD</code> (예: <code>checkOut=2026-06-19</code>)</div>
+        <div class="ann-rule">정책서 v0.31 4-7절. 기본값: 체크인 + 1일. 체크아웃 = 체크인 시 자동으로 +1일 조정. 체크아웃 < 체크인 날짜 선택 불가. 최대 30박 초과 날짜 비활성.</div>
+        <div class="ann-case">검색 API 파라미터에 세금 포함 최종가 기준 고정: <code>includeTaxesInTotal=true</code>, <code>includeLocalTaxesInTotal=true</code>.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">하단 선택 정보 바 — 화면 하단 고정</div>
+        <div class="ann-desc"><ul><li>날짜 선택 상태에 따라 실시간으로 텍스트 업데이트.</li><li>표시 형식: "M월 D일 (요일) → M월 D일 (요일) · N박" (예: "6월 18일 (목) → 6월 19일 (금) · 1박").</li><li>체크인만 선택된 상태: "N월 N일 (요일) → 체크아웃 선택".</li><li>달력 스크롤 시에도 항상 화면 하단에 고정 표시.</li></ul></div>
+        <div class="ann-rule">정책서 4-7절. <code>position: sticky; bottom: 0; background: #fff</code> 적용. 달력 스크롤 영역과 하단 바 분리 (달력 영역에 <code>padding-bottom</code> 하단 바 높이 이상 확보).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">5</div>
+      <div class="ann-body">
+        <div class="ann-title">[적용] 버튼 — 화면 하단 고정</div>
+        <div class="ann-desc"><ul><li>체크인·체크아웃 양쪽 모두 선택된 상태에서만 활성화(파란 버튼).</li><li>체크인만 선택된 상태에서는 비활성(회색) 처리.</li><li>[적용] 탭 시 선택된 날짜 확정 → M01-A로 복귀하며 검색폼 날짜 필드(cn4·cn5)에 선택값 업데이트.</li><li>하단 선택 정보(cn4)와 함께 하단 고정 바 구성.</li></ul></div>
+        <div class="ann-rule">정책서 4-7절. MVP 제외: 날짜별 최저가 힌트(₩/₩₩/₩₩₩ 색상 표시) — Phase 2 검토.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════════════════════════════════════════════════
+  M01-D  인원 · 객실 설정
+════════════════════════════════════════════════ -->
+<div id="m01-d" class="sec-title">
+  <span class="sec-badge">M01-D</span>인원 · 객실 설정
+  <span style="font-size:12px;font-weight:400;color:#888">— 인원 필드 탭 후 전환</span>
+</div>
+<div class="sec-sub">
+  객실별 성인·아동 독립 설정 (Vio 수동 구성 방식). 아동 수에 따라 나이 드롭다운 동적 생성.<br>
+  최대 8객실. <code>rooms</code> 파라미터: 객실별 파이프(|) 구분 → 예) <code>rooms=2|2:8</code>
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — M01-D 인원·객실 설정</div>
+  <ul class="sec-policy-list">
+    <li><strong>기본값</strong>: 1객실, 성인 2명, 아동 0명 (4-9절)</li>
+    <li><strong>제약</strong>: 최대 8객실. 객실당 총 인원 8명(성인+아동). 아동 최대 4명. 아동 나이 0~17세 (4-9절)</li>
+    <li><strong>객실 1</strong>: 제거 불가. 객실 2 이상에만 [객실 제거] 표시 (4-9절)</li>
+    <li><strong>아동 나이 미선택</strong>: 0세(영아)로 전송 (4-9절)</li>
+    <li><strong>rooms 파라미터 형식</strong>: <code>rooms=2</code>(성인2) / <code>rooms=2:8</code>(성인2+아동8세) / <code>rooms=2:4,10</code>(성인2+아동4세·10세) (4-9절)</li>
+    <li><strong>[초기화]</strong>: 1객실/성인 2명/아동 0명으로 초기화 (4-9절)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.29 4-9절</div>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+        <div class="g-hdr">
+          <button class="back-btn">← <span class="wf-cn">1</span></button>
+          <div class="g-title">인원 · 객실</div>
+          <button class="g-reset">초기화 <span class="wf-cn">2</span></button>
+        </div>
+        <div class="g-body" style="overflow-y:auto; padding-bottom:8px;">
+
+          <!-- 객실 1 -->
+          <div style="border:1px solid #e5e7eb; border-radius:8px; padding:12px 14px; margin-bottom:10px;">
+            <div style="font-size:12px; font-weight:600; color:#374151; margin-bottom:10px;">
+              객실 1 <span class="wf-cn">3</span>
+            </div>
+            <div class="g-row">
+              <div>
+                <div class="g-label-t">성인 <span class="wf-cn">4</span></div>
+                <div class="g-label-s">만 18세 이상</div>
+              </div>
+              <div class="counter">
+                <button class="c-btn off">−</button>
+                <span class="c-val">2</span>
+                <button class="c-btn">+</button>
+              </div>
+            </div>
+            <div class="g-row">
+              <div>
+                <div class="g-label-t">아동 <span class="wf-cn">5</span></div>
+                <div class="g-label-s">만 0 – 17세</div>
+              </div>
+              <div class="counter">
+                <button class="c-btn off">−</button>
+                <span class="c-val">0</span>
+                <button class="c-btn">+</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 객실 2 (아동 1명 예시) -->
+          <div style="border:1px solid #e5e7eb; border-radius:8px; padding:12px 14px; margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <div style="font-size:12px; font-weight:600; color:#374151;">객실 2 <span class="wf-cn">3</span></div>
+              <button style="font-size:11px; color:#ef4444; background:none; border:none; padding:0; cursor:pointer;">객실 제거 <span class="wf-cn">7</span></button>
+            </div>
+            <div class="g-row">
+              <div>
+                <div class="g-label-t">성인 <span class="wf-cn">4</span></div>
+                <div class="g-label-s">만 18세 이상</div>
+              </div>
+              <div class="counter">
+                <button class="c-btn off">−</button>
+                <span class="c-val">2</span>
+                <button class="c-btn">+</button>
+              </div>
+            </div>
+            <div class="g-row" style="flex-direction:column; align-items:stretch; gap:8px;">
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div>
+                  <div class="g-label-t">아동 <span class="wf-cn">5</span></div>
+                  <div class="g-label-s">만 0 – 17세</div>
+                </div>
+                <div class="counter">
+                  <button class="c-btn">−</button>
+                  <span class="c-val">1</span>
+                  <button class="c-btn">+</button>
+                </div>
+              </div>
+              <!-- 아동 나이 드롭다운 (아동 1명) -->
+              <div>
+                <div style="font-size:11px;color:#9ca3af;margin-bottom:4px;">1세 아동 나이 (만) <span class="wf-cn">6</span></div>
+                <select class="age-sel">
+                  <option>0세 (영아)</option><option>1세</option>
+                  <option>2세</option><option selected>8세</option>
+                  <option>10세</option><option>17세</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 객실 추가 버튼 -->
+          <button style="width:100%; padding:10px; border:1px dashed #d1d5db; border-radius:8px; background:#f9fafb; color:#6b7280; font-size:13px; cursor:pointer; margin-bottom:4px;">
+            + 객실 추가 <span class="wf-cn">8</span>
+          </button>
+
+        </div>
+        <div class="g-footer">
+          <button class="g-apply">🔍 검색 · 게스트 5명 · 객실 2개 <span class="wf-cn">9</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <h3>화면 주석 — M01-D</h3>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">뒤로가기 (←)</div>
+        <div class="ann-desc"><ul><li>탭 시 변경 중이던 인원·객실 설정 취소 후 M01-A(메인 홈)으로 복귀.</li><li>M01-D 진입 이전에 이미 확정된 인원값은 그대로 유지.</li><li>[검색] 버튼(cn9)을 탭해야만 변경값 적용됨.</li></ul></div>
+        <div class="ann-rule">정책서 4-9절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">[초기화] 버튼</div>
+        <div class="ann-desc"><ul><li>탭 시 모든 객실 설정을 기본값으로 즉시 초기화: 객실 1개 / 성인 2명 / 아동 0명.</li><li>2번째 이상 객실 블록 전체 제거.</li><li>아동 나이 드롭다운 전부 제거.</li><li>초기화 확인 다이얼로그 없음(즉시 처리).</li><li>[검색] 버튼 텍스트도 "게스트 2명 · 객실 1개"로 실시간 업데이트.</li></ul></div>
+        <div class="ann-rule">정책서 4-9절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">객실 블록 (객실별 독립 설정 카드)</div>
+        <div class="ann-desc"><ul><li>각 객실은 독립된 카드 블록으로 표시.</li><li>객실 번호(객실 1, 객실 2 …) 레이블 + 성인 카운터 + 아동 카운터 + (아동 있을 경우) 아동 나이 드롭다운 구성.</li><li>기본 1객실.</li><li>최대 8객실 (8객실 초과 시 [+ 객실 추가] 버튼 비활성).</li></ul></div>
+        <div class="ann-front">← API 파라미터 <code>rooms</code>: 객실별 파이프(|) 구분. 객실1(성인2) = <code>rooms=2</code> / 객실1(성인2)+객실2(성인2·아동1 8세) = <code>rooms=2|2:8</code></div>
+        <div class="ann-rule">정책서 4-9절. 객실 1은 제거 불가 (제거 버튼 미노출). 객실 2 이상에만 [객실 제거] 버튼 표시.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">성인 카운터 (객실별 독립)</div>
+        <div class="ann-desc"><ul><li>해당 객실의 성인 수 설정.</li><li>기본값 2명.</li><li>최소 1명(1명 상태에서 [−] 버튼 비활성 처리 — 회색으로 표시, 탭 무반응).</li><li>최대값은 "객실당 총 인원(성인+아동) 8명" 제약에 따라 동적 변화 (아동이 많을수록 성인 최대값 줄어듦).</li><li>[+] / [−] 탭 시 하단 [검색] 버튼의 게스트 수 실시간 업데이트.</li></ul></div>
+        <div class="ann-rule">정책서 4-9절. 성인 기준: 만 18세 이상.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">5</div>
+      <div class="ann-body">
+        <div class="ann-title">아동 카운터 (객실별 독립)</div>
+        <div class="ann-desc"><ul><li>해당 객실의 아동 수 설정.</li><li>기본값 0명.</li><li>최소 0명(0명 상태에서 [−] 비활성).</li><li>최대 4명 — 단, "객실당 총 인원(성인+아동) 8명" 제약도 동시 적용(둘 중 먼저 도달하는 제약 기준).</li><li>[+] 탭 시 해당 아동의 나이 드롭다운(cn6) 즉시 동적 추가.</li><li>[−] 탭 시 마지막 아동의 나이 드롭다운 제거.</li></ul></div>
+        <div class="ann-rule">정책서 4-9절. 아동 기준: 만 0~17세.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">6</div>
+      <div class="ann-body">
+        <div class="ann-title">아동 나이 드롭다운 (동적 생성, 아동 수만큼)</div>
+        <div class="ann-desc"><ul><li>해당 객실의 아동 수만큼 드롭다운 동적 생성.</li><li>레이블: "1번째 아동 나이 (만)", "2번째 아동 나이 (만)" … 형식.</li><li>선택 옵션: 0세(영아), 1세, 2세, …, 17세 (총 18개 옵션).</li><li>사용자가 나이를 선택하지 않고 넘어간 경우 기본값 0세(영아)로 처리하여 API 파라미터에 포함.</li></ul></div>
+        <div class="ann-front">← <code>rooms</code> 아동 나이 형식: 성인2+아동1(8세) = <code>"2:8"</code> / 성인2+아동2(4세·10세) = <code>"2:4,10"</code> / 성인1+아동1(0세) = <code>"1:0"</code></div>
+        <div class="ann-rule">정책서 4-9절. 나이 미선택 시 0세(영아, 값: 0)로 API 전송. 아동 나이는 검색 결과 정확도에 영향하므로 반드시 전송.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">7</div>
+      <div class="ann-body">
+        <div class="ann-title">[객실 제거] 버튼</div>
+        <div class="ann-desc"><ul><li>객실 2 이상의 각 카드 우측 상단에 표시되는 "객실 제거" 텍스트 버튼(빨간색).</li><li>탭 시 해당 객실 블록 전체(성인·아동 카운터 + 아동 나이 드롭다운) 즉시 삭제.</li><li>제거 확인 없음.</li><li>나머지 객실 번호는 재정렬하지 않음 (삭제된 번호 그대로 유지해도 무방 — 개발팀 결정).</li><li>객실 1은 항상 제거 불가로 [객실 제거] 버튼 미노출.</li></ul></div>
+        <div class="ann-rule">정책서 4-9절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">8</div>
+      <div class="ann-body">
+        <div class="ann-title">[+ 객실 추가] 버튼</div>
+        <div class="ann-desc"><ul><li>마지막 객실 블록 하단에 표시되는 점선 테두리 버튼.</li><li>탭 시 신규 객실 블록이 목록 하단에 추가됨.</li><li>추가 시 기본값: 성인 2명 / 아동 0명.</li><li>신규 추가 후 해당 블록으로 자동 스크롤.</li><li>현재 객실 수 = 8인 경우 버튼 비활성(회색, 탭 무반응) + "최대 8객실까지 추가 가능합니다" 툴팁 표시 (탭 시 또는 호버 시).</li></ul></div>
+        <div class="ann-rule">정책서 4-9절. 최대 8객실 초과 불가.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">9</div>
+      <div class="ann-body">
+        <div class="ann-title">[검색] 버튼 — 하단 고정 (position: sticky; bottom: 0)</div>
+        <div class="ann-desc"><ul><li>화면 하단에 항상 고정.</li><li>버튼 내 텍스트: "검색 · 게스트 N명 · 객실 N개" — 전체 객실 성인+아동 합계(게스트 수)와 객실 수를 실시간으로 반영.</li><li>탭 시 현재 인원·객실 설정값을 확정하고 M01-A로 복귀하며 검색폼 인원·객실 필드(cn6) 업데이트.</li><li>M01-A의 기존 날짜·목적지 값은 그대로 유지.</li><li>인원 확정 후 자동 검색하지 않음 — 사용자가 M01-A에서 [검색] 버튼을 다시 탭해야 S01 이동.</li></ul></div>
+        <div class="ann-front">← <code>rooms</code> 파라미터 최종 조합 예시: 객실1(성인2)+객실2(성인1·아동1 5세) = <code>rooms=2|1:5</code></div>
+        <div class="ann-rule">정책서 4-9절. <code>position: sticky; bottom: 0; background: #fff</code> 적용. 스크롤 시에도 항상 노출.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<script>
+/* ── embed 모드: ?embed 쿼리스트링 시 기획서 UI 제거, 모바일 화면만 표시 ── */
+(function(){
+  if(!new URLSearchParams(location.search).has('embed')) return;
+  document.addEventListener('DOMContentLoaded', function(){
+    var nav = document.querySelector('.page-nav');
+    var toc = document.querySelector('.toc');
+    if(nav) nav.remove();
+    if(toc) toc.remove();
+    document.body.style.cssText = 'margin:0;padding:0;background:#fff;overflow-x:hidden;';
+    var page = document.querySelector('.page');
+    if(page) page.style.cssText = 'margin:0;padding:0;';
+    ['.ann','.sec-policy','.sec-title','.sec-sub','.sec-divider','.wf-cn'].forEach(function(sel){
+      document.querySelectorAll(sel).forEach(function(el){ el.style.display='none'; });
+    });
+    // embed 모드: M01-A(첫 번째 two-col)만 표시, M01-B·C·D 숨김
+    document.querySelectorAll('.two-col').forEach(function(el, i){ el.style.display = i === 0 ? 'block' : 'none'; });
+    document.querySelectorAll('.mobile-wrap').forEach(function(el){
+      el.style.cssText = 'background:none;padding:0;min-height:0;display:block;';
+    });
+    document.querySelectorAll('.mobile-device').forEach(function(el){
+      el.style.cssText = 'width:375px;background:#fff;border-radius:0;padding:0;box-shadow:none;';
+    });
+    document.querySelectorAll('.m-notch').forEach(function(el){ el.style.display='none'; });
+    document.querySelectorAll('.m-screen').forEach(function(el){
+      el.style.cssText = 'height:auto;max-height:none;overflow-y:auto;border-radius:0;';
+    });
+  });
+})();
+</script>
+</body>
+</html>

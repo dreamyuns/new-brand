@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 챗봇 검색 정책서 v0.2 — allmytour meta</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"Malgun Gothic","Apple SD Gothic Neo","Segoe UI",sans-serif;
+  background:#f8fafc;color:#1e293b;min-height:100vh;
+  padding-top:44px;
+}
+
+/* ── 상단 네비 ── */
+.page-nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(15,10,30,.96);backdrop-filter:blur(8px);
+  height:44px;display:flex;align-items:center;padding:0 20px;
+  gap:16px;border-bottom:1px solid rgba(255,255,255,.08);
+}
+.page-nav a{font-size:12px;color:rgba(255,255,255,.55);text-decoration:none;}
+.page-nav a:hover{color:#fff}
+.page-nav-sep{color:rgba(255,255,255,.2)}
+.page-nav .cur{color:#a78bfa;font-weight:700}
+
+/* ── 헤더 ── */
+.chat-header{background:linear-gradient(135deg,#1a0533,#2d1060);color:#fff;padding:40px 48px 32px}
+.chat-header-label{font-size:11px;font-weight:700;letter-spacing:.12em;color:#c4b5fd;margin-bottom:8px;text-transform:uppercase}
+.chat-header-title{font-size:28px;font-weight:800;letter-spacing:-.5px;margin-bottom:6px}
+.chat-header-title .ai-mark{color:#a78bfa}
+.chat-header-meta{font-size:13px;color:rgba(255,255,255,.45);margin-bottom:14px}
+.chat-header-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.3);
+  color:#c4b5fd;font-size:12px;font-weight:700;padding:5px 14px;border-radius:6px;
+}
+.chat-header-badge span{color:#fff;font-weight:800}
+
+/* ── 레이아웃 ── */
+.chat-body-wrap{display:flex;max-width:1280px;margin:0 auto;padding:32px 24px;gap:28px;align-items:flex-start}
+
+/* ── 목차 ── */
+.chat-toc{
+  width:240px;flex-shrink:0;position:sticky;top:58px;
+  background:#fff;border:1px solid #e2e8f0;border-radius:10px;
+  padding:16px 0;max-height:calc(100vh - 72px);overflow-y:auto;
+}
+.chat-toc-hdr{
+  font-size:10px;font-weight:700;letter-spacing:.1em;color:#94a3b8;text-transform:uppercase;
+  padding:0 16px 10px;border-bottom:1px solid #f1f5f9;margin-bottom:8px;
+}
+.chat-toc-art{
+  display:block;font-size:12px;font-weight:700;color:#334155;
+  padding:5px 16px;text-decoration:none;
+  transition:background .12s,color .12s;border-left:3px solid transparent;
+}
+.chat-toc-art:hover{background:#f5f3ff;color:#7c3aed}
+.chat-toc-art.active{background:#ede9fe;color:#7c3aed;border-left-color:#7c3aed}
+.chat-toc-sub{
+  display:block;font-size:11px;color:#64748b;
+  padding:3px 16px 3px 26px;text-decoration:none;
+  transition:background .12s,color .12s;border-left:3px solid transparent;
+}
+.chat-toc-sub:hover{background:#f8fafc;color:#7c3aed}
+.chat-toc-sub.active{color:#7c3aed;border-left-color:#ddd6fe}
+.chat-toc-divider{height:1px;background:#f1f5f9;margin:8px 0}
+
+/* ── 본문 ── */
+.chat-content{flex:1;min-width:0}
+
+.chat-section{background:#fff;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:20px;overflow:hidden}
+.chat-section-hdr{
+  background:#f5f3ff;border-bottom:1px solid #ddd6fe;
+  padding:16px 24px;display:flex;align-items:center;gap:10px;
+}
+.art-badge{
+  background:#7c3aed;color:#fff;font-size:10px;font-weight:700;
+  padding:3px 9px;border-radius:4px;white-space:nowrap;letter-spacing:.05em;
+}
+.chat-section-hdr h2{font-size:16px;font-weight:700;color:#3b0764;letter-spacing:-.3px}
+.chat-section-body{padding:20px 24px}
+
+.chat-sub{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid #f1f5f9}
+.chat-sub:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.chat-sub-title{font-size:14px;font-weight:700;color:#1e293b;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.chat-sub-num{font-size:11px;font-weight:700;color:#7c3aed;background:#ede9fe;padding:2px 8px;border-radius:3px}
+
+.chat-text{font-size:13px;color:#475569;line-height:1.8}
+.chat-text p{margin-bottom:8px}
+.chat-text p:last-child{margin-bottom:0}
+.chat-text strong{color:#1e293b;font-weight:700}
+.chat-text ul{margin:6px 0 6px 18px}
+.chat-text li{margin-bottom:4px}
+
+/* ── 테이블 ── */
+.chat-table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0}
+.chat-table th{background:#f5f3ff;color:#4c1d95;font-weight:700;padding:8px 12px;text-align:left;border:1px solid #ddd6fe;font-size:11px;letter-spacing:.03em}
+.chat-table td{padding:8px 12px;border:1px solid #e2e8f0;color:#475569;vertical-align:top;line-height:1.6}
+.chat-table tr:nth-child(even) td{background:#fafaff}
+.chat-table code{background:#f0edff;color:#7c3aed;padding:1px 5px;border-radius:3px;font-size:11px;font-family:monospace}
+
+/* ── 다이어그램 박스 ── */
+.flow-box{background:#1a0533;color:#e9d5ff;border-radius:10px;padding:18px 20px;font-size:12px;font-family:monospace;line-height:1.8;white-space:pre;overflow-x:auto;margin:10px 0}
+.flow-box .hl{color:#a78bfa;font-weight:700}
+.flow-box .note{color:#6b7280;font-style:italic}
+
+/* ── 예시 박스 ── */
+.ex-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px 16px;font-size:12px;color:#475569;line-height:1.8;margin:10px 0;white-space:pre-wrap;font-family:monospace}
+.ex-box .user{color:#7c3aed;font-weight:700}
+.ex-box .ai{color:#059669;font-weight:700}
+
+/* ── 배지 ── */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;white-space:nowrap}
+.badge-purple{background:#ede9fe;color:#7c3aed}
+.badge-green{background:#d1fae5;color:#065f46}
+.badge-red{background:#fee2e2;color:#991b1b}
+.badge-yellow{background:#fef9c3;color:#854d0e}
+.badge-gray{background:#f1f5f9;color:#64748b}
+
+/* ── 미결 테이블 ── */
+.pending-table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0}
+.pending-table th{background:#fef9c3;color:#78350f;font-weight:700;padding:8px 12px;text-align:left;border:1px solid #fde68a;font-size:11px}
+.pending-table td{padding:8px 12px;border:1px solid #e2e8f0;color:#475569;vertical-align:top;line-height:1.6}
+.pending-table tr:nth-child(even) td{background:#fffbeb}
+
+/* ── 파이프라인 카드 ── */
+.pipeline{display:flex;flex-direction:column;gap:0;margin:10px 0}
+.pipeline-step{display:flex;align-items:flex-start;gap:12px;padding:10px 0}
+.pipeline-step:not(:last-child){border-bottom:none}
+.pipeline-arrow{display:flex;flex-direction:column;align-items:center;gap:2px;padding-top:2px}
+.pipeline-dot{width:10px;height:10px;background:#7c3aed;border-radius:50%;flex-shrink:0}
+.pipeline-line{width:2px;height:32px;background:#ddd6fe;margin:0 4px}
+.pipeline-box{background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:8px 14px;flex:1}
+.pipeline-box-title{font-size:12px;font-weight:700;color:#4c1d95;margin-bottom:2px}
+.pipeline-box-desc{font-size:11px;color:#6b7280;line-height:1.5}
+.pipeline-highlight{background:#ede9fe;border-color:#c4b5fd}
+.pipeline-highlight .pipeline-box-title{color:#6d28d9}
+
+/* ── 상단 요약 카드 ── */
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+.summary-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px}
+.summary-card-label{font-size:10px;font-weight:700;letter-spacing:.08em;color:#94a3b8;text-transform:uppercase;margin-bottom:6px}
+.summary-card-val{font-size:14px;font-weight:800;color:#1e293b}
+.summary-card-sub{font-size:11px;color:#94a3b8;margin-top:2px}
+</style>
+</head>
+<body>
+
+<nav class="page-nav">
+  <a href="index.html">← 목차</a>
+  <span class="page-nav-sep">›</span>
+  <a href="phase1_policy.html">Phase 1 정책서</a>
+  <span class="page-nav-sep">›</span>
+  <span class="cur">AI 챗봇 검색 정책서</span>
+</nav>
+
+<!-- 헤더 -->
+<header class="chat-header">
+  <div class="chat-header-label">Policy Document — AI Chatbot Search</div>
+  <div class="chat-header-title"><span class="ai-mark">✦</span> AI 챗봇 검색 정책서</div>
+  <div class="chat-header-meta">자연어검색 정책서 v0.2 · 2026-06-26 업데이트 · 윤성균 PO</div>
+  <div class="chat-header-badge">
+    최신 버전 <span>v0.2</span>
+    &nbsp;·&nbsp; 기준 파일: 자연어검색_정책서_v0.2.md
+  </div>
+</header>
+
+<!-- 요약 카드 -->
+<div style="max-width:1280px;margin:24px auto 0;padding:0 24px">
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-card-label">결과 카드</div>
+      <div class="summary-card-val">3개 고정</div>
+      <div class="summary-card-sub">KAYAK 인기순 상위 3개</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-label">추천 검색어</div>
+      <div class="summary-card-val">4개 고정</div>
+      <div class="summary-card-sub">LLM 단일 호출로 동시 생성</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-label">대화 이력 보관</div>
+      <div class="summary-card-val">7일 · 20개</div>
+      <div class="summary-card-sub">localStorage (서버 저장 Phase 2)</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-label">날짜 기본값</div>
+      <div class="summary-card-val">D+7 / D+8</div>
+      <div class="summary-card-sub">미입력 시 1박 자동 적용</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-label">인원 기본값</div>
+      <div class="summary-card-val">성인 2인 · 1객실</div>
+      <div class="summary-card-sub">미입력 시 자동 적용</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-card-label">지역 되묻기</div>
+      <div class="summary-card-val">최대 2회</div>
+      <div class="summary-card-sub">인기 도시 뱃지 10개 제공 · 3회째 안내</div>
+    </div>
+  </div>
+</div>
+
+<!-- 본문 레이아웃 -->
+<div class="chat-body-wrap">
+
+  <!-- 목차 -->
+  <nav class="chat-toc">
+    <div class="chat-toc-hdr">목차</div>
+    <a href="#sec1" class="chat-toc-art active">제1조 개요</a>
+    <a href="#sec1-1" class="chat-toc-sub">1-1. 목적</a>
+    <a href="#sec1-2" class="chat-toc-sub">1-2. MVP 범위</a>
+    <div class="chat-toc-divider"></div>
+    <a href="#sec2" class="chat-toc-art">제2조 용어 정의</a>
+    <div class="chat-toc-divider"></div>
+    <a href="#sec3" class="chat-toc-art">제3조 시스템 아키텍처</a>
+    <a href="#sec3-1" class="chat-toc-sub">3-1. 처리 파이프라인</a>
+    <a href="#sec3-2" class="chat-toc-sub">3-2. LLM 파싱 파라미터</a>
+    <div class="chat-toc-divider"></div>
+    <a href="#sec4" class="chat-toc-art">제4조 UI/UX 구조</a>
+    <a href="#sec4-1" class="chat-toc-sub">4-1. 진입 방법</a>
+    <a href="#sec4-2" class="chat-toc-sub">4-2. 헤더 구조</a>
+    <a href="#sec4-3" class="chat-toc-sub">4-3. 초기화면</a>
+    <a href="#sec4-4" class="chat-toc-sub">4-4. 입력창</a>
+    <a href="#sec4-5" class="chat-toc-sub">4-5. AI 응답 흐름</a>
+    <div class="chat-toc-divider"></div>
+    <a href="#sec5" class="chat-toc-art">제5조 결과 카드 정책</a>
+    <a href="#sec5-4" class="chat-toc-sub">5-4. S01 동기화 ★</a>
+    <a href="#sec5-5" class="chat-toc-sub">5-5. 재진입 대화 유지</a>
+    <div class="chat-toc-divider"></div>
+    <a href="#sec6" class="chat-toc-art">제6조 추천 검색어</a>
+    <div class="chat-toc-divider"></div>
+    <a href="#sec7" class="chat-toc-art">제7조 초기화면 추천질문</a>
+    <div class="chat-toc-divider"></div>
+    <a href="#sec8" class="chat-toc-art">제8조 입력 처리 정책</a>
+    <a href="#sec8-1" class="chat-toc-sub">8-1. 기본값 처리 ★</a>
+    <a href="#sec8-2" class="chat-toc-sub">8-2. 지역 없을 때 ★</a>
+    <a href="#sec8-3" class="chat-toc-sub">8-3. 범위 외 질문</a>
+    <a href="#sec8-4" class="chat-toc-sub">8-4. 목적지 변경 시 ★</a>
+    <div class="chat-toc-divider"></div>
+    <a href="#sec9" class="chat-toc-art">제9조 대화 이력 정책</a>
+    <div class="chat-toc-divider"></div>
+    <a href="#sec10" class="chat-toc-art">제10조 오류 처리</a>
+    <a href="#sec10-1" class="chat-toc-sub">10-1. 로딩 2단계</a>
+    <a href="#sec10-2" class="chat-toc-sub">10-2. 검색 0개</a>
+    <a href="#sec10-3" class="chat-toc-sub">10-3. API 오류 ★</a>
+    <div class="chat-toc-divider"></div>
+    <a href="#sec11" class="chat-toc-art">제11조 AI 필터 ★ NEW</a>
+    <a href="#sec11-1" class="chat-toc-sub">11-1. 위치·진입</a>
+    <a href="#sec11-2" class="chat-toc-sub">11-2. 입력 분기</a>
+    <div class="chat-toc-divider"></div>
+    <a href="#sec12" class="chat-toc-art">제12조 미결 항목</a>
+    <div class="chat-toc-divider"></div>
+    <a href="#history" class="chat-toc-art">변경이력</a>
+  </nav>
+
+  <!-- 콘텐츠 -->
+  <div class="chat-content">
+
+    <!-- 제1조 개요 -->
+    <div class="chat-section" id="sec1">
+      <div class="chat-section-hdr">
+        <span class="art-badge">제1조</span>
+        <h2>개요</h2>
+      </div>
+      <div class="chat-section-body">
+
+        <div class="chat-sub" id="sec1-1">
+          <div class="chat-sub-title"><span class="chat-sub-num">1-1</span> 목적</div>
+          <div class="chat-text">
+            <p>자연어 입력(텍스트·음성)을 통해 호텔 검색 조건을 파싱하고, KAYAK API 결과를 AI 요약과 함께 제공하는 챗봇 검색 기능의 정책을 정의한다.</p>
+          </div>
+        </div>
+
+        <div class="chat-sub" id="sec1-2">
+          <div class="chat-sub-title"><span class="chat-sub-num">1-2</span> MVP 범위</div>
+          <table class="chat-table">
+            <tr><th>구분</th><th>포함</th><th>제외</th></tr>
+            <tr><td>입력 방식</td><td>텍스트 입력</td><td>음성 입력 (추가 논의), 사진 첨부 (추가 논의)</td></tr>
+            <tr><td>검색 대상</td><td>호텔 검색 (KAYAK API)</td><td>항공, 렌터카, 관광명소, 맛집</td></tr>
+            <tr><td>결과</td><td>인기순 상위 3개 카드</td><td>S01 전체 결과는 CTA로 연결</td></tr>
+            <tr><td>대화</td><td>세션 내 다중 턴 대화</td><td>세션 간 히스토리 서버 저장 (추가 논의)</td></tr>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제2조 용어 정의 -->
+    <div class="chat-section" id="sec2">
+      <div class="chat-section-hdr">
+        <span class="art-badge">제2조</span>
+        <h2>용어 정의</h2>
+      </div>
+      <div class="chat-section-body">
+        <table class="chat-table">
+          <tr><th>용어</th><th>정의</th></tr>
+          <tr><td><strong>AI 챗봇</strong></td><td>자연어 입력을 받아 호텔 검색 조건을 파싱하고 결과를 제공하는 대화형 인터페이스</td></tr>
+          <tr><td><strong>Function Calling</strong></td><td>LLM이 구조화된 파라미터(도시, 날짜, 인원 등)를 추출하는 기법</td></tr>
+          <tr><td><strong>추천 검색어</strong></td><td>AI가 결과 도출 후 사용자에게 제안하는 후속 검색 문장</td></tr>
+          <tr><td><strong>인기 여행지</strong></td><td>초기화면에 뱃지로 노출되는 사전 정의 도시 목록</td></tr>
+          <tr><td><strong>추천질문</strong></td><td>초기화면에 표시되는 예시 검색 문장 (사전 작성 풀)</td></tr>
+          <tr><td><strong>D+7 기본값</strong></td><td>날짜 미입력 시 오늘 기준 +7일 체크인, +1박(D+8 체크아웃) 적용</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- 제3조 시스템 아키텍처 -->
+    <div class="chat-section" id="sec3">
+      <div class="chat-section-hdr">
+        <span class="art-badge">제3조</span>
+        <h2>시스템 아키텍처</h2>
+      </div>
+      <div class="chat-section-body">
+
+        <div class="chat-sub" id="sec3-1">
+          <div class="chat-sub-title"><span class="chat-sub-num">3-1</span> 처리 파이프라인</div>
+          <div class="pipeline">
+            <div class="pipeline-step">
+              <div class="pipeline-arrow"><div class="pipeline-dot"></div><div class="pipeline-line"></div></div>
+              <div class="pipeline-box">
+                <div class="pipeline-box-title">사용자 자연어 입력</div>
+                <div class="pipeline-box-desc">"도쿄 2인 3박 호텔 추천해줘" 등 자유 문장</div>
+              </div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-arrow"><div class="pipeline-dot"></div><div class="pipeline-line"></div></div>
+              <div class="pipeline-box pipeline-highlight">
+                <div class="pipeline-box-title">LLM Function Calling</div>
+                <div class="pipeline-box-desc">도시·날짜·인원·가격대·편의시설 파라미터 추출</div>
+              </div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-arrow"><div class="pipeline-dot"></div><div class="pipeline-line"></div></div>
+              <div class="pipeline-box pipeline-highlight">
+                <div class="pipeline-box-title">기본값 보완</div>
+                <div class="pipeline-box-desc">날짜 미입력 → D+7/D+8 · 인원 미입력 → 성인 2인·1객실 (8-1절)</div>
+              </div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-arrow"><div class="pipeline-dot"></div><div class="pipeline-line"></div></div>
+              <div class="pipeline-box pipeline-highlight" style="background:#fdf4ff;border-color:#d8b4fe;">
+                <div class="pipeline-box-title" style="color:#6d28d9;">KAYAK Hotels Search API 호출 (multipleHotelsAllRates)</div>
+                <div class="pipeline-box-desc" style="color:#7c3aed;font-weight:600;">
+                  ★ 동시 처리: S01 검색결과 상태도 동일 파라미터로 동기화<br>
+                  → "전체 결과 보기" 탭 시 S01 재호출 없이 즉시 표시 (5-4절)
+                </div>
+              </div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-arrow"><div class="pipeline-dot"></div><div class="pipeline-line"></div></div>
+              <div class="pipeline-box">
+                <div class="pipeline-box-title">Hotel Feed 이미지 매핑 (hotelId 기준)</div>
+                <div class="pipeline-box-desc">사전 적재 필요. 미적재 시 placeholder</div>
+              </div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-arrow"><div class="pipeline-dot"></div></div>
+              <div class="pipeline-box pipeline-highlight">
+                <div class="pipeline-box-title">LLM 결과 요약 브리핑 생성 + 추천 검색어 4개 생성 (단일 호출)</div>
+                <div class="pipeline-box-desc">→ UI 렌더링: 요약 브리핑 + 카드 3개 + 추천 검색어</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 사용자 액션 분기 -->
+          <div style="margin-top:20px;">
+            <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;">사용자 액션 분기</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+
+              <!-- 분기 A -->
+              <div class="pipeline-box" style="border-left:3px solid #7c3aed;">
+                <div class="pipeline-box-title">[A] 결과 카드 탭</div>
+                <div class="pipeline-box-desc">
+                  채팅창 자동 닫힘 → S01(검색결과) 화면 이동<br>
+                  탭한 숙소를 <strong style="color:#4c1d95;">목록 맨 위에 노출</strong><br>
+                  <span style="color:#a78bfa;font-size:10px;">Phase 1 정책서 4-5절·5-9절과 동일한 방식</span>
+                </div>
+              </div>
+
+              <!-- 분기 B -->
+              <div class="pipeline-box" style="border-left:3px solid #7c3aed;">
+                <div class="pipeline-box-title">[B] "전체 결과 보기" 탭</div>
+                <div class="pipeline-box-desc">
+                  채팅창 자동 닫힘 → S01(검색결과) 화면 이동<br>
+                  특정 숙소를 고른 게 아니므로<br>
+                  <strong style="color:#4c1d95;">KAYAK 기본 인기순으로 목록 표시</strong>
+                </div>
+              </div>
+
+              <!-- 분기 C -->
+              <div class="pipeline-box" style="border-left:3px solid #059669;background:#f0fdf4;">
+                <div class="pipeline-box-title" style="color:#065f46;">[C] 후속 질문 입력</div>
+                <div class="pipeline-box-desc">
+                  조건을 바꿔 다시 물어보는 경우<br>
+                  처음부터 파이프라인 다시 실행<br>
+                  채팅창과 S01 결과 모두 새로 갱신
+                </div>
+              </div>
+
+              <!-- 분기 D -->
+              <div class="pipeline-box" style="border-left:3px solid #059669;background:#f0fdf4;">
+                <div class="pipeline-box-title" style="color:#065f46;">[D] 챗봇 버튼 다시 탭 (재진입)</div>
+                <div class="pipeline-box-desc">
+                  S01로 이동 후 챗봇 버튼을 다시 탭해도<br>
+                  <strong style="color:#065f46;">이전 대화 내용이 그대로 남아있음</strong><br>
+                  이어서 후속 질문 가능 (5-5절)
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-sub" id="sec3-2">
+          <div class="chat-sub-title"><span class="chat-sub-num">3-2</span> LLM 파싱 대상 파라미터</div>
+          <table class="chat-table">
+            <tr><th>파라미터</th><th>KAYAK API 필드</th><th>기본값</th></tr>
+            <tr><td>도시/지역</td><td><code>destination</code> (Autocomplete API → entityId 변환)</td><td>없음 (되묻기)</td></tr>
+            <tr><td>체크인</td><td><code>checkIn</code></td><td><strong>D+7</strong></td></tr>
+            <tr><td>체크아웃</td><td><code>checkOut</code></td><td><strong>D+8 (1박)</strong></td></tr>
+            <tr><td>성인 인원</td><td><code>adults</code></td><td><strong>2</strong></td></tr>
+            <tr><td>객실 수</td><td><code>rooms</code></td><td><strong>1</strong></td></tr>
+            <tr><td>가격 상한</td><td><code>maxPrice</code></td><td>없음 (제한 없음)</td></tr>
+            <tr><td>성급</td><td><code>starRating</code></td><td>없음 (전체)</td></tr>
+            <tr><td>숙소 유형</td><td><code>propertyType</code></td><td>없음 (전체)</td></tr>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제4조 UI/UX 구조 -->
+    <div class="chat-section" id="sec4">
+      <div class="chat-section-hdr">
+        <span class="art-badge">제4조</span>
+        <h2>UI/UX 구조</h2>
+      </div>
+      <div class="chat-section-body">
+
+        <div class="chat-sub" id="sec4-1">
+          <div class="chat-sub-title"><span class="chat-sub-num">4-1</span> 진입 방법 <span class="badge badge-purple">v0.2 전면 개정</span></div>
+          <div class="chat-text" style="margin-bottom:12px">
+            <p><strong>기존 FAB(하단 우측 원형 버튼) 폐기.</strong> 대표님 피드백 반영: "AI 검색 버튼이 목적지칸 좌측에 있으면 혼동" → 메인 검색폼에서 분리하여 해소.</p>
+          </div>
+
+          <div class="chat-sub-title" style="font-size:13px;margin-bottom:8px;">▶ 공통 진입점 (C안·D안 동일)</div>
+          <table class="chat-table" style="margin-bottom:16px">
+            <tr><th>진입 경로</th><th>설명</th></tr>
+            <tr><td><strong>GNB 우측 [✦ AI] 배지</strong></td><td>전 화면 GNB에 공통 노출. 탭 → 채팅창 바로 오픈 (인풋 없음)</td></tr>
+          </table>
+
+          <div class="chat-sub-title" style="font-size:13px;margin-bottom:8px;">▶ 메인 진입 UI — C안 vs D안 (택일 논의 중 <span class="badge badge-yellow">⚠️ 미결 #15</span>)</div>
+          <table class="chat-table">
+            <tr><th>안</th><th>구조</th><th>설명</th></tr>
+            <tr>
+              <td><strong>C안</strong><br><span style="font-size:11px;color:#64748b;">검색폼 + 하단 AI 배너</span></td>
+              <td><div class="ex-box" style="margin:0;font-size:11px;">[ 메인 검색폼: 목적지·날짜·인원·검색 ]
+[ ✦  "강남 2인 1박 호텔 찾아줘"  → ]</div></td>
+              <td>
+                일반 검색폼 우선 노출. AI는 검색버튼 하단 알약형 배너로 보조 진입.<br>
+                배너 텍스트: 추천검색어 2.4초 간격 페이드 순환.<br>
+                배너 탭 → 챗봇 오픈 (배너 문구는 입력창에 들어가지 않음)
+              </td>
+            </tr>
+            <tr>
+              <td><strong>D안</strong><br><span style="font-size:11px;color:#64748b;">AI 검색 | 일반 검색 탭</span></td>
+              <td><div class="ex-box" style="margin:0;font-size:11px;">[ ✦ AI 검색 | 일반 검색 ]  ← 기본=AI 검색
+┌──────────────────────────────┐
+│ ✦  가고 싶은 숙소를 AI로 검색  → │
+└──────────────────────────────┘
+🔍 강남 2인 1박 20만원대 호텔
+🔍 제주 주말 풀빌라 2박 찾아줘</div></td>
+              <td>
+                메인 진입 시 기본 탭 = AI 검색 (AI 전면 부각 쇼케이싱).<br>
+                자연어 입력창 + 추천질문 칩 3~4개(세로 리스트).<br>
+                입력 후 [→]/Enter → 챗봇이 열리며 해당 문구로 바로 검색.<br>
+                추천질문 칩 탭 → 그 질문으로 바로 검색.<br>
+                일반 검색 탭 탭 시 기존 구조화 검색폼으로 전환.
+              </td>
+            </tr>
+          </table>
+
+          <div class="chat-text" style="margin-top:12px">
+            <p><strong>검색결과(S01) 재검색바 탭 → 재검색 슬라이드다운(S01-A)도 C안/D안 동일 구조 적용.</strong></p>
+            <p style="margin-top:6px;"><strong>챗봇 동작 자체(대화·결과·닫기 등)는 C안·D안 완전히 동일.</strong> UI 진입 방식만 다름.</p>
+          </div>
+        </div>
+
+        <div class="chat-sub" id="sec4-2">
+          <div class="chat-sub-title"><span class="chat-sub-num">4-2</span> 헤더 구조</div>
+          <div class="ex-box">[ ✦ AI 검색 ]                    [ ··· ]  [ X ]</div>
+          <table class="chat-table" style="margin-top:10px">
+            <tr><th>요소</th><th>동작</th></tr>
+            <tr><td><strong>✦ AI 검색</strong></td><td>브랜드명/AI 이름 <span class="badge badge-yellow">마케팅팀 확정 후 반영</span></td></tr>
+            <tr><td><strong>··· (더보기)</strong></td><td>드롭다운 메뉴 노출: [+ 새 대화창] / [🕐 대화 이력]</td></tr>
+            <tr><td><strong>X (닫기)</strong></td><td>채팅창만 닫기 → S01 배경(챗봇 검색 시 이미 동기화된 상태) 노출. 세션 내 대화 유지 (3-1절 · 5-4절)</td></tr>
+          </table>
+        </div>
+
+        <div class="chat-sub" id="sec4-3">
+          <div class="chat-sub-title"><span class="chat-sub-num">4-3</span> 초기 화면 (대화 없는 상태)</div>
+          <div class="ex-box">  ✦  호텔을 찾아드릴게요
+     (헤드카피 — 마케팅팀 확정 후 반영)
+
+  ─────────────────────────────────────────
+  인기 여행지 (10개 고정, 2줄×5열)
+  [제주] [부산] [오사카] [도쿄] [방콕]
+  [싱가포르] [다낭] [서울] [파리] [뉴욕]
+  ─────────────────────────────────────────
+  이렇게 물어보세요 (15개 풀에서 랜덤 5개)
+  🔍 서울 강남 2인 1박 20만원대 호텔 추천해줘
+  🔍 제주도 주말 풀빌라 2박 찾아줘
+  ─────────────────────────────────────────
+  [ 어디 호텔을 찾아드릴까요?        → ]</div>
+          <div class="chat-text" style="margin-top:10px">
+            <p><strong>인기 여행지 클릭:</strong> 도시명만 입력창에 인풋 (예: "오사카 "). 검색 실행 없음. 사용자가 조건 추가 후 직접 전송.</p>
+            <p><strong>추천질문 클릭:</strong> 전체 문장을 입력창에 인풋. 검색 실행 없음. 수정 후 직접 전송.</p>
+          </div>
+        </div>
+
+        <div class="chat-sub" id="sec4-4">
+          <div class="chat-sub-title"><span class="chat-sub-num">4-4</span> 입력창</div>
+          <table class="chat-table">
+            <tr><th>항목</th><th>정책</th></tr>
+            <tr><td>플레이스홀더 (초기)</td><td>"어디 호텔을 찾아드릴까요?"</td></tr>
+            <tr><td>플레이스홀더 (후속)</td><td>"후속 질문을 입력하세요"</td></tr>
+            <tr><td>글자수 제한</td><td>300자</td></tr>
+            <tr><td>전송 방법</td><td>전송 버튼 탭 또는 엔터키</td></tr>
+            <tr><td>음성 입력 버튼</td><td>🎤 아이콘 <span class="badge badge-yellow">MVP 포함 여부 미결 #4</span></td></tr>
+            <tr><td>파일 첨부 버튼</td><td>+ 아이콘 <span class="badge badge-gray">MVP 제외</span></td></tr>
+          </table>
+        </div>
+
+        <div class="chat-sub" id="sec4-5">
+          <div class="chat-sub-title"><span class="chat-sub-num">4-5</span> AI 응답 흐름</div>
+          <div class="ex-box"><span class="user">[사용자]</span> 12개월 아기와 가기 좋은 영월 펜션 추천해줘
+
+<span class="ai">[AI]</span> 찾는 중 .
+
+<span class="ai">[AI]</span> 12개월 아기와 함께 가기엔 후기 평점이 좋고 아늑한 펜션 위주로 찾아봤어요.
+     7월 1일~7월 2일 1박, 성인 2인 기준이에요.
+
+     ┌──────────────────────────────────┐
+     │ [이미지]                          │
+     │ 영월 강마루펜션                   │
+     │ ★★★★   ⭐ 9.2                   │
+     │ 20만원 ~                          │
+     └──────────────────────────────────┘
+     (카드 2개 더)
+
+     [ 전체 결과 보기 → ]
+
+     😊 😞
+
+     → 무료 조식 제공 펜션으로 다시 찾아줘
+     → 반려동물 동반 가능한 곳만 보여줘
+     → 예산을 30만원으로 올리면?
+     → 날짜를 다음 주로 바꿔서 찾아줘</div>
+          <div class="chat-text" style="margin-top:10px">
+            <p><strong>응답 스타일 원칙:</strong></p>
+            <ul>
+              <li>자연스러운 대화체 문장으로 응답 (보고서·목록형 금지)</li>
+              <li>파싱된 검색 조건을 응답 문장에 자연스럽게 녹여 표시</li>
+              <li><strong>기본값 적용 시 반드시 응답 문장에 명시</strong></li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제5조 결과 카드 정책 -->
+    <div class="chat-section" id="sec5">
+      <div class="chat-section-hdr">
+        <span class="art-badge">제5조</span>
+        <h2>결과 카드 정책</h2>
+      </div>
+      <div class="chat-section-body">
+
+        <div class="chat-sub">
+          <div class="chat-sub-title"><span class="chat-sub-num">5-1</span> 카드 구성</div>
+          <table class="chat-table">
+            <tr><th>항목</th><th>API 필드</th><th>비고</th></tr>
+            <tr><td>이미지</td><td>Hotel Feed (hotelId 매핑)</td><td>사전 적재 필요. 미적재 시 placeholder</td></tr>
+            <tr><td>호텔명</td><td><code>translatedName</code></td><td>한국어</td></tr>
+            <tr><td>성급</td><td><code>starRating</code></td><td>별 아이콘</td></tr>
+            <tr><td>평점</td><td><code>guestRating</code></td><td>숫자 (소수점 1자리)</td></tr>
+            <tr><td>가격</td><td><code>lowestRate</code></td><td>"20만원 ~" 형식. 선택 통화 기준 환산</td></tr>
+          </table>
+        </div>
+
+        <div class="chat-sub">
+          <div class="chat-sub-title"><span class="chat-sub-num">5-2</span> 카드 수 및 정렬</div>
+          <div class="chat-text">
+            <p><strong>표시 수:</strong> 3개 고정</p>
+            <p><strong>정렬 기준:</strong> KAYAK API 응답 기본 순서 (KAYAK 인기순) 상위 3개</p>
+          </div>
+        </div>
+
+        <div class="chat-sub">
+          <div class="chat-sub-title"><span class="chat-sub-num">5-3</span> 카드 클릭 동작</div>
+          <div class="chat-text">
+            <ul>
+              <li>카드 탭 → <strong>채팅창 자동 닫힘</strong> + S01(검색결과 목록) 이동</li>
+              <li>클릭한 숙소를 <strong>S01 목록 최상단</strong>에 노출. 나머지 동기화 결과는 그 아래 정렬</li>
+              <li>Phase 1 정책서 <strong>4-5절</strong>(호텔명 선택 동작) · <strong>5-9절</strong>(숙소명 검색 처리 정책)과 동일 로직 적용</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="chat-sub" id="sec5-4" style="background:#f5f3ff;border:2px solid #7c3aed;border-radius:8px;padding:16px;">
+          <div class="chat-sub-title"><span class="chat-sub-num">5-4</span> S01 동기화 정책 및 "전체 결과 보기" CTA <span class="badge badge-purple" style="font-size:12px;">★ 개발자 필독</span></div>
+          <div class="chat-text">
+            <p><strong>동기화 정책:</strong></p>
+            <ul>
+              <li>챗봇이 KAYAK API를 호출하는 <strong>시점에 채팅창(카드 3개)과 S01(전체 목록)에 동시 동기화하여 결과 표시</strong></li>
+              <li>S01은 <strong>재호출 없이</strong> 이미 준비된 결과를 즉시 표시</li>
+              <li>S01 상단 검색바(도시·날짜·인원)도 챗봇 파싱 조건으로 채워진 상태로 이동</li>
+              <li>기본값이 적용된 파라미터(날짜 D+7 등)도 S01 검색바에 동일하게 반영</li>
+            </ul>
+            <p style="margin-top:10px;"><strong>"전체 결과 보기" CTA / ✕ 닫기:</strong> <span class="badge badge-purple">v0.2 변경</span></p>
+            <ul>
+              <li>탭 → <strong>채팅창만 닫힘</strong> (S01로 별도 이동하는 것이 아님)</li>
+              <li>챗봇 검색 시점에 S01이 이미 동기화돼 있어, 닫으면 배경의 S01이 즉시 보임</li>
+              <li>"전체 결과 보기": 탭한 숙소 없으므로 S01 목록은 KAYAK 인기순 기본 정렬</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="chat-sub" id="sec5-5">
+          <div class="chat-sub-title"><span class="chat-sub-num">5-5</span> 챗봇 재진입 시 대화 유지</div>
+          <div class="chat-text">
+            <ul>
+              <li>S01 이동 후 GNB 챗봇 버튼 재탭 시 → <strong>이전 채팅 내용이 유지된 상태</strong>로 채팅창 재오픈</li>
+              <li>새 대화가 아닌 기존 대화에서 이어서 후속 질문 가능</li>
+              <li>채팅창 내 대화 내용은 브라우저 세션이 유지되는 동안 보존</li>
+              <li>새 대화를 원하면 더보기(<code>···</code>) → "새 대화창" 선택</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제6조 추천 검색어 -->
+    <div class="chat-section" id="sec6">
+      <div class="chat-section-hdr">
+        <span class="art-badge">제6조</span>
+        <h2>추천 검색어 정책 (LLM 자동 생성)</h2>
+      </div>
+      <div class="chat-section-body">
+
+        <div class="chat-sub">
+          <div class="chat-sub-title"><span class="chat-sub-num">6-1</span> 생성 방식</div>
+          <div class="chat-text">
+            <ul>
+              <li>LLM이 결과 도출 후 현재 파싱된 파라미터 기반으로 후속 추천 질문 자동 생성</li>
+              <li><strong>개수: 4개 고정</strong></li>
+              <li>생성 방식: 결과 도출 LLM 호출에 추천 검색어 생성을 함께 요청 (<strong>단일 호출</strong>)</li>
+              <li>표시 위치: "전체 결과 보기" CTA 하단 → 연결 문장 후 리스트</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="chat-sub">
+          <div class="chat-sub-title"><span class="chat-sub-num">6-2</span> 생성 가이드라인 (시스템 프롬프트)</div>
+          <div class="ex-box">[포함]
+- 현재 조건에서 편의시설 변형 (무료취소, 조식포함, 반려동물 등)
+- 성급 변경 (4성급 → 5성급 등)
+- 가격대 조정 (예산 상향/하향)
+- 날짜 변경 (다음 주, 주말 등)
+- 숙소 유형 변경 (호텔 → 펜션/리조트 등)
+
+[제외 — 범위 밖]
+- 항공편 관련 질문
+- 관광명소, 맛집, 교통편
+- KAYAK API에 없는 파라미터 조건</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제7조 초기화면 추천질문 -->
+    <div class="chat-section" id="sec7">
+      <div class="chat-section-hdr">
+        <span class="art-badge">제7조</span>
+        <h2>초기화면 추천질문 정책</h2>
+      </div>
+      <div class="chat-section-body">
+
+        <div class="chat-sub">
+          <div class="chat-sub-title"><span class="chat-sub-num">7-2</span> 노출 방식</div>
+          <div class="chat-text">
+            <p>15개 풀에서 <strong>랜덤 5개</strong> 세로 뱃지 형태로 표시. 클릭 → 전체 문장 입력창에 인풋 (검색 실행 없음)</p>
+          </div>
+        </div>
+
+        <div class="chat-sub">
+          <div class="chat-sub-title"><span class="chat-sub-num">7-3</span> 인기 여행지 뱃지 (10개 고정)</div>
+          <table class="chat-table">
+            <tr><th>구분</th><th>도시</th><th>선정 근거</th></tr>
+            <tr><td>국내</td><td>제주</td><td>국내 여행 1위. 연간 방문객 1,500만+</td></tr>
+            <tr><td></td><td>부산</td><td>국내 여행 2위. 해운대·광안리 수요 집중</td></tr>
+            <tr><td></td><td>서울</td><td>국내 출장·관광 + 외국인 관광 허브</td></tr>
+            <tr><td>아시아</td><td>오사카</td><td>한국인 해외 여행지 1위</td></tr>
+            <tr><td></td><td>도쿄</td><td>한국인 해외 여행지 2위</td></tr>
+            <tr><td></td><td>방콕</td><td>동남아 1위. 연중 수요 안정적</td></tr>
+            <tr><td></td><td>싱가포르</td><td>동남아 허브 + 환승 호텔 수요</td></tr>
+            <tr><td></td><td>다낭</td><td>최근 3년간 급성장</td></tr>
+            <tr><td>장거리</td><td>파리</td><td>유럽 한국인 여행자 1위</td></tr>
+            <tr><td></td><td>뉴욕</td><td>미주 1위. 비즈니스·관광 혼합 수요</td></tr>
+          </table>
+          <div class="chat-text" style="margin-top:10px">
+            <p><strong>배열:</strong> 국내 → 아시아 → 장거리 순 고정 · 2줄×5열</p>
+            <p><strong>클릭 동작:</strong> 도시명만 입력창에 인풋 (예: "오사카 "). 검색 실행 없음.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제8조 입력 처리 정책 -->
+    <div class="chat-section" id="sec8">
+      <div class="chat-section-hdr">
+        <span class="art-badge">제8조</span>
+        <h2>입력 처리 정책</h2>
+      </div>
+      <div class="chat-section-body">
+
+        <div class="chat-sub" id="sec8-1" style="background:#f5f3ff;border:2px solid #7c3aed;border-radius:8px;padding:16px;">
+          <div class="chat-sub-title"><span class="chat-sub-num">8-1</span> 기본값 처리 <span class="badge badge-purple">★ 개발자 필독</span></div>
+          <table class="chat-table">
+            <tr><th>파라미터</th><th>기본값</th><th>응답 처리</th></tr>
+            <tr><td>날짜</td><td><strong>D+7 체크인, D+8 체크아웃 (1박)</strong></td><td>응답 문장에 반드시 명시: "7월 1일~7월 2일 1박 기준이에요"</td></tr>
+            <tr><td>인원</td><td><strong>성인 2인, 객실 1개</strong></td><td>인원 언급 없으면 명시 생략 가능</td></tr>
+            <tr><td>가격</td><td>제한 없음</td><td>명시 생략</td></tr>
+            <tr><td>성급</td><td>전체</td><td>명시 생략</td></tr>
+          </table>
+        </div>
+
+        <div class="chat-sub" id="sec8-2" style="background:#f5f3ff;border:2px solid #7c3aed;border-radius:8px;padding:16px;">
+          <div class="chat-sub-title"><span class="chat-sub-num">8-2</span> 지역 없을 때 처리 <span class="badge badge-purple">★ CHAT-7 참조</span></div>
+          <div class="chat-text" style="margin-bottom:10px">
+            <p>사용자 입력에 도시·지역 정보가 없을 때 AI가 최대 <strong>2회</strong> 되묻기. 1회·2회는 동일 메시지를 표시하며 검색을 진행하지 않는다.</p>
+          </div>
+
+          <div class="chat-text" style="margin-bottom:8px;"><strong>1·2회 되묻기 메시지 (동일):</strong></div>
+          <div class="ex-box"><span class="user">[사용자]</span> 조식 포함 호텔 추천해줘
+
+<span class="ai">[AI]</span> 어느 도시 호텔을 찾으시나요?
+     아래에서 고르거나, 도시명을 직접 입력해 주세요.
+
+     [제주] [부산] [서울] [오사카] [도쿄]
+     [방콕] [싱가포르] [다낭] [파리] [뉴욕]</div>
+
+          <div class="chat-text" style="margin:10px 0 8px;"><strong>3회째 안내 메시지 (검색 진행 없음):</strong></div>
+          <div class="ex-box"><span class="ai">[AI]</span> 아래에서 고르거나, 도시명을 직접 입력해 주세요.
+
+     [제주] [부산] [서울] [오사카] [도쿄]
+     [방콕] [싱가포르] [다낭] [파리] [뉴욕]</div>
+
+          <div class="chat-text" style="margin-top:10px">
+            <ul>
+              <li><strong>되묻기 최대 횟수: 2회.</strong> 3회째 입력에도 지역 없으면 검색 없이 안내 메시지만 표시</li>
+              <li><strong>인기 도시 뱃지 10개 고정:</strong> 제주·부산·서울·오사카·도쿄·방콕·싱가포르·다낭·파리·뉴욕</li>
+              <li><strong>도시 뱃지 탭 또는 직접 입력 시:</strong> 이전 대화에서 쌓인 조건(조식·가격대·성급 등)을 합산하여 KAYAK API 재호출</li>
+              <li>도시 직접 입력도 뱃지 탭과 동일하게 처리</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="chat-sub" id="sec8-3">
+          <div class="chat-sub-title"><span class="chat-sub-num">8-3</span> 범위 외 질문 처리</div>
+          <div class="ex-box"><span class="ai">[AI]</span> 저는 호텔 검색만 도와드릴 수 있어요.
+     어느 도시 호텔을 찾아드릴까요?</div>
+        </div>
+
+        <div class="chat-sub" id="sec8-4" style="background:#f5f3ff;border:2px solid #7c3aed;border-radius:8px;padding:16px;">
+          <div class="chat-sub-title"><span class="chat-sub-num">8-4</span> 목적지 변경 시 누적 조건 초기화 <span class="badge badge-purple">★ CHAT-7 케이스 D 참조</span></div>
+          <div class="chat-text" style="margin-bottom:10px">
+            <p>대화 중 <strong>목적지(도시·지역)가 변경</strong>되면 이전 대화에서 쌓인 조건 전체를 초기화하고 새 목적지 기본값으로 재검색한다.</p>
+          </div>
+          <div class="ex-box"><span class="user">[사용자]</span> 서울 강남 조식 포함 호텔 찾아줘
+<span class="ai">[AI]</span> 서울 강남에서 조식 포함 호텔 찾아봤어요. (결과 3개)
+
+<span class="user">[사용자]</span> 오사카로 바꿔줘
+
+<span class="ai">[AI]</span> 오사카 호텔을 새로 찾아드릴게요.
+     ⚠ 목적지가 바뀌어서 이전 조건(조식 포함)은 초기화됐어요.
+        오사카 기본 조건으로 검색해요.
+
+     [결과 3개]</div>
+          <div class="chat-text" style="margin-top:10px">
+            <ul>
+              <li><strong>초기화 범위:</strong> 목적지 외 조건 전체 (조식·가격대·성급·숙소유형 등) 초기화</li>
+              <li><strong>초기화하지 않는 경우:</strong> 날짜·인원 등 목적지 외 조건만 변경 시 기존 누적 조건 유지
+                <ul style="margin-top:4px;">
+                  <li>예: "날짜를 다음 주로 바꿔줘" → 조식 포함 조건 유지</li>
+                </ul>
+              </li>
+              <li><strong>UI 안내:</strong> 초기화 시 응답 문장에 어떤 조건이 사라졌는지 명시 (사용자 혼란 방지)</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제9조 대화 이력 정책 -->
+    <div class="chat-section" id="sec9">
+      <div class="chat-section-hdr">
+        <span class="art-badge">제9조</span>
+        <h2>대화 이력 정책</h2>
+      </div>
+      <div class="chat-section-body">
+
+        <div class="chat-sub">
+          <div class="chat-sub-title"><span class="chat-sub-num">9-1</span> 저장 방식</div>
+          <div class="chat-text">
+            <ul>
+              <li>브라우저 <strong>localStorage에 저장</strong> (서버 저장 MVP 제외 → Phase 2)</li>
+              <li>최대 보관: <strong>최근 7일 이내, 최대 20개 대화</strong></li>
+              <li>20개 초과 or 7일 초과 시 오래된 항목부터 자동 삭제</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="chat-sub">
+          <div class="chat-sub-title"><span class="chat-sub-num">9-2</span> 대화 제목 자동 생성</div>
+          <div class="chat-text">
+            <p>사용자 첫 질문 기반 LLM 자동 요약 (10자 내외)</p>
+            <p>예: "12개월 아기와 영월 펜션" → <strong>"영월 아기 동반 펜션"</strong></p>
+          </div>
+        </div>
+
+        <div class="chat-sub">
+          <div class="chat-sub-title"><span class="chat-sub-num">9-3</span> 대화 이력 화면 구조</div>
+          <div class="chat-text">
+            <ul>
+              <li>항목 탭 → 해당 대화로 복귀</li>
+              <li>🗑 탭 → 삭제 확인 팝업 표시 → [취소] / [삭제] 선택 후 삭제 (CHAT-6 케이스 B 참조)</li>
+              <li>"← 채팅창으로" 버튼 → 대화이력 닫고 기존 채팅창 복귀 (새 대화 생성 없음)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="chat-sub">
+          <div class="chat-sub-title"><span class="chat-sub-num">9-4</span> 새 대화 생성</div>
+          <div class="chat-text">
+            <p>더보기(<code>···</code>) → "새 대화창" → 현재 대화 자동 저장 후 빈 채팅창 열림</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제10조 오류 처리 -->
+    <div class="chat-section" id="sec10">
+      <div class="chat-section-hdr">
+        <span class="art-badge">제10조</span>
+        <h2>로딩 / 예외 / 오류 처리</h2>
+      </div>
+      <div class="chat-section-body">
+
+        <div class="chat-sub" id="sec10-1">
+          <div class="chat-sub-title"><span class="chat-sub-num">10-1</span> 로딩 상태 — 2단계 <span class="badge badge-purple">v0.2 변경</span></div>
+          <table class="chat-table">
+            <tr><th>단계</th><th>UI 문구</th><th>시간</th></tr>
+            <tr><td>1단계</td><td>"찾는 중 …" + 점 애니메이션</td><td>약 1.5초</td></tr>
+            <tr><td>2단계</td><td>"검색결과 페이지에도 결과 반영중 …" + 점 애니메이션</td><td>약 1.5초</td></tr>
+            <tr><td>완료</td><td>AI 브리핑 + 카드 3개 + 추천검색어 노출</td><td>총 ~3초</td></tr>
+          </table>
+          <div class="chat-text" style="margin-top:8px">
+            <p>2단계 문구는 챗봇 검색 시 배경의 S01도 동시 동기화되고 있음을 사용자에게 안내하는 역할. <strong>로딩 중 입력창 비활성 처리.</strong></p>
+          </div>
+        </div>
+
+        <div class="chat-sub" id="sec10-2">
+          <div class="chat-sub-title"><span class="chat-sub-num">10-2</span> 검색 결과 0개 <span class="badge badge-purple">v0.2 변경</span></div>
+          <div class="chat-text" style="margin-bottom:8px">
+            <p>챗봇 결과 0개 시 → 채팅 안내 문구 표시. ✕ 닫기 시 <strong>S01-D-zero 레이아웃과 동일한 화면</strong>으로 표시.</p>
+          </div>
+          <div class="ex-box"><span class="ai">[AI]</span> 조건에 맞는 숙소를 찾지 못했어요.
+     날짜나 예산을 바꿔볼까요?
+
+     → 날짜를 다음 주로 바꿔서 찾아줘
+     → 예산을 30만원으로 높이면?</div>
+          <div class="chat-text" style="margin-top:8px">
+            <ul>
+              <li>S01-D-zero 레이아웃 재사용 (기존 목록 그대로 표시, 상단 "조건에 맞는 숙소가 없어요" 안내 배너)</li>
+              <li><strong>[필터 초기화] 버튼 미노출</strong> — 챗봇 0개 상태에서는 표시하지 않음</li>
+              <li>S01 문구 변경: "조건에 맞는 숙소를 찾지 못했어요" (S01-D-zero 기본 문구와 동일)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="chat-sub" id="sec10-3" style="background:#fff7f7;border:2px solid #fca5a5;border-radius:8px;padding:16px;">
+          <div class="chat-sub-title"><span class="chat-sub-num">10-3</span> API 오류 <span class="badge badge-purple">★ CHAT-8 참조</span></div>
+          <div class="ex-box"><span class="ai">[AI]</span> 잠시 검색이 원활하지 않아요. 다시 시도해 주세요.
+
+     [↺ 다시 시도]</div>
+          <div class="chat-text" style="margin-top:10px">
+            <ul>
+              <li>[다시 시도] 버튼: 동일 입력으로 API 재호출. 입력창 변경 없음</li>
+              <li>연속 3회 이상 오류 시 추가 문구: <strong>"네트워크 환경을 확인해 주세요."</strong></li>
+              <li>기술적 오류 메시지 사용자 노출 금지</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제11조 AI 필터 (스마트 필터) — v0.2 신설 -->
+    <div class="chat-section" id="sec11">
+      <div class="chat-section-hdr">
+        <span class="art-badge">제11조</span>
+        <h2>AI 필터 (스마트 필터) <span class="badge badge-purple" style="font-size:12px;margin-left:8px;">v0.2 신설</span></h2>
+      </div>
+      <div class="chat-section-body">
+
+        <div class="chat-sub" id="sec11-1">
+          <div class="chat-sub-title"><span class="chat-sub-num">11-1</span> 위치 및 진입</div>
+          <div class="chat-text" style="margin-bottom:10px">
+            <p>검색결과(S01) <strong>필터바 맨 앞</strong>에 [✦ AI 필터] 칩을 배치한다. 기존 필터칩([⊟ 전체][인기순↕][1박 가격][성급][평점 7.0+]) 앞에 위치.</p>
+          </div>
+          <div class="ex-box">[✦ AI 필터]  [⊟ 전체]  [인기순↕]  [1박 가격]  [성급]  [평점 7.0+]</div>
+          <div class="chat-text" style="margin-top:10px">
+            <ul>
+              <li>칩 스타일: 파란 테두리 + 펄스 애니메이션(눈에 띄게)</li>
+              <li>탭 → 자연어 입력 바텀시트 오픈 ("AI가 답변합니다 · 원하는 조건을 자유롭게 입력하세요")</li>
+              <li>AI 필터는 <strong>현재 검색결과 내 필터 전용</strong> (지역·날짜·인원 변경 → 챗봇 인계)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="chat-sub" id="sec11-2">
+          <div class="chat-sub-title"><span class="chat-sub-num">11-2</span> 입력 분기 (결과 내 필터 vs 챗봇 인계) <span class="badge badge-purple">★ 개발자 필독</span></div>
+          <div class="chat-text" style="margin-bottom:10px">
+            <p>입력 문장을 LLM이 파싱해 <strong>'결과 내 필터'</strong> 또는 <strong>'챗봇 인계(새 검색)'</strong>로 분기한다.</p>
+          </div>
+          <table class="chat-table">
+            <tr><th>구분</th><th>대상 조건</th><th>동작</th></tr>
+            <tr>
+              <td><strong>결과 내 필터</strong></td>
+              <td>성급 · 가격대 · 숙소유형 · 편의시설(수영장·조식 등) · 평점 · 브랜드</td>
+              <td>현재 검색(지역·날짜·인원) <strong>유지</strong>한 채 결과에 필터만 적용 → 하단 토스트 "✓ 필터가 적용되었습니다"</td>
+            </tr>
+            <tr>
+              <td><strong>챗봇 인계 (새 검색)</strong></td>
+              <td>지역 · 체크인/아웃 · 인원 변경 / 필터 컬럼·값과 무관한 입력("조용한 곳" 등)</td>
+              <td>채팅창으로 인계 → 챗봇이 새로 검색</td>
+            </tr>
+          </table>
+          <div class="chat-text" style="margin-top:10px">
+            <p><strong>분기 예시:</strong></p>
+            <ul>
+              <li>"수영장 있는 5성급", "1박 20만원 이하" → 결과 내 필터</li>
+              <li>"오사카로 바꿔줘", "다음주로", "조용한 곳" → 챗봇 인계</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="chat-sub">
+          <div class="chat-sub-title"><span class="chat-sub-num">11-3</span> AI 챗봇 vs AI 필터 역할 구분</div>
+          <table class="chat-table">
+            <tr><th>기능</th><th>진입점</th><th>역할</th></tr>
+            <tr><td><strong>AI 챗봇</strong></td><td>GNB ✦ / 메인 진입</td><td>지역·날짜·인원 포함 <strong>무엇이든 새로 검색·대화</strong></td></tr>
+            <tr><td><strong>AI 필터</strong></td><td>검색결과 필터바 [✦ AI 필터] 칩</td><td><strong>현재 결과를 좁히는 필터 전용</strong>. 범위 밖은 챗봇 인계</td></tr>
+          </table>
+          <div class="chat-text" style="margin-top:8px">
+            <p>AI 필터 UI 분기 경계·라벨 상세는 <span class="badge badge-yellow">⚠️ 미결 #17</span> 참조.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제12조 미결 항목 -->
+    <div class="chat-section" id="sec12">
+      <div class="chat-section-hdr">
+        <span class="art-badge">제12조</span>
+        <h2>미결 및 추가 논의 항목</h2>
+      </div>
+      <div class="chat-section-body">
+        <table class="pending-table">
+          <tr><th>#</th><th>항목</th><th>내용</th><th>확인처</th><th>상태</th></tr>
+          <tr><td>1</td><td>챗봇 브랜드명 / AI 이름</td><td>서비스 내 AI 챗봇 명칭 및 아이콘</td><td>마케팅팀</td><td><span class="badge badge-yellow">⚠️ 미결</span></td></tr>
+          <tr><td>2</td><td>챗봇 버튼 디자인</td><td>GNB ✦ AI 배지 스타일·색상 확정</td><td>UX/UI 디자이너</td><td><span class="badge badge-yellow">⚠️ 미결</span></td></tr>
+          <tr><td>3</td><td>챗봇 진입 C안 배너 문구</td><td>C안 검색버튼 하단 배너에 순환 노출되는 추천검색어 카피</td><td>마케팅팀</td><td><span class="badge badge-yellow">⚠️ 미결</span></td></tr>
+          <tr><td>4</td><td>🎤 음성 입력 MVP 포함 여부</td><td>Web Speech API 또는 별도 STT 서비스. 포함 시 개발 공수 확인 필요</td><td>PO / 개발팀</td><td><span class="badge badge-yellow">⚠️ 미결</span></td></tr>
+          <tr><td>5</td><td>😊 😞 피드백 버튼 MVP 포함 여부</td><td>결과 품질 평가 데이터 수집. 포함 시 수집 데이터 활용 방안 논의</td><td>PO</td><td><span class="badge badge-yellow">⚠️ 미결</span></td></tr>
+          <tr><td>6</td><td>📷 사진 첨부 MVP 포함 여부</td><td>랜드마크 사진 → 지역 인식 → 호텔 검색. MVP 제외 유력</td><td>PO / 개발팀</td><td><span class="badge badge-yellow">⚠️ 미결</span></td></tr>
+          <tr><td>7</td><td>Hotel Feed 이미지 적재 일정</td><td>카드 이미지 표시를 위한 hotelId 기준 사전 적재. 미적재 시 placeholder</td><td>개발팀</td><td><span class="badge badge-yellow">⚠️ 미결</span></td></tr>
+          <tr><td>8</td><td>카드 클릭 → S01 연동 방식</td><td>hotelId 기준 S01 하이라이트 or 필터 적용 처리 방식</td><td>개발팀</td><td><span class="badge badge-yellow">⚠️ 미결</span></td></tr>
+          <tr><td>9</td><td>LLM 선택</td><td>어떤 LLM을 사용할 것인가</td><td>기술연구소</td><td><span class="badge badge-yellow">⚠️ 미결</span></td></tr>
+          <tr><td>10</td><td>세션 간 히스토리 서버 저장</td><td>MVP는 localStorage. 서버 저장 및 로그인 연동은 Phase 2</td><td>개발팀</td><td><span class="badge badge-gray">🔄 Phase 2</span></td></tr>
+          <tr><td>11</td><td>인기 여행지 뱃지 관리 주체</td><td>어드민에서 수정 가능하게 할 것인가, 배포 업데이트로만 변경할 것인가</td><td>PO / 개발팀</td><td><span class="badge badge-yellow">⚠️ 미결</span></td></tr>
+          <tr><td>15</td><td>메인 AI 진입 C안 vs D안 택일</td><td>C안(검색폼 + 하단 배너) vs D안([AI 검색|일반 검색] 탭, 기본=AI). 대표님 컨펌 필요</td><td>PO / CEO</td><td><span class="badge badge-yellow">⚠️ 미결</span></td></tr>
+          <tr><td>16</td><td>숙소상세(S02) AI 문의 기능</td><td>S02에서 어메니티·정책·리뷰 관련 AI 문의 기능 분화. 검색 챗봇과 별도. MVP vs Phase 2 검토</td><td>PO / 개발팀</td><td><span class="badge badge-yellow">⚠️ 미결</span></td></tr>
+          <tr><td>17</td><td>AI 필터 분기 경계·라벨</td><td>결과 내 필터 vs 챗봇 인계 분기 기준 상세. UI 라벨("AI 필터" 명칭) 확정</td><td>PO / 마케팅팀</td><td><span class="badge badge-yellow">⚠️ 미결</span></td></tr>
+          <tr><td>18</td><td>지역 미입력 처리 A/B안</td><td>A안: 되묻기 → 인기도시 클릭 유도 / B안: 인기도시 자동 검색어 → 랜덤 결과</td><td>PO</td><td><span class="badge badge-yellow">⚠️ 미결</span></td></tr>
+          <tr><td>19</td><td>챗봇 AI 추천 결과 강조 여부</td><td>챗봇 추천 호텔을 S01 최상단 "✦ AI 추천"으로 강조 유지할지. 시각적 처리 방식</td><td>PO / UX/UI 디자이너</td><td><span class="badge badge-yellow">⚠️ 미결</span></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- 변경이력 -->
+    <div class="chat-section" id="history">
+      <div class="chat-section-hdr">
+        <span class="art-badge">이력</span>
+        <h2>변경이력</h2>
+      </div>
+      <div class="chat-section-body">
+        <table class="chat-table">
+          <tr><th>버전</th><th>날짜</th><th>변경 내용</th><th>작성자</th></tr>
+          <tr><td>v0.1</td><td>2026-06-24</td><td>최초 작성</td><td>윤성균 PO</td></tr>
+          <tr><td>v0.1</td><td>2026-06-24</td><td>버전 유지 수정 — ① 5-3절 카드 클릭 동작 수정 (채팅창 닫힘·S01 이동·선택 숙소 최상단·Phase 1 정책서 4-5절·5-9절 동일 로직 명시) ② 5-4절 S01 동기화 정책 보완 (채팅창+S01 동시 동기화 명시) ③ 5-5절 신설 (챗봇 재진입 시 대화 유지) ④ 3-1절 처리 파이프라인 보완 (사용자 액션 분기 A·B·C·D 추가)</td><td>윤성균 PO</td></tr>
+          <tr style="background:#ede9fe;"><td><strong>v0.2</strong></td><td>2026-06-26</td><td>① 4-1절 진입 UI 전면 개정 — FAB 폐기, GNB ✦ AI 배지(공통) + C안(검색버튼 하단 배너) / D안([AI 검색|일반 검색] 탭) 신설 ② 11절 AI 필터(스마트 필터) 신설 — S01 필터바 맨 앞 [✦ AI 필터] 칩, 결과 내 필터/챗봇 인계 분기 ③ 4-2절·5-4절 닫기 동작 변경 — 채팅창만 닫기, S01 배경 동기화로 닫으면 S01 보임 ④ 10-1절 로딩 2단계 업데이트 ("찾는 중 …" 1.5초 → "검색결과 페이지에도 결과 반영중 …" 1.5초) ⑤ 10-2절 검색 0개 처리 — S01-D-zero 레이아웃 재사용, 문구 변경, [필터 초기화] 미노출 ⑥ 기존 12절 미결 갱신 (#12·#13·#14 FAB 관련 폐기, #15~#19 신규 추가)</td><td>윤성균 PO</td></tr>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /chat-content -->
+</div><!-- /chat-body-wrap -->
+
+<script>
+(function(){
+  var arts = document.querySelectorAll('.chat-toc-art, .chat-toc-sub');
+  arts.forEach(function(a){
+    a.addEventListener('click', function(){
+      arts.forEach(function(x){ x.classList.remove('active'); });
+      a.classList.add('active');
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

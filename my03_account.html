@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MY03 — 계정관리 | allmy meta 화면기획서</title>
+<link rel="stylesheet" href="./wf-styles.css">
+<style>
+.two-col { grid-template-columns: 480px 1fr; gap: 28px; }
+
+/* ── 모바일 프레임 ── */
+.mobile-wrap {
+  display: flex; justify-content: center; align-items: flex-start;
+  padding: 20px 16px; background: #2a2a2a; border-radius: 8px; min-height: 560px;
+}
+.mobile-device {
+  width: 375px; background: #1a1f2e; border-radius: 44px; padding: 10px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 20px 50px rgba(0,0,0,.5);
+}
+.m-notch { height: 22px; background: #111; border-radius: 11px 11px 0 0; display: flex; align-items: center; justify-content: center; }
+.m-notch-pill { width: 68px; height: 13px; background: #111; border-radius: 7px; }
+.m-screen {
+  background: #f8f8f6; height: 640px; overflow: hidden;
+  border-radius: 0 0 6px 6px; font-size: 13px; position: relative;
+  display: flex; flex-direction: column;
+}
+
+/* ── GNB 바 (세부탐색형) ── */
+.my-gnb {
+  flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 14px; background: #fff; border-bottom: 1px solid #f0f0f0;
+  height: 45px;
+}
+.my-gnb-back {
+  width: 32px; height: 32px; background: #f5f5f5; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; border: none; color: #333; cursor: pointer;
+}
+.my-gnb-title {
+  flex: 1; text-align: center; font-size: 14px; font-weight: 800; color: #111;
+}
+.my-gnb-icon {
+  width: 32px; height: 32px; background: #f0f0f0; border: 1px solid #e5e7eb;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; cursor: pointer; color: #333;
+}
+
+/* ── 스크롤 영역 ── */
+.my-scroll { flex: 1; overflow-y: auto; overflow-x: hidden; }
+.my-scroll::-webkit-scrollbar { display: none; }
+
+/* ── 입력 폼 영역 ── */
+.ac-form-section {
+  background: #fff; margin-top: 8px; padding: 8px 16px 16px;
+}
+.ac-form-label {
+  font-size: 11px; font-weight: 700; color: #9ca3af;
+  padding: 12px 0 8px; letter-spacing: .5px;
+}
+.ac-field { margin-bottom: 12px; }
+.ac-field-label {
+  font-size: 11px; font-weight: 700; color: #374151; margin-bottom: 5px;
+  display: flex; align-items: center; gap: 4px;
+}
+.ac-field-label-opt {
+  font-size: 10px; font-weight: 400; color: #9ca3af;
+}
+.ac-input-wrap { position: relative; }
+.ac-input {
+  width: 100%; padding: 11px 14px; border: 1.5px solid #e5e7eb;
+  border-radius: 10px; font-size: 13px; color: #111; background: #fff;
+  outline: none;
+}
+.ac-input::placeholder { color: #c4c9d4; }
+.ac-input.readonly {
+  background: #f8f8f6; color: #9ca3af; cursor: not-allowed;
+}
+.ac-input.valid { border-color: #d1fae5; }
+.ac-input.error { border-color: #ef4444; background: #fef2f2; }
+.ac-input-badge {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px;
+}
+.ac-input-badge-verified { background: #d1fae5; color: #065f46; }
+.ac-input-check { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #059669; font-weight: 900; }
+.ac-error-msg { font-size: 11px; color: #ef4444; margin-top: 4px; }
+
+/* ── 국적 선택 (바텀시트 트리거) ── */
+.ac-select-trigger {
+  width: 100%; padding: 11px 14px; border: 1.5px solid #e5e7eb;
+  border-radius: 10px; font-size: 13px; color: #111; background: #fff;
+  display: flex; align-items: center; justify-content: space-between; cursor: pointer;
+}
+.ac-select-trigger.empty { color: #c4c9d4; }
+.ac-select-arrow { color: #9ca3af; font-size: 12px; }
+
+/* ── 전화번호 (국가코드 + 번호) ── */
+.ac-phone-wrap { display: flex; gap: 8px; }
+.ac-phone-code {
+  padding: 11px 12px; border: 1.5px solid #e5e7eb; border-radius: 10px;
+  font-size: 13px; color: #111; background: #fff; white-space: nowrap;
+  cursor: pointer; display: flex; align-items: center; gap: 4px;
+}
+.ac-phone-num { flex: 1; }
+
+/* ── 마케팅 동의 영역 ── */
+.ac-marketing-section {
+  background: #fff; margin-top: 8px; padding: 16px;
+}
+.ac-marketing-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px;
+}
+.ac-marketing-label { font-size: 14px; font-weight: 700; color: #111; }
+.ac-marketing-sub { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+
+/* 토글 스위치 */
+.ac-toggle {
+  width: 44px; height: 26px; border-radius: 13px; position: relative;
+  cursor: pointer; flex-shrink: 0; border: none;
+}
+.ac-toggle.on { background: #4f46e5; }
+.ac-toggle.off { background: #d1d5db; }
+.ac-toggle-thumb {
+  position: absolute; top: 3px; width: 20px; height: 20px;
+  background: #fff; border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+  transition: left .15s;
+}
+.ac-toggle.on .ac-toggle-thumb { left: 21px; }
+.ac-toggle.off .ac-toggle-thumb { left: 3px; }
+
+.ac-terms-link {
+  font-size: 12px; color: #4f46e5; font-weight: 600; cursor: pointer;
+  text-decoration: underline; display: inline-block;
+}
+
+/* ── 하단 저장 버튼 (sticky) ── */
+.ac-save-bar {
+  flex-shrink: 0; padding: 10px 16px;
+  background: #fff; border-top: 1px solid #f0f0f0;
+}
+.ac-save-btn {
+  width: 100%; padding: 14px; border-radius: 12px;
+  background: #4f46e5; color: #fff; font-size: 14px; font-weight: 700;
+  border: none; cursor: pointer;
+}
+.ac-save-btn.disabled { background: #e5e7eb; color: #9ca3af; }
+
+/* ── 바텀시트 오버레이 공통 ── */
+.sheet-overlay {
+  position: absolute; inset: 0; background: rgba(0,0,0,.48); z-index: 10;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.sheet-container {
+  background: #fff; border-radius: 20px 20px 0 0; max-height: 88%;
+  display: flex; flex-direction: column;
+}
+.sheet-handle-wrap { display: flex; justify-content: center; padding: 10px 0 0; }
+.sheet-handle { width: 36px; height: 4px; background: #e5e7eb; border-radius: 2px; }
+.sheet-header {
+  display: flex; align-items: center; justify-content: center;
+  padding: 12px 16px 10px; position: relative; border-bottom: 1px solid #f0f0f0;
+}
+.sheet-title { font-size: 15px; font-weight: 800; color: #111; }
+.sheet-close {
+  position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+  width: 28px; height: 28px; border-radius: 50%; background: #f0f0f0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: #374151; border: none; cursor: pointer;
+}
+.sheet-search-wrap {
+  padding: 10px 16px; border-bottom: 1px solid #f0f0f0;
+}
+.sheet-search {
+  width: 100%; padding: 9px 14px 9px 34px; border: 1.5px solid #e5e7eb;
+  border-radius: 10px; font-size: 13px; background: #f8f8f6; outline: none;
+}
+.sheet-search-icon {
+  position: absolute; left: 28px; top: 50%; transform: translateY(-50%);
+  font-size: 13px; color: #9ca3af;
+}
+.sheet-body { overflow-y: auto; padding: 0 0 20px; }
+.sheet-body::-webkit-scrollbar { display: none; }
+.sheet-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 20px; cursor: pointer; border-bottom: 1px solid #f5f5f5;
+}
+.sheet-item:last-child { border-bottom: none; }
+.sheet-item-flag { font-size: 20px; width: 28px; text-align: center; flex-shrink: 0; }
+.sheet-item-name { flex: 1; font-size: 14px; font-weight: 600; color: #111; }
+.sheet-item-check { color: #4f46e5; font-size: 16px; font-weight: 900; }
+.sheet-item.selected .sheet-item-name { color: #4f46e5; }
+.sheet-section-label {
+  font-size: 11px; font-weight: 700; color: #9ca3af; letter-spacing: .5px;
+  padding: 12px 20px 6px;
+}
+</style>
+</head>
+<body>
+
+<!-- ════ Page Nav ════ -->
+<nav class="page-nav">
+  <a href="index.html" class="page-nav-back">← 목록으로</a>
+  <span class="page-nav-title">MY03 — 계정관리</span>
+  <span class="page-nav-route">my03_account.html</span>
+  <div class="page-nav-nav">
+    <a href="my02_cashback.html" class="page-nav-pager">← 이전</a>
+    <a href="my04_terms.html" class="page-nav-pager">다음 →</a>
+  </div>
+</nav>
+
+<!-- ════ TOC ════ -->
+<nav class="toc">
+  <div class="toc-inner">
+    <span class="toc-label">MY03</span>
+    <a href="#a" class="toc-link active">A — 기본 입력</a>
+    <span class="toc-sep"></span>
+    <a href="#b" class="toc-link">B — 국적 선택 바텀시트</a>
+    <span class="toc-sep"></span>
+    <a href="#c" class="toc-link">C — 유효성 오류</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- ════ A: 기본 입력 상태 ════ -->
+<div id="a" class="sec-title">
+  <span class="sec-badge">MY03-A</span>계정관리 — 기본 입력 상태
+  <span style="font-size:12px;font-weight:400;color:#888">— 마이페이지 > [계정관리] 진입</span>
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — MY03 계정관리 전체</div>
+  <ul class="sec-policy-list">
+    <li><strong>진입 조건</strong>: 로그인 상태에서만 접근 가능 (10-3절)</li>
+    <li><strong>이메일 필드</strong>: 읽기전용. 인증완료 표시. 변경 불가 (10-3절)</li>
+    <li><strong>입력 필드</strong>: 이름(영문, 선택) / 성(영문, 선택) / 국적(바텀시트) / 전화번호(국가코드+번호) (10-3절)</li>
+    <li><strong>마케팅 수신 동의</strong>: 회원가입 시 선택값과 자동 동기화. [마케팅 약관 전문 보기] → 바텀시트 팝업 (10-3절)</li>
+    <li><strong>[저장]</strong>: 필드별 유효성 검사. 오류 시 해당 필드 에러 메시지 (10-3절)</li>
+    <li><strong>아바타 이미지</strong>: 미표시 (v0.20)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.29 10-3절</div>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- GNB -->
+        <div class="my-gnb">
+          <button class="my-gnb-back">← <span class="wf-cn">1</span></button>
+          <div class="my-gnb-title">계정관리</div>
+          <button class="my-gnb-icon">☰</button>
+        </div>
+
+        <!-- 스크롤 영역 -->
+        <div class="my-scroll">
+
+          <!-- 입력 폼 -->
+          <div class="ac-form-section">
+            <div class="ac-form-label">회원 정보 <span style="font-size:10px;font-weight:400;color:#9ca3af;">(영문 입력)</span></div>
+
+            <!-- 이름 -->
+            <div class="ac-field">
+              <div class="ac-field-label">이름 <span class="ac-field-label-opt">선택</span> <span class="wf-cn">3</span></div>
+              <div class="ac-input-wrap">
+                <input class="ac-input valid" type="text" value="Sungkyoon" placeholder="예) Sungkyoon">
+                <span class="ac-input-check">✓</span>
+              </div>
+            </div>
+
+            <!-- 성 -->
+            <div class="ac-field">
+              <div class="ac-field-label">성 <span class="ac-field-label-opt">선택</span> <span class="wf-cn">4</span></div>
+              <div class="ac-input-wrap">
+                <input class="ac-input valid" type="text" value="Yoon" placeholder="예) Yoon">
+                <span class="ac-input-check">✓</span>
+              </div>
+            </div>
+
+            <!-- 이메일 (읽기전용) -->
+            <div class="ac-field">
+              <div class="ac-field-label">이메일 <span class="wf-cn">5</span></div>
+              <div class="ac-input-wrap">
+                <input class="ac-input readonly" type="text" value="dreamyuns@allmytour.com" readonly>
+                <span class="ac-input-badge ac-input-badge-verified">✓ 인증완료</span>
+              </div>
+            </div>
+
+            <!-- 국적 -->
+            <div class="ac-field">
+              <div class="ac-field-label">국적 <span class="ac-field-label-opt">선택</span> <span class="wf-cn">6</span></div>
+              <button class="ac-select-trigger">
+                <span>🇰🇷 대한민국</span>
+                <span class="ac-select-arrow">›</span>
+              </button>
+            </div>
+
+            <!-- 전화번호 -->
+            <div class="ac-field">
+              <div class="ac-field-label">전화번호 <span class="ac-field-label-opt">선택</span> <span class="wf-cn">7</span></div>
+              <div class="ac-phone-wrap">
+                <button class="ac-phone-code">🇰🇷 +82 <span class="wf-cn">8</span></button>
+                <div class="ac-input-wrap ac-phone-num">
+                  <input class="ac-input" type="tel" value="01012345678" placeholder="예) 01012345678">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 마케팅 수신 동의 -->
+          <div class="ac-marketing-section">
+            <div class="ac-marketing-row">
+              <div>
+                <div class="ac-marketing-label">마케팅 수신 동의 <span class="wf-cn">9</span></div>
+                <div class="ac-marketing-sub">이메일·SMS 마케팅 정보 수신</div>
+              </div>
+              <button class="ac-toggle on"><div class="ac-toggle-thumb"></div></button>
+            </div>
+            <span class="ac-terms-link">마케팅 약관 전문 보기 <span class="wf-cn">10</span></span>
+          </div>
+
+          <div style="height: 8px;"></div>
+
+        </div><!-- /my-scroll -->
+
+        <!-- 하단 저장 버튼 (sticky) -->
+        <div class="ac-save-bar">
+          <button class="ac-save-btn">저장 <span class="wf-cn">11</span></button>
+        </div>
+
+      </div><!-- /m-screen -->
+    </div>
+  </div>
+
+  <!-- 주석 패널 MY03-A -->
+  <div class="ann">
+    <h3>화면 주석 — MY03-A (기본 입력)</h3>
+    <div class="ann-item">
+      <div class="cn">진입</div>
+      <div class="ann-body">
+        <div class="ann-title">마이페이지 > [계정관리] 탭 → 별도 전체화면</div>
+        <div class="ann-desc">
+          <ul>
+            <li>로그인 전용 화면. 비로그인 진입 불가.</li>
+            <li>기존에 저장된 정보가 있으면 각 필드에 미리 채워진 상태로 진입 (이름·성·국적·전화번호·마케팅 동의).</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-3절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">← 뒤로가기</div>
+        <div class="ann-desc">
+          <ul>
+            <li>탭 시 저장 없이 MY01 마이페이지로 복귀.</li>
+            <li>MVP에서는 변경사항 미저장 확인 알럿 없음 (단순 복귀 처리).</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-1절. MY01~MY03 공통 GNB 패턴.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">이름 필드 (First Name, 영문, 선택)</div>
+        <div class="ann-desc">
+          <ul>
+            <li>영문 알파벳(A-Z, a-z) 및 공백만 허용. 특수기호·숫자·한글 입력 불가.</li>
+            <li>위반 문자 포함 시 유효성 오류 (MY03-C 참조). 유효 입력 완료 시 우측 ✓ 표시.</li>
+          </ul>
+        </div>
+        <div class="ann-front">← placeholder: 예) Sungkyoon</div>
+        <div class="ann-rule">정책서 10-3절 (이름: 영문, 선택).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">성 필드 (Last Name, 영문, 선택)</div>
+        <div class="ann-desc">
+          <ul>
+            <li>이름 필드와 동일 유효성 규칙 적용. 영문 알파벳 + 공백만 허용.</li>
+            <li>이름·성 동시 오류 시 두 필드 모두 에러 표시.</li>
+          </ul>
+        </div>
+        <div class="ann-front">← placeholder: 예) Yoon</div>
+        <div class="ann-rule">정책서 10-3절 (성: 영문, 선택).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">5</div>
+      <div class="ann-body">
+        <div class="ann-title">이메일 필드 (읽기전용) ★</div>
+        <div class="ann-desc">
+          <ul>
+            <li>로그인 인증에 사용한 이메일 주소. 수정·변경 불가.</li>
+            <li>시각 처리: 회색 배경(#f8f8f6) + 커서 not-allowed + 우측 "✓ 인증완료" 초록 배지 고정 표시.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-3절 (이메일 읽기전용, 변경 불가).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">6</div>
+      <div class="ann-body">
+        <div class="ann-title">국적 필드 (바텀시트 선택, 선택)</div>
+        <div class="ann-desc">
+          <ul>
+            <li>탭 시 국적 선택 바텀시트(MY03-B) 슬라이드업.</li>
+            <li>선택 완료 시 바텀시트 자동 닫힘 → 필드에 국기 아이콘 + 국가명 표시 (예: 🇰🇷 대한민국).</li>
+            <li>미선택 상태: 플레이스홀더 "국적을 선택해주세요" 회색 표시.</li>
+          </ul>
+        </div>
+        <div class="ann-front">← placeholder: 국적을 선택해주세요</div>
+        <div class="ann-rule">정책서 10-3절 (국적: 바텀시트 선택).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">7</div>
+      <div class="ann-body">
+        <div class="ann-title">전화번호 필드 (선택)</div>
+        <div class="ann-desc">
+          <ul>
+            <li>좌측 국가코드 선택 버튼 + 우측 번호 직접 입력 2분할 구조.</li>
+            <li>국가코드와 국적 선택은 독립적으로 설정 가능 (연동 없음).</li>
+          </ul>
+        </div>
+        <div class="ann-front">← placeholder: 예) 01012345678</div>
+        <div class="ann-rule">정책서 10-3절 (국가코드 선택 + 번호 직접 입력).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">8</div>
+      <div class="ann-body">
+        <div class="ann-title">국가코드 선택 버튼</div>
+        <div class="ann-desc">
+          <ul>
+            <li>탭 시 국가코드 선택 바텀시트 팝업. 기본값: 🇰🇷 +82 (대한민국).</li>
+            <li>국적 필드 선택값과 별도 독립 설정 — 국적 변경해도 국가코드 자동 변경 없음.</li>
+          </ul>
+        </div>
+        <div class="ann-front">← 기본값: +82 (한국)</div>
+        <div class="ann-rule">정책서 10-3절 (전화번호: 국가코드 선택 + 번호 직접 입력).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">9</div>
+      <div class="ann-body">
+        <div class="ann-title">마케팅 수신 동의 토글 ★</div>
+        <div class="ann-desc">
+          <ul>
+            <li>ON/OFF 토글 스위치. 이메일·SMS 마케팅 정보 수신 동의 여부 설정.</li>
+            <li>초기값: 회원가입(AUTH) 시 선택한 마케팅 동의값과 자동 동기화 (가입 시 체크하면 ON, 미체크면 OFF).</li>
+            <li>토글 변경 후 [저장] 탭 시에만 서버에 반영.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-3절 (회원가입 시 선택값과 자동 동기화).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">10</div>
+      <div class="ann-body">
+        <div class="ann-title">[마케팅 약관 전문 보기] 링크</div>
+        <div class="ann-desc">
+          <ul>
+            <li>탭 시 마케팅 약관 전문 바텀시트 팝업.</li>
+            <li>내용 확인 후 [✕] 또는 딤 영역 탭 시 바텀시트 닫힘. 동의 상태 변경 없음.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-3절 ([마케팅 약관 전문 보기] → 바텀시트 팝업).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">11</div>
+      <div class="ann-body">
+        <div class="ann-title">[저장] 버튼 (하단 sticky) ★</div>
+        <div class="ann-desc">
+          <ul>
+            <li>탭 시 모든 입력 필드 유효성 일괄 검사 실행.</li>
+            <li><b>유효성 통과 시:</b> 서버 저장 → MY01 마이페이지로 복귀 + "저장되었습니다" 토스트 메시지 표시.</li>
+            <li><b>유효성 오류 시:</b> 오류 필드에 빨간 테두리 + 에러 메시지 표시, 저장 비활성 (MY03-C 참조).</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-3절 (하단 저장 버튼 + 유효성 검사).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════ B: 국적 선택 바텀시트 ════ -->
+<div id="b" class="sec-title">
+  <span class="sec-badge">MY03-B</span>국적 선택 바텀시트
+  <span style="font-size:12px;font-weight:400;color:#888">— 국적 필드 탭 시 슬라이드업</span>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- 배경: MY03-A 흐리게 -->
+        <div class="my-gnb" style="opacity:.4;">
+          <button class="my-gnb-back">←</button>
+          <div class="my-gnb-title">계정관리</div>
+          <button class="my-gnb-icon">☰</button>
+        </div>
+        <div style="flex:1;overflow:hidden;position:relative;">
+          <div style="padding:12px 16px;opacity:.25;">
+            <div style="height:44px;background:#e5e7eb;border-radius:8px;margin-bottom:8px;"></div>
+            <div style="height:44px;background:#e5e7eb;border-radius:8px;margin-bottom:8px;"></div>
+            <div style="height:44px;background:#f0f0f0;border-radius:8px;margin-bottom:8px;"></div>
+            <div style="height:44px;background:#e5e7eb;border-radius:8px;"></div>
+          </div>
+
+          <!-- 바텀시트 오버레이 -->
+          <div class="sheet-overlay">
+            <div class="sheet-container">
+              <div class="sheet-handle-wrap"><div class="sheet-handle"></div></div>
+              <div class="sheet-header">
+                <span class="sheet-title">국적 선택 <span class="wf-cn">1</span></span>
+                <button class="sheet-close">✕</button>
+              </div>
+              <!-- 검색 -->
+              <div class="sheet-search-wrap" style="position:relative;">
+                <span class="sheet-search-icon">🔍</span>
+                <input class="sheet-search" type="text" placeholder="국가 검색">
+                <span class="wf-cn" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);">2</span>
+              </div>
+              <div class="sheet-body">
+                <div class="sheet-section-label">인기 국적</div>
+                <div class="sheet-item selected">
+                  <span class="sheet-item-flag">🇰🇷</span>
+                  <span class="sheet-item-name">대한민국 <span class="wf-cn">3</span></span>
+                  <span class="sheet-item-check">✓</span>
+                </div>
+                <div class="sheet-item">
+                  <span class="sheet-item-flag">🇺🇸</span>
+                  <span class="sheet-item-name">미국</span>
+                </div>
+                <div class="sheet-item">
+                  <span class="sheet-item-flag">🇯🇵</span>
+                  <span class="sheet-item-name">일본</span>
+                </div>
+                <div class="sheet-item">
+                  <span class="sheet-item-flag">🇨🇳</span>
+                  <span class="sheet-item-name">중국</span>
+                </div>
+                <div class="sheet-section-label">전체</div>
+                <div class="sheet-item">
+                  <span class="sheet-item-flag">🇦🇺</span>
+                  <span class="sheet-item-name">호주</span>
+                </div>
+                <div class="sheet-item">
+                  <span class="sheet-item-flag">🇬🇧</span>
+                  <span class="sheet-item-name">영국</span>
+                </div>
+                <div class="sheet-item" style="color:#9ca3af;font-size:12px;padding:8px 20px;justify-content:center;">
+                  … 전체 N개 국가
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 주석 패널 MY03-B -->
+  <div class="ann">
+    <h3>화면 주석 — MY03-B (국적 선택)</h3>
+    <div class="ann-item">
+      <div class="cn">진입</div>
+      <div class="ann-body">
+        <div class="ann-title">국적 필드 탭 → 바텀시트 슬라이드업</div>
+        <div class="ann-desc">
+          <ul>
+            <li>MY03-A에서 국적 필드 탭 시 슬라이드업. 딤 영역 탭 또는 [✕] 탭 시 선택 없이 닫힘.</li>
+            <li>국적 선택 즉시 바텀시트 자동 닫힘 → 국적 필드에 선택 국기 + 국가명 반영.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-3절 (국적: 바텀시트 선택).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">국적 선택 바텀시트</div>
+        <div class="ann-desc">
+          <ul>
+            <li>전체 국가 목록이 많으므로 검색 필드 포함.</li>
+            <li>목록 구성: "인기 국적" 섹션 (한국·미국·일본·중국 고정 상단) + "전체" 섹션 (알파벳 순).</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-3절 (국적: 바텀시트 선택).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">국가 검색 필드</div>
+        <div class="ann-desc">
+          <ul>
+            <li>한국어 국가명 및 영어 국가명 모두 검색 지원 (예: "한국", "Korea" 모두 대한민국 노출).</li>
+            <li>텍스트 입력 즉시 목록 실시간 필터링.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-3절 (국적 바텀시트 — 검색 포함).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">현재 선택 국적 — ✓ 표시</div>
+        <div class="ann-desc">
+          <ul>
+            <li>현재 저장된 국적 항목에 인디고 체크마크(✓)와 텍스트 색상 강조.</li>
+            <li>다른 항목 탭 시 즉시 선택 → 바텀시트 자동 닫힘 → 국적 필드에 국기+국가명 반영.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">인기 국적 섹션: 한국·미국·일본·중국 (상위 4개 고정 노출). 정책서 10-3절.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════ C: 유효성 오류 상태 ════ -->
+<div id="c" class="sec-title">
+  <span class="sec-badge">MY03-C</span>계정관리 — 유효성 오류 상태
+  <span style="font-size:12px;font-weight:400;color:#888">— [저장] 탭 시 특수기호·숫자 포함 시 오류</span>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- GNB -->
+        <div class="my-gnb">
+          <button class="my-gnb-back">←</button>
+          <div class="my-gnb-title">계정관리</div>
+          <button class="my-gnb-icon">☰</button>
+        </div>
+
+        <!-- 스크롤 영역 -->
+        <div class="my-scroll">
+
+          <div class="ac-form-section">
+            <div class="ac-form-label">회원 정보 <span style="font-size:10px;font-weight:400;color:#9ca3af;">(영문 입력)</span></div>
+
+            <!-- 이름 — 오류 -->
+            <div class="ac-field">
+              <div class="ac-field-label">이름 <span class="ac-field-label-opt">선택</span></div>
+              <div class="ac-input-wrap">
+                <input class="ac-input error" type="text" value="St3ve!" placeholder="예) Sungkyoon">
+              </div>
+              <div class="ac-error-msg">⚠ 영문 알파벳만 입력 가능합니다 (특수기호·숫자 제외) <span class="wf-cn">1</span></div>
+            </div>
+
+            <!-- 성 — 오류 -->
+            <div class="ac-field">
+              <div class="ac-field-label">성 <span class="ac-field-label-opt">선택</span></div>
+              <div class="ac-input-wrap">
+                <input class="ac-input error" type="text" value="K@y4n!" placeholder="예) Yoon">
+              </div>
+              <div class="ac-error-msg">⚠ 영문 알파벳만 입력 가능합니다 (특수기호·숫자 제외) <span class="wf-cn">2</span></div>
+            </div>
+
+            <!-- 이메일 (정상) -->
+            <div class="ac-field">
+              <div class="ac-field-label">이메일</div>
+              <div class="ac-input-wrap">
+                <input class="ac-input readonly" type="text" value="dreamyuns@allmytour.com" readonly>
+                <span class="ac-input-badge ac-input-badge-verified">✓ 인증완료</span>
+              </div>
+            </div>
+
+            <!-- 국적 (정상) -->
+            <div class="ac-field">
+              <div class="ac-field-label">국적 <span class="ac-field-label-opt">선택</span></div>
+              <button class="ac-select-trigger">
+                <span>🇰🇷 대한민국</span>
+                <span class="ac-select-arrow">›</span>
+              </button>
+            </div>
+
+            <!-- 전화번호 (정상) -->
+            <div class="ac-field">
+              <div class="ac-field-label">전화번호 <span class="ac-field-label-opt">선택</span></div>
+              <div class="ac-phone-wrap">
+                <button class="ac-phone-code">🇰🇷 +82</button>
+                <div class="ac-input-wrap ac-phone-num">
+                  <input class="ac-input" type="tel" value="01012345678">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ac-marketing-section">
+            <div class="ac-marketing-row">
+              <div>
+                <div class="ac-marketing-label">마케팅 수신 동의</div>
+                <div class="ac-marketing-sub">이메일·SMS 마케팅 정보 수신</div>
+              </div>
+              <button class="ac-toggle on"><div class="ac-toggle-thumb"></div></button>
+            </div>
+            <span class="ac-terms-link">마케팅 약관 전문 보기</span>
+          </div>
+
+          <div style="height:8px;"></div>
+
+        </div><!-- /my-scroll -->
+
+        <!-- 하단 저장 버튼 — 비활성 -->
+        <div class="ac-save-bar">
+          <button class="ac-save-btn disabled">저장 <span class="wf-cn">3</span></button>
+        </div>
+
+      </div><!-- /m-screen -->
+    </div>
+  </div>
+
+  <!-- 주석 패널 MY03-C -->
+  <div class="ann">
+    <h3>화면 주석 — MY03-C (유효성 오류)</h3>
+    <div class="ann-item">
+      <div class="cn">트리거</div>
+      <div class="ann-body">
+        <div class="ann-title">[저장] 탭 → 유효성 검사 실행</div>
+        <div class="ann-desc">
+          <ul>
+            <li>[저장] 버튼 탭 시 모든 입력 필드 일괄 유효성 검사 실행.</li>
+            <li>오류 필드: 빨간 테두리(#ef4444) + 연분홍 배경(#fef2f2) + 필드 하단 에러 메시지 표시.</li>
+            <li>오류가 있는 첫 번째 필드로 자동 스크롤 이동.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-3절 (저장 전 필드별 유효성 검사).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">이름 오류 — 특수기호·숫자 입력 시</div>
+        <div class="ann-desc">
+          <ul>
+            <li>허용 문자: 영문 알파벳(A-Z, a-z) + 공백. 그 외 전부 불허 (숫자·특수기호·한글 포함).</li>
+            <li>위반 시 에러 메시지: "영문 알파벳만 입력 가능합니다 (특수기호·숫자 제외)"</li>
+            <li>시각 처리: 필드 테두리 빨간색 + 배경 연분홍(#fef2f2).</li>
+          </ul>
+        </div>
+        <div class="ann-rule">허용: 영문(A-Z, a-z) + 공백. 불허: 숫자·특수기호·한글 전부. 정책서 10-3절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">성 오류 — 특수기호·숫자 입력 시</div>
+        <div class="ann-desc">
+          <ul>
+            <li>이름 필드와 동일 유효성 규칙 적용.</li>
+            <li>에러 메시지: "영문 알파벳만 입력 가능합니다 (특수기호·숫자 제외)"</li>
+            <li>이름·성 동시 오류 시 두 필드 모두 에러 상태 표시.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-3절 (이름·성 동시 오류 시 두 필드 모두 에러 표시).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">[저장] 버튼 — 비활성 상태</div>
+        <div class="ann-desc">
+          <ul>
+            <li>유효성 오류가 하나라도 있는 동안 [저장] 버튼 회색 비활성(disabled) 처리 (배경 #e5e7eb, 텍스트 #9ca3af).</li>
+            <li>오류 필드를 모두 수정 완료 시 [저장] 버튼 인디고 활성 상태로 자동 복귀.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-3절 (오류 시 저장 버튼 비활성).</div>
+        <div class="ann-case">오류 해결 흐름: 잘못된 이름 입력 → 에러 표시 → 영문으로 수정 → 에러 해제 → [저장] 활성화</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /page -->
+<script src="./wf-scripts.js"></script>
+</body>
+</html>

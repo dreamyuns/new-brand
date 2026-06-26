@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phase 2 정책서 v0.1 — allmytour meta</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"Malgun Gothic","Apple SD Gothic Neo","Segoe UI",sans-serif;
+  background:#f8fafc;color:#1e293b;min-height:100vh;
+  padding-top:44px;
+}
+
+/* ── 헤더 ── */
+.p2-header{background:#0c1a2e;color:#fff;padding:40px 48px 32px}
+.p2-header-label{font-size:11px;font-weight:700;letter-spacing:.12em;color:#7dd3fc;margin-bottom:8px;text-transform:uppercase}
+.p2-header-title{font-size:28px;font-weight:800;letter-spacing:-.5px;margin-bottom:6px}
+.p2-header-title .phase{color:#38bdf8}
+.p2-header-meta{font-size:13px;color:rgba(255,255,255,.45);margin-bottom:14px}
+.p2-header-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(56,189,248,.15);border:1px solid rgba(56,189,248,.3);
+  color:#7dd3fc;font-size:12px;font-weight:700;padding:5px 14px;border-radius:6px;
+}
+.p2-header-badge span{color:#fff;font-weight:800}
+
+/* ── 레이아웃 ── */
+.p2-body{display:flex;max-width:1280px;margin:0 auto;padding:32px 24px;gap:28px;align-items:flex-start}
+
+/* ── 목차 ── */
+.p2-toc{
+  width:240px;flex-shrink:0;position:sticky;top:20px;
+  background:#fff;border:1px solid #e2e8f0;border-radius:10px;
+  padding:16px 0;max-height:calc(100vh - 48px);overflow-y:auto;
+}
+.p2-toc-hdr{
+  font-size:10px;font-weight:700;letter-spacing:.1em;color:#94a3b8;text-transform:uppercase;
+  padding:0 16px 10px;border-bottom:1px solid #f1f5f9;margin-bottom:8px;
+}
+.p2-toc-art{
+  display:block;font-size:12px;font-weight:700;color:#334155;
+  padding:5px 16px;text-decoration:none;
+  transition:background .12s,color .12s;border-left:3px solid transparent;
+}
+.p2-toc-art:hover{background:#f0f9ff;color:#0284c7}
+.p2-toc-art.active{background:#e0f2fe;color:#0284c7;border-left-color:#0ea5e9}
+.p2-toc-sub{
+  display:block;font-size:11px;color:#64748b;
+  padding:3px 16px 3px 26px;text-decoration:none;
+  transition:background .12s,color .12s;border-left:3px solid transparent;
+}
+.p2-toc-sub:hover{background:#f8fafc;color:#0284c7}
+.p2-toc-sub.active{color:#0284c7;border-left-color:#bae6fd}
+.p2-toc-divider{height:1px;background:#f1f5f9;margin:8px 0}
+
+/* ── 본문 ── */
+.p2-content{flex:1;min-width:0}
+
+.p2-section{background:#fff;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:20px;overflow:hidden}
+.p2-section-hdr{
+  background:#f0f9ff;border-bottom:1px solid #bae6fd;
+  padding:16px 24px;display:flex;align-items:center;gap:10px;
+}
+.p2-art-badge{
+  background:#0ea5e9;color:#fff;font-size:10px;font-weight:700;
+  padding:3px 9px;border-radius:4px;white-space:nowrap;letter-spacing:.05em;
+}
+.p2-section-hdr h2{font-size:16px;font-weight:700;color:#0c4a6e;letter-spacing:-.3px}
+.p2-section-body{padding:20px 24px}
+
+.p2-sub{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid #f1f5f9}
+.p2-sub:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.p2-sub-title{font-size:14px;font-weight:700;color:#1e293b;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.p2-sub-num{font-size:11px;font-weight:700;color:#0284c7;background:#e0f2fe;padding:2px 8px;border-radius:3px}
+
+.p2-text{font-size:13px;color:#475569;line-height:1.8}
+.p2-text p{margin-bottom:8px}
+.p2-text p:last-child{margin-bottom:0}
+.p2-text strong{color:#1e293b;font-weight:700}
+.p2-text ul{padding-left:18px;margin:6px 0}
+.p2-text li{margin-bottom:5px}
+.p2-text code{
+  font-family:'SFMono-Regular',Consolas,monospace;
+  font-size:12px;background:#f1f5f9;color:#0369a1;padding:1px 5px;border-radius:3px;
+}
+
+/* ── 테이블 ── */
+.p2-table-wrap{overflow-x:auto;margin:10px 0}
+.p2-table{width:100%;border-collapse:collapse;font-size:13px}
+.p2-table th{
+  background:#e0f2fe;color:#0369a1;font-weight:700;
+  padding:9px 14px;text-align:left;border-bottom:2px solid #bae6fd;white-space:nowrap;
+}
+.p2-table td{padding:9px 14px;border-bottom:1px solid #f1f5f9;color:#475569;vertical-align:top;line-height:1.65}
+.p2-table tr:last-child td{border-bottom:none}
+.p2-table tr:hover td{background:#fafbfc}
+
+/* ── 코드 블록 ── */
+.p2-code{
+  background:#1e293b;color:#e2e8f0;
+  font-family:'SFMono-Regular',Consolas,monospace;
+  font-size:12px;line-height:1.85;
+  padding:18px 20px;border-radius:8px;margin:12px 0;
+  overflow-x:auto;white-space:pre;
+}
+.p2-code .cm{color:#64748b}
+.p2-code .kw{color:#7dd3fc}
+.p2-code .num{color:#fb923c}
+.p2-code .str{color:#86efac}
+
+/* ── 강조 박스 ── */
+.p2-notice{
+  background:#eff6ff;border:1px solid #bfdbfe;border-left:3px solid #3b82f6;
+  border-radius:6px;padding:12px 14px;margin:12px 0;
+  font-size:13px;color:#1d4ed8;line-height:1.7;
+}
+.p2-warn{
+  background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #f59e0b;
+  border-radius:6px;padding:12px 14px;margin:12px 0;
+  font-size:13px;color:#92400e;line-height:1.7;
+}
+.p2-warn strong,.p2-notice strong{font-weight:700}
+
+/* ── 태그 ── */
+.tag-p2{display:inline-block;font-size:10px;font-weight:700;background:#dbeafe;color:#1d4ed8;padding:1px 6px;border-radius:3px;margin-left:4px}
+.tag-pending{display:inline-block;font-size:10px;font-weight:700;background:#fef3c7;color:#b45309;padding:1px 6px;border-radius:3px;margin-left:4px}
+.tag-tbd{display:inline-block;font-size:10px;font-weight:700;background:#f3f4f6;color:#6b7280;padding:1px 6px;border-radius:3px;margin-left:4px}
+
+/* ── 미결 이슈 섹션 ── */
+.p2-issue-section .p2-section-hdr{background:#fff7ed;border-bottom-color:#fed7aa}
+.p2-issue-section .p2-art-badge{background:#ea580c}
+.p2-issue-section h2{color:#7c2d12}
+.p2-issue-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:13px 0;border-bottom:1px solid #f1f5f9;
+}
+.p2-issue-item:last-child{border-bottom:none}
+.p2-issue-num{
+  background:#fef3c7;color:#92400e;font-size:11px;font-weight:700;
+  min-width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;
+}
+.p2-issue-body{flex:1}
+.p2-issue-title{font-size:13px;font-weight:700;color:#1e293b;margin-bottom:4px;line-height:1.55}
+.p2-issue-owner{font-size:11px;color:#94a3b8}
+
+/* ── 변경이력 섹션 ── */
+.p2-history-section .p2-section-hdr{background:#f8fafc;border-bottom-color:#e2e8f0}
+.p2-history-section .p2-art-badge{background:#64748b}
+.p2-history-section h2{color:#334155}
+
+/* ── GNB ── */
+.page-nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:44px;background:#0f172a;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;border-bottom:1px solid rgba(255,255,255,.08);
+}
+.pn-l{display:flex;align-items:center;min-width:0}
+.pn-back{
+  display:inline-flex;align-items:center;gap:4px;flex-shrink:0;
+  border:1px solid #0ea5e9;color:#7dd3fc;
+  padding:4px 10px;border-radius:4px;font-weight:700;font-size:11px;
+  text-decoration:none;transition:background .15s;
+}
+.pn-back:hover{background:rgba(14,165,233,.15)}
+.pn-sep{color:rgba(255,255,255,.18);margin:0 12px;flex-shrink:0}
+.pn-code{font-weight:800;color:#fff;font-size:12px;font-family:monospace;white-space:nowrap}
+.pn-name{color:rgba(255,255,255,.7);margin-left:5px;font-size:12px;font-weight:600;white-space:nowrap}
+.pn-route{color:rgba(255,255,255,.3);margin-left:8px;font-size:11px;white-space:nowrap}
+.pn-r{display:flex;gap:6px;flex-shrink:0;margin-left:16px}
+.pn-btn{
+  display:inline-block;padding:4px 11px;
+  border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.45);
+  font-size:11px;font-weight:700;border-radius:4px;
+  text-decoration:none;transition:background .15s,color .15s;white-space:nowrap;
+}
+.pn-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+.pn-btn.disabled{opacity:.28;pointer-events:none;cursor:default}
+
+/* ── 푸터 ── */
+.p2-footer{
+  text-align:center;font-size:12px;color:#94a3b8;
+  padding:32px 24px 48px;border-top:1px solid #e2e8f0;
+  margin:0 24px;line-height:1.8;
+}
+</style>
+</head>
+<body>
+
+<!-- ── GNB ── -->
+<div class="page-nav">
+  <div class="pn-l">
+    <a class="pn-back" href="index.html">← 목록으로</a>
+    <span class="pn-sep">|</span>
+    <span class="pn-code">POLICY-P2</span>
+    <span class="pn-name">— Phase 2 정책서</span>
+    <span class="pn-route">/ v0.1</span>
+  </div>
+  <div class="pn-r">
+    <a class="pn-btn" href="phase1_policy.html">← 이전</a>
+    <span class="pn-btn disabled">다음 →</span>
+  </div>
+</div>
+
+<!-- ══ 헤더 ══ -->
+<div class="p2-header">
+  <div class="p2-header-label">allmytour meta — Phase 2</div>
+  <div class="p2-header-title"><span class="phase">Phase 2</span> 정책서</div>
+  <div class="p2-header-meta">올마이투어 써드파티 공급사 연동 · 개발자확인용 · v0.1</div>
+  <div class="p2-header-badge">기준 정책서 <span>v0.1</span> — context/신규정책/Phase2_정책서_v0.1.md</div>
+</div>
+
+<!-- ══ 바디 ══ -->
+<div class="p2-body">
+
+  <!-- ── 목차 ── -->
+  <nav class="p2-toc">
+    <div class="p2-toc-hdr">목차</div>
+
+    <a class="p2-toc-art" href="#sec-history">변경이력</a>
+
+    <div class="p2-toc-divider"></div>
+
+    <a class="p2-toc-art" href="#sec-1">제1조 개요</a>
+    <a class="p2-toc-sub" href="#sec-1-1">1-1. Phase 2 목표</a>
+    <a class="p2-toc-sub" href="#sec-1-2">1-2. 올마이투어 상품 구분</a>
+
+    <a class="p2-toc-art" href="#sec-2">제2조 매핑 구조</a>
+    <a class="p2-toc-sub" href="#sec-2-1">2-1. 기본 매핑 테이블 구조</a>
+    <a class="p2-toc-sub" href="#sec-2-2">2-2. 매핑 범위</a>
+    <a class="p2-toc-sub" href="#sec-2-3">2-3. 매핑 데이터 출처</a>
+    <a class="p2-toc-sub" href="#sec-2-4">2-4. 매핑 작업</a>
+
+    <a class="p2-toc-art" href="#sec-3">제3조 검색 플로우</a>
+    <a class="p2-toc-sub" href="#sec-3-1">3-1. Autocomplete</a>
+    <a class="p2-toc-sub" href="#sec-3-2">3-2. Autocomplete 선택 → S01</a>
+    <a class="p2-toc-sub" href="#sec-3-3">3-3. 병렬 호출 구조</a>
+    <a class="p2-toc-sub" href="#sec-3-4">3-4. 페이지당 숙소 수</a>
+
+    <a class="p2-toc-art" href="#sec-4">제4조 써드파티 연결 정책</a>
+    <a class="p2-toc-sub" href="#sec-4-1">4-1. 연결 우선순위</a>
+    <a class="p2-toc-sub" href="#sec-4-2">4-2. Provider 인덱스 구성</a>
+    <a class="p2-toc-sub" href="#sec-4-3">4-3. Rate Limit 확인 필수</a>
+
+    <a class="p2-toc-art" href="#sec-5">제5조 화면·어드민 기획</a>
+    <a class="p2-toc-sub" href="#sec-5-1">5-1. 추가 필요 화면</a>
+    <a class="p2-toc-sub" href="#sec-5-2">5-2. 자사 상품 UI 표시 방식</a>
+
+    <a class="p2-toc-art" href="#sec-6">제6조 Phase 3 고려사항</a>
+
+    <a class="p2-toc-art" href="#sec-7">제7조 글로벌화 정책</a>
+    <a class="p2-toc-sub" href="#sec-7-1">7-1. API 언어 코드 변환 규칙</a>
+    <a class="p2-toc-sub" href="#sec-7-2">7-2. Expedia 지원 언어 범위</a>
+    <a class="p2-toc-sub" href="#sec-7-3">7-3. 표시통화 20종</a>
+    <a class="p2-toc-sub" href="#sec-7-4">7-4. 폴백 정책</a>
+    <a class="p2-toc-sub" href="#sec-7-5">7-5. 공통 필수 헤더</a>
+
+    <div class="p2-toc-divider"></div>
+
+    <a class="p2-toc-art" href="#sec-issues" style="color:#ea580c">⚠ 미결 이슈</a>
+  </nav>
+
+  <!-- ── 본문 ── -->
+  <div class="p2-content">
+
+    <!-- 변경이력 -->
+    <div id="sec-history" class="p2-section p2-history-section">
+      <div class="p2-section-hdr">
+        <span class="p2-art-badge">이력</span>
+        <h2>변경이력</h2>
+      </div>
+      <div class="p2-section-body">
+        <div class="p2-table-wrap">
+          <table class="p2-table">
+            <thead><tr><th>버전</th><th>날짜</th><th>변경 내용</th><th>결정자</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>v0.1</strong></td>
+                <td>2026-06-19</td>
+                <td>초안 작성 — Phase 2 개발 미팅(2026-06-19) 논의 기반. 1차 수정 반영: 직계약 Phase→별도 논의 필요, 담당자 차도현, 호텔베즈·DIDA (논의필요) 추가, 과거 사례 항목·항공 메타 삭제, 미결이슈 담당 윤성균 책임</td>
+                <td>윤성균 책임</td>
+              </tr>
+              <tr>
+                <td><strong>v0.1</strong></td>
+                <td>2026-06-19</td>
+                <td>제7조 글로벌화 정책 추가 — 대표님 전달 문서(글로벌_다국어_메타서비스_통합기획정책서.docx, Expedia Lodging 언어통화 매핑.xlsx) 기반</td>
+                <td>윤성균 책임</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 제1조 개요 -->
+    <div id="sec-1" class="p2-section">
+      <div class="p2-section-hdr">
+        <span class="p2-art-badge">제1조</span>
+        <h2>개요</h2>
+      </div>
+      <div class="p2-section-body">
+
+        <div id="sec-1-1" class="p2-sub">
+          <div class="p2-sub-title"><span class="p2-sub-num">1-1</span>Phase 2 목표</div>
+          <div class="p2-text">
+            <p>Phase 1(KAYAK API 기반 메타서치) 완료 후, 올마이투어 자체 공급사 연동을 통해 가격 비교 목록에 자사 상품을 포함시킨다.</p>
+            <p><strong>Phase 2 주요 연동 대상:</strong> 올마이투어 써드파티 공급사 (익스피디아 우선)</p>
+          </div>
+        </div>
+
+        <div id="sec-1-2" class="p2-sub">
+          <div class="p2-sub-title"><span class="p2-sub-num">1-2</span>올마이투어 상품 구분</div>
+          <div class="p2-table-wrap">
+            <table class="p2-table">
+              <thead><tr><th>구분</th><th>대상</th><th>처리 방식</th><th>Phase</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><strong>써드파티</strong></td>
+                  <td>익스피디아, 호텔베즈, DIDA 트래블 등</td>
+                  <td>API 호출</td>
+                  <td><span class="tag-p2">Phase 2</span> 부터 순차 연결</td>
+                </tr>
+                <tr>
+                  <td><strong>직계약</strong></td>
+                  <td>올마이투어 직계약 호텔</td>
+                  <td>DB 쿼리</td>
+                  <td><span class="tag-pending">별도 논의 필요</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제2조 매핑 구조 -->
+    <div id="sec-2" class="p2-section">
+      <div class="p2-section-hdr">
+        <span class="p2-art-badge">제2조</span>
+        <h2>매핑 구조</h2>
+      </div>
+      <div class="p2-section-body">
+
+        <div id="sec-2-1" class="p2-sub">
+          <div class="p2-sub-title"><span class="p2-sub-num">2-1</span>기본 매핑 테이블 구조</div>
+          <div class="p2-code">KAYAK 호텔 ID  ↔  올마이투어 호텔 ID  ↔  공급사(익스피디아 등) 호텔 ID</div>
+          <div class="p2-text">
+            <ul>
+              <li>KAYAK 호텔 ID와 공급사 호텔 ID를 <strong>직접 매핑하지 않음</strong></li>
+              <li>올마이투어 내부 ID를 허브로 하여 공급사 추가 시 확장 가능한 구조 유지</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="sec-2-2" class="p2-sub">
+          <div class="p2-sub-title"><span class="p2-sub-num">2-2</span>매핑 범위</div>
+          <div class="p2-text">
+            <ul>
+              <li><strong>Phase 2 매핑 대상: 호텔 매핑만</strong></li>
+              <li>city코드 매핑 불필요 — 검색결과 숙소 목록은 KAYAK API가 내려주므로, KAYAK city코드를 올마이투어 도시 코드에 별도 매핑하지 않아도 됨</li>
+              <li>city코드 매핑은 Phase 3 이상(KAYAK 미보유 숙소 서비스 시)에서 검토</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="sec-2-3" class="p2-sub">
+          <div class="p2-sub-title"><span class="p2-sub-num">2-3</span>매핑 데이터 출처</div>
+          <div class="p2-text">
+            <ul>
+              <li>KAYAK Static Data Feed API로 전체 호텔 데이터 적재 (호텔 코드, city코드 포함)</li>
+              <li>예상 매핑률: 약 <strong>60% 수준</strong> (스테이피아 과거 경험 기반)</li>
+              <li>매핑 미완료 숙소: 공급사 병렬 호출 없이 KAYAK 결과만 노출</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="sec-2-4" class="p2-sub">
+          <div class="p2-sub-title"><span class="p2-sub-num">2-4</span>매핑 작업</div>
+          <div class="p2-text">
+            <ul>
+              <li>VerbTech 또는 AI 기반 자동 매핑 도구 활용 검토</li>
+              <li>담당: <strong>차도현 연구원</strong> (진행 중)</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제3조 검색 플로우 -->
+    <div id="sec-3" class="p2-section">
+      <div class="p2-section-hdr">
+        <span class="p2-art-badge">제3조</span>
+        <h2>검색 플로우</h2>
+      </div>
+      <div class="p2-section-body">
+
+        <div id="sec-3-1" class="p2-sub">
+          <div class="p2-sub-title"><span class="p2-sub-num">3-1</span>Autocomplete</div>
+          <div class="p2-text">
+            <ul>
+              <li>Autocomplete API: KAYAK API 그대로 사용</li>
+              <li>placeType 11개 모두 노출 (별도 필터링 없음)</li>
+              <li>Autocomplete를 위한 별도 city코드 매핑 불필요</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="sec-3-2" class="p2-sub">
+          <div class="p2-sub-title"><span class="p2-sub-num">3-2</span>Autocomplete 선택 → 검색결과 페이지(S01) 이동</div>
+          <div class="p2-text">
+            <ul>
+              <li>도시(city코드) 선택 → S01 (해당 도시 숙소 목록 표시)</li>
+              <li>호텔(hotel) 선택 → S01 (선택한 호텔 최상단, 이하 동일 도시 기준 목록)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="sec-3-3" class="p2-sub">
+          <div class="p2-sub-title"><span class="p2-sub-num">3-3</span>병렬 호출 구조</div>
+          <div class="p2-code"><span class="num">1.</span> Autocomplete 키워드 입력 → KAYAK Autocomplete API 호출
+<span class="num">2.</span> 도시 또는 호텔 선택 → S01으로 이동
+<span class="num">3.</span> <span class="kw">[병렬 호출]</span>
+   A. KAYAK 검색 API → 숙소 목록 50개 수령
+   B. 50개 호텔 ID → 올마이투어 매핑 테이블 조회 → 공급사 호텔 코드 획득
+   C. 공급사 API 호출 → 가격 수령
+<span class="num">4.</span> KAYAK 응답 포맷에 공급사 Provider 인덱스 추가하여 병합
+<span class="num">5.</span> 가격 기준 정렬 → 프론트 전달</div>
+          <div class="p2-notice">
+            <strong>병렬 호출 흐름도</strong> — 시각적 다이어그램은 <a href="kayak_allmytour_flow.html" style="color:#1d4ed8;font-weight:700;">kayak_allmytour_flow.html</a>을 참조하세요.
+          </div>
+        </div>
+
+        <div id="sec-3-4" class="p2-sub">
+          <div class="p2-sub-title"><span class="p2-sub-num">3-4</span>페이지당 숙소 수</div>
+          <div class="p2-text">
+            <ul>
+              <li>50개 유지</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제4조 써드파티 연결 정책 -->
+    <div id="sec-4" class="p2-section">
+      <div class="p2-section-hdr">
+        <span class="p2-art-badge">제4조</span>
+        <h2>써드파티 연결 정책</h2>
+      </div>
+      <div class="p2-section-body">
+
+        <div id="sec-4-1" class="p2-sub">
+          <div class="p2-sub-title"><span class="p2-sub-num">4-1</span>연결 우선순위</div>
+          <div class="p2-table-wrap">
+            <table class="p2-table">
+              <thead><tr><th>순서</th><th>공급사</th><th>상태</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><strong>1</strong></td>
+                  <td>익스피디아</td>
+                  <td><span class="tag-p2">Phase 2 최우선</span></td>
+                </tr>
+                <tr>
+                  <td><strong>2</strong></td>
+                  <td>호텔베즈</td>
+                  <td><span class="tag-pending">Phase 2 이후 순차 (논의필요)</span></td>
+                </tr>
+                <tr>
+                  <td><strong>3</strong></td>
+                  <td>DIDA 트래블</td>
+                  <td><span class="tag-pending">Phase 2 이후 순차 (논의필요)</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="sec-4-2" class="p2-sub">
+          <div class="p2-sub-title"><span class="p2-sub-num">4-2</span>Provider 인덱스 구성</div>
+          <div class="p2-text">
+            <ul>
+              <li>KAYAK 응답 포맷의 Provider 인덱스에 올마이투어 공급사 코드를 별도 추가</li>
+              <li>각 공급사별 인덱스로 클릭 시 연결 대상(자사 상세 페이지 / 아웃링크) 구분</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="sec-4-3" class="p2-sub">
+          <div class="p2-sub-title"><span class="p2-sub-num">4-3</span>Rate Limit 사전 확인 필수</div>
+          <div class="p2-warn">
+            <strong>⚠ 연동 전 반드시 확인:</strong> 올마이투어 써드파티 공급사 연결 전 각 공급사의 Rate Limit 정책을 사전 확인해야 합니다.
+          </div>
+          <div class="p2-text">
+            <ul>
+              <li><strong>확인 항목:</strong> N개 숙소 일괄 조회 가능 여부 vs 1건씩 N회 호출 필요 여부</li>
+              <li><strong>대응:</strong> 공급사별 조건 상이 → API 문서·계약 조건 사전 파악 후 연동 일정 수립</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제5조 화면·어드민 기획 방향 -->
+    <div id="sec-5" class="p2-section">
+      <div class="p2-section-hdr">
+        <span class="p2-art-badge">제5조</span>
+        <h2>화면·어드민 기획 방향</h2>
+      </div>
+      <div class="p2-section-body">
+
+        <div id="sec-5-1" class="p2-sub">
+          <div class="p2-sub-title"><span class="p2-sub-num">5-1</span>추가 필요 화면</div>
+          <div class="p2-text">
+            <p>익스피디아 상품은 올마이투어 자사 OTA 상품으로 처리하므로 결제 라인 자체 구성이 필요하다.</p>
+          </div>
+          <div class="p2-table-wrap">
+            <table class="p2-table">
+              <thead><tr><th>화면</th><th>내용</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><strong>결제 라인</strong></td>
+                  <td>포트원 기반 자체 결제 구성</td>
+                </tr>
+                <tr>
+                  <td><strong>예약 내역</strong></td>
+                  <td>예정 / 완료 / 취소</td>
+                </tr>
+                <tr>
+                  <td><strong>어드민 결제 관리</strong></td>
+                  <td>공급사별 예약·정산 관리</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="sec-5-2" class="p2-sub">
+          <div class="p2-sub-title"><span class="p2-sub-num">5-2</span>자사 상품 UI 표시 방식</div>
+          <div class="p2-text">
+            <ul>
+              <li>Vio.com 참고: 숙소 상세 내 자사 상품 섹션 별도 표시</li>
+              <li>검색결과 목록 카드 수에는 영향 없음 (50개 유지)</li>
+              <li>자사 상품 최상단 고정 방식 채택하지 않음 (가격 기준 정렬 유지)</li>
+            </ul>
+          </div>
+          <div class="p2-notice">
+            <strong>미결:</strong> 자사 상품 UI 표시 방식 확정 필요 (별도 섹션 vs 리스트 내 정렬). 미결 이슈 #2 참조.
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 제6조 Phase 3 이상 고려사항 -->
+    <div id="sec-6" class="p2-section">
+      <div class="p2-section-hdr">
+        <span class="p2-art-badge">제6조</span>
+        <h2>Phase 3 이상 고려사항 (미결)</h2>
+      </div>
+      <div class="p2-section-body">
+        <div class="p2-table-wrap">
+          <table class="p2-table">
+            <thead><tr><th>항목</th><th>내용</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>KAYAK 미보유 숙소 처리</strong></td>
+                <td>Phase 3 이상 검토. city코드 매핑 포함 별도 설계 필요</td>
+              </tr>
+              <tr>
+                <td><strong>새 카테고리 확장</strong></td>
+                <td>에어비앤비 등 베케이션 렌탈은 별도 서비스·검색 엔진 분리 검토</td>
+              </tr>
+              <tr>
+                <td><strong>크로스셀링</strong></td>
+                <td>투어·티켓 카테고리 확장 방향 (대표 언급)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 제7조 글로벌화 정책 -->
+    <div id="sec-7" class="p2-section">
+      <div class="p2-section-hdr">
+        <span class="p2-art-badge">제7조</span>
+        <h2>글로벌화 정책 (Phase 2 적용 사항)</h2>
+      </div>
+      <div class="p2-section-body">
+
+        <div class="p2-notice" style="margin-bottom:16px">
+          <strong>참고 문서:</strong> <code>context/신규정책/다국어매핑/다국어_통화_정책_정리.md</code><br>
+          원본: 글로벌_다국어_메타서치_통합기획정책서.docx / Expedia Lodging 언어통화 매핑.xlsx
+        </div>
+
+        <div id="sec-7-1" class="p2-sub">
+          <div class="p2-sub-title"><span class="p2-sub-num">7-1</span>API 언어 코드 변환 규칙 <span class="tag-pending">개발 필수</span></div>
+          <div class="p2-table-wrap">
+            <table class="p2-table">
+              <thead><tr><th>용도</th><th>포맷</th><th>예시</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>UI·콘텐츠 기준</td>
+                  <td>BCP-47, 하이픈</td>
+                  <td><code>ko-KR, ja-JP, es-MX, zh-TW</code></td>
+                </tr>
+                <tr>
+                  <td><strong>Expedia API 호출</strong></td>
+                  <td>ISO 639, 언더스코어</td>
+                  <td><code>ko_KR, ja_JP, es_MX, zh_TW</code></td>
+                </tr>
+                <tr>
+                  <td><strong>KAYAK API 호출</strong> (Phase 1과 동일)</td>
+                  <td>ISO 639, 언더스코어</td>
+                  <td><code>ko_KR, ja_JP, es_MX, zh_TW</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p2-warn">
+            <strong>⚠ API 호출 계층에서 변환 필수.</strong> Expedia·KAYAK 모두 언더스코어 포맷 사용. <code>ko-KR</code> → <code>ko_KR</code> 변환 누락 시 API 호출 실패.
+          </div>
+        </div>
+
+        <div id="sec-7-2" class="p2-sub">
+          <div class="p2-sub-title"><span class="p2-sub-num">7-2</span>Expedia Lodging 지원 언어 범위</div>
+          <div class="p2-text">
+            <p>Expedia Lodging API는 전체 언어를 지원하지 않음. 1차 지원 UI 언어 7종은 모두 Lodging 지원 범위 내.</p>
+          </div>
+          <div class="p2-table-wrap">
+            <table class="p2-table">
+              <thead><tr><th>언어</th><th>Expedia 코드 → API 코드</th><th>Lodging 지원</th></tr></thead>
+              <tbody>
+                <tr><td>한국어</td><td><code>ko-KR → ko_KR</code></td><td>✅</td></tr>
+                <tr><td>일본어</td><td><code>ja-JP → ja_JP</code></td><td>✅</td></tr>
+                <tr><td>영어</td><td><code>en-US → en_US / en-GB → en_GB</code></td><td>✅</td></tr>
+                <tr><td>스페인어(멕시코)</td><td><code>es-MX → es_MX</code></td><td>✅</td></tr>
+                <tr><td>인도네시아어</td><td><code>id-ID → id_ID</code></td><td>✅</td></tr>
+                <tr><td>베트남어</td><td><code>vi-VN → vi_VN</code></td><td>✅</td></tr>
+                <tr><td>중국어 번체(대만)</td><td><code>zh-TW → zh_TW</code></td><td>✅</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p2-text">
+            <p><strong>폴백 규칙:</strong> 7종 범위 외 언어로 Expedia API 호출 시 → <code>en_US</code>로 폴백 처리</p>
+            <p><strong>중국어 코드 주의:</strong> zh-CN(간체/본토)·zh-TW(번체/대만)·zh-HK(광둥어/홍콩) 별개 코드. 혼용 금지. zh-CN은 중국 본토 ICP 라이선스 요건으로 서비스 불가, 제외 유지.</p>
+          </div>
+        </div>
+
+        <div id="sec-7-3" class="p2-sub">
+          <div class="p2-sub-title"><span class="p2-sub-num">7-3</span>표시통화 20종</div>
+          <div class="p2-text">
+            <p>Phase 1과 동일하게 20종 적용. Expedia Lodging 지원 통화와 전부 일치 — 공급사 레벨 제약 없음.</p>
+          </div>
+          <div class="p2-table-wrap">
+            <table class="p2-table">
+              <thead><tr><th>분류</th><th>통화</th></tr></thead>
+              <tbody>
+                <tr><td>홈마켓</td><td>KRW · JPY</td></tr>
+                <tr><td>국제 표시통화</td><td>USD · EUR · GBP</td></tr>
+                <tr><td>고빈도 여행 통화</td><td>AUD · CAD · NZD · SGD · HKD · TWD · ZAR</td></tr>
+                <tr><td>신흥·고성장 통화</td><td>INR · IDR · VND · PHP · MYR</td></tr>
+                <tr><td>LATAM 통화</td><td>MXN · ARS · COP</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="sec-7-4" class="p2-sub">
+          <div class="p2-sub-title"><span class="p2-sub-num">7-4</span>폴백 정책</div>
+          <div class="p2-table-wrap">
+            <table class="p2-table">
+              <thead><tr><th>상황</th><th>처리</th></tr></thead>
+              <tbody>
+                <tr><td>Expedia Lodging 미지원 언어로 호출</td><td><code>en_US</code>로 폴백</td></tr>
+                <tr><td>통화 20종 범위 외</td><td>USD로 표시 폴백 + 안내</td></tr>
+                <tr><td>국가 미식별</td><td>기본 로케일 ko_KR / KRW 적용</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="sec-7-5" class="p2-sub">
+          <div class="p2-sub-title"><span class="p2-sub-num">7-5</span>KAYAK·Expedia API 공통 필수 헤더</div>
+          <div class="p2-table-wrap">
+            <table class="p2-table">
+              <thead><tr><th>헤더</th><th>내용</th></tr></thead>
+              <tbody>
+                <tr><td><code>User-Agent</code></td><td>최종 사용자 브라우저 UA</td></tr>
+                <tr><td><code>x-original-client-ip</code></td><td>최종 사용자 실제 IP (엣지에서 캡처)</td></tr>
+                <tr><td><code>userTrackId</code></td><td>세션 단위 고유 식별자</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p2-warn">
+            <strong>⚠ 이 3종 누락 시 KAYAK·Expedia 요금·캐시백 오류 발생.</strong> Phase 1 KAYAK 호출과 동일하게 Expedia API 호출 시에도 반드시 전달.
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 미결 이슈 -->
+    <div id="sec-issues" class="p2-section p2-issue-section">
+      <div class="p2-section-hdr">
+        <span class="p2-art-badge">⚠</span>
+        <h2>미결 이슈</h2>
+      </div>
+      <div class="p2-section-body">
+
+        <div class="p2-issue-item">
+          <div class="p2-issue-num">1</div>
+          <div class="p2-issue-body">
+            <div class="p2-issue-title">익스피디아 API Rate Limit 정책 확인 (50개 일괄 vs 1건씩 호출)</div>
+            <div class="p2-issue-owner">담당: 윤성균 책임</div>
+          </div>
+        </div>
+
+        <div class="p2-issue-item">
+          <div class="p2-issue-num">2</div>
+          <div class="p2-issue-body">
+            <div class="p2-issue-title">Phase 2 자사 상품 UI 표시 방식 확정 (별도 섹션 vs 리스트 내 정렬)</div>
+            <div class="p2-issue-owner">담당: 윤성균 책임</div>
+          </div>
+        </div>
+
+        <div class="p2-issue-item">
+          <div class="p2-issue-num">3</div>
+          <div class="p2-issue-body">
+            <div class="p2-issue-title">홍콩처럼 country 코드가 city처럼 쓰이는 예외 케이스 처리</div>
+            <div class="p2-issue-owner">담당: 개발팀</div>
+          </div>
+        </div>
+
+        <div class="p2-issue-item">
+          <div class="p2-issue-num">4</div>
+          <div class="p2-issue-body">
+            <div class="p2-issue-title">Phase 3 이상 city코드 매핑 포함 설계 전략</div>
+            <div class="p2-issue-owner">담당: 추후</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /p2-content -->
+
+</div><!-- /p2-body -->
+
+<div class="p2-footer">
+  allmytour meta. Phase 2 정책서 v0.1 · 2026-06-19 · 대화창 2 산출물<br>
+  경로: context/신규정책/new_wireframe/p2_policy.html
+</div>
+
+<script>
+// 스크롤 spy — 목차 active 상태 자동 업데이트
+(function(){
+  const links = document.querySelectorAll('.p2-toc a[href^="#"]');
+  const sections = [];
+  links.forEach(a => {
+    const el = document.querySelector(a.getAttribute('href'));
+    if(el) sections.push({el, a});
+  });
+
+  function update(){
+    let active = null;
+    sections.forEach(({el}) => {
+      if(el.getBoundingClientRect().top <= 80) active = el;
+    });
+    links.forEach(a => a.classList.remove('active'));
+    if(active){
+      const match = sections.find(s => s.el === active);
+      if(match) match.a.classList.add('active');
+    }
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+
+</body>
+</html>

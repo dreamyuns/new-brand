@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MY01 — 마이페이지 | allmy meta 화면기획서</title>
+<link rel="stylesheet" href="./wf-styles.css">
+<style>
+.two-col { grid-template-columns: 480px 1fr; gap: 28px; }
+
+/* ── 모바일 프레임 ── */
+.mobile-wrap {
+  display: flex; justify-content: center; align-items: flex-start;
+  padding: 20px 16px; background: #2a2a2a; border-radius: 8px; min-height: 560px;
+}
+.mobile-device {
+  width: 375px; background: #1a1f2e; border-radius: 44px; padding: 10px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 20px 50px rgba(0,0,0,.5);
+}
+.m-notch { height: 22px; background: #111; border-radius: 11px 11px 0 0; display: flex; align-items: center; justify-content: center; }
+.m-notch-pill { width: 68px; height: 13px; background: #111; border-radius: 7px; }
+.m-screen {
+  background: #fff; height: 640px; overflow: hidden;
+  border-radius: 0 0 6px 6px; font-size: 13px; position: relative;
+  display: flex; flex-direction: column;
+}
+
+/* ── GNB 바 (마이페이지 — 뒤로가기만) ── */
+.my-gnb {
+  flex-shrink: 0; display: flex; align-items: center;
+  padding: 0 14px; background: #fff; border-bottom: 1px solid #f0f0f0;
+  height: 45px;
+}
+.my-gnb-back {
+  width: 32px; height: 32px; background: #f5f5f5; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; border: none; color: #333; cursor: pointer;
+}
+
+/* ── 스크롤 영역 ── */
+.my-scroll { flex: 1; overflow-y: auto; overflow-x: hidden; }
+.my-scroll::-webkit-scrollbar { display: none; }
+
+/* ── 비로그인 상단 유도 영역 ── */
+.my-login-prompt {
+  padding: 24px 16px 20px; background: #f8f8f6; border-bottom: 8px solid #f0f0f0;
+}
+.my-login-title {
+  font-size: 16px; font-weight: 800; color: #111; margin-bottom: 4px;
+}
+.my-login-sub {
+  font-size: 12px; color: #9ca3af; margin-bottom: 14px; line-height: 1.5;
+}
+.my-login-btn {
+  width: 100%; padding: 13px; border-radius: 12px;
+  background: #4f46e5; color: #fff; font-size: 14px; font-weight: 700;
+  border: none; cursor: pointer; text-align: center;
+}
+
+/* ── 로그인 상단 프로필 영역 ── */
+.my-profile {
+  padding: 20px 16px 18px; display: flex; align-items: center;
+  border-bottom: 8px solid #f0f0f0;
+}
+.my-profile-info { flex: 1; }
+.my-profile-greet { font-size: 12px; color: #9ca3af; margin-bottom: 2px; }
+.my-profile-name { font-size: 16px; font-weight: 800; color: #111; margin-bottom: 2px; }
+.my-profile-email { font-size: 11px; color: #9ca3af; }
+
+/* ── 메뉴 목록 ── */
+.my-menu-section { padding: 0 0 4px; }
+.my-menu-label {
+  font-size: 11px; font-weight: 700; color: #9ca3af; letter-spacing: .5px;
+  padding: 14px 16px 6px;
+}
+.my-menu-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 16px; border-bottom: 1px solid #f5f5f5; cursor: pointer;
+}
+.my-menu-item:active { background: #f8f8f6; }
+.my-menu-icon { font-size: 16px; width: 22px; text-align: center; flex-shrink: 0; }
+.my-menu-name { flex: 1; font-size: 14px; font-weight: 600; color: #111; }
+.my-menu-value { font-size: 12px; color: #9ca3af; margin-right: 4px; }
+.my-menu-arrow { font-size: 12px; color: #d1d5db; }
+.my-menu-divider { height: 8px; background: #f0f0f0; }
+
+/* ── 로그아웃 버튼 ── */
+.my-logout-wrap { padding: 16px; }
+.my-logout-btn {
+  width: 100%; padding: 13px; border-radius: 12px;
+  background: #fef2f2; color: #ef4444; font-size: 14px; font-weight: 700;
+  border: 1.5px solid #fecaca; cursor: pointer; text-align: center;
+}
+
+/* ── 바텀시트 오버레이 공통 ── */
+.sheet-overlay {
+  position: absolute; inset: 0; background: rgba(0,0,0,.48); z-index: 10;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.sheet-container {
+  background: #fff; border-radius: 20px 20px 0 0; max-height: 85%;
+  display: flex; flex-direction: column;
+}
+.sheet-handle-wrap { display: flex; justify-content: center; padding: 10px 0 0; }
+.sheet-handle { width: 36px; height: 4px; background: #e5e7eb; border-radius: 2px; }
+.sheet-header {
+  display: flex; align-items: center; justify-content: center;
+  padding: 12px 16px 10px; position: relative; border-bottom: 1px solid #f0f0f0;
+}
+.sheet-title { font-size: 15px; font-weight: 800; color: #111; }
+.sheet-close {
+  position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+  width: 28px; height: 28px; border-radius: 50%; background: #f0f0f0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: #374151; border: none; cursor: pointer;
+}
+.sheet-body { overflow-y: auto; padding: 8px 0 20px; }
+.sheet-body::-webkit-scrollbar { display: none; }
+
+/* ── 언어/통화 선택 목록 ── */
+.sheet-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 20px; cursor: pointer; border-bottom: 1px solid #f5f5f5;
+}
+.sheet-item:last-child { border-bottom: none; }
+.sheet-item-flag { font-size: 20px; width: 28px; text-align: center; flex-shrink: 0; }
+.sheet-item-main { flex: 1; }
+.sheet-item-name { font-size: 14px; font-weight: 600; color: #111; }
+.sheet-item-sub { font-size: 11px; color: #9ca3af; margin-top: 1px; }
+.sheet-item-check { color: #4f46e5; font-size: 16px; font-weight: 900; }
+.sheet-item.selected .sheet-item-name { color: #4f46e5; }
+.sheet-section-label {
+  font-size: 11px; font-weight: 700; color: #9ca3af; letter-spacing: .5px;
+  padding: 14px 20px 6px; background: #fff;
+}
+</style>
+</head>
+<body>
+
+<!-- ════ Page Nav ════ -->
+<nav class="page-nav">
+  <a href="index.html" class="page-nav-back">← 목록으로</a>
+  <span class="page-nav-title">MY01 — 마이페이지</span>
+  <span class="page-nav-route">my01_mypage.html</span>
+  <div class="page-nav-nav">
+    <a href="auth_login.html" class="page-nav-pager">← 이전</a>
+    <a href="my02_cashback.html" class="page-nav-pager">다음 →</a>
+  </div>
+</nav>
+
+<!-- ════ TOC ════ -->
+<nav class="toc">
+  <div class="toc-inner">
+    <span class="toc-label">MY01</span>
+    <a href="#a" class="toc-link active">A — 비로그인</a>
+    <span class="toc-sep"></span>
+    <a href="#b" class="toc-link">B — 로그인</a>
+    <span class="toc-sep"></span>
+    <a href="#c" class="toc-link">C — 언어 선택</a>
+    <span class="toc-sep"></span>
+    <a href="#d" class="toc-link">D — 통화 선택</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- ════ A: 비로그인 ════ -->
+<div id="a" class="sec-title">
+  <span class="sec-badge">MY01-A</span>마이페이지 — 비로그인 상태
+  <span style="font-size:12px;font-weight:400;color:#888">— GNB [☰ 전체메뉴] 탭 진입, 비로그인</span>
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — MY01 마이페이지 전체</div>
+  <ul class="sec-policy-list">
+    <li><strong>진입</strong>: GNB [☰ 전체메뉴] 탭 → 전체화면 이동 (10-1절)</li>
+    <li><strong>GNB 패턴</strong>: 뒤로가기만 (로그인·전체메뉴 버튼 없음) (v0.15 확정)</li>
+    <li><strong>비로그인</strong>: [회원가입/로그인] 버튼 + 공통메뉴(언어·통화·약관) (10-1절)</li>
+    <li><strong>로그인</strong>: 이름·이메일 + 계정관리·캐시백 내역 + 공통메뉴 + 하단 [로그아웃] (10-1절)</li>
+    <li><strong>[로그아웃]</strong>: 로그아웃 후 M01 이동 (10-1절)</li>
+    <li><strong>내 예약·알림·고객지원</strong>: MVP 제외 (10-1절)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.29 10-1절</div>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- GNB: 마이페이지 — 뒤로가기만 -->
+        <div class="my-gnb">
+          <button class="my-gnb-back">← <span class="wf-cn">뒤</span></button>
+        </div>
+
+        <!-- 스크롤 영역 -->
+        <div class="my-scroll">
+
+          <!-- 상단 로그인 유도 -->
+          <div class="my-login-prompt">
+            <div class="my-login-title">로그인하고 캐시백 받아보세요 <span class="wf-cn">1</span></div>
+            <div class="my-login-sub">예약 시 캐시백이 적립되고<br>월 정산 후 지급됩니다.</div>
+            <button class="my-login-btn">회원가입/로그인 <span class="wf-cn">2</span></button>
+          </div>
+
+          <!-- 공통 메뉴 -->
+          <div class="my-menu-section">
+            <div class="my-menu-label">설정</div>
+            <div class="my-menu-item">
+              <span class="my-menu-icon">🌐</span>
+              <span class="my-menu-name">언어 <span class="wf-cn">3</span></span>
+              <span class="my-menu-value">한국어</span>
+              <span class="my-menu-arrow">›</span>
+            </div>
+            <div class="my-menu-item">
+              <span class="my-menu-icon">💱</span>
+              <span class="my-menu-name">통화 <span class="wf-cn">4</span></span>
+              <span class="my-menu-value">KRW</span>
+              <span class="my-menu-arrow">›</span>
+            </div>
+          </div>
+
+          <div class="my-menu-divider"></div>
+
+          <div class="my-menu-section">
+            <div class="my-menu-label">약관</div>
+            <div class="my-menu-item">
+              <span class="my-menu-icon">📄</span>
+              <span class="my-menu-name">약관 <span class="wf-cn">5</span></span>
+              <span class="my-menu-arrow">›</span>
+            </div>
+          </div>
+
+        </div><!-- /my-scroll -->
+
+      </div><!-- /m-screen -->
+    </div>
+  </div>
+
+  <!-- 주석 패널 MY01-A -->
+  <div class="ann">
+    <h3>화면 주석 — MY01-A (비로그인)</h3>
+    <div class="ann-item">
+      <div class="cn">진입</div>
+      <div class="ann-body">
+        <div class="ann-title">GNB [☰ 전체메뉴] 탭 → 마이페이지 전체화면</div>
+        <div class="ann-desc">
+          <ul>
+            <li>M01·S01·S02 어느 화면에서든 GNB [☰] 탭 시 마이페이지 전체화면으로 직접 이동. 별도 드롭다운 없음.</li>
+            <li>마이페이지 하위 화면(MY01~MY03) GNB에는 뒤로가기(←) 버튼만 표시. 로그인 버튼·전체메뉴 버튼 미표시.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 5-1절·6-1절·10-1절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">뒤</div>
+      <div class="ann-body">
+        <div class="ann-title">GNB [←] 뒤로가기 — 마이페이지 닫기</div>
+        <div class="ann-desc">
+          <ul>
+            <li>탭 시 마이페이지를 닫고 직전 화면(S01 검색결과·S02 숙소상세 등)으로 복귀. MY01~MY03 공통 GNB 패턴.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-1절. MY01~MY03 공통 패턴.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">로그인 유도 영역 — 상단 고정</div>
+        <div class="ann-desc">
+          <ul>
+            <li>비로그인 상태 전용 영역. 캐시백 혜택 헤드카피와 설명 문구를 노출해 로그인 동기 부여.</li>
+            <li>회색 배경(#f8f8f6)으로 메뉴 목록과 시각적 구분. 하단에 [회원가입/로그인] 버튼 배치.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-1절 (비로그인 상단 로그인 유도 영역).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">[회원가입/로그인] 버튼 ★</div>
+        <div class="ann-desc">
+          <ul>
+            <li>탭 시 → 로그인/회원가입 통합 바텀시트(auth_login.html — AUTH-A) 팝업.</li>
+            <li>버튼 텍스트는 "회원가입/로그인" 단일 표기 (로그인·회원가입 분리 없음).</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 8-1절. 로그인·회원가입 통합 버튼 (v0.13 확정).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">언어 변환 메뉴</div>
+        <div class="ann-desc">
+          <ul>
+            <li>탭 시 언어 선택 바텀시트(MY01-C) 슬라이드업. 현재 선택된 언어명을 우측에 미리보기 표시(예: 한국어).</li>
+            <li>언어 변경은 전체 서비스 UI 텍스트 및 모든 API 호출의 <code>languageCode</code> 파라미터에 즉시 반영.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">MVP 지원 언어: 한국어·English·日本語·简体中文. 정책서 11-1절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">통화 변환 메뉴</div>
+        <div class="ann-desc">
+          <ul>
+            <li>탭 시 통화 선택 바텀시트(MY01-D) 슬라이드업. 현재 선택된 통화 코드를 우측에 미리보기 표시(예: KRW).</li>
+            <li>통화 변경은 검색결과·숙소상세 등 모든 가격 표시에 즉시 반영. API 호출의 <code>currencyCode</code> 파라미터 변경.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">통화 목록: KAYAK Constants API 전체 통화 동적 사용 (고정 목록 없음). 기본값 KRW. 정책서 11-2절 v0.18.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">5</div>
+      <div class="ann-body">
+        <div class="ann-title">약관 메뉴</div>
+        <div class="ann-desc">
+          <ul>
+            <li>탭 시 약관 전문 바텀시트 팝업. 이용약관·개인정보처리방침 내용 포함.</li>
+            <li>비로그인·로그인 공통 메뉴. MVP에서는 내용 표시 전용 (별도 동의 액션 없음).</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-1절 공통 메뉴.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════ B: 로그인 상태 ════ -->
+<div id="b" class="sec-title">
+  <span class="sec-badge">MY01-B</span>마이페이지 — 로그인 상태
+  <span style="font-size:12px;font-weight:400;color:#888">— 로그인 회원 진입 시</span>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- GNB: 마이페이지 — 뒤로가기만 -->
+        <div class="my-gnb">
+          <button class="my-gnb-back">←</button>
+        </div>
+
+        <!-- 스크롤 영역 -->
+        <div class="my-scroll">
+
+          <!-- 프로필 영역 -->
+          <div class="my-profile">
+            <div class="my-profile-info">
+              <div class="my-profile-greet">안녕하세요, <span class="wf-cn">1</span></div>
+              <div class="my-profile-name">Sungkyoon Yoon 님 <span class="wf-cn">2</span></div>
+              <div class="my-profile-email">dreamyuns@allmytour.com <span class="wf-cn">3</span></div>
+            </div>
+          </div>
+
+          <!-- 로그인 전용 메뉴 -->
+          <div class="my-menu-section">
+            <div class="my-menu-label">내 활동</div>
+            <div class="my-menu-item">
+              <span class="my-menu-icon">💸</span>
+              <span class="my-menu-name">캐시백 내역 <span class="wf-cn">4</span></span>
+              <span class="my-menu-arrow">›</span>
+            </div>
+            <div class="my-menu-item">
+              <span class="my-menu-icon">👤</span>
+              <span class="my-menu-name">계정관리 <span class="wf-cn">5</span></span>
+              <span class="my-menu-arrow">›</span>
+            </div>
+          </div>
+
+          <div class="my-menu-divider"></div>
+
+          <!-- 공통 메뉴 -->
+          <div class="my-menu-section">
+            <div class="my-menu-label">설정</div>
+            <div class="my-menu-item">
+              <span class="my-menu-icon">🌐</span>
+              <span class="my-menu-name">언어 <span class="wf-cn">6</span></span>
+              <span class="my-menu-value">한국어</span>
+              <span class="my-menu-arrow">›</span>
+            </div>
+            <div class="my-menu-item">
+              <span class="my-menu-icon">💱</span>
+              <span class="my-menu-name">통화 <span class="wf-cn">7</span></span>
+              <span class="my-menu-value">KRW</span>
+              <span class="my-menu-arrow">›</span>
+            </div>
+          </div>
+
+          <div class="my-menu-divider"></div>
+
+          <div class="my-menu-section">
+            <div class="my-menu-label">약관</div>
+            <div class="my-menu-item">
+              <span class="my-menu-icon">📄</span>
+              <span class="my-menu-name">약관 <span class="wf-cn">8</span></span>
+              <span class="my-menu-arrow">›</span>
+            </div>
+          </div>
+
+          <!-- 로그아웃 -->
+          <div class="my-logout-wrap">
+            <button class="my-logout-btn">로그아웃 <span class="wf-cn">9</span></button>
+          </div>
+
+        </div><!-- /my-scroll -->
+
+      </div><!-- /m-screen -->
+    </div>
+  </div>
+
+  <!-- 주석 패널 MY01-B -->
+  <div class="ann">
+    <h3>화면 주석 — MY01-B (로그인)</h3>
+    <div class="ann-item">
+      <div class="cn">진입</div>
+      <div class="ann-body">
+        <div class="ann-title">GNB [☰ 전체메뉴] 탭 → 마이페이지 전체화면</div>
+        <div class="ann-desc">
+          <ul>
+            <li>로그인 상태. GNB에 뒤로가기(←) 버튼만 표시. 로그인·전체메뉴 버튼 미표시.</li>
+            <li>로그인 여부에 따라 프로필 영역과 메뉴 구성이 달라짐 (로그인 전용 메뉴 추가 노출).</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-1절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">프로필 영역 — 이름·이메일</div>
+        <div class="ann-desc">
+          <ul>
+            <li>v0.20 정책: 아바타 이미지 제거 — 이름·이메일 텍스트만 표시. (마케팅팀 요청 시 추가)</li>
+            <li>이름·성 모두 미입력 시: 이메일 주소의 @ 앞 부분을 대체 표시 (예: dreamyuns).</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-1절·10-3절. v0.20 아바타 이미지 삭제.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">회원 이름</div>
+        <div class="ann-desc">
+          <ul>
+            <li>계정관리(MY03)에서 입력한 이름(First Name) + 성(Last Name) 영문 조합으로 표시 (예: Sungkyoon Yoon).</li>
+            <li>이름·성 모두 미입력 시: 이메일 주소의 @ 앞 부분을 대체 표시.</li>
+          </ul>
+        </div>
+        <div class="ann-front">← MY03 계정관리 입력값 (firstName + lastName, 영문). 정책서 10-3절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">회원 이메일</div>
+        <div class="ann-desc">
+          <ul>
+            <li>로그인 인증에 사용한 이메일 주소 표시. 변경 불가 (읽기전용).</li>
+            <li>계정관리(MY03) 이메일 필드와 동일값.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-3절 (이메일 읽기전용, 변경 불가).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">캐시백 내역 메뉴</div>
+        <div class="ann-desc">
+          <ul>
+            <li>탭 시 → 캐시백 내역 전체화면(my02_cashback.html) 이동.</li>
+            <li>로그인 전용 메뉴. 비로그인 상태에서는 이 메뉴 항목 미표시.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-1절·10-2절. 로그인 전용 메뉴.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">5</div>
+      <div class="ann-body">
+        <div class="ann-title">계정관리 메뉴</div>
+        <div class="ann-desc">
+          <ul>
+            <li>탭 시 → 계정관리 전체화면(my03_account.html) 이동.</li>
+            <li>수정 가능 항목: 이름·성(영문), 국적, 전화번호, 마케팅 수신 동의. 이메일은 읽기전용.</li>
+            <li>로그인 전용 메뉴. 비로그인 상태에서는 미표시.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-1절·10-3절. 로그인 전용 메뉴.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">6</div>
+      <div class="ann-body">
+        <div class="ann-title">언어 변환 메뉴 (공통)</div>
+        <div class="ann-desc">
+          <ul>
+            <li>탭 시 언어 선택 바텀시트(MY01-C) 슬라이드업. 비로그인·로그인 공통 표시.</li>
+            <li>현재 선택 언어명 우측 미리보기 (예: 한국어). 선택 즉시 전체 서비스 UI 언어 변경.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">MVP 지원 4개: 한국어·English·日本語·简体中文. 정책서 11-1절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">7</div>
+      <div class="ann-body">
+        <div class="ann-title">통화 변환 메뉴 (공통)</div>
+        <div class="ann-desc">
+          <ul>
+            <li>탭 시 통화 선택 바텀시트(MY01-D) 슬라이드업. 비로그인·로그인 공통 표시.</li>
+            <li>현재 선택 통화 코드 우측 미리보기 (예: KRW). 선택 즉시 모든 가격 표시 통화 변경.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">통화 목록: KAYAK Constants API 전체 통화 동적 사용 (고정 목록 없음). 기본값 KRW. 정책서 11-2절 v0.18.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">8</div>
+      <div class="ann-body">
+        <div class="ann-title">약관 메뉴 (공통)</div>
+        <div class="ann-desc">
+          <ul>
+            <li>탭 시 약관 전문 바텀시트 팝업. 이용약관·개인정보처리방침 내용 포함.</li>
+            <li>비로그인·로그인 공통 표시.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-1절 공통 메뉴.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">9</div>
+      <div class="ann-body">
+        <div class="ann-title">[로그아웃] 버튼 ★</div>
+        <div class="ann-desc">
+          <ul>
+            <li>탭 시 세션 종료(로그아웃) → 메인(M01)으로 이동.</li>
+            <li>로그인 상태에서만 노출. 비로그인 상태에서는 이 버튼 미표시.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 8-8절 (로그아웃 → M01 이동).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════ C: 언어 선택 바텀시트 ════ -->
+<div id="c" class="sec-title">
+  <span class="sec-badge">MY01-C</span>언어 선택 바텀시트
+  <span style="font-size:12px;font-weight:400;color:#888">— 언어 메뉴 탭 시 슬라이드업</span>
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — MY01-C 언어 선택</div>
+  <ul class="sec-policy-list">
+    <li><strong>저장</strong>: 변경값 <code>localStorage</code> 저장. 앱 전체 즉시 반영 (11-3절)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.29 11-3절</div>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- 배경: MY01-B 흐리게 -->
+        <div class="my-gnb" style="opacity:.4;">
+          <button class="my-gnb-back">←</button>
+        </div>
+        <div style="flex:1;overflow:hidden;position:relative;">
+          <!-- 배경 미리보기 (흐리게) -->
+          <div style="padding:16px;opacity:.25;">
+            <div style="height:60px;background:#f0f0f0;border-radius:8px;margin-bottom:8px;"></div>
+            <div style="height:48px;background:#f0f0f0;border-radius:8px;margin-bottom:8px;"></div>
+            <div style="height:48px;background:#f0f0f0;border-radius:8px;"></div>
+          </div>
+
+          <!-- 바텀시트 오버레이 -->
+          <div class="sheet-overlay">
+            <div class="sheet-container">
+              <div class="sheet-handle-wrap"><div class="sheet-handle"></div></div>
+              <div class="sheet-header">
+                <span class="sheet-title">언어 선택 <span class="wf-cn">1</span></span>
+                <button class="sheet-close">✕</button>
+              </div>
+              <div class="sheet-body">
+                <div class="sheet-section-label">언어</div>
+                <div class="sheet-item selected">
+                  <span class="sheet-item-flag">🇰🇷</span>
+                  <div class="sheet-item-main">
+                    <div class="sheet-item-name">한국어 <span class="wf-cn">2</span></div>
+                    <div class="sheet-item-sub">Korean</div>
+                  </div>
+                  <span class="sheet-item-check">✓</span>
+                </div>
+                <div class="sheet-item">
+                  <span class="sheet-item-flag">🇺🇸</span>
+                  <div class="sheet-item-main">
+                    <div class="sheet-item-name">English</div>
+                    <div class="sheet-item-sub">영어</div>
+                  </div>
+                </div>
+                <div class="sheet-item">
+                  <span class="sheet-item-flag">🇯🇵</span>
+                  <div class="sheet-item-main">
+                    <div class="sheet-item-name">日本語</div>
+                    <div class="sheet-item-sub">일본어</div>
+                  </div>
+                </div>
+                <div class="sheet-item">
+                  <span class="sheet-item-flag">🇨🇳</span>
+                  <div class="sheet-item-main">
+                    <div class="sheet-item-name">简体中文</div>
+                    <div class="sheet-item-sub">중국어(간체)</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 주석 패널 MY01-C -->
+  <div class="ann">
+    <h3>화면 주석 — MY01-C (언어 선택)</h3>
+    <div class="ann-item">
+      <div class="cn">진입</div>
+      <div class="ann-body">
+        <div class="ann-title">언어 메뉴 탭 → 바텀시트 슬라이드업</div>
+        <div class="ann-desc">
+          <ul>
+            <li>MY01-A(비로그인) 또는 MY01-B(로그인) 언어 메뉴 탭 시 동일 바텀시트 표시. 비로그인·로그인 구분 없음.</li>
+            <li>딤 영역 탭 또는 [✕] 탭 시 바텀시트 닫힘. 선택 없이 닫으면 기존 언어 유지.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-1절 (언어 변환 → 언어 선택 바텀시트).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">바텀시트 타이틀</div>
+        <div class="ann-desc">
+          <ul>
+            <li>상단 중앙 "언어 선택" 텍스트 고정. 우측 [✕] 버튼 탭 시 바텀시트 닫힘 (언어 변경 없음).</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">현재 선택 언어 — ✓ 표시</div>
+        <div class="ann-desc">
+          <ul>
+            <li>현재 적용 중인 언어 항목에 인디고 체크마크(✓)와 텍스트 색상 강조 표시.</li>
+            <li>다른 항목 탭 시 즉시 해당 언어로 전환 → 바텀시트 자동 닫힘 → 전체 서비스 UI 언어 즉시 변경.</li>
+            <li>기본값: 한국어(ko_KR).</li>
+          </ul>
+        </div>
+        <div class="ann-rule">MVP 지원 4개: 한국어(기본)·English·日本語·简体中文. 정책서 11-1절.</div>
+        <div class="ann-case">languageCode 연결: ko_KR / en_US / ja_JP / zh_CN</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════ D: 통화 선택 바텀시트 ════ -->
+<div id="d" class="sec-title">
+  <span class="sec-badge">MY01-D</span>통화 선택 바텀시트
+  <span style="font-size:12px;font-weight:400;color:#888">— 통화 메뉴 탭 시 슬라이드업</span>
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — MY01-D 통화 선택</div>
+  <ul class="sec-policy-list">
+    <li><strong>지원 통화</strong>: Constants API(<code>/api/4.0/constants-mapping</code>) 전체 통화 동적 사용. 고정 목록 없음 (11-2절)</li>
+    <li><strong>기본 통화</strong>: KRW (11-2절)</li>
+    <li><strong>캐싱</strong>: 앱 초기화 시 캐싱 → 통화 선택 UI에 전체 노출 (11-2절)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.29 11-2절</div>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- 배경: MY01-B 흐리게 -->
+        <div class="my-gnb" style="opacity:.4;">
+          <button class="my-gnb-back">←</button>
+        </div>
+        <div style="flex:1;overflow:hidden;position:relative;">
+          <div style="padding:16px;opacity:.25;">
+            <div style="height:60px;background:#f0f0f0;border-radius:8px;margin-bottom:8px;"></div>
+            <div style="height:48px;background:#f0f0f0;border-radius:8px;margin-bottom:8px;"></div>
+            <div style="height:48px;background:#f0f0f0;border-radius:8px;"></div>
+          </div>
+
+          <!-- 바텀시트 오버레이 -->
+          <div class="sheet-overlay">
+            <div class="sheet-container">
+              <div class="sheet-handle-wrap"><div class="sheet-handle"></div></div>
+              <div class="sheet-header">
+                <span class="sheet-title">통화 선택 <span class="wf-cn">1</span></span>
+                <button class="sheet-close">✕</button>
+              </div>
+              <div class="sheet-body">
+                <div class="sheet-section-label">통화 <span class="wf-cn">3</span> <span style="font-size:9px;color:#9ca3af;font-weight:400">— KAYAK Constants API 동적 로딩</span></div>
+                <div class="sheet-item selected">
+                  <span class="sheet-item-flag">🇰🇷</span>
+                  <div class="sheet-item-main">
+                    <div class="sheet-item-name">원화 <span class="wf-cn">2</span></div>
+                    <div class="sheet-item-sub">KRW · ₩</div>
+                  </div>
+                  <span class="sheet-item-check">✓</span>
+                </div>
+                <div class="sheet-item">
+                  <span class="sheet-item-flag">🇺🇸</span>
+                  <div class="sheet-item-main">
+                    <div class="sheet-item-name">U.S. Dollars</div>
+                    <div class="sheet-item-sub">USD · $</div>
+                  </div>
+                </div>
+                <div class="sheet-item">
+                  <span class="sheet-item-flag">🇯🇵</span>
+                  <div class="sheet-item-main">
+                    <div class="sheet-item-name">日本円</div>
+                    <div class="sheet-item-sub">JPY · ¥</div>
+                  </div>
+                </div>
+                <div class="sheet-item">
+                  <span class="sheet-item-flag">🇨🇳</span>
+                  <div class="sheet-item-main">
+                    <div class="sheet-item-name">人民币</div>
+                    <div class="sheet-item-sub">CNY · ¥</div>
+                  </div>
+                </div>
+                <div class="sheet-item">
+                  <span class="sheet-item-flag">🇸🇬</span>
+                  <div class="sheet-item-main">
+                    <div class="sheet-item-name">Singapore Dollar</div>
+                    <div class="sheet-item-sub">SGD · $</div>
+                  </div>
+                </div>
+                <div class="sheet-item">
+                  <span class="sheet-item-flag">🇪🇺</span>
+                  <div class="sheet-item-main">
+                    <div class="sheet-item-name">Euro</div>
+                    <div class="sheet-item-sub">EUR · €</div>
+                  </div>
+                </div>
+                <div class="sheet-item">
+                  <span class="sheet-item-flag">🇲🇾</span>
+                  <div class="sheet-item-main">
+                    <div class="sheet-item-name">Malaysian Ringgit</div>
+                    <div class="sheet-item-sub">MYR · RM</div>
+                  </div>
+                </div>
+                <div style="padding:10px 20px;font-size:11px;color:#9ca3af;text-align:center;">이외 통화는 Constants API 전체 목록에서 제공</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 주석 패널 MY01-D -->
+  <div class="ann">
+    <h3>화면 주석 — MY01-D (통화 선택)</h3>
+    <div class="ann-item">
+      <div class="cn">진입</div>
+      <div class="ann-body">
+        <div class="ann-title">통화 메뉴 탭 → 바텀시트 슬라이드업</div>
+        <div class="ann-desc">
+          <ul>
+            <li>비로그인·로그인 공통. 언어 선택(MY01-C)과 동일 바텀시트 구조 사용.</li>
+            <li>딤 영역 탭 또는 [✕] 탭 시 바텀시트 닫힘. 선택 없이 닫으면 기존 통화 유지.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 10-1절·11-2절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">바텀시트 타이틀</div>
+        <div class="ann-desc">
+          <ul>
+            <li>상단 중앙 "통화 선택" 텍스트 고정. 우측 [✕] 버튼 탭 시 바텀시트 닫힘 (통화 변경 없음).</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">현재 선택 통화 — ✓ 표시</div>
+        <div class="ann-desc">
+          <ul>
+            <li>현재 적용 중인 통화 항목에 인디고 체크마크(✓)와 텍스트 색상 강조 표시.</li>
+            <li>다른 항목 탭 시 즉시 해당 통화로 전환 → 바텀시트 자동 닫힘 → 검색결과·숙소상세 등 모든 가격 표시 즉시 변경.</li>
+            <li>기본값: 원화(KRW).</li>
+          </ul>
+        </div>
+        <div class="ann-rule">기본값: KRW. 전체 목록 KAYAK Constants API 동적 로딩 (앱 초기화 시 캐싱). 정책서 11-2절 v0.18.</div>
+        <div class="ann-case">API 파라미터: currencyCode = Constants API 제공 값 (예: KRW·USD·JPY·CNY·SGD·EUR·MYR 등)</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">통화 목록 — 동적 로딩 ★</div>
+        <div class="ann-desc">
+          <ul>
+            <li>통화 선택 목록은 KAYAK Constants API(<code>/api/4.0/constants-mapping</code>) 전체 통화를 앱 초기화 시 캐싱해 사용.</li>
+            <li>고정 4개(KRW·USD·JPY·CNY) 방식에서 전체 통화 동적 방식으로 변경 (v0.18).</li>
+            <li>영어권 국가 통화(싱가포르 SGD·말레이시아 MYR 등) 포함.</li>
+            <li>와이어프레임에서는 대표 7개 샘플 표시 — 실제 목록은 Constants API 응답 전체.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 11-2절 v0.18 (2026-06-12 대표님 방향 확정).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /page -->
+<script src="./wf-scripts.js"></script>
+</body>
+</html>

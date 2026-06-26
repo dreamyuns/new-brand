@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>allmy meta — 신규 메타서치 화면기획서</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Malgun Gothic","Segoe UI",Arial,sans-serif;background:#1a1f2e;min-height:100vh;color:#fff}
+a{text-decoration:none;color:inherit}
+
+/* ── 전체 래퍼 ── */
+.cover-wrap{max-width:1200px;margin:0 auto;padding:0 40px}
+
+/* ── 헤더 (전체 너비) ── */
+.cover-header{padding:60px 0 36px}
+
+.cover-logo{font-size:26px;font-weight:800;letter-spacing:-1px;margin-bottom:4px}
+.cover-logo .brand{color:#4f46e5}.cover-logo .dot{color:#fff}.cover-logo .meta{color:#a5b4fc}
+.cover-title{color:#fff;font-size:34px;font-weight:700;margin-bottom:6px}
+.cover-meta{color:rgba(255,255,255,.4);font-size:13px;margin-bottom:10px}
+.cover-desc{color:rgba(255,255,255,.6);font-size:14px;line-height:1.75;max-width:680px;margin-bottom:10px}
+.cover-desc strong{color:#a5b4fc}
+.cover-policy{
+  display:inline-block;margin-top:10px;
+  background:rgba(79,70,229,.18);border:1px solid rgba(165,180,252,.3);
+  color:#a5b4fc;font-size:12px;font-weight:700;padding:6px 16px;border-radius:6px;
+  letter-spacing:.3px;
+}
+.cover-policy span{color:#fff;font-weight:800}
+
+/* ── 2-column body ── */
+.cover-body{display:flex;gap:24px;align-items:flex-start;padding-bottom:60px}
+
+/* ── 좌측 sticky 목차 ── */
+.idx-toc{
+  width:188px;flex-shrink:0;
+  position:sticky;top:24px;
+  max-height:calc(100vh - 48px);overflow-y:auto;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;padding:14px 0;
+}
+.idx-toc-hdr{
+  font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,.25);
+  padding:0 14px 10px;border-bottom:1px solid rgba(255,255,255,.07);
+  margin-bottom:6px;
+}
+.idx-toc-item{
+  display:flex;align-items:center;gap:9px;
+  padding:7px 14px;
+  font-size:12px;font-weight:700;color:rgba(255,255,255,.38);
+  border-left:3px solid transparent;
+  transition:color .15s,background .15s,border-left-color .15s;
+}
+.idx-toc-item:hover{
+  background:rgba(255,255,255,.06);color:rgba(255,255,255,.7);
+}
+.idx-toc-item.active{color:#fff}
+.idx-toc-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.idx-toc-divider{height:1px;background:rgba(255,255,255,.07);margin:6px 0}
+.idx-toc-count{
+  margin-left:auto;font-size:10px;font-weight:700;
+  background:rgba(255,255,255,.08);color:rgba(255,255,255,.3);
+  padding:1px 6px;border-radius:8px;
+}
+.idx-toc-item.active .idx-toc-count{background:rgba(255,255,255,.12);color:rgba(255,255,255,.5)}
+
+/* ── 우측 본문 ── */
+.main-content{flex:1;min-width:0;padding-top:0}
+
+/* ── 그룹 ── */
+.group{margin-bottom:44px}
+.group-title{
+  font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;
+  color:rgba(255,255,255,.35);margin-bottom:14px;padding-bottom:8px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  display:flex;align-items:center;gap:10px;
+}
+.group-title-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ── 카드 그리드 ── */
+.screen-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+
+.screen-card{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:20px 22px;cursor:pointer;
+  transition:background .18s,border-color .18s,transform .18s;
+  display:block;position:relative;
+}
+.screen-card:hover{
+  background:rgba(255,255,255,.11);border-color:rgba(255,255,255,.25);
+  transform:translateY(-2px);
+}
+.screen-card:hover .sc-arrow{opacity:1}
+
+.sc-num{font-size:11px;font-weight:700;font-family:monospace;margin-bottom:7px}
+.sc-name{font-size:16px;font-weight:700;color:#fff;margin-bottom:4px}
+.sc-route{font-size:11px;color:rgba(255,255,255,.3);font-family:monospace;margin-bottom:9px}
+.sc-desc{font-size:13px;color:rgba(255,255,255,.55);line-height:1.6}
+.sc-cases{margin-top:10px;display:flex;flex-wrap:wrap;gap:5px}
+.sc-case-chip{
+  font-size:10px;font-weight:700;padding:2px 8px;border-radius:12px;
+  background:rgba(255,255,255,.08);color:rgba(255,255,255,.5);
+}
+.sc-arrow{
+  position:absolute;top:20px;right:20px;color:rgba(255,255,255,.25);
+  font-size:18px;opacity:0;transition:opacity .18s;
+}
+.sc-date{
+  display:inline-block;font-size:12px;font-weight:700;
+  padding:2px 8px;border-radius:3px;margin-left:6px;vertical-align:middle;
+  background:#fde68a;color:#1a1a1a;
+  letter-spacing:.02em;
+}
+
+/* ── 그룹별 색상 ── */
+.group-search .screen-card{border-left:3px solid #f97316}
+.group-search .sc-num{color:#fb923c}
+.group-search .sc-case-chip{background:rgba(249,115,22,.12);color:#fb923c}
+
+.group-outlink .screen-card{border-left:3px solid #f59e0b}
+.group-outlink .sc-num{color:#fbbf24}
+.group-outlink .sc-case-chip{background:rgba(245,158,11,.12);color:#fbbf24}
+
+.group-auth .screen-card{border-left:3px solid #8b5cf6}
+.group-auth .sc-num{color:#a78bfa}
+.group-auth .sc-case-chip{background:rgba(139,92,246,.12);color:#a78bfa}
+
+.group-my .screen-card{border-left:3px solid #4f46e5}
+.group-my .sc-num{color:#818cf8}
+.group-my .sc-case-chip{background:rgba(79,70,229,.15);color:#a5b4fc}
+
+.group-phase2 .screen-card{border-left:3px solid #0ea5e9}
+.group-phase2 .sc-num{color:#38bdf8}
+.group-phase2 .sc-case-chip{background:rgba(14,165,233,.12);color:#38bdf8}
+
+.group-policy-docs .screen-card.card-p1{border-left:3px solid #6366f1}
+.group-policy-docs .screen-card.card-p1 .sc-num{color:#818cf8}
+.group-policy-docs .screen-card.card-p1 .sc-case-chip{background:rgba(99,102,241,.15);color:#a5b4fc}
+.group-policy-docs .screen-card.card-p2{border-left:3px solid #0ea5e9}
+.group-policy-docs .screen-card.card-p2 .sc-num{color:#38bdf8}
+.group-policy-docs .screen-card.card-p2 .sc-case-chip{background:rgba(14,165,233,.12);color:#38bdf8}
+.group-policy-docs .screen-card.card-chat{border-left:3px solid #7c3aed}
+.group-policy-docs .screen-card.card-chat .sc-num{color:#a78bfa}
+.group-policy-docs .screen-card.card-chat .sc-case-chip{background:rgba(124,58,237,.12);color:#a78bfa}
+
+.group-pc .screen-card{border-left:3px solid #14b8a6}
+.group-pc .sc-num{color:#2dd4bf}
+.group-pc .sc-case-chip{background:rgba(20,184,166,.12);color:#2dd4bf}
+
+.group-chat .screen-card{border-left:3px solid #7c3aed}
+.group-chat .sc-num{color:#a78bfa}
+.group-chat .sc-case-chip{background:rgba(124,58,237,.12);color:#a78bfa}
+
+/* ── 푸터 ── */
+.footer{
+  color:rgba(255,255,255,.22);font-size:12px;text-align:center;
+  padding:28px 0 48px;border-top:1px solid rgba(255,255,255,.07);
+  margin-top:0;line-height:1.8;
+}
+</style>
+</head>
+<body>
+<div class="cover-wrap">
+
+  <!-- ── 헤더 ── -->
+  <div class="cover-header">
+    <div class="cover-logo">
+      <span class="brand">allmy</span><span class="dot"> </span><span class="meta">meta.</span>
+    </div>
+    <div class="cover-title">신규 메타서치 화면기획서</div>
+    <div class="cover-meta">Mobile Wireframe · 대화창 2 산출물 · PO 검토용</div>
+    <div class="cover-desc">
+      <strong>KAYAK API 기반 메타서치 + OTA 하이브리드 신규 서비스</strong> — B2C 모바일 화면기획서.<br>
+      각 카드를 클릭하면 해당 화면의 상세 기획서로 이동합니다.<br>
+      모든 화면은 375px 고정 모바일 프레임 기준이며, 정책서 v0.33 기반으로 제작되었습니다.
+    </div>
+    <div class="cover-policy">기준 정책서 <span>v0.33</span> — context/신규정책/phase1정책/신규_mvp_메타서치_v0.33.md</div>
+  </div>
+
+  <!-- ── 2-column body ── -->
+  <div class="cover-body">
+
+    <!-- ── 좌측 sticky 목차 ── -->
+    <nav class="idx-toc" id="idx-toc">
+      <div class="idx-toc-hdr">목차</div>
+
+      <a class="idx-toc-item" href="#group-policy-docs" data-color="#6366f1">
+        <span class="idx-toc-dot" style="background:#6366f1"></span>
+        정책서
+        <span class="idx-toc-count">4</span>
+      </a>
+
+      <div class="idx-toc-divider"></div>
+
+      <a class="idx-toc-item" href="#group-search" data-color="#f97316">
+        <span class="idx-toc-dot" style="background:#f97316"></span>
+        검색 플로우
+        <span class="idx-toc-count">4</span>
+      </a>
+      <a class="idx-toc-item" href="#group-outlink" data-color="#f59e0b">
+        <span class="idx-toc-dot" style="background:#f59e0b"></span>
+        아웃링크
+        <span class="idx-toc-count">2</span>
+      </a>
+      <a class="idx-toc-item" href="#group-auth" data-color="#8b5cf6">
+        <span class="idx-toc-dot" style="background:#8b5cf6"></span>
+        인증
+        <span class="idx-toc-count">1</span>
+      </a>
+      <a class="idx-toc-item" href="#group-my" data-color="#4f46e5">
+        <span class="idx-toc-dot" style="background:#4f46e5"></span>
+        마이페이지
+        <span class="idx-toc-count">4</span>
+      </a>
+
+      <div class="idx-toc-divider"></div>
+
+      <a class="idx-toc-item" href="#group-pc" data-color="#14b8a6">
+        <span class="idx-toc-dot" style="background:#14b8a6"></span>
+        PC 래핑
+        <span class="idx-toc-count">1</span>
+      </a>
+
+      <div class="idx-toc-divider"></div>
+
+      <a class="idx-toc-item" href="#group-chat" data-color="#7c3aed">
+        <span class="idx-toc-dot" style="background:#7c3aed"></span>
+        AI 챗봇 검색
+        <span class="idx-toc-count">1</span>
+      </a>
+
+    </nav>
+
+    <!-- ── 우측 본문 ── -->
+    <div class="main-content">
+
+      <!-- ═══ 정책서 ═══ -->
+      <div id="group-policy-docs" class="group">
+        <div class="group-title">
+          <span class="group-title-dot" style="background:#6366f1"></span>
+          정책서 — Policy Documents
+        </div>
+        <div class="screen-grid group-policy-docs">
+
+          <a class="screen-card card-p1" href="phase1_policy.html">
+            <div class="sc-num">POLICY-P1 <span class="sc-date">최종수정 : 06.19</span></div>
+            <div class="sc-name">Phase 1 (MVP) 정책서</div>
+            <div class="sc-route">phase1_policy.html</div>
+            <div class="sc-desc">KAYAK API 기반 메타서치 MVP 전체 정책 · 제1조~제14조 + 부록 A · v0.30 기준</div>
+            <div class="sc-cases">
+              <span class="sc-case-chip">검색·자동완성</span>
+              <span class="sc-case-chip">S01·S02</span>
+              <span class="sc-case-chip">아웃링크</span>
+              <span class="sc-case-chip">회원·인증</span>
+              <span class="sc-case-chip">캐시백</span>
+              <span class="sc-case-chip">마이페이지</span>
+            </div>
+            <div class="sc-arrow">→</div>
+          </a>
+
+          <a class="screen-card card-p2" href="p2_policy.html">
+            <div class="sc-num">POLICY-P2 <span class="sc-date">최종수정 : 06.19</span></div>
+            <div class="sc-name">Phase 2 정책서</div>
+            <div class="sc-route">p2_policy.html</div>
+            <div class="sc-desc">올마이투어 써드파티 공급사 연동 정책 · 익스피디아 우선 · 매핑 구조 · 병렬 호출 플로우 · v0.1</div>
+            <div class="sc-cases">
+              <span class="sc-case-chip">제1조 개요</span>
+              <span class="sc-case-chip">제2조 매핑</span>
+              <span class="sc-case-chip">제3조 검색플로우</span>
+              <span class="sc-case-chip">제4조 써드파티</span>
+              <span class="sc-case-chip">미결 이슈</span>
+            </div>
+            <div class="sc-arrow">→</div>
+          </a>
+
+          <a class="screen-card card-p2" href="p2_flow_kayak.html">
+            <div class="sc-num">P2-FLOW <span class="sc-date">최종수정 : 06.19</span></div>
+            <div class="sc-name">KAYAK × allmytour API 흐름도</div>
+            <div class="sc-route">p2_flow_kayak.html</div>
+            <div class="sc-desc">검색어→자동완성→매핑→병렬 API 호출→응답 조합 7단계 시각 다이어그램</div>
+            <div class="sc-cases">
+              <span class="sc-case-chip">자동완성 분기</span>
+              <span class="sc-case-chip">매핑 테이블</span>
+              <span class="sc-case-chip">병렬 호출</span>
+              <span class="sc-case-chip">응답 조합</span>
+            </div>
+            <div class="sc-arrow">→</div>
+          </a>
+
+          <a class="screen-card card-p2" href="p2_global.html">
+            <div class="sc-num">P2-GLOBAL <span class="sc-date">최종수정 : 06.19</span></div>
+            <div class="sc-name">글로벌화 정책 — 다국어·다통화</div>
+            <div class="sc-route">p2_global.html</div>
+            <div class="sc-desc">1차 지원 언어 7종 · 표시통화 20종 · 언어×통화 매핑 매트릭스 · 폴백 cascade · AWS 라우팅 · CMP 쿠키 동의 국가별 차등</div>
+            <div class="sc-cases">
+              <span class="sc-case-chip">언어 코드 변환</span>
+              <span class="sc-case-chip">통화 매핑</span>
+              <span class="sc-case-chip">폴백 정책</span>
+              <span class="sc-case-chip">CMP</span>
+            </div>
+            <div class="sc-arrow">→</div>
+          </a>
+
+          <a class="screen-card card-chat" href="chat01_policy.html">
+            <div class="sc-num">POLICY-CHAT <span class="sc-date">최종수정 : 06.26</span></div>
+            <div class="sc-name">AI 챗봇 검색 정책서</div>
+            <div class="sc-route">chat01_policy.html</div>
+            <div class="sc-desc">자연어검색 정책서 v0.2 전문 · LLM 파이프라인 · S01 동기화 · 기본값 · 되묻기 · 대화이력 · 오류처리 · AI 필터</div>
+            <div class="sc-cases">
+              <span class="sc-case-chip">자연어 파싱</span>
+              <span class="sc-case-chip">LLM → KAYAK</span>
+              <span class="sc-case-chip">S01 동기화</span>
+              <span class="sc-case-chip">대화이력</span>
+              <span class="sc-case-chip">오류처리</span>
+            </div>
+            <div class="sc-arrow">→</div>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- ═══ 검색 플로우 ═══ -->
+      <div id="group-search" class="group">
+        <div class="group-title">
+          <span class="group-title-dot" style="background:#f97316"></span>
+          검색 플로우 — Search Flow
+        </div>
+        <div class="screen-grid group-search">
+
+          <a class="screen-card" href="m01_main.html">
+            <div class="sc-num">M01 <span class="sc-date">최종수정 : 06.16</span></div>
+            <div class="sc-name">메인</div>
+            <div class="sc-route">m01_main.html</div>
+            <div class="sc-desc">검색 폼 · 자동완성 드롭다운 · 날짜 캘린더 · 인원·객실 설정</div>
+            <div class="sc-cases">
+              <span class="sc-case-chip">검색폼</span>
+              <span class="sc-case-chip">자동완성</span>
+              <span class="sc-case-chip">캘린더</span>
+              <span class="sc-case-chip">인원설정</span>
+            </div>
+            <div class="sc-arrow">→</div>
+          </a>
+
+          <a class="screen-card" href="s01_search.html">
+            <div class="sc-num">S01 <span class="sc-date">최종수정 : 06.17</span></div>
+            <div class="sc-name">검색결과 — 숙소 목록</div>
+            <div class="sc-route">s01_search.html</div>
+            <div class="sc-desc">호텔 카드 목록 · 공급사 최저가 1개 · 캐시백 배지 · 필터·정렬 · TTL 만료 처리 · [목록|지도] 토글</div>
+            <div class="sc-cases">
+              <span class="sc-case-chip">카드 목록</span>
+              <span class="sc-case-chip">필터 바텀시트</span>
+              <span class="sc-case-chip">정렬</span>
+              <span class="sc-case-chip">TTL 만료</span>
+              <span class="sc-case-chip">재검색바</span>
+            </div>
+            <div class="sc-arrow">→</div>
+          </a>
+
+          <a class="screen-card" href="map01_search_map.html">
+            <div class="sc-num">MAP01 <span class="sc-date">최종수정 : 06.17</span></div>
+            <div class="sc-name">검색결과 — 지도 뷰</div>
+            <div class="sc-route">map01_search_map.html</div>
+            <div class="sc-desc">GNB 없음 · 가격 핀 · 미니카드 슬라이드업 · [이 지역 검색] · 200km 초과 오류</div>
+            <div class="sc-cases">
+              <span class="sc-case-chip">MAP-A 기본</span>
+              <span class="sc-case-chip">MAP-B 핀 선택</span>
+              <span class="sc-case-chip">MAP-C 이지역검색</span>
+              <span class="sc-case-chip">MAP-D 200km오류</span>
+            </div>
+            <div class="sc-arrow">→</div>
+          </a>
+
+          <a class="screen-card" href="s02_hotel_detail.html">
+            <div class="sc-num">S02 <span class="sc-date">최종수정 : 06.16</span></div>
+            <div class="sc-name">숙소 상세 · 공급사 목록</div>
+            <div class="sc-route">s02_hotel_detail.html</div>
+            <div class="sc-desc">5탭 구성 · 호텔정보 탭(기본 활성) · 가격비교 · 사진 · 지도 · 리뷰 · Accordion 더보기</div>
+            <div class="sc-cases">
+              <span class="sc-case-chip">호텔정보</span>
+              <span class="sc-case-chip">가격비교</span>
+              <span class="sc-case-chip">사진</span>
+              <span class="sc-case-chip">지도</span>
+              <span class="sc-case-chip">리뷰</span>
+            </div>
+            <div class="sc-arrow">→</div>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- ═══ 아웃링크 ═══ -->
+      <div id="group-outlink" class="group">
+        <div class="group-title">
+          <span class="group-title-dot" style="background:#f59e0b"></span>
+          아웃링크 — Outlink Flow
+        </div>
+        <div class="screen-grid group-outlink">
+
+          <a class="screen-card" href="login_modal.html">
+            <div class="sc-num">LOGIN-MODAL <span class="sc-date">최종수정 : 06.16</span></div>
+            <div class="sc-name">로그인 유도 모달</div>
+            <div class="sc-route">login_modal.html</div>
+            <div class="sc-desc">비로그인 [이동→] 탭 시 표시 · 캐시백 혜택 강조 · [회원가입/로그인] 단일 버튼 · 건너뛰기</div>
+            <div class="sc-cases">
+              <span class="sc-case-chip">A — 캐시백 있음</span>
+              <span class="sc-case-chip">B — 캐시백 없음</span>
+            </div>
+            <div class="sc-arrow">→</div>
+          </a>
+
+          <a class="screen-card" href="out01_redirect.html">
+            <div class="sc-num">OUT01 <span class="sc-date">최종수정 : 06.16</span></div>
+            <div class="sc-name">아웃링크 이동 중</div>
+            <div class="sc-route">out01_redirect.html</div>
+            <div class="sc-desc">타 OTA 이동 전 중간 화면 · 프로그레스 바 · 캐시백 안내 배너 · 면책 고지</div>
+            <div class="sc-cases">
+              <span class="sc-case-chip">로딩</span>
+              <span class="sc-case-chip">완료</span>
+              <span class="sc-case-chip">오류</span>
+            </div>
+            <div class="sc-arrow">→</div>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- ═══ 인증 ═══ -->
+      <div id="group-auth" class="group">
+        <div class="group-title">
+          <span class="group-title-dot" style="background:#8b5cf6"></span>
+          인증 — Auth
+        </div>
+        <div class="screen-grid group-auth">
+
+          <a class="screen-card" href="auth_login.html">
+            <div class="sc-num">AUTH <span class="sc-date">최종수정 : 06.16</span></div>
+            <div class="sc-name">로그인 · 회원가입</div>
+            <div class="sc-route">auth_login.html</div>
+            <div class="sc-desc">이메일 인증코드 기반 통합 바텀시트 · 비밀번호 없음 · 기존/신규 회원 분기 · 약관 동의 · SNS Phase 2</div>
+            <div class="sc-cases">
+              <span class="sc-case-chip">A — 이메일 입력</span>
+              <span class="sc-case-chip">B — 이메일 완료</span>
+              <span class="sc-case-chip">C — 발송중</span>
+              <span class="sc-case-chip">D — 코드 입력</span>
+              <span class="sc-case-chip">D-ERR — 오류</span>
+              <span class="sc-case-chip">E — 약관 동의</span>
+              <span class="sc-case-chip">E-DIS — 비활성</span>
+            </div>
+            <div class="sc-arrow">→</div>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- ═══ 마이페이지 ═══ -->
+      <div id="group-my" class="group">
+        <div class="group-title">
+          <span class="group-title-dot" style="background:#4f46e5"></span>
+          마이페이지 — My Pages
+        </div>
+        <div class="screen-grid group-my">
+
+          <a class="screen-card" href="my01_mypage.html">
+            <div class="sc-num">MY01 <span class="sc-date">최종수정 : 06.16</span></div>
+            <div class="sc-name">마이페이지</div>
+            <div class="sc-route">my01_mypage.html</div>
+            <div class="sc-desc">GNB [☰] 탭 직접 진입 · 비로그인/로그인 분기 · 언어·통화 선택 바텀시트 · [로그아웃]</div>
+            <div class="sc-cases">
+              <span class="sc-case-chip">A — 비로그인</span>
+              <span class="sc-case-chip">B — 로그인</span>
+              <span class="sc-case-chip">C — 언어 선택</span>
+              <span class="sc-case-chip">D — 통화 선택</span>
+            </div>
+            <div class="sc-arrow">→</div>
+          </a>
+
+          <a class="screen-card" href="my02_cashback.html">
+            <div class="sc-num">MY02 <span class="sc-date">최종수정 : 06.16</span></div>
+            <div class="sc-name">캐시백 내역</div>
+            <div class="sc-route">my02_cashback.html</div>
+            <div class="sc-desc">총 적립금액 상단 고정 · 카드형 전체 목록 · 상태 배지 3종 · 빈 상태 문구</div>
+            <div class="sc-cases">
+              <span class="sc-case-chip">A — 내역 있음</span>
+              <span class="sc-case-chip">B — 빈 상태</span>
+            </div>
+            <div class="sc-arrow">→</div>
+          </a>
+
+          <a class="screen-card" href="my03_account.html">
+            <div class="sc-num">MY03 <span class="sc-date">최종수정 : 06.19</span></div>
+            <div class="sc-name">계정관리</div>
+            <div class="sc-route">my03_account.html</div>
+            <div class="sc-desc">이름·성 영문 입력 · 이메일 읽기전용 · 국적 바텀시트 · 전화번호 국가코드 · 마케팅 토글 · 하단 저장 버튼</div>
+            <div class="sc-cases">
+              <span class="sc-case-chip">A — 기본 입력</span>
+              <span class="sc-case-chip">B — 국적 바텀시트</span>
+              <span class="sc-case-chip">C — 유효성 오류</span>
+            </div>
+            <div class="sc-arrow">→</div>
+          </a>
+
+          <a class="screen-card" href="my04_terms.html">
+            <div class="sc-num">MY04 <span class="sc-date">최종수정 : 06.19</span></div>
+            <div class="sc-name">약관</div>
+            <div class="sc-route">my04_terms.html</div>
+            <div class="sc-desc">이용약관 · 개인정보처리방침 · 마케팅 수신 동의 목록 + 전문 뷰어 · 동의 이력 날짜 (로그인+동의 시)</div>
+            <div class="sc-cases">
+              <span class="sc-case-chip">A — 목록(비로그인)</span>
+              <span class="sc-case-chip">B — 목록(동의O)</span>
+              <span class="sc-case-chip">C — 목록(동의X)</span>
+              <span class="sc-case-chip">D — 뷰어(이용약관)</span>
+              <span class="sc-case-chip">E — 뷰어(마케팅+이력)</span>
+            </div>
+            <div class="sc-arrow">→</div>
+          </a>
+
+        </div>
+      </div>
+
+
+      <!-- ═══ PC 래핑 ═══ -->
+      <div id="group-pc" class="group">
+        <div class="group-title">
+          <span class="group-title-dot" style="background:#14b8a6"></span>
+          PC 래핑 — PC Wrapper
+        </div>
+        <div class="screen-grid group-pc">
+
+          <a class="screen-card" href="pc_wrapper.html">
+            <div class="sc-num">PC <span class="sc-date">최종수정 : 06.23</span></div>
+            <div class="sc-name">PC 래핑 화면</div>
+            <div class="sc-route">pc_wrapper.html</div>
+            <div class="sc-desc">왼쪽 브랜딩 패널(sticky) + 오른쪽 375px 모바일 프레임 · 전 화면 공통 래핑 · 언어·통화 선택 · 로그인 CTA</div>
+            <div class="sc-cases">
+              <span class="sc-case-chip">PC-A 비로그인</span>
+              <span class="sc-case-chip">PC-B 로그인</span>
+            </div>
+            <div class="sc-arrow">→</div>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- ═══ AI 챗봇 검색 ═══ -->
+      <div id="group-chat" class="group">
+        <div class="group-title">
+          <span class="group-title-dot" style="background:#7c3aed"></span>
+          AI 챗봇 검색 — 자연어검색
+        </div>
+        <div class="screen-grid group-chat">
+
+          <a class="screen-card" href="chat01_ai_search.html">
+            <div class="sc-num">CHAT01 <span class="sc-date">최종수정 : 06.26</span></div>
+            <div class="sc-name">AI 챗봇 검색</div>
+            <div class="sc-route">chat01_ai_search.html</div>
+            <div class="sc-desc">자연어 입력 → LLM 파싱 → KAYAK API → 결과 카드 3개 + 추천검색어 · 전체화면 전환 방식 · 정책서 v0.2 기준</div>
+            <div class="sc-cases">
+              <span class="sc-case-chip">CHAT-1 초기화면</span>
+              <span class="sc-case-chip">CHAT-2 로딩</span>
+              <span class="sc-case-chip">CHAT-3 결과 도출</span>
+              <span class="sc-case-chip">CHAT-4 결과 0개</span>
+              <span class="sc-case-chip">CHAT-5 더보기</span>
+              <span class="sc-case-chip">CHAT-6 대화이력</span>
+            </div>
+            <div class="sc-arrow">→</div>
+          </a>
+
+        </div>
+      </div>
+
+    </div><!-- /main-content -->
+  </div><!-- /cover-body -->
+
+  <div class="footer">
+    allmy meta. 신규 메타서치 화면기획서 · 정책서 v0.33 기준 · 대화창 2 산출물<br>
+    와이어프레임은 레이아웃·기능·정책 기준이며, 실제 비주얼 디자인은 별도 진행합니다.<br>
+    경로: context/신규정책/new_wireframe/
+  </div>
+
+</div><!-- /cover-wrap -->
+
+<script>
+// 스크롤 spy — 목차 active 상태 자동 업데이트
+(function(){
+  const items = document.querySelectorAll('.idx-toc-item');
+  const sections = [];
+  items.forEach(a => {
+    const id = a.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if(el) sections.push({el, a, color: a.dataset.color});
+  });
+
+  function update(){
+    let active = null;
+    sections.forEach(({el}) => {
+      if(el.getBoundingClientRect().top <= 80) active = el;
+    });
+    items.forEach(a => {
+      a.classList.remove('active');
+      a.style.borderLeftColor = 'transparent';
+    });
+    if(active){
+      const match = sections.find(s => s.el === active);
+      if(match){
+        match.a.classList.add('active');
+        match.a.style.borderLeftColor = match.color;
+        match.a.style.color = '#fff';
+      }
+    }
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+
+</body>
+</html>

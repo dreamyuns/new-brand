@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kayak × allmytour — API 흐름도</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 84px 24px 60px;
+  }
+
+  /* ── GNB ── */
+  .page-nav{
+    position:fixed;top:0;left:0;right:0;z-index:200;
+    height:44px;background:#0f172a;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 20px;border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  .pn-l{display:flex;align-items:center;min-width:0}
+  .pn-back{
+    display:inline-flex;align-items:center;gap:4px;flex-shrink:0;
+    border:1px solid #0ea5e9;color:#7dd3fc;
+    padding:4px 10px;border-radius:4px;font-weight:700;font-size:11px;
+    text-decoration:none;transition:background .15s;
+  }
+  .pn-back:hover{background:rgba(14,165,233,.15)}
+  .pn-sep{color:rgba(255,255,255,.18);margin:0 12px;flex-shrink:0}
+  .pn-code{font-weight:800;color:#fff;font-size:12px;font-family:monospace;white-space:nowrap}
+  .pn-name{color:rgba(255,255,255,.7);margin-left:5px;font-size:12px;font-weight:600;white-space:nowrap}
+  .pn-route{color:rgba(255,255,255,.3);margin-left:8px;font-size:11px;white-space:nowrap}
+  .pn-r{display:flex;gap:6px;flex-shrink:0;margin-left:16px}
+  .pn-btn{
+    display:inline-block;padding:4px 11px;
+    border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.45);
+    font-size:11px;font-weight:700;border-radius:4px;
+    text-decoration:none;transition:background .15s,color .15s;white-space:nowrap;
+  }
+  .pn-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+  .pn-btn.disabled{opacity:.28;pointer-events:none;cursor:default}
+
+  h1 {
+    font-size: 15px;
+    font-weight: 500;
+    color: #6b7280;
+    margin-bottom: 32px;
+    text-align: center;
+    letter-spacing: -0.2px;
+  }
+  h1 span { color: #111827; font-weight: 600; }
+
+  .flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 680px;
+  }
+
+  /* 노드 공통 */
+  .node {
+    border-radius: 12px;
+    padding: 12px 22px;
+    text-align: center;
+    position: relative;
+  }
+  .node .title {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .node .sub {
+    font-size: 12px;
+    margin-top: 3px;
+    line-height: 1.5;
+  }
+
+  /* 색상 */
+  .node-gray  {
+    background: #f3f4f6;
+    border: 1.5px solid #d1d5db;
+    color: #374151;
+  }
+  .node-gray .sub { color: #6b7280; }
+
+  .node-blue  {
+    background: #dbeafe;
+    border: 1.5px solid #93c5fd;
+    color: #1e40af;
+  }
+  .node-blue .sub { color: #3b82f6; }
+
+  .node-teal  {
+    background: #d1fae5;
+    border: 1.5px solid #6ee7b7;
+    color: #065f46;
+  }
+  .node-teal .sub { color: #059669; }
+
+  .node-amber {
+    background: #fef3c7;
+    border: 1.5px solid #fcd34d;
+    color: #92400e;
+  }
+  .node-amber .sub { color: #b45309; }
+
+  .node-coral {
+    background: #fee2e2;
+    border: 1.5px solid #fca5a5;
+    color: #991b1b;
+  }
+  .node-coral .sub { color: #dc2626; }
+
+  /* 화살표 */
+  .arrow {
+    width: 1px;
+    height: 28px;
+    background: #9ca3af;
+    position: relative;
+    margin: 0 auto;
+  }
+  .arrow::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 50%;
+    transform: translateX(-50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid #9ca3af;
+  }
+
+  /* 단계 뱃지 */
+  .step-badge {
+    font-size: 11px;
+    font-weight: 500;
+    color: #9ca3af;
+    margin-bottom: 4px;
+    letter-spacing: 0.3px;
+  }
+
+  /* 백엔드 컨테이너 */
+  .backend-box {
+    border: 1.5px dashed #d1d5db;
+    border-radius: 14px;
+    padding: 20px 20px 24px;
+    width: 100%;
+    position: relative;
+    background: #fff;
+  }
+  .backend-label {
+    position: absolute;
+    top: -10px;
+    left: 16px;
+    background: #f8f9fa;
+    padding: 0 8px;
+    font-size: 11px;
+    color: #9ca3af;
+    letter-spacing: 0.3px;
+  }
+
+  .parallel-row {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+  }
+  .parallel-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+  }
+
+  .connector-svg {
+    width: 100%;
+    overflow: visible;
+    display: block;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── GNB ── -->
+<div class="page-nav">
+  <div class="pn-l">
+    <a class="pn-back" href="index.html">← 목록으로</a>
+    <span class="pn-sep">|</span>
+    <span class="pn-code">P2-FLOW</span>
+    <span class="pn-name">— KAYAK × allmytour API 흐름도</span>
+  </div>
+  <div class="pn-r">
+    <a class="pn-btn" href="p2_policy.html">← 이전</a>
+    <a class="pn-btn" href="p2_global.html">다음 →</a>
+  </div>
+</div>
+
+<h1><span>Kayak × allmytour</span> API 흐름도</h1>
+
+<div class="flow">
+
+  <!-- ① 검색어 -->
+  <div class="step-badge">① 검색어</div>
+  <div class="node node-gray" style="min-width:240px">
+    <div class="title">사용자 검색어 입력</div>
+  </div>
+  <div class="arrow"></div>
+
+  <!-- ② 자동완성 -->
+  <div class="step-badge">② 자동완성</div>
+  <div class="node node-blue" style="min-width:300px">
+    <div class="title">Kayak 자동완성 API</div>
+    <div class="sub">cityCode / hotelCode 타입 응답</div>
+  </div>
+
+  <!-- 분기 SVG -->
+  <svg class="connector-svg" height="56" viewBox="0 0 680 56" preserveAspectRatio="none">
+    <line x1="340" y1="0" x2="340" y2="18" stroke="#9ca3af" stroke-width="1"/>
+    <line x1="170" y1="18" x2="510" y2="18" stroke="#9ca3af" stroke-width="1"/>
+    <line x1="170" y1="18" x2="170" y2="48" stroke="#9ca3af" stroke-width="1"/>
+    <line x1="510" y1="18" x2="510" y2="48" stroke="#9ca3af" stroke-width="1"/>
+    <polygon points="165,46 175,46 170,54" fill="#9ca3af"/>
+    <polygon points="505,46 515,46 510,54" fill="#9ca3af"/>
+    <text x="230" y="14" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="sans-serif">cityCode 선택</text>
+    <text x="450" y="14" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="sans-serif">hotelCode 선택</text>
+  </svg>
+
+  <!-- ③ 선택 분기 -->
+  <div style="display:flex;gap:20px;width:100%;">
+    <div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+      <div class="step-badge">③ 도시 선택</div>
+      <div class="node node-gray" style="width:100%">
+        <div class="title">도시(cityCode) 선택</div>
+        <div class="sub">검색 조건 함께 전달</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+      <div class="step-badge">③ 호텔 선택</div>
+      <div class="node node-gray" style="width:100%">
+        <div class="title">호텔(hotelCode) 선택</div>
+        <div class="sub">검색 조건 함께 전달</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- cityCode↓ / hotelCode 점선 우회 -->
+  <svg class="connector-svg" height="36" viewBox="0 0 680 36" preserveAspectRatio="none">
+    <line x1="170" y1="0" x2="170" y2="36" stroke="#9ca3af" stroke-width="1"/>
+    <polygon points="165,33 175,33 170,41" fill="#9ca3af"/>
+    <line x1="510" y1="0" x2="510" y2="36" stroke="#9ca3af" stroke-width="1" stroke-dasharray="5 4"/>
+  </svg>
+
+  <!-- 백엔드 컨테이너 -->
+  <div class="backend-box">
+    <span class="backend-label">백엔드 처리</span>
+
+    <!-- ④ DB 조회 + hotelCode 합류 -->
+    <div style="display:flex;gap:16px;align-items:flex-start;">
+      <div style="display:flex;flex-direction:column;align-items:center;flex:1;">
+        <div class="step-badge">④ DB 조회</div>
+        <div class="node node-blue" style="width:100%">
+          <div class="title">Kayak 호텔 Static DB 정보 조회</div>
+          <div class="sub">cityCode 기준 호텔 목록</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;flex:1;padding-top:36px;">
+        <!-- hotelCode 점선 계속 -->
+        <div style="width:1px;height:28px;background:repeating-linear-gradient(to bottom,#9ca3af 0,#9ca3af 4px,transparent 4px,transparent 8px);margin:0 auto;"></div>
+      </div>
+    </div>
+
+    <!-- cityCode → 매핑 합류 SVG -->
+    <svg class="connector-svg" height="32" viewBox="0 0 680 32" preserveAspectRatio="none">
+      <!-- cityCode 경로 내려오다 오른쪽으로 꺾어 매핑에 합류 -->
+      <line x1="170" y1="0" x2="170" y2="20" stroke="#9ca3af" stroke-width="1"/>
+      <line x1="170" y1="20" x2="340" y2="20" stroke="#9ca3af" stroke-width="1"/>
+      <!-- hotelCode 점선 내려와 왼쪽으로 꺾어 매핑에 합류 -->
+      <line x1="510" y1="0" x2="510" y2="20" stroke="#9ca3af" stroke-width="1" stroke-dasharray="5 4"/>
+      <line x1="510" y1="20" x2="340" y2="20" stroke="#9ca3af" stroke-width="1" stroke-dasharray="5 4"/>
+      <polygon points="335,15 345,15 340,23" fill="#9ca3af"/>
+    </svg>
+
+    <!-- ⑤ 매핑 -->
+    <div style="display:flex;flex-direction:column;align-items:center;">
+      <div class="step-badge">⑤ 매핑</div>
+      <div class="node node-teal" style="width:100%">
+        <div class="title">allmytour 호텔 ID 매핑 테이블 확인</div>
+        <div class="sub">Kayak hotelCode → AMT hotel_id</div>
+      </div>
+    </div>
+
+    <!-- 병렬 분기 SVG -->
+    <svg class="connector-svg" height="44" viewBox="0 0 680 44" preserveAspectRatio="none">
+      <line x1="340" y1="0" x2="340" y2="16" stroke="#9ca3af" stroke-width="1"/>
+      <line x1="160" y1="16" x2="520" y2="16" stroke="#9ca3af" stroke-width="1"/>
+      <line x1="160" y1="16" x2="160" y2="40" stroke="#9ca3af" stroke-width="1"/>
+      <line x1="520" y1="16" x2="520" y2="40" stroke="#9ca3af" stroke-width="1"/>
+      <polygon points="155,38 165,38 160,46" fill="#9ca3af"/>
+      <polygon points="515,38 525,38 520,46" fill="#9ca3af"/>
+      <text x="340" y="12" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="sans-serif">병렬 호출</text>
+    </svg>
+
+    <!-- ⑥ 병렬 -->
+    <div class="parallel-row">
+      <div class="parallel-col">
+        <div class="step-badge">⑥ Kayak</div>
+        <div class="node node-blue" style="width:100%">
+          <div class="title">Kayak 가격/가용 API</div>
+          <div class="sub">hotelCode 기준 요청</div>
+        </div>
+      </div>
+      <div class="parallel-col">
+        <div class="step-badge">⑥ Expedia</div>
+        <div class="node node-amber" style="width:100%">
+          <div class="title">product_mapper 조회</div>
+          <div class="sub">AMT hotel_id → Expedia hotelCode</div>
+        </div>
+        <div class="arrow" style="height:20px;"></div>
+        <div class="node node-coral" style="width:100%">
+          <div class="title">익스피디아 검색 API</div>
+          <div class="sub">Expedia hotelCode 기준 요청</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 병합 SVG -->
+    <svg class="connector-svg" height="44" viewBox="0 0 680 44" preserveAspectRatio="none">
+      <line x1="160" y1="0" x2="160" y2="28" stroke="#9ca3af" stroke-width="1"/>
+      <line x1="520" y1="0" x2="520" y2="28" stroke="#9ca3af" stroke-width="1"/>
+      <line x1="160" y1="28" x2="520" y2="28" stroke="#9ca3af" stroke-width="1"/>
+      <line x1="340" y1="28" x2="340" y2="44" stroke="#9ca3af" stroke-width="1"/>
+      <polygon points="335,42 345,42 340,50" fill="#9ca3af"/>
+    </svg>
+
+    <!-- ⑦ 응답 조합 -->
+    <div style="display:flex;flex-direction:column;align-items:center;margin-top:4px;">
+      <div class="step-badge">⑦ 조합</div>
+      <div class="node node-teal" style="width:100%">
+        <div class="title">응답 조합</div>
+        <div class="sub">Kayak + 익스피디아 결과 병합</div>
+      </div>
+    </div>
+
+  </div><!-- /backend-box -->
+
+  <div class="arrow"></div>
+
+  <!-- ⑧ 응답 -->
+  <div class="step-badge">⑧ 응답</div>
+  <div class="node node-gray" style="min-width:260px">
+    <div class="title">클라이언트 응답 반환</div>
+    <div class="sub">조합된 호텔 검색 결과</div>
+  </div>
+
+</div>
+</body>
+</html>

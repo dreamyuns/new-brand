@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>P2-GLOBAL 글로벌화 정책 — allmytour meta</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"Malgun Gothic","Apple SD Gothic Neo","Segoe UI",sans-serif;
+  background:#f8fafc;color:#1e293b;min-height:100vh;
+  padding-top:44px;
+}
+
+/* ── 헤더 ── */
+.p2-header{background:#0c1a2e;color:#fff;padding:40px 48px 32px}
+.p2-header-label{font-size:11px;font-weight:700;letter-spacing:.12em;color:#7dd3fc;margin-bottom:8px;text-transform:uppercase}
+.p2-header-title{font-size:28px;font-weight:800;letter-spacing:-.5px;margin-bottom:6px}
+.p2-header-title .phase{color:#38bdf8}
+.p2-header-meta{font-size:13px;color:rgba(255,255,255,.45);margin-bottom:14px}
+.p2-header-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(56,189,248,.15);border:1px solid rgba(56,189,248,.3);
+  color:#7dd3fc;font-size:12px;font-weight:700;padding:5px 14px;border-radius:6px;
+}
+.p2-header-badge span{color:#fff;font-weight:800}
+
+/* ── 레이아웃 ── */
+.p2-body{display:flex;max-width:1280px;margin:0 auto;padding:32px 24px;gap:28px;align-items:flex-start}
+
+/* ── 목차 ── */
+.p2-toc{
+  width:240px;flex-shrink:0;position:sticky;top:20px;
+  background:#fff;border:1px solid #e2e8f0;border-radius:10px;
+  padding:16px 0;max-height:calc(100vh - 48px);overflow-y:auto;
+}
+.p2-toc-hdr{
+  font-size:10px;font-weight:700;letter-spacing:.1em;color:#94a3b8;text-transform:uppercase;
+  padding:0 16px 10px;border-bottom:1px solid #f1f5f9;margin-bottom:8px;
+}
+.p2-toc-art{
+  display:block;font-size:12px;font-weight:700;color:#334155;
+  padding:5px 16px;text-decoration:none;
+  transition:background .12s,color .12s;border-left:3px solid transparent;
+}
+.p2-toc-art:hover{background:#f0f9ff;color:#0284c7}
+.p2-toc-art.active{background:#e0f2fe;color:#0284c7;border-left-color:#0ea5e9}
+.p2-toc-sub{
+  display:block;font-size:11px;color:#64748b;
+  padding:3px 16px 3px 26px;text-decoration:none;
+  transition:background .12s,color .12s;border-left:3px solid transparent;
+}
+.p2-toc-sub:hover{background:#f8fafc;color:#0284c7}
+.p2-toc-sub.active{color:#0284c7;border-left-color:#bae6fd}
+.p2-toc-divider{height:1px;background:#f1f5f9;margin:8px 0}
+
+/* ── 본문 ── */
+.p2-content{flex:1;min-width:0}
+
+.p2-section{background:#fff;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:20px;overflow:hidden}
+.p2-section-hdr{
+  background:#f0f9ff;border-bottom:1px solid #bae6fd;
+  padding:16px 24px;display:flex;align-items:center;gap:10px;
+}
+.p2-art-badge{
+  background:#0ea5e9;color:#fff;font-size:10px;font-weight:700;
+  padding:3px 9px;border-radius:4px;white-space:nowrap;letter-spacing:.05em;
+}
+.p2-section-hdr h2{font-size:16px;font-weight:700;color:#0c4a6e;letter-spacing:-.3px}
+.p2-section-body{padding:20px 24px}
+
+.p2-sub{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid #f1f5f9}
+.p2-sub:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.p2-sub-title{font-size:14px;font-weight:700;color:#1e293b;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.p2-sub-num{font-size:11px;font-weight:700;color:#0284c7;background:#e0f2fe;padding:2px 8px;border-radius:3px}
+
+.p2-text{font-size:13px;color:#475569;line-height:1.8}
+.p2-text p{margin-bottom:8px}
+.p2-text p:last-child{margin-bottom:0}
+.p2-text strong{color:#1e293b;font-weight:700}
+.p2-text ul{padding-left:18px;margin:6px 0}
+.p2-text li{margin-bottom:5px}
+.p2-text code{
+  font-family:'SFMono-Regular',Consolas,monospace;
+  font-size:12px;background:#f1f5f9;color:#0369a1;padding:1px 5px;border-radius:3px;
+}
+
+/* ── 테이블 ── */
+.p2-table-wrap{overflow-x:auto;margin:10px 0}
+.p2-table{width:100%;border-collapse:collapse;font-size:13px}
+.p2-table th{
+  background:#e0f2fe;color:#0369a1;font-weight:700;
+  padding:9px 14px;text-align:left;border-bottom:2px solid #bae6fd;white-space:nowrap;
+}
+.p2-table td{padding:9px 14px;border-bottom:1px solid #f1f5f9;color:#475569;vertical-align:top;line-height:1.65}
+.p2-table tr:last-child td{border-bottom:none}
+.p2-table tr:hover td{background:#fafbfc}
+
+/* ── 코드 블록 ── */
+.p2-code{
+  background:#1e293b;color:#e2e8f0;
+  font-family:'SFMono-Regular',Consolas,monospace;
+  font-size:12px;line-height:1.85;
+  padding:18px 20px;border-radius:8px;margin:12px 0;
+  overflow-x:auto;white-space:pre;
+}
+.p2-code .cm{color:#64748b}
+.p2-code .kw{color:#7dd3fc}
+.p2-code .str{color:#86efac}
+
+/* ── 강조 박스 ── */
+.p2-notice{
+  background:#eff6ff;border:1px solid #bfdbfe;border-left:3px solid #3b82f6;
+  border-radius:6px;padding:12px 14px;margin:12px 0;
+  font-size:13px;color:#1d4ed8;line-height:1.7;
+}
+.p2-warn{
+  background:#fffbeb;border:1px solid #fde68a;border-left:3px solid #f59e0b;
+  border-radius:6px;padding:12px 14px;margin:12px 0;
+  font-size:13px;color:#92400e;line-height:1.7;
+}
+.p2-warn strong,.p2-notice strong{font-weight:700}
+
+/* ── 태그 ── */
+.tag-p1{display:inline-block;font-size:10px;font-weight:700;background:#dcfce7;color:#166534;padding:1px 6px;border-radius:3px;margin-left:4px}
+.tag-p2{display:inline-block;font-size:10px;font-weight:700;background:#dbeafe;color:#1d4ed8;padding:1px 6px;border-radius:3px;margin-left:4px}
+.tag-infra{display:inline-block;font-size:10px;font-weight:700;background:#f3e8ff;color:#6b21a8;padding:1px 6px;border-radius:3px;margin-left:4px}
+.tag-warn{display:inline-block;font-size:10px;font-weight:700;background:#fef3c7;color:#b45309;padding:1px 6px;border-radius:3px;margin-left:4px}
+
+/* ── GNB ── */
+.page-nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:44px;background:#0f172a;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;border-bottom:1px solid rgba(255,255,255,.08);
+}
+.pn-l{display:flex;align-items:center;min-width:0}
+.pn-back{
+  display:inline-flex;align-items:center;gap:4px;flex-shrink:0;
+  border:1px solid #0ea5e9;color:#7dd3fc;
+  padding:4px 10px;border-radius:4px;font-weight:700;font-size:11px;
+  text-decoration:none;transition:background .15s;
+}
+.pn-back:hover{background:rgba(14,165,233,.15)}
+.pn-sep{color:rgba(255,255,255,.18);margin:0 12px;flex-shrink:0}
+.pn-code{font-weight:800;color:#fff;font-size:12px;font-family:monospace;white-space:nowrap}
+.pn-name{color:rgba(255,255,255,.7);margin-left:5px;font-size:12px;font-weight:600;white-space:nowrap}
+.pn-route{color:rgba(255,255,255,.3);margin-left:8px;font-size:11px;white-space:nowrap}
+.pn-r{display:flex;gap:6px;flex-shrink:0;margin-left:16px}
+.pn-btn{
+  display:inline-block;padding:4px 11px;
+  border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.45);
+  font-size:11px;font-weight:700;border-radius:4px;
+  text-decoration:none;transition:background .15s,color .15s;white-space:nowrap;
+}
+.pn-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+.pn-btn.disabled{opacity:.28;pointer-events:none;cursor:default}
+
+/* ── 푸터 ── */
+.p2-footer{
+  text-align:center;font-size:12px;color:#94a3b8;
+  padding:32px 24px 48px;border-top:1px solid #e2e8f0;
+  margin:0 24px;line-height:1.8;
+}
+
+/* ═══════════════════════════════════
+   글로벌화 전용 시각화 CSS
+═══════════════════════════════════ */
+
+/* 결정사항 카드 그리드 */
+.decision-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin:12px 0;
+}
+.d-card{
+  background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:14px 16px;
+  position:relative;
+}
+.d-card-num{
+  display:inline-block;font-size:10px;font-weight:800;font-family:monospace;
+  background:#0ea5e9;color:#fff;padding:2px 7px;border-radius:3px;margin-bottom:8px;
+}
+.d-card-label{font-size:11px;font-weight:700;color:#64748b;margin-bottom:4px;letter-spacing:.03em}
+.d-card-val{font-size:13px;font-weight:700;color:#0c4a6e;line-height:1.55}
+.d-card-val code{
+  font-family:'SFMono-Regular',Consolas,monospace;
+  font-size:11px;background:#e0f2fe;color:#0369a1;padding:1px 5px;border-radius:3px;
+}
+.d-card.warn{background:#fffbeb;border-color:#fde68a}
+.d-card.warn .d-card-num{background:#f59e0b}
+.d-card.warn .d-card-val{color:#78350f}
+
+/* 언어 코드 변환 다이어그램 */
+.code-flow{
+  display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:16px 0;
+}
+.code-flow-item{
+  display:flex;align-items:center;gap:8px;
+  background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:10px 14px;
+  flex:1;min-width:220px;
+}
+.code-box{
+  font-family:'SFMono-Regular',Consolas,monospace;
+  font-size:13px;font-weight:700;padding:5px 10px;border-radius:5px;white-space:nowrap;
+}
+.code-box.bcp{background:#dbeafe;color:#1e40af;border:1px solid #93c5fd}
+.code-box.iso{background:#dcfce7;color:#166534;border:1px solid #86efac}
+.code-flow-arrow{
+  font-size:18px;color:#94a3b8;flex-shrink:0;
+}
+.code-flow-lang{font-size:11px;color:#64748b;min-width:70px}
+
+/* 통화 배지 */
+.currency-grid{
+  display:flex;flex-wrap:wrap;gap:6px;margin:10px 0;
+}
+.cur-badge{
+  display:inline-block;font-family:monospace;font-size:12px;font-weight:700;
+  padding:4px 10px;border-radius:5px;white-space:nowrap;
+}
+.cur-home{background:#e0f2fe;color:#0369a1;border:1px solid #7dd3fc}
+.cur-intl{background:#dbeafe;color:#1e40af;border:1px solid #93c5fd}
+.cur-travel{background:#f0fdf4;color:#166534;border:1px solid #86efac}
+.cur-emerging{background:#fef9c3;color:#713f12;border:1px solid #fde047}
+.cur-latam{background:#fdf4ff;color:#6b21a8;border:1px solid #d8b4fe}
+
+/* 통화 분류 범례 */
+.cur-legend{
+  display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;
+}
+.cur-legend-item{
+  display:flex;align-items:center;gap:5px;font-size:11px;color:#64748b;
+}
+.cur-legend-dot{
+  width:10px;height:10px;border-radius:2px;flex-shrink:0;
+}
+.dot-home{background:#7dd3fc}
+.dot-intl{background:#93c5fd}
+.dot-travel{background:#86efac}
+.dot-emerging{background:#fde047}
+.dot-latam{background:#d8b4fe}
+
+/* 폴백 cascade */
+.fallback-flow{
+  display:flex;flex-direction:column;gap:0;margin:16px 0;
+  border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;
+}
+.fb-step{
+  display:flex;align-items:center;gap:14px;
+  padding:13px 18px;border-bottom:1px solid #f1f5f9;background:#fff;
+}
+.fb-step:last-child{border-bottom:none}
+.fb-num{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;flex-shrink:0;
+}
+.fb-num.pri{background:#0ea5e9;color:#fff}
+.fb-num.sec{background:#7dd3fc;color:#0c4a6e}
+.fb-num.tert{background:#e0f2fe;color:#0369a1}
+.fb-label{font-size:13px;font-weight:700;color:#1e293b;margin-bottom:2px}
+.fb-desc{font-size:12px;color:#64748b}
+.fb-result{margin-left:auto;font-family:monospace;font-size:12px;font-weight:700;color:#0284c7;background:#e0f2fe;padding:3px 9px;border-radius:4px;white-space:nowrap}
+
+/* 언어 매핑 매트릭스 */
+.lang-matrix{
+  display:grid;gap:0;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin:12px 0;
+}
+.lm-row{
+  display:grid;grid-template-columns:140px 140px 1fr 120px;
+  border-bottom:1px solid #f1f5f9;
+}
+.lm-row.hdr{background:#e0f2fe;font-weight:700;font-size:12px;color:#0369a1}
+.lm-row:last-child{border-bottom:none}
+.lm-row:not(.hdr):hover{background:#fafbfc}
+.lm-cell{
+  padding:10px 13px;font-size:12px;color:#475569;
+  border-right:1px solid #f1f5f9;line-height:1.6;
+}
+.lm-cell:last-child{border-right:none}
+.lm-cell.hdr{color:#0369a1;font-weight:700}
+.lm-flag{font-size:16px;margin-right:6px}
+.lm-cur-wrap{display:flex;flex-wrap:wrap;gap:3px}
+
+/* AWS 리전 테이블 */
+.region-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin:14px 0}
+.region-card{
+  background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:14px;
+}
+.region-name{font-size:11px;font-weight:700;color:#64748b;letter-spacing:.05em;margin-bottom:4px}
+.region-aws{font-family:monospace;font-size:12px;color:#0369a1;background:#f1f5f9;padding:2px 7px;border-radius:3px;margin-bottom:8px;display:inline-block}
+.region-countries{font-size:12px;color:#1e293b;font-weight:700;margin-bottom:4px;line-height:1.55}
+.region-cur{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
+
+/* CMP 지역별 배너 */
+.cmp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin:14px 0}
+.cmp-card{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:14px;position:relative}
+.cmp-region{font-size:11px;font-weight:700;color:#64748b;letter-spacing:.04em;margin-bottom:4px}
+.cmp-law{font-size:10px;font-weight:700;color:#fff;padding:2px 7px;border-radius:3px;margin-bottom:8px;display:inline-block}
+.cmp-law.gdpr{background:#dc2626}
+.cmp-law.ccpa{background:#2563eb}
+.cmp-law.pipa{background:#16a34a}
+.cmp-law.appi{background:#7c3aed}
+.cmp-law.lgpd{background:#ea580c}
+.cmp-law.apac{background:#0891b2}
+.cmp-banner-type{font-size:13px;font-weight:700;color:#1e293b;margin-bottom:3px}
+.cmp-default{font-size:11px;color:#64748b}
+
+/* Phase 적용범위 테이블 */
+.p2-table .cell-p1{color:#166534;font-weight:700}
+.p2-table .cell-p2{color:#1d4ed8;font-weight:700}
+.p2-table .cell-infra{color:#6b21a8;font-weight:700}
+
+/* 원본문서 링크 */
+.doc-ref{
+  background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:12px 16px;
+  font-size:12px;color:#64748b;line-height:1.8;margin-bottom:16px;
+}
+.doc-ref strong{color:#334155;font-weight:700}
+
+/* D3 카드 통화 미니 배지 */
+.d-card-sub{font-size:10px;font-weight:400;color:#94a3b8;margin-left:4px}
+.d-cur-mini{display:flex;flex-wrap:wrap;gap:2px;margin-top:7px}
+.d-cur-mini span{
+  font-family:'SFMono-Regular',Consolas,monospace;
+  font-size:9px;font-weight:700;
+  background:#e0f2fe;color:#0369a1;
+  padding:1px 5px;border-radius:2px;white-space:nowrap;
+}
+
+/* 코드 변환 테이블 배지 */
+.code-bcp{
+  display:inline-block;font-family:'SFMono-Regular',Consolas,monospace;
+  font-size:12px;font-weight:700;
+  background:#dbeafe;color:#1e40af;border:1px solid #93c5fd;
+  padding:2px 8px;border-radius:4px;
+}
+.code-iso{
+  display:inline-block;font-family:'SFMono-Regular',Consolas,monospace;
+  font-size:12px;font-weight:700;
+  background:#dcfce7;color:#166534;border:1px solid #86efac;
+  padding:2px 8px;border-radius:4px;
+}
+.code-convert-table td{vertical-align:middle}
+.code-arrow-cell{text-align:center;font-size:16px;color:#94a3b8;padding:8px 6px}
+
+/* 용어 정의 */
+.terms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;margin:12px 0}
+.term-card{
+  background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:13px 15px;
+}
+.term-name{
+  font-size:12px;font-weight:800;font-family:'SFMono-Regular',Consolas,monospace;
+  color:#0369a1;background:#e0f2fe;
+  display:inline-block;padding:2px 8px;border-radius:3px;margin-bottom:7px;
+}
+.term-desc{font-size:12px;color:#475569;line-height:1.7}
+.term-desc strong{color:#1e293b;font-weight:700}
+.term-desc em{color:#0369a1;font-style:normal;font-weight:700}
+</style>
+</head>
+<body>
+
+<!-- ── GNB ── -->
+<div class="page-nav">
+  <div class="pn-l">
+    <a class="pn-back" href="index.html">← 목록으로</a>
+    <span class="pn-sep">|</span>
+    <span class="pn-code">P2-GLOBAL</span>
+    <span class="pn-name">— 글로벌화 정책</span>
+    <span class="pn-route">/ v0.1</span>
+  </div>
+  <div class="pn-r">
+    <a class="pn-btn" href="p2_flow_kayak.html">← 이전</a>
+    <span class="pn-btn disabled">다음 →</span>
+  </div>
+</div>
+
+<!-- ── 헤더 ── -->
+<div class="p2-header">
+  <div class="p2-header-label">Phase 2 — 글로벌화 정책</div>
+  <div class="p2-header-title">글로벌 다국어·다통화 정책 <span class="phase">시각화 정리</span></div>
+  <div class="p2-header-meta">정책 기준: Phase2_정책서_v0.1 제7조 / 원본: 글로벌_다국어_메타서비스_통합기획정책서.docx</div>
+  <div class="p2-header-badge">작성일 <span>2026-06-19</span></div>
+</div>
+
+<!-- ── BODY ── -->
+<div class="p2-body">
+
+  <!-- ── 목차 ── -->
+  <nav class="p2-toc">
+    <div class="p2-toc-hdr">목차</div>
+    <a class="p2-toc-art" href="#sec-0">§0 용어 정의</a>
+    <a class="p2-toc-sub" href="#sec-0">ICP·Ketch·BCP-47 등</a>
+    <div class="p2-toc-divider"></div>
+    <a class="p2-toc-art" href="#sec-1">§1 핵심 결정사항</a>
+    <a class="p2-toc-sub" href="#sec-1">D1~D8 요약 카드</a>
+    <div class="p2-toc-divider"></div>
+    <a class="p2-toc-art" href="#sec-2">§2 1차 지원 언어 7종</a>
+    <a class="p2-toc-sub" href="#sec-2">언어별 코드·역할</a>
+    <div class="p2-toc-divider"></div>
+    <a class="p2-toc-art" href="#sec-3">§3 언어 코드 변환 규칙</a>
+    <a class="p2-toc-sub" href="#sec-3">BCP-47 ↔ ISO 639</a>
+    <div class="p2-toc-divider"></div>
+    <a class="p2-toc-art" href="#sec-4">§4 언어×통화 매핑 매트릭스</a>
+    <a class="p2-toc-sub" href="#sec-4">7언어 × 20통화 연결</a>
+    <div class="p2-toc-divider"></div>
+    <a class="p2-toc-art" href="#sec-5">§5 표시통화 20종</a>
+    <a class="p2-toc-sub" href="#sec-5">분류별 통화 배지</a>
+    <div class="p2-toc-divider"></div>
+    <a class="p2-toc-art" href="#sec-6">§6 폴백 정책</a>
+    <a class="p2-toc-sub" href="#sec-6">로케일 결정 cascade</a>
+    <div class="p2-toc-divider"></div>
+    <a class="p2-toc-art" href="#sec-7">§7 AWS 라우팅 아키텍처</a>
+    <a class="p2-toc-sub" href="#sec-7">리전별 라우팅</a>
+    <div class="p2-toc-divider"></div>
+    <a class="p2-toc-art" href="#sec-8">§8 CMP 쿠키 동의 정책</a>
+    <a class="p2-toc-sub" href="#sec-8">국가별 배너 차등</a>
+    <div class="p2-toc-divider"></div>
+    <a class="p2-toc-art" href="#sec-9">§9 Phase 1·2 적용 범위</a>
+  </nav>
+
+  <!-- ── 본문 ── -->
+  <div class="p2-content">
+
+    <!-- ── §0 용어 정의 ── -->
+    <div id="sec-0" class="p2-section">
+      <div class="p2-section-hdr">
+        <span class="p2-art-badge">§0</span>
+        <h2>용어 정의</h2>
+      </div>
+      <div class="p2-section-body">
+        <div class="terms-grid">
+
+          <div class="term-card">
+            <div class="term-name">BCP-47</div>
+            <div class="term-desc">IETF가 정의한 언어 태그 표준. <strong>하이픈(-)</strong>으로 언어-지역을 구분. UI·콘텐츠 기준으로 사용. <em>예: ko-KR, en-US, zh-TW</em></div>
+          </div>
+
+          <div class="term-card">
+            <div class="term-name">ISO 639</div>
+            <div class="term-desc">ISO가 정의한 언어 코드 국제 표준. KAYAK·Expedia API는 <strong>언더스코어(_)</strong> 형식을 요구. <em>예: ko_KR, en_US, zh_TW</em></div>
+          </div>
+
+          <div class="term-card">
+            <div class="term-name">ICP 라이선스</div>
+            <div class="term-desc">중국 정부(공업정보화부)가 인터넷 서비스 제공자에게 요구하는 라이선스. <strong>중국 본토에서 서비스하려면 반드시 취득 필요.</strong> 취득 불가 시 zh-CN(간체) 서비스 불가 → D2 제외 근거.</div>
+          </div>
+
+          <div class="term-card">
+            <div class="term-name">Ketch</div>
+            <div class="term-desc">쿠키·개인정보 동의를 관리하는 <strong>CMP(Consent Management Platform)</strong> 솔루션. API 기반으로 국가별 동의 정책을 코드로 설정 가능. AWS 엣지와 통합 정합성이 높아 선정.</div>
+          </div>
+
+          <div class="term-card">
+            <div class="term-name">CMP</div>
+            <div class="term-desc"><strong>Consent Management Platform</strong>. 사용자의 쿠키·개인정보 수집 동의를 받고 관리하는 솔루션. GDPR·PIPA 등 규정 준수를 위해 필수. 국가별로 다른 동의 방식(옵트인/옵트아웃)을 처리.</div>
+          </div>
+
+          <div class="term-card">
+            <div class="term-name">Lambda@Edge</div>
+            <div class="term-desc">AWS CloudFront(CDN) <strong>엣지 서버에서 실행되는 서버리스 함수</strong>. 사용자 요청이 오리진 서버에 도달하기 전, 엣지에서 국가 감지·로케일 설정 등을 처리 가능. 지연 5ms 미만.</div>
+          </div>
+
+          <div class="term-card">
+            <div class="term-name">Geo 감지</div>
+            <div class="term-desc">사용자의 IP 주소를 기반으로 접속 국가를 자동 감지하는 기술. CloudFront가 <strong>CloudFront-Viewer-Country</strong> 헤더로 국가 코드를 전달. 언어·통화 자동 설정에 사용.</div>
+          </div>
+
+          <div class="term-card">
+            <div class="term-name">링구아 프랑카</div>
+            <div class="term-desc">모국어가 다른 사람들 사이의 <strong>공통 언어</strong>. 이 정책에서는 영어(EN)가 링구아 프랑카 역할을 담당 — 12개 통화권(USD·GBP·CAD·AUD 등)을 영어 UI 하나로 커버.</div>
+          </div>
+
+          <div class="term-card">
+            <div class="term-name">GDPR</div>
+            <div class="term-desc">EU <strong>일반 개인정보 보호 규정</strong>. 유럽 사용자 개인정보 처리 기준. 동의 없이 마케팅·분석 쿠키 수집 불가. 위반 시 전 세계 매출의 최대 4% 과징금.</div>
+          </div>
+
+          <div class="term-card">
+            <div class="term-name">PIPA</div>
+            <div class="term-desc">한국 <strong>개인정보 보호법</strong> (Personal Information Protection Act). 국내 서비스에 적용. GDPR 대비 간소 옵트인 방식 허용 — 수락 버튼 표시 + 거부 가능 구조.</div>
+          </div>
+
+          <div class="term-card">
+            <div class="term-name">APPI</div>
+            <div class="term-desc">일본 <strong>개인정보 보호법</strong> (Act on Protection of Personal Information) + 전기통신사업법. 고지형(옵트아웃) 방식 — 쿠키 사용 고지 후 사용자가 거부하지 않으면 수락으로 간주.</div>
+          </div>
+
+          <div class="term-card">
+            <div class="term-name">CCPA / CPRA</div>
+            <div class="term-desc">미국 캘리포니아 <strong>소비자 프라이버시법 / 프라이버시 권리법</strong>. "내 개인정보 판매 금지(Do Not Sell)" 링크를 필수로 제공해야 함.</div>
+          </div>
+
+          <div class="term-card">
+            <div class="term-name">LGPD</div>
+            <div class="term-desc">브라질 <strong>일반 개인정보 보호법</strong> (Lei Geral de Proteção de Dados). GDPR과 유사한 강제 옵트인 구조. 수락·거부를 동등하게 제공해야 함.</div>
+          </div>
+
+          <div class="term-card">
+            <div class="term-name">Typeahead</div>
+            <div class="term-desc">검색창 키 입력 시 실시간으로 후보 목록을 보여주는 <strong>자동완성</strong> 기능. Expedia API 명칭. KAYAK의 Autocomplete API와 동일한 기능. Lodging(숙소) API와 별도로 동작.</div>
+          </div>
+
+          <div class="term-card">
+            <div class="term-name">Lodging API</div>
+            <div class="term-desc">Expedia의 <strong>숙소 데이터·가격 API</strong>. 지원 언어·통화가 Typeahead(자동완성) API보다 제한적. 1차 지원 언어 7종은 모두 Lodging 지원 범위 내에 있음.</div>
+          </div>
+
+          <div class="term-card">
+            <div class="term-name">폴백 (Fallback)</div>
+            <div class="term-desc">요청한 조건(언어·통화)이 지원되지 않을 때 <strong>기본값으로 대체</strong>하는 처리 방식. 이 정책에서는 미지원 언어 → en_US, 미지원 통화 → USD, 국가 미식별 → ko-KR/KRW로 폴백.</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ── §1 핵심 결정사항 ── -->
+    <div id="sec-1" class="p2-section">
+      <div class="p2-section-hdr">
+        <span class="p2-art-badge">§1</span>
+        <h2>핵심 결정사항 요약 (D1~D8)</h2>
+      </div>
+      <div class="p2-section-body">
+        <div class="doc-ref">
+          <strong>원본 문서</strong> — <code>글로벌_다국어_메타서비스_통합기획정책서.docx</code> / <code>Expedia Lodging 언어통화 매핑.xlsx</code><br>
+          <strong>정리 기준</strong> — 2026-06-15 원본 / 2026-06-19 정리 · Phase2_정책서_v0.1 제7조 반영
+        </div>
+        <div class="decision-grid">
+          <div class="d-card">
+            <div class="d-card-num">D1</div>
+            <div class="d-card-label">1차 UI 언어</div>
+            <div class="d-card-val"><strong>7종</strong> — KR·JP·EN·es-MX·ID·VN·zh-TW</div>
+          </div>
+          <div class="d-card warn">
+            <div class="d-card-num">D2</div>
+            <div class="d-card-label">중국어 간체 제외</div>
+            <div class="d-card-val"><code>zh-CN</code>·<code>CNY</code> 미포함 — ICP 라이선스 요건 (본토 서비스 법적 불가)</div>
+          </div>
+          <div class="d-card">
+            <div class="d-card-num">D3</div>
+            <div class="d-card-label">표시통화</div>
+            <div class="d-card-val"><strong>20종</strong> <span class="d-card-sub">→ §5 상세</span></div>
+            <div class="d-cur-mini">
+              <span>KRW</span><span>JPY</span><span>USD</span><span>EUR</span><span>GBP</span>
+              <span>AUD</span><span>CAD</span><span>NZD</span><span>SGD</span><span>HKD</span>
+              <span>TWD</span><span>ZAR</span><span>INR</span><span>IDR</span><span>VND</span>
+              <span>PHP</span><span>MYR</span><span>MXN</span><span>ARS</span><span>COP</span>
+            </div>
+          </div>
+          <div class="d-card">
+            <div class="d-card-num">D4</div>
+            <div class="d-card-label">자동 라우팅</div>
+            <div class="d-card-val">AWS CloudFront + Lambda@Edge + Route 53 Geolocation (엣지 국가 감지 &lt;10ms)</div>
+          </div>
+          <div class="d-card">
+            <div class="d-card-num">D5</div>
+            <div class="d-card-label">로케일 우선순위</div>
+            <div class="d-card-val">명시 선택 &gt; Geo 자동감지 &gt; 기본값 <code>ko-KR / KRW</code></div>
+          </div>
+          <div class="d-card">
+            <div class="d-card-num">D6</div>
+            <div class="d-card-label">CMP 솔루션</div>
+            <div class="d-card-val"><strong>Ketch</strong> 최우선 — API-first·privacy-as-code·AWS 엣지 정합</div>
+          </div>
+          <div class="d-card warn">
+            <div class="d-card-num">D7</div>
+            <div class="d-card-label">한국·일본 배너</div>
+            <div class="d-card-val">한국 = <strong>간소 옵트인</strong> / 일본 = <strong>고지형(옵트아웃)</strong><br>"비노출" 폐기 — PIPA·APPI 위반 리스크</div>
+          </div>
+          <div class="d-card">
+            <div class="d-card-num">D8</div>
+            <div class="d-card-label">필수 쿠키</div>
+            <div class="d-card-val">세션·로케일·CSRF 등 비식별 필수 쿠키는 전 지역 즉시 활성화 (동의 불필요)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── §2 1차 지원 언어 7종 ── -->
+    <div id="sec-2" class="p2-section">
+      <div class="p2-section-hdr">
+        <span class="p2-art-badge">§2</span>
+        <h2>1차 지원 언어 7종</h2>
+      </div>
+      <div class="p2-section-body">
+        <div class="p2-warn">
+          <strong>⚠️ 중국어 주의 사항</strong><br>
+          <code>zh-CN</code>(간체/본토)·<code>zh-TW</code>(번체/대만)·<code>zh-HK</code>(광둥어/홍콩) — 별개 코드, 혼용 금지.<br>
+          zh-CN은 중국 본토 ICP 라이선스 요건으로 서비스 불가. zh-TW만 지원.
+        </div>
+        <div class="p2-table-wrap">
+          <table class="p2-table">
+            <thead>
+              <tr>
+                <th>코드</th>
+                <th>언어</th>
+                <th>Expedia 코드 (BCP-47)</th>
+                <th>KAYAK 코드 (ISO 639)</th>
+                <th>역할</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>KR</strong></td>
+                <td>🇰🇷 한국어</td>
+                <td><code>ko-KR</code></td>
+                <td><code>ko_KR</code></td>
+                <td>1차 핵심 타깃</td>
+              </tr>
+              <tr>
+                <td><strong>JP</strong></td>
+                <td>🇯🇵 일본어</td>
+                <td><code>ja-JP</code></td>
+                <td><code>ja_JP</code></td>
+                <td>2차 핵심 타깃</td>
+              </tr>
+              <tr>
+                <td><strong>EN</strong></td>
+                <td>🌐 영어</td>
+                <td><code>en-US</code> / <code>en-GB</code></td>
+                <td><code>en_US</code> / <code>en_GB</code></td>
+                <td>링구아 프랑카 (12개 통화권 공통)</td>
+              </tr>
+              <tr>
+                <td><strong>ES/MX</strong></td>
+                <td>🇲🇽 스페인어(멕시코)</td>
+                <td><code>es-MX</code></td>
+                <td><code>es_MX</code></td>
+                <td>LATAM 스페인어권 공통</td>
+              </tr>
+              <tr>
+                <td><strong>ID</strong></td>
+                <td>🇮🇩 인도네시아어</td>
+                <td><code>id-ID</code></td>
+                <td><code>id_ID</code></td>
+                <td>동남아 대형 시장</td>
+              </tr>
+              <tr>
+                <td><strong>VN</strong></td>
+                <td>🇻🇳 베트남어</td>
+                <td><code>vi-VN</code></td>
+                <td><code>vi_VN</code></td>
+                <td>동남아 고성장 시장</td>
+              </tr>
+              <tr>
+                <td><strong>TW</strong></td>
+                <td>🇹🇼 중국어 번체(대만)</td>
+                <td><code>zh-TW</code></td>
+                <td><code>zh_TW</code></td>
+                <td>대만 시장</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="p2-notice">
+          <strong>영어(EN)의 링구아 프랑카 역할</strong><br>
+          7개 언어만으로 20개 통화 표시를 충족. USD·GBP·CAD·AUD·NZD·SGD·INR·ZAR·PHP·HKD·MYR·EUR 등 12개 통화권을 영어 UI로 커버.
+        </div>
+        <div class="p2-sub-title" style="margin-top:16px"><span class="p2-sub-num">Expedia 호환성</span> Lodging 지원 범위 확인</div>
+        <div class="p2-text">
+          <p>Expedia Lodging API는 전체 언어를 지원하지 않음. <strong>1차 지원 UI 언어 7종은 모두 Lodging 지원 범위 내.</strong></p>
+          <p><strong>폴백 규칙:</strong> 7종 범위 외 언어로 Expedia API 호출 시 → <code>en_US</code>로 폴백 처리</p>
+          <ul>
+            <li><strong>Lodging 미지원 언어 (Typeahead 전용):</strong> en-AU/CA/IN, es-AR/US, fr-BE, de-AT, nl-BE 등 → 자동완성만 지원, Lodging 호출 불가</li>
+            <li><strong>Lodging 미지원 통화 (언어는 지원):</strong> UAH(우크라이나)·HUF(헝가리)·ISK(아이슬란드) → 통화 매핑 불가, USD 폴백</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── §3 언어 코드 변환 규칙 ── -->
+    <div id="sec-3" class="p2-section">
+      <div class="p2-section-hdr">
+        <span class="p2-art-badge">§3</span>
+        <h2>언어 코드 변환 규칙 <span class="tag-warn">⚠️ 개발 필수</span></h2>
+      </div>
+      <div class="p2-section-body">
+        <div class="p2-warn">
+          <strong>⚠️ API 호출 계층에서 변환 필수</strong><br>
+          Expedia·KAYAK 모두 언더스코어(ISO 639) 포맷 사용. <code>ko-KR</code> → <code>ko_KR</code> 변환 누락 시 API 호출 실패 / 빈 결과 반환.
+        </div>
+        <div class="p2-table-wrap">
+          <table class="p2-table">
+            <thead>
+              <tr><th>용도</th><th>포맷</th><th>구분자</th><th>예시</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>UI·콘텐츠 기준 (Expedia)</td>
+                <td>BCP-47</td>
+                <td><strong>하이픈 <code>-</code></strong></td>
+                <td><code>ko-KR</code>, <code>ja-JP</code>, <code>es-MX</code>, <code>zh-TW</code></td>
+              </tr>
+              <tr>
+                <td><strong>KAYAK Hotels API 호출</strong></td>
+                <td>ISO 639</td>
+                <td><strong>언더스코어 <code>_</code></strong></td>
+                <td><code>ko_KR</code>, <code>ja_JP</code>, <code>es_MX</code>, <code>zh_TW</code></td>
+              </tr>
+              <tr>
+                <td><strong>Expedia Lodging API 호출</strong></td>
+                <td>ISO 639</td>
+                <td><strong>언더스코어 <code>_</code></strong></td>
+                <td><code>ko_KR</code>, <code>ja_JP</code>, <code>es_MX</code>, <code>zh_TW</code></td>
+              </tr>
+              <tr>
+                <td>중국어 변형 (KAYAK)</td>
+                <td>ISO 639</td>
+                <td>지역 변형 필수</td>
+                <td><code>zh_TW</code> / <code>zh_HK</code> / <code>zh_SG</code> — <code>zh</code> 단독 불가</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p2-sub-title" style="margin-top:20px"><span class="p2-sub-num">변환 테이블</span> 7개 언어 코드 변환 — BCP-47(UI) → ISO 639(API)</div>
+        <div class="p2-table-wrap">
+          <table class="p2-table code-convert-table">
+            <thead>
+              <tr>
+                <th>언어</th>
+                <th>UI·콘텐츠 (BCP-47, 하이픈)</th>
+                <th style="width:28px"></th>
+                <th>API 호출 (ISO 639, 언더스코어)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>🇰🇷 한국어</td>
+                <td><span class="code-bcp">ko-KR</span></td>
+                <td class="code-arrow-cell">→</td>
+                <td><span class="code-iso">ko_KR</span></td>
+              </tr>
+              <tr>
+                <td>🇯🇵 일본어</td>
+                <td><span class="code-bcp">ja-JP</span></td>
+                <td class="code-arrow-cell">→</td>
+                <td><span class="code-iso">ja_JP</span></td>
+              </tr>
+              <tr>
+                <td>🌐 영어</td>
+                <td><span class="code-bcp">en-US</span> / <span class="code-bcp">en-GB</span></td>
+                <td class="code-arrow-cell">→</td>
+                <td><span class="code-iso">en_US</span> / <span class="code-iso">en_GB</span></td>
+              </tr>
+              <tr>
+                <td>🇲🇽 스페인어(멕시코)</td>
+                <td><span class="code-bcp">es-MX</span></td>
+                <td class="code-arrow-cell">→</td>
+                <td><span class="code-iso">es_MX</span></td>
+              </tr>
+              <tr>
+                <td>🇮🇩 인도네시아어</td>
+                <td><span class="code-bcp">id-ID</span></td>
+                <td class="code-arrow-cell">→</td>
+                <td><span class="code-iso">id_ID</span></td>
+              </tr>
+              <tr>
+                <td>🇻🇳 베트남어</td>
+                <td><span class="code-bcp">vi-VN</span></td>
+                <td class="code-arrow-cell">→</td>
+                <td><span class="code-iso">vi_VN</span></td>
+              </tr>
+              <tr>
+                <td>🇹🇼 중국어 번체(대만)</td>
+                <td><span class="code-bcp">zh-TW</span></td>
+                <td class="code-arrow-cell">→</td>
+                <td><span class="code-iso">zh_TW</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p2-sub-title" style="margin-top:20px"><span class="p2-sub-num">공통 필수 헤더</span> KAYAK·Expedia API 3종</div>
+        <div class="p2-table-wrap">
+          <table class="p2-table">
+            <thead>
+              <tr><th>헤더</th><th>내용</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>User-Agent</code></td><td>최종 사용자 브라우저 UA</td></tr>
+              <tr><td><code>x-original-client-ip</code></td><td>최종 사용자 실제 IP (엣지에서 캡처)</td></tr>
+              <tr><td><code>userTrackId</code></td><td>세션 단위 고유 식별자</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="p2-warn">
+          <strong>⚠️ 3종 누락 시 KAYAK 요금·캐시백 오류 발생</strong> — 공급사 발급 샘플 동일 규약 적용
+        </div>
+      </div>
+    </div>
+
+    <!-- ── §4 언어×통화 매핑 매트릭스 ── -->
+    <div id="sec-4" class="p2-section">
+      <div class="p2-section-hdr">
+        <span class="p2-art-badge">§4</span>
+        <h2>언어×통화 로케일 매핑 매트릭스</h2>
+      </div>
+      <div class="p2-section-body">
+        <div class="lang-matrix">
+          <div class="lm-row hdr">
+            <div class="lm-cell hdr">UI 언어</div>
+            <div class="lm-cell hdr">Expedia 코드</div>
+            <div class="lm-cell hdr">매핑 통화</div>
+            <div class="lm-cell hdr">KAYAK 코드</div>
+          </div>
+          <div class="lm-row">
+            <div class="lm-cell"><span class="lm-flag">🇰🇷</span><strong>한국어</strong></div>
+            <div class="lm-cell"><code>ko-KR</code></div>
+            <div class="lm-cell">
+              <div class="lm-cur-wrap"><span class="cur-badge cur-home">KRW</span></div>
+            </div>
+            <div class="lm-cell"><code>ko_KR</code></div>
+          </div>
+          <div class="lm-row">
+            <div class="lm-cell"><span class="lm-flag">🇯🇵</span><strong>일본어</strong></div>
+            <div class="lm-cell"><code>ja-JP</code></div>
+            <div class="lm-cell">
+              <div class="lm-cur-wrap"><span class="cur-badge cur-home">JPY</span></div>
+            </div>
+            <div class="lm-cell"><code>ja_JP</code></div>
+          </div>
+          <div class="lm-row">
+            <div class="lm-cell"><span class="lm-flag">🌐</span><strong>영어</strong></div>
+            <div class="lm-cell"><code>en-US</code> / <code>en-GB</code></div>
+            <div class="lm-cell">
+              <div class="lm-cur-wrap">
+                <span class="cur-badge cur-intl">USD</span>
+                <span class="cur-badge cur-intl">GBP</span>
+                <span class="cur-badge cur-travel">CAD</span>
+                <span class="cur-badge cur-travel">AUD</span>
+                <span class="cur-badge cur-travel">NZD</span>
+                <span class="cur-badge cur-travel">SGD</span>
+                <span class="cur-badge cur-emerging">INR</span>
+                <span class="cur-badge cur-travel">ZAR</span>
+                <span class="cur-badge cur-emerging">PHP</span>
+                <span class="cur-badge cur-travel">HKD</span>
+                <span class="cur-badge cur-emerging">MYR</span>
+                <span class="cur-badge cur-intl">EUR</span>
+              </div>
+            </div>
+            <div class="lm-cell"><code>en_US</code> / <code>en_GB</code></div>
+          </div>
+          <div class="lm-row">
+            <div class="lm-cell"><span class="lm-flag">🇲🇽</span><strong>스페인어(멕시코)</strong></div>
+            <div class="lm-cell"><code>es-MX</code></div>
+            <div class="lm-cell">
+              <div class="lm-cur-wrap">
+                <span class="cur-badge cur-latam">MXN</span>
+                <span class="cur-badge cur-latam">ARS</span>
+                <span class="cur-badge cur-latam">COP</span>
+              </div>
+            </div>
+            <div class="lm-cell"><code>es_MX</code></div>
+          </div>
+          <div class="lm-row">
+            <div class="lm-cell"><span class="lm-flag">🇮🇩</span><strong>인도네시아어</strong></div>
+            <div class="lm-cell"><code>id-ID</code></div>
+            <div class="lm-cell">
+              <div class="lm-cur-wrap"><span class="cur-badge cur-emerging">IDR</span></div>
+            </div>
+            <div class="lm-cell"><code>id_ID</code></div>
+          </div>
+          <div class="lm-row">
+            <div class="lm-cell"><span class="lm-flag">🇻🇳</span><strong>베트남어</strong></div>
+            <div class="lm-cell"><code>vi-VN</code></div>
+            <div class="lm-cell">
+              <div class="lm-cur-wrap"><span class="cur-badge cur-emerging">VND</span></div>
+            </div>
+            <div class="lm-cell"><code>vi_VN</code></div>
+          </div>
+          <div class="lm-row">
+            <div class="lm-cell"><span class="lm-flag">🇹🇼</span><strong>중국어 번체(대만)</strong></div>
+            <div class="lm-cell"><code>zh-TW</code></div>
+            <div class="lm-cell">
+              <div class="lm-cur-wrap"><span class="cur-badge cur-travel">TWD</span></div>
+            </div>
+            <div class="lm-cell"><code>zh_TW</code></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── §5 표시통화 20종 ── -->
+    <div id="sec-5" class="p2-section">
+      <div class="p2-section-hdr">
+        <span class="p2-art-badge">§5</span>
+        <h2>표시통화 20종</h2>
+      </div>
+      <div class="p2-section-body">
+        <div class="p2-notice">
+          전 20종이 <strong>Expedia Lodging 지원 통화</strong> — 공급사 레벨 제약 없음. Phase 1과 동일하게 Phase 2에도 적용.
+        </div>
+        <div class="cur-legend">
+          <div class="cur-legend-item"><div class="cur-legend-dot dot-home"></div>홈마켓</div>
+          <div class="cur-legend-item"><div class="cur-legend-dot dot-intl"></div>국제 표시통화</div>
+          <div class="cur-legend-item"><div class="cur-legend-dot dot-travel"></div>고빈도 여행 통화</div>
+          <div class="cur-legend-item"><div class="cur-legend-dot dot-emerging"></div>신흥·고성장 통화</div>
+          <div class="cur-legend-item"><div class="cur-legend-dot dot-latam"></div>LATAM 통화</div>
+        </div>
+        <div class="currency-grid">
+          <span class="cur-badge cur-home">KRW</span>
+          <span class="cur-badge cur-home">JPY</span>
+          <span class="cur-badge cur-intl">USD</span>
+          <span class="cur-badge cur-intl">EUR</span>
+          <span class="cur-badge cur-intl">GBP</span>
+          <span class="cur-badge cur-travel">AUD</span>
+          <span class="cur-badge cur-travel">CAD</span>
+          <span class="cur-badge cur-travel">NZD</span>
+          <span class="cur-badge cur-travel">SGD</span>
+          <span class="cur-badge cur-travel">HKD</span>
+          <span class="cur-badge cur-travel">TWD</span>
+          <span class="cur-badge cur-travel">ZAR</span>
+          <span class="cur-badge cur-emerging">INR</span>
+          <span class="cur-badge cur-emerging">IDR</span>
+          <span class="cur-badge cur-emerging">VND</span>
+          <span class="cur-badge cur-emerging">PHP</span>
+          <span class="cur-badge cur-emerging">MYR</span>
+          <span class="cur-badge cur-latam">MXN</span>
+          <span class="cur-badge cur-latam">ARS</span>
+          <span class="cur-badge cur-latam">COP</span>
+        </div>
+
+        <div class="p2-sub-title" style="margin-top:20px"><span class="p2-sub-num">후속 추가 후보</span> Phase 2·3 검토 대상</div>
+        <div class="p2-table-wrap">
+          <table class="p2-table">
+            <thead><tr><th>Phase</th><th>통화</th><th>대상 시장</th></tr></thead>
+            <tbody>
+              <tr><td>Phase 2 검토</td><td><code>BRL</code>·<code>THB</code>·<code>SAR</code>·<code>AED</code></td><td>브라질·태국·GCC</td></tr>
+              <tr><td>Phase 3 검토</td><td><code>MAD</code>·<code>EGP</code>·<code>PLN</code>·<code>CZK</code>·<code>PEN</code>·<code>CLP</code></td><td>아프리카·동유럽·LATAM 확장</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── §6 폴백 정책 ── -->
+    <div id="sec-6" class="p2-section">
+      <div class="p2-section-hdr">
+        <span class="p2-art-badge">§6</span>
+        <h2>폴백 정책 — 로케일 결정 Cascade</h2>
+      </div>
+      <div class="p2-section-body">
+
+        <div class="p2-sub-title"><span class="p2-sub-num">로케일 결정 우선순위</span></div>
+        <div class="fallback-flow">
+          <div class="fb-step">
+            <div class="fb-num pri">1</div>
+            <div>
+              <div class="fb-label">명시 선택</div>
+              <div class="fb-desc">URL 파라미터 / 쿠키 (사용자가 직접 언어·통화 변경)</div>
+            </div>
+            <div class="fb-result">파라미터 값</div>
+          </div>
+          <div class="fb-step">
+            <div class="fb-num sec">2</div>
+            <div>
+              <div class="fb-label">Geo 자동감지</div>
+              <div class="fb-desc">CloudFront-Viewer-Country 헤더 → country→locale 매핑 테이블</div>
+            </div>
+            <div class="fb-result">감지된 로케일</div>
+          </div>
+          <div class="fb-step">
+            <div class="fb-num tert">3</div>
+            <div>
+              <div class="fb-label">기본값</div>
+              <div class="fb-desc">국가 미식별 / 매핑 없는 국가</div>
+            </div>
+            <div class="fb-result">ko-KR / KRW</div>
+          </div>
+        </div>
+
+        <div class="p2-sub-title" style="margin-top:20px"><span class="p2-sub-num">상황별 폴백 규칙</span></div>
+        <div class="p2-table-wrap">
+          <table class="p2-table">
+            <thead>
+              <tr><th>상황</th><th>처리 규칙</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Expedia Lodging 미지원 언어로 호출</td>
+                <td><code>en_US</code>로 폴백</td>
+              </tr>
+              <tr>
+                <td>공급사 미지원 언어 시장</td>
+                <td>UI = 영어(<code>en-GB</code>) / 통화 = 해당국 통화 유지</td>
+              </tr>
+              <tr>
+                <td>현지어 1차 미지원 (EUR·HKD·MYR 등)</td>
+                <td>UI = 영어, 통화 = 현지 통화 (분리 적용)</td>
+              </tr>
+              <tr>
+                <td>통화 20종 범위 외</td>
+                <td>USD로 표시 폴백 + 안내 표기</td>
+              </tr>
+              <tr>
+                <td>국가 미식별 / 기타</td>
+                <td>기본 로케일 <code>ko-KR</code> / <code>KRW</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── §7 AWS 라우팅 아키텍처 ── -->
+    <div id="sec-7" class="p2-section">
+      <div class="p2-section-hdr">
+        <span class="p2-art-badge">§7</span>
+        <h2>AWS 자동 라우팅 아키텍처 <span class="tag-infra">인프라</span></h2>
+      </div>
+      <div class="p2-section-body">
+
+        <div class="p2-sub-title"><span class="p2-sub-num">계층별 구성</span></div>
+        <div class="p2-table-wrap">
+          <table class="p2-table">
+            <thead>
+              <tr><th>계층</th><th>AWS 서비스</th><th>역할</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>엣지 계산</strong></td>
+                <td>CloudFront + Lambda@Edge</td>
+                <td>국가 감지 + 로케일 매핑 (&lt;5ms)</td>
+              </tr>
+              <tr>
+                <td><strong>DNS·라우팅</strong></td>
+                <td>Route 53 (Geolocation)</td>
+                <td>사용자 위치별 최적 리전 ALB 자동 선택</td>
+              </tr>
+              <tr>
+                <td><strong>애플리케이션</strong></td>
+                <td>ECS/Fargate (다중 리전)</td>
+                <td>리전별 API 서버 (KAYAK 호출·실질가 계산)</td>
+              </tr>
+              <tr>
+                <td><strong>캐시</strong></td>
+                <td>ElastiCache (Redis)</td>
+                <td>로케일·호텔·환율 캐시 (리전별 독립)</td>
+              </tr>
+              <tr>
+                <td><strong>데이터</strong></td>
+                <td>DynamoDB Global Tables</td>
+                <td>country→locale 매핑 테이블 (다중 리전 동기)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p2-sub-title" style="margin-top:20px"><span class="p2-sub-num">리전별 라우팅</span></div>
+        <div class="region-grid">
+          <div class="region-card">
+            <div class="region-name">Asia Pacific</div>
+            <div class="region-aws">ap-northeast-1 (Tokyo)</div>
+            <div class="region-countries">🇰🇷 KR · 🇯🇵 JP · 🇹🇼 TW · 🇸🇬 SG · 🇦🇺 AU · 🇭🇰 HK · 🇲🇾 MY · 🇵🇭 PH · 🇳🇿 NZ</div>
+            <div class="region-cur">
+              <span class="cur-badge cur-home">KRW</span>
+              <span class="cur-badge cur-home">JPY</span>
+              <span class="cur-badge cur-travel">TWD</span>
+              <span class="cur-badge cur-travel">SGD</span>
+              <span class="cur-badge cur-travel">AUD</span>
+              <span class="cur-badge cur-travel">HKD</span>
+              <span class="cur-badge cur-emerging">MYR</span>
+              <span class="cur-badge cur-emerging">PHP</span>
+              <span class="cur-badge cur-travel">NZD</span>
+            </div>
+          </div>
+          <div class="region-card">
+            <div class="region-name">South Asia</div>
+            <div class="region-aws">ap-south-1 (Mumbai)</div>
+            <div class="region-countries">🇮🇳 IN</div>
+            <div class="region-cur">
+              <span class="cur-badge cur-emerging">INR</span>
+            </div>
+          </div>
+          <div class="region-card">
+            <div class="region-name">Southeast Asia</div>
+            <div class="region-aws">ap-southeast-1</div>
+            <div class="region-countries">🇮🇩 ID · 🇻🇳 VN</div>
+            <div class="region-cur">
+              <span class="cur-badge cur-emerging">IDR</span>
+              <span class="cur-badge cur-emerging">VND</span>
+            </div>
+          </div>
+          <div class="region-card">
+            <div class="region-name">LATAM</div>
+            <div class="region-aws">sa-east-1 (São Paulo)</div>
+            <div class="region-countries">🇲🇽 MX · 🇦🇷 AR · 🇨🇴 CO</div>
+            <div class="region-cur">
+              <span class="cur-badge cur-latam">MXN</span>
+              <span class="cur-badge cur-latam">ARS</span>
+              <span class="cur-badge cur-latam">COP</span>
+            </div>
+          </div>
+          <div class="region-card">
+            <div class="region-name">Europe / Africa</div>
+            <div class="region-aws">eu-west-1 (Ireland)</div>
+            <div class="region-countries">🇪🇺 EU · 🇬🇧 UK · 🇿🇦 ZA</div>
+            <div class="region-cur">
+              <span class="cur-badge cur-intl">EUR</span>
+              <span class="cur-badge cur-intl">GBP</span>
+              <span class="cur-badge cur-travel">ZAR</span>
+            </div>
+          </div>
+          <div class="region-card">
+            <div class="region-name">North America</div>
+            <div class="region-aws">us-east-1</div>
+            <div class="region-countries">🇺🇸 US · 🇨🇦 CA</div>
+            <div class="region-cur">
+              <span class="cur-badge cur-intl">USD</span>
+              <span class="cur-badge cur-travel">CAD</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── §8 CMP 쿠키 동의 정책 ── -->
+    <div id="sec-8" class="p2-section">
+      <div class="p2-section-hdr">
+        <span class="p2-art-badge">§8</span>
+        <h2>CMP 쿠키 동의 정책 <span class="tag-infra">인프라</span></h2>
+      </div>
+      <div class="p2-section-body">
+
+        <div class="p2-notice">
+          <strong>CMP 선정: Ketch 최우선</strong> — API-first·privacy-as-code·AWS 엣지 정합<br>
+          D8: 세션·로케일·CSRF 등 비식별 <strong>필수 쿠키</strong>는 전 지역 동의 없이 즉시 활성화
+        </div>
+
+        <div class="p2-sub-title" style="margin-top:16px"><span class="p2-sub-num">쿠키 카테고리</span></div>
+        <div class="p2-table-wrap">
+          <table class="p2-table">
+            <thead><tr><th>카테고리</th><th>예시</th><th>동의 필요</th></tr></thead>
+            <tbody>
+              <tr><td><strong>필수(Essential)</strong></td><td>세션ID·로케일·CSRF 토큰</td><td>불필요 (즉시 ON)</td></tr>
+              <tr><td><strong>분석(Analytics)</strong></td><td>GA4·Mixpanel·Hotjar</td><td>동의 필수</td></tr>
+              <tr><td><strong>마케팅(Marketing)</strong></td><td>광고 픽셀·전환 추적</td><td>동의 필수</td></tr>
+              <tr><td><strong>개인화</strong></td><td>추천·A/B 테스트</td><td>동의 권장</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p2-sub-title" style="margin-top:20px"><span class="p2-sub-num">국가별 배너 차등</span></div>
+        <div class="cmp-grid">
+          <div class="cmp-card">
+            <div class="cmp-region">EU / UK</div>
+            <div><span class="cmp-law gdpr">GDPR</span></div>
+            <div class="cmp-banner-type">강제 옵트인</div>
+            <div class="cmp-default">기본값: 전체 거부</div>
+          </div>
+          <div class="cmp-card">
+            <div class="cmp-region">미국(CA)</div>
+            <div><span class="cmp-law ccpa">CCPA/CPRA</span></div>
+            <div class="cmp-banner-type">Do-Not-Sell</div>
+            <div class="cmp-default">기본값: 수락 + 거부 링크</div>
+          </div>
+          <div class="cmp-card">
+            <div class="cmp-region">한국</div>
+            <div><span class="cmp-law pipa">PIPA</span></div>
+            <div class="cmp-banner-type">간소 옵트인</div>
+            <div class="cmp-default">기본값: 수락 (거부 가능)</div>
+          </div>
+          <div class="cmp-card">
+            <div class="cmp-region">일본</div>
+            <div><span class="cmp-law appi">APPI+전기통신</span></div>
+            <div class="cmp-banner-type">고지형 (옵트아웃)</div>
+            <div class="cmp-default">기본값: 수락 (옵트아웃)</div>
+          </div>
+          <div class="cmp-card">
+            <div class="cmp-region">브라질</div>
+            <div><span class="cmp-law lgpd">LGPD</span></div>
+            <div class="cmp-banner-type">강제</div>
+            <div class="cmp-default">기본값: 수락·거부 동등</div>
+          </div>
+          <div class="cmp-card">
+            <div class="cmp-region">기타 APAC/LATAM</div>
+            <div><span class="cmp-law apac">국가별 상이</span></div>
+            <div class="cmp-banner-type">경량 배너</div>
+            <div class="cmp-default">기본값: 수락</div>
+          </div>
+        </div>
+        <div class="p2-warn" style="margin-top:8px">
+          <strong>⚠️ D7 확정 사항</strong> — 한국·일본 "비노출" 방식은 폐기. PIPA·APPI 위반 리스크로 간소 옵트인(KR) / 고지형 옵트아웃(JP)으로 확정.
+        </div>
+      </div>
+    </div>
+
+    <!-- ── §9 Phase 1·2 적용 범위 ── -->
+    <div id="sec-9" class="p2-section">
+      <div class="p2-section-hdr">
+        <span class="p2-art-badge">§9</span>
+        <h2>Phase 1·2 적용 범위</h2>
+      </div>
+      <div class="p2-section-body">
+        <div class="p2-table-wrap">
+          <table class="p2-table">
+            <thead>
+              <tr><th>항목</th><th>Phase 1 관련</th><th>Phase 2 관련</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>언어 코드 변환 (Expedia↔KAYAK)</td>
+                <td class="cell-p1">✅ KAYAK API 호출 시 이미 적용</td>
+                <td class="cell-p2">✅ Expedia API 호출 시 동일 규칙 적용 필수</td>
+              </tr>
+              <tr>
+                <td>표시통화 20종</td>
+                <td class="cell-p1">✅ 11-2절 Constants API 기반 구현</td>
+                <td class="cell-p2">✅ Expedia 통화 지원 범위 동일 — 제약 없음</td>
+              </tr>
+              <tr>
+                <td>Expedia 지원 언어 범위</td>
+                <td>참고</td>
+                <td class="cell-p2">✅ Phase 2 개발 시 직접 참조 필수</td>
+              </tr>
+              <tr>
+                <td>AWS 자동 라우팅</td>
+                <td class="cell-infra">인프라 설계 범위</td>
+                <td class="cell-infra">인프라 설계 범위</td>
+              </tr>
+              <tr>
+                <td>CMP (Ketch)</td>
+                <td class="cell-infra">인프라 설계 범위</td>
+                <td class="cell-infra">인프라 설계 범위</td>
+              </tr>
+              <tr>
+                <td>폴백 정책</td>
+                <td class="cell-p1">✅ 11-2절 통화 폴백</td>
+                <td class="cell-p2">✅ 공급사 미지원 언어 폴백 반영 필요</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p2-warn" style="margin-top:16px">
+          <strong>⚠️ 핵심 개발 주의사항 (Phase 2)</strong><br>
+          1. Expedia API 호출 시 언어 코드 포맷: <code>ko-KR</code> → <code>ko_KR</code> (언더스코어 변환 필수)<br>
+          2. Expedia Lodging 미지원 언어로 호출 시 에러 발생 — 7종 범위 외 언어는 <code>en_US</code> 폴백 처리<br>
+          3. KAYAK 호출과 동일하게 User-Agent·고객 IP·userTrackId 전달 필수
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 푸터 ── -->
+    <div class="p2-footer">
+      P2-GLOBAL — 글로벌화 정책 시각화<br>
+      정책 기준: Phase2_정책서_v0.1 제7조 / 원본: 글로벌_다국어_메타서비스_통합기획정책서.docx<br>
+      작성일 2026-06-19 · allmytour meta
+    </div>
+
+  </div><!-- /p2-content -->
+</div><!-- /p2-body -->
+
+<script>
+// 스크롤 기반 목차 활성화
+(function(){
+  var arts = document.querySelectorAll('.p2-toc-art');
+  var secs = Array.from(document.querySelectorAll('.p2-section[id]'));
+  function update(){
+    var pos = window.scrollY + 80;
+    var cur = null;
+    secs.forEach(function(s){if(s.offsetTop<=pos)cur=s.id});
+    arts.forEach(function(a){
+      var href = a.getAttribute('href').replace('#','');
+      a.classList.toggle('active', href === cur);
+    });
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+</body>
+</html>

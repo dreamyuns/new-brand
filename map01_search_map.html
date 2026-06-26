@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MAP01 — 검색결과_지도 뷰 | allmy meta 화면기획서</title>
+<link rel="stylesheet" href="./wf-styles.css">
+<style>
+
+/* ── 지도 화면 전용 m-screen ── */
+.map-m-screen {
+  background: #fff;
+  height: 640px;
+  overflow: hidden;
+  border-radius: 0 0 6px 6px;
+  font-size: 13px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── 상단 고정 바 ── */
+.map-topbar { flex-shrink: 0; background: #fff; }
+
+.map-searchbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.map-sb-summary {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f4f4f2;
+  border-radius: 10px;
+  padding: 8px 11px;
+  min-width: 0;
+  cursor: pointer;
+}
+.map-sb-icon { font-size: 14px; flex-shrink: 0; }
+.map-sb-text { flex: 1; min-width: 0; }
+.map-sb-dest { font-size: 13px; font-weight: 700; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.map-sb-detail { font-size: 10px; color: #9ca3af; margin-top: 1px; }
+.map-sb-chevron { font-size: 11px; color: #9ca3af; flex-shrink: 0; }
+.map-close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f4f4f2;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* 토글 + 필터 바 */
+.map-filterbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-bottom: 1px solid #f0f0f0;
+  overflow-x: auto;
+}
+.map-filterbar::-webkit-scrollbar { display: none; }
+
+/* 필터칩 */
+.map-chip {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 5px 10px;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.map-chip.active { background: #eef2ff; border-color: #4f46e5; color: #4f46e5; }
+
+/* ── 지도 영역 ── */
+.map-area {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background-color: #d6e8d0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* 도로 (시각 요소) */
+.map-road-h {
+  position: absolute;
+  left: 0; right: 0;
+  height: 7px;
+  background: rgba(255,255,255,0.75);
+}
+.map-road-v {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 7px;
+  background: rgba(255,255,255,0.75);
+}
+.map-road-h.wide { height: 11px; }
+.map-road-v.wide { width: 11px; }
+
+/* 지역 레이블 */
+.map-label {
+  position: absolute;
+  font-size: 10px;
+  color: rgba(60,80,40,0.55);
+  font-weight: 700;
+  pointer-events: none;
+  letter-spacing: 0.5px;
+}
+
+/* ── 지도 핀 ── */
+.map-pin {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  background: #fff;
+  border: 1.5px solid #374151;
+  border-radius: 20px;
+  padding: 4px 9px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #111;
+  box-shadow: 0 2px 6px rgba(0,0,0,.18);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.12s;
+}
+.map-pin::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid #374151;
+}
+.map-pin.selected {
+  background: #4f46e5;
+  color: #fff;
+  border-color: #4f46e5;
+  transform: translate(-50%, -100%) scale(1.12);
+  box-shadow: 0 4px 14px rgba(79,70,229,.45);
+  z-index: 10;
+}
+.map-pin.selected::after { border-top-color: #4f46e5; }
+.map-pin.no-price {
+  background: #e9e9e9;
+  color: #b0b0b0;
+  border-color: #d0d0d0;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: default;
+  box-shadow: none;
+}
+.map-pin.no-price::after { border-top-color: #d0d0d0; }
+
+/* ── [이 지역 검색] 버튼 ── */
+.map-rethis {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1a1f2e;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 18px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,.3);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  z-index: 20;
+  white-space: nowrap;
+}
+.map-rethis.disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ── 로딩 오버레이 ── */
+.map-loading-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255,255,255,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+}
+.map-spinner {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 3px solid rgba(79,70,229,.2);
+  border-top-color: #4f46e5;
+}
+
+/* ── 200km 오류 토스트 ── */
+.map-err-toast {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 10px;
+  padding: 9px 14px;
+  z-index: 20;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
+  max-width: 300px;
+}
+.map-err-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.map-err-text { font-size: 11px; font-weight: 600; color: #dc2626; line-height: 1.4; }
+
+/* ── 미니카드 슬라이드 ── */
+.mc-slide-wrap {
+  display: flex;
+  overflow: hidden;
+}
+.mc-inner {
+  flex: 0 0 88%;
+}
+.mc-inner.mc-peek {
+  flex: 0 0 88%;
+  opacity: 0.4;
+  pointer-events: none;
+}
+.mc-dots {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 0 0;
+}
+.mc-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #e5e7eb;
+}
+.mc-dot.active { background: #4f46e5; }
+
+/* ── 미니카드 ── */
+.map-minicard {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  z-index: 25;
+  background: #fff;
+  border-radius: 14px 14px 0 0;
+  padding: 0 12px 16px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,.12);
+}
+.mc-handle-wrap {
+  padding: 8px 0 8px;
+  display: flex;
+  justify-content: center;
+}
+.mc-handle {
+  width: 32px; height: 4px;
+  background: #d1d5db;
+  border-radius: 2px;
+}
+.mc-inner {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.mc-img {
+  width: 72px; height: 72px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  background: #e5e7eb;
+  overflow: hidden;
+  object-fit: cover;
+}
+.mc-img-1 { background: linear-gradient(135deg, #c8d8e8 0%, #7a9bb8 100%); }
+.mc-img-2 { background: linear-gradient(135deg, #d8c8e8 0%, #9a7bb8 100%); }
+.mc-img-3 { background: linear-gradient(135deg, #c8e8d0 0%, #7ab88a 100%); }
+.mc-info { flex: 1; min-width: 0; }
+.mc-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mc-meta {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-bottom: 5px;
+}
+.mc-price {
+  font-size: 15px;
+  font-weight: 800;
+  color: #111;
+}
+.mc-price-sub {
+  font-size: 10px;
+  color: #9ca3af;
+  margin-top: 1px;
+}
+.mc-cta {
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+  white-space: nowrap;
+  line-height: 1.3;
+  text-align: center;
+}
+.mc-no-price .mc-cta { background: #e5e7eb; color: #9ca3af; cursor: default; }
+.mc-no-price .mc-price { color: #9ca3af; font-weight: 500; }
+
+/* ── 지도 공통 two-col ── */
+.map-two-col {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 28px;
+  align-items: start;
+  margin-bottom: 10px;
+}
+
+</style>
+</head>
+<body>
+
+<!-- ── page-nav ── -->
+<nav class="page-nav">
+  <a class="page-nav-back" href="index.html">← 목록으로</a>
+  <span class="page-nav-sep">|</span>
+  <span class="page-nav-title">MAP01 — 검색결과_지도 뷰</span>
+  <span class="page-nav-route">/ S01 [지도] 탭 탭 → URL <code>?layout=map</code></span>
+  <div class="page-nav-nav">
+    <a class="page-nav-pager" href="s01_search.html">← 이전 (S01)</a>
+    <span class="page-nav-pager-disabled">다음 →</span>
+  </div>
+</nav>
+
+<!-- ── TOC ── -->
+<nav class="toc">
+  <div class="toc-inner">
+    <span class="toc-label">목차</span>
+    <a href="#map-a" class="toc-link">MAP-A 기본</a>
+    <span class="toc-sep">·</span>
+    <a href="#map-b" class="toc-link">MAP-B 핀 선택</a>
+    <span class="toc-sep">·</span>
+    <a href="#map-c" class="toc-link">MAP-C 이 지역 검색</a>
+    <span class="toc-sep">·</span>
+    <a href="#map-d" class="toc-link">MAP-D 200km 오류</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- ════════════════════════════════════
+     MAP-A: 초기 진입 (핀 미선택)
+════════════════════════════════════ -->
+<div id="map-a" class="sec-title">
+  <span class="sec-badge">MAP-A</span>지도 뷰 — 기본 진입 (핀 미선택)
+  <span style="font-size:12px;font-weight:400;color:#888">정책서 v0.33 기준</span>
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — MAP01 지도 화면 전체</div>
+  <ul class="sec-policy-list">
+    <li><strong>URL 구조</strong>: S01 URL + <code>?layout=map</code> 파라미터. 별도 HTML 페이지 아님 (5-11-1절)</li>
+    <li><strong>초기 진입 데이터</strong>: <code>/hotels</code> 응답 데이터 재사용. 별도 API 호출 없음 (5-11-1절)</li>
+    <li><strong>핀 데이터 필드</strong>: <code>latitude/longitude</code>, <code>lowestRate</code>, <code>name</code>, <code>guestRating</code>, <code>images[0]</code>, <code>starRating</code> (5-11-3절)</li>
+    <li><strong>가격 없는 핀</strong>: 핀 표시하되 dimmed 처리. 탭 → S02(숙소 상세) 진입 허용. 미니카드에 "가격 정보 없음" + [상세보기] 버튼 표시 (5-11-3절)</li>
+    <li><strong>필터</strong>: S01과 동일 5개, 상태 공유. 목록↔지도 필터 변경 상호 동기화 (5-11-8절)</li>
+    <li><strong>정렬</strong>: 지도 뷰 미제공. <code>popularity</code> 고정 (5-11-8절)</li>
+    <li><strong>GNB</strong>: 미표시. 검색바 + 필터칩 + X 닫기버튼만 (5-11-9절)</li>
+    <li><strong>X 버튼</strong>: <code>?layout=map</code> 제거 → S01 목록 뷰 복귀. 기존 검색 결과 그대로 (5-11-1절)</li>
+    <li><strong>클러스터링</strong>: 클라이언트(Google Maps SDK) 처리 (5-11-2절)</li>
+    <li><strong>범위 제한</strong>: envelope 200km 초과 시 안내 토스트 + API 미호출 (5-11-7절)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.32 5-11절</div>
+</div>
+
+<div class="map-two-col">
+
+  <!-- 모바일 프레임 -->
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="map-m-screen">
+
+        <!-- 상단 고정 바 -->
+        <div class="map-topbar">
+          <!-- 재검색바 + X버튼 -->
+          <div class="map-searchbar">
+            <div class="map-sb-summary">
+              <span class="map-sb-icon">📍</span>
+              <div class="map-sb-text">
+                <div class="map-sb-dest">서울</div>
+                <div class="map-sb-detail">6/18(목) → 6/19(금) · 성인 2명</div>
+              </div>
+              <span class="map-sb-chevron">▾</span>
+            </div>
+            <span class="wf-cn">1</span>
+            <button class="map-close-btn"><span class="wf-cn">3</span>✕</button>
+          </div>
+          <!-- 토글 + 필터칩 -->
+          <div class="map-filterbar">
+            <button class="map-chip"><span class="wf-cn">2</span> 가격범위 ▾</button>
+            <button class="map-chip">성급 ▾</button>
+            <button class="map-chip">숙소유형 ▾</button>
+            <button class="map-chip">브랜드·체인 ▾</button>
+            <button class="map-chip">평점 7.0+</button>
+          </div>
+        </div>
+
+        <!-- 지도 영역 -->
+        <div class="map-area">
+          <!-- 도로 시각화 -->
+          <div class="map-road-h wide" style="top:40%;"></div>
+          <div class="map-road-h" style="top:62%;"></div>
+          <div class="map-road-v wide" style="left:30%;"></div>
+          <div class="map-road-v" style="left:68%;"></div>
+          <!-- 지역 레이블 -->
+          <div class="map-label" style="top:15%;left:10%;">종로구</div>
+          <div class="map-label" style="top:52%;left:40%;">중구</div>
+          <div class="map-label" style="top:72%;left:66%;">성동구</div>
+          <!-- 가격 핀 -->
+          <div class="map-pin" style="left:28%;top:28%;">₩165,000 <span class="wf-cn">4</span></div>
+          <div class="map-pin" style="left:56%;top:22%;">₩189,000</div>
+          <div class="map-pin" style="left:44%;top:48%;">₩123,000</div>
+          <div class="map-pin" style="left:16%;top:60%;">₩245,000</div>
+          <div class="map-pin" style="left:75%;top:50%;">₩312,000</div>
+          <div class="map-pin" style="left:83%;top:30%;">₩98,000</div>
+          <!-- 가격 없는 핀 -->
+          <div class="map-pin no-price" style="left:62%;top:70%;">호텔</div>
+          <div class="map-pin no-price" style="left:40%;top:76%;">호텔</div>
+        </div>
+
+      </div>
+    </div>
+  </div><!-- /mobile-wrap -->
+
+  <!-- 주석 영역 -->
+  <div class="ann">
+    <h3>MAP01 공통 주석 (CN1–CN4)</h3>
+
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">상단 고정 바 구조</div>
+        <div class="ann-desc">
+          <ul>
+            <li>GNB(로고·로그인·전체메뉴) <strong>없음</strong> — 지도 영역 최대화 목적 (Vio 패턴 확정)</li>
+            <li>구성: <strong>재검색바</strong>(검색 조건 축약 표시, 탭 → 조건 수정 패널) + <strong>X 닫기 버튼</strong>(CN3)</li>
+            <li>재검색바는 S01 컴포넌트와 동일 — 목적지·날짜·인원 한 줄 요약</li>
+          </ul>
+        </div>
+        <div class="ann-desc">
+          <strong>MAP01 ↔ S01 목록 동기화 원칙 (v0.29 변경)</strong>
+          <ul>
+            <li><strong>초기 진입 시:</strong> S01 <code>/hotels</code> 응답 데이터 재사용 → 좌표(<code>latitude</code>/<code>longitude</code>) 추출하여 핀 표시. 별도 API 재호출 없음.</li>
+            <li><strong>[이 지역 검색] 탭 시:</strong> 뷰포트 kpolygon으로 <code>/hotels</code> 재호출 → <strong>지도 핀만 업데이트. S01 목록 유지.</strong> (v0.27 A안 연동 → v0.29에서 제외 확정)</li>
+            <li><strong>필터 변경 시:</strong> 지도 필터 = S01 필터 동일 컴포넌트. 변경 시 지도 핀·S01 목록 동시 갱신.</li>
+            <li><strong>X 닫기 → S01 복귀 시:</strong> 원래 검색 조건 기준 목록 그대로 표시 (지도에서 [이 지역 검색] 실행 후에도 목록은 변경 없음).</li>
+          </ul>
+        </div>
+        <div class="ann-front">← S01 URL + <code>?layout=map</code> 파라미터 전환 방식. 별도 라우팅 페이지 아님. 히스토리 스택에 쌓힘.</div>
+        <div class="ann-rule">확정: v0.29 5-11-1절·5-11-6절. [이 지역 검색] 목록 동기화 제외 확정(2026-06-16).</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">필터칩 — 5개 (S01과 동일) ★</div>
+        <div class="ann-desc">
+          <ul>
+            <li><strong>[가격범위]</strong>: <code>minPrice</code> / <code>maxPrice</code>. max = <code>postFilterHighestTotalRate</code> 동적. 탭 → 가격 슬라이더 바텀시트 (S01-D-1과 동일 컴포넌트)</li>
+            <li><strong>[성급]</strong>: <code>starRating</code>. 성급없음(0성) 포함. 탭 → 성급 바텀시트 (S01-D-2와 동일 컴포넌트)</li>
+            <li><strong>[숙소유형]</strong>: <code>propertyTypes</code>. 동적 목록. 탭 → 숙소유형 바텀시트 (S01-D-3과 동일 컴포넌트)</li>
+            <li><strong>[브랜드·체인]</strong>: <code>chains</code>. 동적 목록. 탭 → 브랜드·체인 바텀시트 (S01-D-4와 동일 컴포넌트)</li>
+            <li><strong>[평점 7.0+]</strong>: 즉시 토글 방식 (바텀시트 없음). 탭 ON → <code>guestRatings=7</code> 이상 전체 호출. 탭 OFF → 평점 제한 없음.</li>
+            <li>필터 변경 시 <code>/hotels</code> API 재호출 → 지도 핀 갱신 + S01 목록 동시 갱신.</li>
+            <li>활성된 필터칩: 강조 배경 (파란색 테두리·텍스트). ❌ [무료취소] 없음 (v0.26 확인).</li>
+          </ul>
+        </div>
+        <div class="ann-rule">확정: v0.29 5-11-8절. 2개 → 5개 변경(2026-06-16).</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">X 닫기 버튼</div>
+        <div class="ann-desc">
+          <ul>
+            <li>탭 시 → <code>?layout=map</code> 파라미터 제거 → S01 목록 뷰 복귀</li>
+            <li>S01 [지도 보기] 플로팅 버튼으로 진입했으므로, X버튼이 유일한 뒤로가기 UI. 브라우저 뒤로가기 제스처와도 동일.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">확정: v0.27 5-11-1절</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">지도 핀 — 3종</div>
+        <div class="ann-desc">
+          <ul>
+            <li><strong>가격 핀</strong> (기본): <code>lowestRate</code> 값 표시 (예: ₩123,000). 흰 배경 + 검정 테두리. 탭 → 선택 핀으로 전환 + 미니카드 노출(CN5)</li>
+            <li><strong>선택 핀</strong>: 파란색 강조 + 1.1× 확대. 다른 핀 탭 시 이전 선택 해제.</li>
+            <li><strong>가격 없는 핀</strong>: <code>lowestRate</code> = null인 호텔. 회색 dimmed. 탭 → S02(숙소 상세) 진입. 미니카드에 "가격 정보 없음" + [상세보기] 버튼 표시. 텍스트 "호텔" 표시.</li>
+          </ul>
+        </div>
+        <div class="ann-front">← lowestRate: /hotels 응답 필드. null = 자사 매핑 미완료 또는 판매 중지 호텔</div>
+        <div class="ann-rule">확정: v0.27 5-11-3절·5-11-4절</div>
+      </div>
+    </div>
+
+  </div><!-- /ann -->
+</div><!-- /map-two-col -->
+
+<hr class="sec-divider">
+
+<!-- ════════════════════════════════════
+     MAP-B: 핀 선택 → 미니카드 노출
+════════════════════════════════════ -->
+<div id="map-b" class="sec-title">
+  <span class="sec-badge">MAP-B</span>핀 선택 — 미니카드 슬라이드업
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — MAP-B 핀 선택 미니카드</div>
+  <ul class="sec-policy-list">
+    <li><strong>동작</strong>: 핀 탭 → 선택 핀 강조 + 하단 미니카드 슬라이드업 (5-11-5절)</li>
+    <li><strong>미니카드 이동</strong>: 미니카드 탭 → <code>window.open()</code> S02 새탭 이동 (5-11-9절)</li>
+    <li><strong>미니카드 데이터</strong>: <code>images[0]</code>(72×72) / <code>name</code> / <code>guestRating</code>+<code>numberOfReviews</code> / <code>topRates[isCheapestRate:true].totalRate</code> (5-11-5절)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.32 5-11-5절·5-11-9절</div>
+</div>
+
+<div class="map-two-col">
+
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="map-m-screen">
+
+        <div class="map-topbar">
+          <div class="map-searchbar">
+            <div class="map-sb-summary">
+              <span class="map-sb-icon">📍</span>
+              <div class="map-sb-text">
+                <div class="map-sb-dest">서울</div>
+                <div class="map-sb-detail">6/18(목) → 6/19(금) · 성인 2명</div>
+              </div>
+              <span class="map-sb-chevron">▾</span>
+            </div>
+            <button class="map-close-btn">✕</button>
+          </div>
+          <div class="map-filterbar">
+            <button class="map-chip">가격범위 ▾</button>
+            <button class="map-chip">성급 ▾</button>
+            <button class="map-chip">숙소유형 ▾</button>
+            <button class="map-chip">브랜드·체인 ▾</button>
+            <button class="map-chip">평점 7.0+</button>
+          </div>
+        </div>
+
+        <div class="map-area">
+          <div class="map-road-h wide" style="top:40%;"></div>
+          <div class="map-road-h" style="top:62%;"></div>
+          <div class="map-road-v wide" style="left:30%;"></div>
+          <div class="map-road-v" style="left:68%;"></div>
+          <div class="map-label" style="top:15%;left:10%;">종로구</div>
+          <div class="map-label" style="top:52%;left:40%;">중구</div>
+          <div class="map-label" style="top:72%;left:66%;">성동구</div>
+          <!-- 미선택 핀들 -->
+          <div class="map-pin" style="left:28%;top:28%;">₩165,000</div>
+          <div class="map-pin" style="left:56%;top:22%;">₩189,000</div>
+          <div class="map-pin" style="left:16%;top:60%;">₩245,000</div>
+          <div class="map-pin" style="left:75%;top:50%;">₩312,000</div>
+          <div class="map-pin" style="left:83%;top:30%;">₩98,000</div>
+          <div class="map-pin no-price" style="left:62%;top:70%;">호텔</div>
+          <!-- 선택된 핀 -->
+          <div class="map-pin selected" style="left:44%;top:48%;">₩123,000</div>
+
+          <!-- 미니카드 (슬라이드업 + 좌우 스와이프) -->
+          <div class="map-minicard">
+            <div class="mc-handle-wrap"><div class="mc-handle"></div></div>
+            <!-- 슬라이드 래퍼 -->
+            <div class="mc-slide-wrap">
+              <!-- 현재 카드 (선택 핀) -->
+              <div class="mc-inner">
+                <div class="mc-img mc-img-1"></div>
+                <div class="mc-info">
+                  <div class="mc-name">그랜드 하얏트 서울 <span class="wf-cn">5</span></div>
+                  <div class="mc-meta">★ 8.9 · 2,438개 리뷰 <span class="wf-cn">6</span></div>
+                  <div class="mc-price">₩312,620 <span class="wf-cn">7</span></div>
+                  <div class="mc-price-sub">/ 1박 · 세금 포함</div>
+                </div>
+                <button class="mc-cta">상세보기<br>→ <span class="wf-cn">8</span></button>
+              </div>
+              <!-- 다음 카드 (오른쪽 8% 미리보기) -->
+              <div class="mc-inner mc-peek">
+                <div class="mc-img mc-img-2"></div>
+                <div class="mc-info">
+                  <div class="mc-name">서울신라호텔</div>
+                  <div class="mc-meta">★ 9.1 · 1,890개 리뷰</div>
+                  <div class="mc-price">₩189,000</div>
+                  <div class="mc-price-sub">/ 1박 · 세금 포함</div>
+                </div>
+                <button class="mc-cta">상세보기<br>→</button>
+              </div>
+            </div>
+            <!-- 페이지 도트 (총 6개 핀 중 1번째) -->
+            <div class="mc-dots">
+              <div class="mc-dot active"></div>
+              <div class="mc-dot"></div>
+              <div class="mc-dot"></div>
+              <div class="mc-dot"></div>
+              <div class="mc-dot"></div>
+              <div class="mc-dot"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <h3>MAP-B 주석 (CN5)</h3>
+
+    <div class="ann-item">
+      <div class="cn">5</div>
+      <div class="ann-body">
+        <div class="ann-title">미니카드 — 핀 탭 시 하단 슬라이드업 + 좌우 스와이프</div>
+        <div class="ann-desc">
+          <ul>
+            <li>핀 탭 → 선택 핀 강조(CN4) + 미니카드 하단에서 슬라이드업</li>
+            <li>빈 지도 영역 탭 → 미니카드 닫힘, 핀 선택 해제</li>
+            <li>다른 핀 탭 → 미니카드 내용 즉시 해당 핀으로 교체 (닫힘 없이)</li>
+          </ul>
+        </div>
+        <div class="ann-desc">
+          <strong>좌우 스와이프 동작:</strong>
+          <ul>
+            <li><strong>스와이프 순서: S01 목록에 표시된 순서와 동일</strong> — 현재 정렬 기준(인기순·가격순 등)을 그대로 따름. 별도 순서 로직 없음.</li>
+            <li>예: S01 목록 1번째 카드 = 미니카드 첫 번째. 정렬을 바꾸면 슬라이드 순서도 함께 변경됨.</li>
+            <li>카드 전환 시 → 해당 호텔의 지도 핀도 동시에 선택 상태로 변경, 지도가 해당 핀 중심으로 이동</li>
+            <li>오른쪽에 다음 카드 일부 미리보기(8%)로 스와이프 가능함을 인지시킴</li>
+            <li>하단 도트 표시: 현재 위치(N번째) 및 전체 카드 수 표시</li>
+          </ul>
+        </div>
+        <div class="ann-desc">
+          미니카드 표시 항목 ★(v0.29: 이미지·리뷰 수 추가):
+          <table style="font-size:11px;border-collapse:collapse;width:100%;margin-top:4px;">
+            <tr style="background:#f9fafb;">
+              <th style="padding:4px 6px;border:1px solid #e5e7eb;text-align:left;">CN</th>
+              <th style="padding:4px 6px;border:1px solid #e5e7eb;text-align:left;">UI 항목</th>
+              <th style="padding:4px 6px;border:1px solid #e5e7eb;text-align:left;">API 필드</th>
+            </tr>
+            <tr>
+              <td style="padding:4px 6px;border:1px solid #e5e7eb;">—</td>
+              <td style="padding:4px 6px;border:1px solid #e5e7eb;">호텔 이미지 ★</td>
+              <td style="padding:4px 6px;border:1px solid #e5e7eb;font-family:monospace;">images[0] (v0.29 추가)</td>
+            </tr>
+            <tr>
+              <td style="padding:4px 6px;border:1px solid #e5e7eb;">5</td>
+              <td style="padding:4px 6px;border:1px solid #e5e7eb;">호텔명</td>
+              <td style="padding:4px 6px;border:1px solid #e5e7eb;font-family:monospace;">name / translatedName</td>
+            </tr>
+            <tr>
+              <td style="padding:4px 6px;border:1px solid #e5e7eb;">6</td>
+              <td style="padding:4px 6px;border:1px solid #e5e7eb;">평점 + 리뷰 수 ★</td>
+              <td style="padding:4px 6px;border:1px solid #e5e7eb;font-family:monospace;">guestRating + numberOfReviews</td>
+            </tr>
+            <tr>
+              <td style="padding:4px 6px;border:1px solid #e5e7eb;">7</td>
+              <td style="padding:4px 6px;border:1px solid #e5e7eb;">최저가</td>
+              <td style="padding:4px 6px;border:1px solid #e5e7eb;font-family:monospace;">topRates[isCheapestRate:true].totalRate</td>
+            </tr>
+            <tr>
+              <td style="padding:4px 6px;border:1px solid #e5e7eb;">8</td>
+              <td style="padding:4px 6px;border:1px solid #e5e7eb;">[상세보기 →]</td>
+              <td style="padding:4px 6px;border:1px solid #e5e7eb;font-family:monospace;">→ S02 진입</td>
+            </tr>
+          </table>
+        </div>
+        <div class="ann-desc">
+          <ul>
+            <li><strong>호텔 이미지 (★ v0.29 추가):</strong> <code>images[0]</code> (Static Data Feeds 캐시). 없거나 에러 시 회색 플레이스홀더.</li>
+            <li><strong>평점 + 리뷰 수 (★ v0.29 추가):</strong> "★ N.N · M,MMM개 리뷰" 형식 (예: ★ 8.9 · 2,438개 리뷰).</li>
+            <li><strong>[상세보기 →] 버튼</strong>: 탭 → S02(숙소 상세) 진입. 새탭(<code>window.open()</code>) 방식.</li>
+            <li><strong>가격 없는 핀(no-price)</strong>: 미니카드 표시. 가격 영역에 "가격 정보 없음" 표시. [상세보기] 버튼은 활성 → 탭 시 S02 진입.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">확정: v0.29 5-11-5절 / v0.32 가격 없는 핀 S02 진입 허용.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════════════════════════════════════
+     MAP-C: 드래그/줌 후 [이 지역 검색] 표시
+════════════════════════════════════ -->
+<div id="map-c" class="sec-title">
+  <span class="sec-badge">MAP-C</span>지도 이동 후 — [이 지역 검색] 버튼 표시
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — MAP-C [이 지역 검색]</div>
+  <ul class="sec-policy-list">
+    <li><strong>표시 조건</strong>: 드래그·줌 변경 후 뷰포트가 초기 검색 기준과 달라졌을 때 (5-11-6절)</li>
+    <li><strong>재호출</strong>: 뷰포트 <code>kpolygon</code> 변환 → <code>/hotels</code> 재호출. <code>pageSize=50</code>, <code>sortBy=popularity</code> 고정 (5-11-6절)</li>
+    <li><strong>결과 반영</strong>: 지도 핀만 업데이트. S01 목록 변경 없음 (v0.29 확정) (5-11-6절)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.32 5-11-6절</div>
+</div>
+
+<div class="map-two-col">
+
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="map-m-screen">
+
+        <div class="map-topbar">
+          <div class="map-searchbar">
+            <div class="map-sb-summary">
+              <span class="map-sb-icon">📍</span>
+              <div class="map-sb-text">
+                <div class="map-sb-dest">서울</div>
+                <div class="map-sb-detail">6/18(목) → 6/19(금) · 성인 2명</div>
+              </div>
+              <span class="map-sb-chevron">▾</span>
+            </div>
+            <button class="map-close-btn">✕</button>
+          </div>
+          <div class="map-filterbar">
+            <button class="map-chip">가격범위 ▾</button>
+            <button class="map-chip">성급 ▾</button>
+            <button class="map-chip">숙소유형 ▾</button>
+            <button class="map-chip">브랜드·체인 ▾</button>
+            <button class="map-chip">평점 7.0+</button>
+          </div>
+        </div>
+
+        <div class="map-area">
+          <!-- 드래그된 지도 (다른 지역으로 이동된 상태) -->
+          <div class="map-road-h wide" style="top:35%;"></div>
+          <div class="map-road-h" style="top:58%;"></div>
+          <div class="map-road-v wide" style="left:40%;"></div>
+          <div class="map-road-v" style="left:72%;"></div>
+          <div class="map-label" style="top:12%;left:18%;">마포구</div>
+          <div class="map-label" style="top:48%;left:50%;">용산구</div>
+          <div class="map-label" style="top:68%;left:72%;">서초구</div>
+          <!-- 이동된 지역 핀들 -->
+          <div class="map-pin" style="left:22%;top:25%;">₩143,000</div>
+          <div class="map-pin" style="left:50%;top:18%;">₩219,000</div>
+          <div class="map-pin" style="left:36%;top:45%;">₩178,000</div>
+          <div class="map-pin" style="left:68%;top:38%;">₩95,000</div>
+          <div class="map-pin no-price" style="left:78%;top:60%;">호텔</div>
+
+          <!-- [이 지역 검색] 버튼 -->
+          <button class="map-rethis"><span class="wf-cn">6</span>🔍 이 지역 검색</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <h3>MAP-C 주석 (CN6)</h3>
+
+    <div class="ann-item">
+      <div class="cn">6</div>
+      <div class="ann-body">
+        <div class="ann-title">[이 지역 검색] 버튼</div>
+        <div class="ann-desc">
+          <ul>
+            <li><strong>표시 조건</strong>: 지도 드래그 또는 줌 변경 후 뷰포트가 초기 검색 기준에서 변경되었을 때 상단 중앙에 표시</li>
+            <li><strong>초기 진입 시 (MAP-A)</strong>: 버튼 숨김</li>
+            <li><strong>동작</strong>: 버튼 탭 → 현재 뷰포트 좌표를 <code>kpolygon</code>으로 변환 → <code>/hotels</code> 재호출</li>
+            <li><strong>S01 목록 동기화 — 제외 확정 (★ v0.29 변경)</strong>: [이 지역 검색] 탭 시 <strong>지도 핀만 업데이트. S01 목록은 변경하지 않음.</strong> (v0.27 A안 동시 연동 → v0.29에서 제외 확정)</li>
+            <li>재호출 중: 버튼 비활성 + 지도 위 로딩 스피너 오버레이</li>
+            <li>재호출 완료: 새 뷰포트 기준 핀 업데이트 + 버튼 숨김</li>
+            <li>X 닫기 → S01 복귀 시: 원래 검색 조건 기준 목록 그대로 표시 (지도 이동 후 [이 지역 검색] 실행해도 목록은 변경 없음)</li>
+          </ul>
+        </div>
+        <div class="ann-front">← <code>pageSize=50</code>, <code>sortBy=popularity</code>. 지도 뷰 전용 설정.</div>
+        <div class="ann-rule">확정: v0.29 5-11-6절·5-11-7절. 목록 동기화 제외(2026-06-16).</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════════════════════════════════════
+     MAP-D: 200km 초과 오류
+════════════════════════════════════ -->
+<div id="map-d" class="sec-title">
+  <span class="sec-badge">MAP-D</span>200km 초과 — 오류 토스트 표시
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — MAP-D 범위 초과</div>
+  <ul class="sec-policy-list">
+    <li><strong>발생 조건</strong>: [이 지역 검색] 탭 시 envelope이 200km 초과 (5-11-7절)</li>
+    <li><strong>처리</strong>: API 미호출. [이 지역 검색] 버튼 dimmed 비활성. 오류 토스트 표시 (5-11-7절)</li>
+    <li><strong>안내 문구</strong>: "지도를 더 확대하고 [이 지역 검색]을 탭해 주세요" (5-11-7절)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.32 5-11-7절</div>
+</div>
+
+<div class="map-two-col">
+
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="map-m-screen">
+
+        <div class="map-topbar">
+          <div class="map-searchbar">
+            <div class="map-sb-summary">
+              <span class="map-sb-icon">📍</span>
+              <div class="map-sb-text">
+                <div class="map-sb-dest">서울</div>
+                <div class="map-sb-detail">6/18(목) → 6/19(금) · 성인 2명</div>
+              </div>
+              <span class="map-sb-chevron">▾</span>
+            </div>
+            <button class="map-close-btn">✕</button>
+          </div>
+          <div class="map-filterbar">
+            <button class="map-chip">가격범위 ▾</button>
+            <button class="map-chip">성급 ▾</button>
+            <button class="map-chip">숙소유형 ▾</button>
+            <button class="map-chip">브랜드·체인 ▾</button>
+            <button class="map-chip">평점 7.0+</button>
+          </div>
+        </div>
+
+        <div class="map-area">
+          <!-- 멀리 줌아웃된 상태 — 핀이 매우 드문드문 -->
+          <div class="map-road-h" style="top:50%;"></div>
+          <div class="map-road-v" style="left:50%;"></div>
+          <div class="map-label" style="top:20%;left:8%;">경기도</div>
+          <div class="map-label" style="top:45%;left:42%;">서울</div>
+          <div class="map-label" style="top:68%;left:65%;">인천</div>
+          <!-- 핀들 (넓은 범위에 드문드문) -->
+          <div class="map-pin" style="left:42%;top:44%;font-size:9px;padding:3px 7px;">₩123,000</div>
+          <div class="map-pin" style="left:58%;top:39%;font-size:9px;padding:3px 7px;">₩189,000</div>
+          <div class="map-pin no-price" style="left:25%;top:30%;font-size:9px;padding:3px 7px;">호텔</div>
+
+          <!-- [이 지역 검색] 비활성 버튼 -->
+          <button class="map-rethis disabled">🔍 이 지역 검색</button>
+
+          <!-- 오류 토스트 — [이 지역 검색] 버튼 아래 -->
+          <div class="map-err-toast" style="top:52px;">
+            <span class="map-err-icon">⚠️</span>
+            <div class="map-err-text">
+              <span class="wf-cn">7</span>
+              지도를 더 확대하고 [이 지역 검색]을 탭해 주세요
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <h3>MAP-D 주석 (CN7)</h3>
+
+    <div class="ann-item">
+      <div class="cn">7</div>
+      <div class="ann-body">
+        <div class="ann-title">200km 초과 오류 처리</div>
+        <div class="ann-desc">
+          <ul>
+            <li><strong>발생 조건</strong>: [이 지역 검색] 탭 시 뷰포트 envelope이 200km를 초과하는 경우</li>
+            <li><strong>API 처리</strong>: <code>/hotels</code> 호출 없음 — 클라이언트에서 거리 계산 후 차단</li>
+            <li><strong>[이 지역 검색] 버튼</strong>: dimmed 상태로 표시 (비활성, 탭 불가)</li>
+            <li><strong>오류 문구</strong>: "지도를 더 확대하고 [이 지역 검색]을 탭해 주세요"</li>
+            <li>오류 토스트 자동 닫힘 없음 — 사용자가 줌인하면 토스트 사라짐 + 버튼 활성화</li>
+          </ul>
+        </div>
+        <div class="ann-front">← 200km 기준: kpolygon envelope의 최대 거리. KAYAK API 스펙 기준.</div>
+        <div class="ann-rule">확정: v0.27 5-11-9절</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /page -->
+</body>
+</html>

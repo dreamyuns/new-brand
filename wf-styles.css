@@ -1,0 +1,109 @@
+/* allmytour 신규서비스 Front Wireframe — 공유 스타일시트 v1.1 */
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Malgun Gothic","Segoe UI",Arial,sans-serif;background:#f0f0eb;color:#1a1a1a;font-size:14px}
+a{color:inherit;text-decoration:none}
+
+/* ── Page Nav (상단 고정) ── */
+.page-nav{position:fixed;top:0;left:0;right:0;background:#1a1f2e;z-index:200;padding:0 24px;display:flex;align-items:center;height:42px;gap:14px}
+.page-nav-back{color:#ff6b00;font-size:12px;font-weight:700;padding:4px 12px;border:1px solid #ff6b00;border-radius:4px;white-space:nowrap}
+.page-nav-back:hover{background:#ff6b00;color:#fff}
+.page-nav-nav{margin-left:auto;display:flex;gap:6px;align-items:center}
+.page-nav-pager{color:#ff6b00;font-size:12px;font-weight:700;padding:4px 10px;border:1px solid rgba(255,107,0,.5);border-radius:4px;white-space:nowrap}
+.page-nav-pager:hover{background:#ff6b00;color:#fff}
+.page-nav-pager-disabled{color:rgba(255,255,255,.2);font-size:12px;padding:4px 10px;border:1px solid rgba(255,255,255,.08);border-radius:4px;white-space:nowrap;cursor:default}
+.page-nav-title{color:#fff;font-size:13px;font-weight:700}
+.page-nav-route{color:rgba(255,255,255,.4);font-size:11px;margin-left:4px}
+.page-nav-sep{color:rgba(255,255,255,.2)}
+
+/* ── TOC (목차 — page-nav 바로 아래 고정) ── */
+.toc{position:fixed;top:42px;left:0;right:0;background:#252b3b;z-index:190;border-bottom:1px solid rgba(255,255,255,.06)}
+.toc-inner{display:flex;align-items:center;gap:4px;padding:0 24px;height:34px;overflow-x:auto;white-space:nowrap}
+.toc-inner::-webkit-scrollbar{display:none}
+.toc-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.5px;margin-right:6px;flex-shrink:0}
+.toc-link{padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;color:rgba(255,255,255,.55);text-decoration:none;flex-shrink:0;transition:background .15s,color .15s}
+.toc-link:hover{background:rgba(255,107,0,.2);color:#ff6b00}
+.toc-link.active{background:#ff6b00;color:#fff}
+.toc-sep{width:1px;height:14px;background:rgba(255,255,255,.12);flex-shrink:0;margin:0 4px}
+
+/* ── Page wrapper ── */
+.page{margin-top:76px;padding:28px 32px;max-width:1800px;margin-left:auto;margin-right:auto}
+
+/* ── Section ── */
+.sec-title{font-size:18px;font-weight:700;color:#1a1f2e;padding-bottom:12px;border-bottom:2px solid #ff6b00;margin-bottom:22px;display:flex;align-items:center;gap:12px}
+.sec-badge{background:#ff6b00;color:#fff;font-size:11px;padding:3px 10px;border-radius:99px;font-weight:700}
+.sec-sub{font-size:12px;color:#888;margin-bottom:20px;line-height:1.6}
+
+/* ── Two column ── */
+.two-col{display:grid;grid-template-columns:60% 38%;gap:24px;align-items:start}
+
+/* ── Wireframe shell ── */
+.wf{border:1px solid #d0d0c8;border-radius:8px;overflow:hidden;background:#fafaf8}
+
+/* WF Components */
+.wf-btn{display:inline-block;padding:6px 14px;border-radius:4px;font-size:11px;font-weight:700;border:1.5px solid #bbb;background:#fff;color:#444;cursor:pointer}
+.wf-btn-primary{background:#ff6b00;color:#fff;border-color:#ff6b00}
+.wf-btn-sm{padding:3px 9px;font-size:10px}
+.wf-btn-outline{background:#fff;color:#ff6b00;border-color:#ff6b00}
+.wf-btn-ghost{background:#f5f5f5;color:#666;border-color:#ddd}
+.wf-btn-danger{color:#e74c3c;border-color:#e74c3c}
+
+.wf-input{border:1px solid #ccc;border-radius:4px;padding:5px 10px;font-size:11px;background:#fff;color:#333;width:100%}
+.wf-select{border:1px solid #ccc;border-radius:4px;padding:5px 10px;font-size:11px;background:#fff;color:#333}
+.wf-hint{font-size:10px;color:#999;margin-top:3px;line-height:1.5}
+
+/* Badge */
+.wf-badge{display:inline-block;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:600}
+.bg-free{background:#d1fae5;color:#065f46}
+.bg-meal{background:#dbeafe;color:#1e3a8a}
+.bg-awesome{background:#fff3e8;color:#c04a00}
+.bg-lowest{background:#ff6b00;color:#fff}
+.bg-guest{background:#e5e7eb;color:#374151}
+
+/* Callout number ON wireframe */
+.wf-cn{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;min-width:17px;background:#e53e3e;color:#fff;border-radius:50%;font-size:9px;font-weight:700;margin-left:4px;vertical-align:middle;position:relative;top:-1px}
+
+/* Price display */
+.price-big{font-size:18px;font-weight:800;color:#111}
+.price-blur{background:#ccc;color:#ccc;border-radius:3px;user-select:none;display:inline-block;filter:blur(4px)}
+.price-label{font-size:10px;color:#aaa}
+.price-orange{color:#ff6b00}
+
+/* ── Annotation Panel ── */
+.ann{background:#fff;border-radius:8px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.ann h3{font-size:15px;font-weight:700;color:#1a1f2e;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid #e8e8e2}
+.ann-item{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #f0f0eb;display:flex;gap:10px;align-items:flex-start}
+.ann-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.cn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;min-width:22px;background:#e53e3e;color:#fff;border-radius:50%;font-size:11px;font-weight:700;margin-top:1px}
+.ann-body{flex:1}
+.ann-title{font-size:14px;font-weight:700;color:#1a1f2e;margin-bottom:4px}
+.ann-desc{font-size:13px;color:#444;line-height:1.65}
+.ann-desc ul{margin:4px 0 0;padding-left:0;list-style:none}
+.ann-desc ul li{position:relative;padding-left:12px;margin-bottom:5px;font-size:13px;color:#444;line-height:1.65}
+.ann-desc ul li::before{content:"·";position:absolute;left:0;color:#9ca3af;font-weight:700}
+.ann-desc ul li:last-child{margin-bottom:0}
+.ann-desc code{font-family:'SFMono-Regular',Consolas,monospace;font-size:11.5px;background:#f1f5f9;color:#0f172a;padding:1px 5px;border-radius:3px;border:1px solid #e2e8f0}
+.ann-front{margin-top:6px;font-size:12px;color:#0e7490;background:#ecfeff;padding:5px 9px;border-radius:3px;border-left:2px solid #0e7490;line-height:1.6}
+.ann-rule{margin-top:5px;font-size:12px;color:#92400e;background:#fefce8;padding:5px 9px;border-radius:3px;border-left:2px solid #fde68a;line-height:1.6}
+.ann-case{margin-top:5px;font-size:12px;color:#1e3a8a;background:#eff6ff;padding:5px 9px;border-radius:3px;border-left:2px solid #93c5fd;line-height:1.6}
+
+/* Divider */
+.sec-divider{border:none;border-top:2px dashed #e0e0da;margin:36px 0}
+
+/* ── Section Common Policy Block ── */
+.sec-policy{background:#f0fdf4;border:1px solid #bbf7d0;border-left:3px solid #16a34a;border-radius:6px;padding:12px 14px;margin:8px 0 16px}
+.sec-policy-hdr{font-size:12px;font-weight:700;color:#166534;margin-bottom:8px;display:flex;align-items:center;gap:4px}
+.sec-policy-list{margin:0;padding:0;list-style:none}
+.sec-policy-list li{font-size:12px;color:#374151;padding-left:12px;position:relative;margin-bottom:4px;line-height:1.65}
+.sec-policy-list li::before{content:"·";position:absolute;left:0;color:#16a34a;font-weight:700}
+.sec-policy-list li:last-child{margin-bottom:0}
+.sec-policy-list code{font-family:'SFMono-Regular',Consolas,monospace;font-size:11px;background:#dcfce7;color:#14532d;padding:1px 4px;border-radius:3px}
+.sec-policy-list strong{color:#1a1f2e}
+.sec-policy-rule{margin-top:8px;font-size:11px;color:#166534;padding-top:6px;border-top:1px solid #bbf7d0}
+
+/* State chips */
+.state-chip{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;margin-right:4px}
+.state-guest{background:#e5e7eb;color:#374151}
+.state-regular{background:#dbeafe;color:#1e3a8a}
+.state-awesome{background:#fff3e8;color:#c04a00}

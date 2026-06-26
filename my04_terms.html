@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MY04 — 약관 | allmy meta 화면기획서</title>
+<link rel="stylesheet" href="./wf-styles.css">
+<style>
+.two-col { grid-template-columns: 480px 1fr; gap: 28px; }
+
+/* ── 모바일 프레임 (my03 패턴) ── */
+.mobile-wrap {
+  display: flex; justify-content: center; align-items: flex-start;
+  padding: 20px 16px; background: #2a2a2a; border-radius: 8px; min-height: 560px;
+}
+.mobile-device {
+  width: 375px; background: #1a1f2e; border-radius: 44px; padding: 10px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 20px 50px rgba(0,0,0,.5);
+}
+.m-notch { height: 22px; background: #111; border-radius: 11px 11px 0 0; display: flex; align-items: center; justify-content: center; }
+.m-notch-pill { width: 68px; height: 13px; background: #111; border-radius: 7px; }
+.m-screen {
+  background: #f8f8f6; height: 640px; overflow: hidden;
+  border-radius: 0 0 6px 6px; font-size: 13px; position: relative;
+  display: flex; flex-direction: column;
+}
+
+/* ── GNB (MY 하위) ── */
+.my-gnb {
+  flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 14px; background: #fff; border-bottom: 1px solid #f0f0f0;
+  height: 45px;
+}
+.my-gnb-back {
+  width: 32px; height: 32px; background: #f5f5f5; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; border: none; color: #333; cursor: pointer;
+}
+.my-gnb-title {
+  flex: 1; text-align: center; font-size: 14px; font-weight: 800; color: #111;
+}
+.my-gnb-icon {
+  width: 32px; height: 32px; background: #f0f0f0; border: 1px solid #e5e7eb;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; cursor: pointer; color: #333;
+}
+
+/* ── 스크롤 영역 ── */
+.my-scroll { flex: 1; overflow-y: auto; overflow-x: hidden; }
+.my-scroll::-webkit-scrollbar { display: none; }
+
+/* ── 약관 목록 ── */
+.terms-list { background: #fff; }
+.terms-item {
+  display: flex; align-items: center; padding: 16px;
+  border-bottom: 1px solid #f5f5f5; cursor: pointer;
+}
+.terms-item:last-child { border-bottom: none; }
+.terms-item-body { flex: 1; min-width: 0; }
+.terms-item-name { font-size: 14px; font-weight: 600; color: #1a1a1a; margin-bottom: 3px; }
+.terms-item-date { font-size: 11px; color: #9ca3af; }
+.terms-item-consent { font-size: 11px; color: #059669; font-weight: 600; margin-top: 3px; }
+.terms-item-arrow { color: #c4c4c0; font-size: 18px; flex-shrink: 0; margin-left: 8px; line-height: 1; }
+
+/* ── 약관 뷰어 헤더 ── */
+.viewer-header {
+  padding: 14px 16px; border-bottom: 1px solid #f0f0f0; background: #fff;
+  flex-shrink: 0;
+}
+.viewer-title { font-size: 15px; font-weight: 800; color: #1a1a1a; margin-bottom: 3px; }
+.viewer-date { font-size: 11px; color: #9ca3af; }
+
+/* ── 약관 본문 ── */
+.viewer-body {
+  padding: 14px 16px; font-size: 12px; color: #374151; line-height: 1.75;
+  background: #fff; overflow-y: auto;
+}
+.viewer-body::-webkit-scrollbar { display: none; }
+.viewer-body p { margin-bottom: 10px; }
+.viewer-body p:last-child { margin-bottom: 0; }
+.viewer-body h4 { font-size: 12px; font-weight: 700; color: #1a1a1a; margin: 14px 0 5px; }
+.viewer-body h4:first-child { margin-top: 0; }
+
+/* ── 동의이력 바 (케이스 E) ── */
+.consent-bar {
+  padding: 13px 16px; background: #f0fdf4; border-top: 1px solid #bbf7d0;
+  flex-shrink: 0;
+}
+.consent-bar-label { font-size: 10px; font-weight: 700; color: #166534; letter-spacing: .04em; margin-bottom: 3px; }
+.consent-bar-date { font-size: 13px; font-weight: 700; color: #065f46; }
+</style>
+</head>
+<body>
+
+<!-- ════ Page Nav ════ -->
+<nav class="page-nav">
+  <a href="index.html" class="page-nav-back">← 목록으로</a>
+  <span class="page-nav-title">MY04 — 약관</span>
+  <span class="page-nav-route">my04_terms.html</span>
+  <div class="page-nav-nav">
+    <a href="my03_account.html" class="page-nav-pager">← 이전</a>
+    <span class="page-nav-pager-disabled">다음 →</span>
+  </div>
+</nav>
+
+<!-- ════ TOC ════ -->
+<nav class="toc">
+  <div class="toc-inner">
+    <span class="toc-label">MY04</span>
+    <a href="#a" class="toc-link active">A — 목록(비로그인)</a>
+    <span class="toc-sep"></span>
+    <a href="#b" class="toc-link">B — 목록(로그인·동의O)</a>
+    <span class="toc-sep"></span>
+    <a href="#c" class="toc-link">C — 목록(로그인·동의X)</a>
+    <span class="toc-sep"></span>
+    <a href="#d" class="toc-link">D — 뷰어(이용약관)</a>
+    <span class="toc-sep"></span>
+    <a href="#e" class="toc-link">E — 뷰어(마케팅·로그인)</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- ════ A: 약관 목록 — 비로그인 ════ -->
+<div id="a" class="sec-title">
+  <span class="sec-badge">MY04-A</span>약관 목록 — 비로그인
+  <span style="font-size:12px;font-weight:400;color:#888">— 로그인 + 마케팅 미동의 시에도 동일 UI</span>
+</div>
+<div class="sec-sub">MY01 마이페이지 > [약관] 탭 진입 · 3개 항목 · 마케팅 동의 이력 미표시</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — MY04 약관 목록·뷰어 전체</div>
+  <ul class="sec-policy-list">
+    <li><strong>진입</strong>: MY01 마이페이지 > [약관] 탭 → MY04 전체화면 전환 (비로그인·로그인 공통)</li>
+    <li><strong>GNB</strong>: ← 뒤로가기만 · 타이틀 중앙 고정 · [로그인]·[☰] 없음 (MY 하위 화면 패턴)</li>
+    <li><strong>항목 구성</strong>: 이용약관 / 개인정보처리방침 / 마케팅 수신 동의 — 로그인 여부 무관 항상 3개 표시</li>
+    <li><strong>마케팅 동의 이력</strong>: 로그인 + 동의 완료 시에만 날짜 표시 · 비로그인·미동의 시 미표시 ("미동의" 문구 없음)</li>
+    <li><strong>약관 소스</strong>: MVP=하드코딩 · 이후 백엔드 API 전환 예정</li>
+    <li><strong>동의 상태 변경</strong>: 이 화면에서 제공 안 함 → MY03 계정관리에서만 처리</li>
+  </ul>
+  <div class="sec-policy-rule">기준: 2026-06-19 논의 확정 — 별도 정책서 없음</div>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- GNB -->
+        <div class="my-gnb">
+          <button class="my-gnb-back">← <span class="wf-cn">1</span></button>
+          <div class="my-gnb-title">약관</div>
+          <button class="my-gnb-icon">☰</button>
+        </div>
+
+        <!-- 스크롤 영역 -->
+        <div class="my-scroll">
+          <div class="terms-list">
+
+            <div class="terms-item">
+              <div class="terms-item-body">
+                <div class="terms-item-name">이용약관 <span class="wf-cn">2</span></div>
+                <div class="terms-item-date">시행일: 2026.01.15</div>
+              </div>
+              <span class="terms-item-arrow">&#8250;</span>
+            </div>
+
+            <div class="terms-item">
+              <div class="terms-item-body">
+                <div class="terms-item-name">개인정보처리방침 <span class="wf-cn">2</span></div>
+                <div class="terms-item-date">시행일: 2026.01.15</div>
+              </div>
+              <span class="terms-item-arrow">&#8250;</span>
+            </div>
+
+            <div class="terms-item">
+              <div class="terms-item-body">
+                <div class="terms-item-name">마케팅 수신 동의 <span class="wf-cn">3</span></div>
+                <div class="terms-item-date">시행일: 2026.01.15</div>
+                <!-- 비로그인 / 미동의: 동의 이력 날짜 미표시 -->
+              </div>
+              <span class="terms-item-arrow">&#8250;</span>
+            </div>
+
+          </div>
+        </div><!-- /my-scroll -->
+
+      </div><!-- /m-screen -->
+    </div><!-- /mobile-device -->
+  </div><!-- /mobile-wrap -->
+
+  <div class="ann">
+    <h3>MY04 — 약관 목록 주석</h3>
+
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">← 뒤로가기</div>
+        <div class="ann-desc">
+          <ul>
+            <li>탭 시 MY01 마이페이지로 복귀</li>
+            <li>[☰] 버튼: MY 하위 공통 표시. 탭 시 MY01으로 이동 (전체메뉴 드롭다운 없음)</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 v0.15 · MY01~MY04 공통 GNB 패턴</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">이용약관 / 개인정보처리방침</div>
+        <div class="ann-desc">
+          <ul>
+            <li>항목명 + 시행일 표시</li>
+            <li>탭 → 약관 뷰어 전체화면 전환 (케이스 D)</li>
+            <li>시행일: MVP 하드코딩 (이후 API 필드로 대체)</li>
+          </ul>
+        </div>
+        <div class="ann-front">개발: MVP 하드코딩 → 이후 API 응답 기반 전환 시 시행일 필드 그대로 사용</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">마케팅 수신 동의</div>
+        <div class="ann-desc">
+          <ul>
+            <li>항목은 로그인 여부 무관 항상 표시</li>
+            <li>동의 이력 날짜: <strong>로그인 + 동의 완료 시에만</strong> 항목명 아래 표시 (케이스 B)</li>
+            <li>비로그인 또는 미동의: 날짜 없이 시행일만 (이 케이스, 케이스 C)</li>
+            <li>탭 → 약관 뷰어 전체화면 전환 (케이스 D/E)</li>
+          </ul>
+        </div>
+        <div class="ann-case">A (비로그인) · C (로그인+미동의): 날짜 미표시 — 동일 UI<br>B (로그인+동의O): 동의 이력 날짜 표시</div>
+        <div class="ann-rule">동의 상태 변경은 MY03 계정관리에서만 처리</div>
+      </div>
+    </div>
+
+  </div><!-- /ann -->
+</div><!-- /two-col -->
+
+<hr class="sec-divider">
+
+<!-- ════ B: 약관 목록 — 로그인 + 마케팅 동의 완료 ════ -->
+<div id="b" class="sec-title">
+  <span class="sec-badge">MY04-B</span>약관 목록 — 로그인 · 마케팅 동의 완료
+</div>
+<div class="sec-sub">로그인 상태 + 마케팅 수신 동의 완료 · 마케팅 항목에 동의 이력 날짜 표시</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <div class="my-gnb">
+          <button class="my-gnb-back">←</button>
+          <div class="my-gnb-title">약관</div>
+          <button class="my-gnb-icon">☰</button>
+        </div>
+
+        <div class="my-scroll">
+          <div class="terms-list">
+
+            <div class="terms-item">
+              <div class="terms-item-body">
+                <div class="terms-item-name">이용약관</div>
+                <div class="terms-item-date">시행일: 2026.01.15</div>
+              </div>
+              <span class="terms-item-arrow">&#8250;</span>
+            </div>
+
+            <div class="terms-item">
+              <div class="terms-item-body">
+                <div class="terms-item-name">개인정보처리방침</div>
+                <div class="terms-item-date">시행일: 2026.01.15</div>
+              </div>
+              <span class="terms-item-arrow">&#8250;</span>
+            </div>
+
+            <div class="terms-item">
+              <div class="terms-item-body">
+                <div class="terms-item-name">마케팅 수신 동의</div>
+                <div class="terms-item-date">시행일: 2026.01.15</div>
+                <div class="terms-item-consent">동의: 2026.06.01 <span class="wf-cn">1</span></div>
+              </div>
+              <span class="terms-item-arrow">&#8250;</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <h3>케이스 B 주석</h3>
+
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">마케팅 동의 이력 날짜</div>
+        <div class="ann-desc">
+          <ul>
+            <li>시행일 아래 "동의: YYYY.MM.DD" 형식으로 표시</li>
+            <li>데이터: 회원가입 또는 MY03 계정관리에서 마케팅 동의 변경 시 저장된 일시</li>
+            <li>색상: 초록 (#059669) — 동의 완료 상태 구분</li>
+          </ul>
+        </div>
+        <div class="ann-front">개발: 회원 프로필 API에서 <code>marketingConsentAt</code> 필드 제공 필요</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════ C: 약관 목록 — 로그인 + 마케팅 미동의 ════ -->
+<div id="c" class="sec-title">
+  <span class="sec-badge">MY04-C</span>약관 목록 — 로그인 · 마케팅 미동의
+</div>
+<div class="sec-sub">로그인 상태 + 마케팅 수신 동의 미완료 · 날짜 미표시 · 케이스 A와 동일 UI</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <div class="my-gnb">
+          <button class="my-gnb-back">←</button>
+          <div class="my-gnb-title">약관</div>
+          <button class="my-gnb-icon">☰</button>
+        </div>
+
+        <div class="my-scroll">
+          <div class="terms-list">
+
+            <div class="terms-item">
+              <div class="terms-item-body">
+                <div class="terms-item-name">이용약관</div>
+                <div class="terms-item-date">시행일: 2026.01.15</div>
+              </div>
+              <span class="terms-item-arrow">&#8250;</span>
+            </div>
+
+            <div class="terms-item">
+              <div class="terms-item-body">
+                <div class="terms-item-name">개인정보처리방침</div>
+                <div class="terms-item-date">시행일: 2026.01.15</div>
+              </div>
+              <span class="terms-item-arrow">&#8250;</span>
+            </div>
+
+            <div class="terms-item">
+              <div class="terms-item-body">
+                <div class="terms-item-name">마케팅 수신 동의 <span class="wf-cn">1</span></div>
+                <div class="terms-item-date">시행일: 2026.01.15</div>
+                <!-- 미동의: 날짜 미표시, "미동의" 문구도 없음 -->
+              </div>
+              <span class="terms-item-arrow">&#8250;</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <h3>케이스 C 주석</h3>
+
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">마케팅 미동의 상태</div>
+        <div class="ann-desc">
+          <ul>
+            <li>동의 이력 날짜 미표시</li>
+            <li>"미동의" 문구도 미표시 — 부정적 인상 방지</li>
+            <li>비로그인(케이스 A)과 UI 동일</li>
+          </ul>
+        </div>
+        <div class="ann-case">A(비로그인) · C(로그인+미동의): 동일 UI 처리</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════ D: 약관 뷰어 — 이용약관 ════ -->
+<div id="d" class="sec-title">
+  <span class="sec-badge">MY04-D</span>약관 뷰어 — 이용약관
+  <span style="font-size:12px;font-weight:400;color:#888">— 개인정보처리방침도 동일 레이아웃</span>
+</div>
+<div class="sec-sub">이용약관·개인정보처리방침 공통 UI · 비로그인·로그인 구분 없음 · 전문 스크롤 · 하단 동의이력 바 없음</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <div class="my-gnb">
+          <button class="my-gnb-back">← <span class="wf-cn">1</span></button>
+          <div class="my-gnb-title">이용약관</div>
+          <button class="my-gnb-icon">☰</button>
+        </div>
+
+        <div class="my-scroll">
+          <div class="viewer-header">
+            <div class="viewer-title">이용약관 <span class="wf-cn">2</span></div>
+            <div class="viewer-date">시행일: 2026년 1월 15일</div>
+          </div>
+          <div class="viewer-body">
+            <h4>제1조 (목적)</h4>
+            <p>본 약관은 allmy meta가 제공하는 호텔 가격 비교 및 예약 중개 서비스 이용에 관한 기본적인 사항을 규정함을 목적으로 합니다.</p>
+            <h4>제2조 (정의)</h4>
+            <p>① "서비스"란 회사가 운영하는 호텔 메타서치 및 OTA 가격 비교 서비스를 말합니다.<br>
+            ② "회원"이란 본 약관에 동의하고 서비스를 이용하는 자를 말합니다.<br>
+            ③ "캐시백"이란 회원이 타 OTA 예약 완료 시 지급되는 혜택을 말합니다.</p>
+            <h4>제3조 (약관의 게시 및 개정)</h4>
+            <p>① 회사는 본 약관을 서비스 화면에 게시합니다.<br>
+            ② 회사는 관련 법령을 위배하지 않는 범위에서 약관을 개정할 수 있으며, 개정 시 최소 7일 전 공지합니다.</p>
+            <h4>제4조 (서비스 이용)</h4>
+            <p>① 이용자는 회원 가입 없이 가격 비교 서비스를 이용할 수 있습니다.<br>
+            ② 캐시백 적립 및 내역 조회는 로그인 회원에 한합니다.</p>
+            <h4>제5조 (책임의 한계)</h4>
+            <p>서비스는 호텔 예약 중개 역할을 하며, 타 OTA의 예약 조건·취소 정책에 대한 책임을 지지 않습니다.</p>
+            <p style="color:#9ca3af;font-size:11px;margin-top:16px">※ MVP 기간 중 약관 전문은 별도 공지 후 적용됩니다.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <h3>케이스 D 주석</h3>
+
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">뷰어 GNB</div>
+        <div class="ann-desc">
+          <ul>
+            <li>← 버튼: 약관 목록(MY04)으로 복귀</li>
+            <li>타이틀: 선택한 약관명 ("이용약관" / "개인정보처리방침" / "마케팅 수신 동의")</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">뷰어 헤더 · 본문</div>
+        <div class="ann-desc">
+          <ul>
+            <li>헤더: 약관명 + 시행일 고정 표시</li>
+            <li>본문: 약관 전문 스크롤 · 하드코딩 텍스트 (MVP)</li>
+            <li>이용약관 · 개인정보처리방침: 동일 레이아웃 · 하단 동의 이력 바 없음</li>
+          </ul>
+        </div>
+        <div class="ann-front">개발: MVP 하드코딩 → 이후 API 응답(약관 본문 필드) 기반 전환</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════ E: 약관 뷰어 — 마케팅 수신 동의 (로그인 + 동의이력) ════ -->
+<div id="e" class="sec-title">
+  <span class="sec-badge">MY04-E</span>약관 뷰어 — 마케팅 수신 동의 · 로그인 · 동의 이력 표시
+</div>
+<div class="sec-sub">로그인 + 마케팅 동의 완료 · 뷰어 하단에 동의 이력 바 고정 노출</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <div class="my-gnb">
+          <button class="my-gnb-back">←</button>
+          <div class="my-gnb-title">마케팅 수신 동의</div>
+          <button class="my-gnb-icon">☰</button>
+        </div>
+
+        <!-- 뷰어: flex column으로 본문 스크롤 + 하단 bar 고정 -->
+        <div class="my-scroll" style="display:flex;flex-direction:column;">
+          <div class="viewer-header">
+            <div class="viewer-title">마케팅 수신 동의</div>
+            <div class="viewer-date">시행일: 2026년 1월 15일</div>
+          </div>
+          <div class="viewer-body" style="flex:1;min-height:0;">
+            <h4>마케팅 정보 수신 동의</h4>
+            <p>allmy meta는 회원님께 다음과 같은 마케팅 정보를 발송합니다.</p>
+            <h4>발송 항목</h4>
+            <p>① 특가 호텔 및 프로모션 정보<br>
+            ② 여행 추천 및 이벤트 안내<br>
+            ③ 신규 서비스 출시 안내<br>
+            ④ 캐시백 적립 및 혜택 안내</p>
+            <h4>발송 채널</h4>
+            <p>이메일 · 앱 푸시 알림 · 문자(SMS)</p>
+            <h4>동의 거부 권리</h4>
+            <p>마케팅 수신 동의는 선택 사항이며, 거부하더라도 기본 서비스 이용에 제한이 없습니다. 계정관리에서 언제든지 변경하실 수 있습니다.</p>
+            <p style="color:#9ca3af;font-size:11px;margin-top:16px">※ MVP 기간 중 약관 전문은 별도 공지 후 적용됩니다.</p>
+          </div>
+          <!-- 동의 이력 바 — 로그인 + 동의 완료 시에만 표시 -->
+          <div class="consent-bar">
+            <div class="consent-bar-label">동의 이력 <span class="wf-cn" style="background:#059669">1</span></div>
+            <div class="consent-bar-date">동의: 2026년 6월 1일</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <h3>케이스 E 주석</h3>
+
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">동의 이력 바 — 로그인 + 동의 완료 시에만 표시</div>
+        <div class="ann-desc">
+          <ul>
+            <li>뷰어 하단 고정 (본문 스크롤 시에도 유지)</li>
+            <li>레이블 "동의 이력" + 동의 일시 표시</li>
+            <li>형식: "동의: YYYY년 M월 D일"</li>
+            <li>배경: 연한 초록 (#f0fdf4) — 동의 완료 상태 시각화</li>
+          </ul>
+        </div>
+        <div class="ann-case">로그인 + 동의O: 이 케이스 (동의 이력 바 표시)<br>비로그인 또는 미동의: 동의 이력 바 미노출 → 케이스 D 레이아웃</div>
+        <div class="ann-front">개발: 회원 프로필 API <code>marketingConsentAt</code> 필드 활용</div>
+        <div class="ann-rule">동의 상태 변경 버튼 없음 → MY03 계정관리에서만 처리</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 푸터 -->
+<div style="text-align:center;font-size:12px;color:#bbb;padding:48px 0 60px;border-top:1px dashed #e0e0da;margin-top:48px;line-height:1.8">
+  allmy meta. MY04 약관 화면기획서 · 정책서 v0.33 기준 · 대화창 2 산출물<br>
+  경로: context/신규정책/new_wireframe/my04_terms.html
+</div>
+
+</div><!-- /page -->
+
+<script>
+(function(){
+  const links = document.querySelectorAll('.toc-link');
+  const sections = [];
+  links.forEach(a => {
+    const id = a.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if(el) sections.push({el, a});
+  });
+  function update(){
+    let active = null;
+    sections.forEach(s => { if(s.el.getBoundingClientRect().top <= 80) active = s; });
+    links.forEach(a => a.classList.remove('active'));
+    if(active) active.a.classList.add('active');
+    else if(sections.length) sections[0].a.classList.add('active');
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+})();
+</script>
+
+</body>
+</html>

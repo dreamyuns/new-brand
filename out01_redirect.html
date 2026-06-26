@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OUT01 — 외부 OTA 이동 중 | allmy meta 화면기획서</title>
+<link rel="stylesheet" href="./wf-styles.css">
+<style>
+.two-col { grid-template-columns: 480px 1fr; gap: 28px; }
+
+.mobile-wrap {
+  display: flex; justify-content: center; align-items: flex-start;
+  padding: 20px 16px; background: #2a2a2a; border-radius: 8px; min-height: 560px;
+}
+.mobile-device {
+  width: 375px; background: #1a1f2e; border-radius: 44px; padding: 10px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 20px 50px rgba(0,0,0,.5);
+}
+.m-notch { height: 22px; background: #111; border-radius: 11px 11px 0 0; display: flex; align-items: center; justify-content: center; }
+.m-notch-pill { width: 68px; height: 13px; background: #111; border-radius: 7px; }
+.m-screen {
+  background: #f8f8f6; height: 640px; overflow-y: auto; overflow-x: hidden;
+  border-radius: 0 0 6px 6px; font-size: 13px; position: relative;
+  display: flex; flex-direction: column;
+}
+.m-screen::-webkit-scrollbar { display: none; }
+
+/* ── OUT01 전용 GNB ── */
+.out-gnb {
+  display: flex; align-items: center; gap: 10px; padding: 12px 16px;
+  background: #fff; border-bottom: 1px solid #f0f0f0; flex-shrink: 0;
+}
+.out-gnb-back {
+  width: 32px; height: 32px; border: 1.5px solid #e5e7eb; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; cursor: pointer; background: #fff; color: #333; flex-shrink: 0;
+}
+.out-gnb-title { font-size: 14px; font-weight: 800; color: #111; }
+
+/* ── 이동 중 컨텐츠 영역 ── */
+.out-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 20px; }
+
+/* ── 스피너 ── */
+.out-spinner-wrap { position: relative; width: 72px; height: 72px; margin-bottom: 22px; }
+.out-spinner-ring {
+  width: 72px; height: 72px; border-radius: 50%;
+  border: 3px solid #e5e7eb; border-top-color: #4f46e5;
+  animation: out-spin 0.9s linear infinite;
+  position: absolute; top: 0; left: 0;
+}
+@keyframes out-spin { to { transform: rotate(360deg); } }
+.out-spinner-logo {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 40px; height: 40px; border-radius: 10px; background: #4f46e5;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: #fff; font-weight: 900;
+}
+
+/* 완료 상태 체크 */
+.out-check-wrap { position: relative; width: 72px; height: 72px; margin-bottom: 22px; }
+.out-check-circle {
+  width: 72px; height: 72px; border-radius: 50%; background: #d1fae5;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px;
+}
+/* 오류 상태 아이콘 */
+.out-error-circle {
+  width: 72px; height: 72px; border-radius: 50%; background: #fee2e2;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+}
+
+/* ── 메시지 ── */
+.out-msg-title { font-size: 17px; font-weight: 800; color: #111; text-align: center; margin-bottom: 8px; line-height: 1.4; }
+.out-msg-sub { font-size: 12px; color: #9ca3af; text-align: center; line-height: 1.7; }
+.out-msg-sub b { color: #374151; font-weight: 700; }
+
+/* ── 호텔·공급사 카드 ── */
+.out-card {
+  background: #fff; border-radius: 12px; padding: 14px 16px; margin: 20px 0 0;
+  width: 100%; border: 1.5px solid #e5e7eb;
+}
+.out-card-hotel { font-size: 13px; font-weight: 800; color: #111; margin-bottom: 5px; }
+.out-card-row { display: flex; align-items: center; justify-content: space-between; }
+.out-card-meta { font-size: 11px; color: #9ca3af; }
+.out-card-price-wrap { text-align: right; }
+.out-card-price { font-size: 15px; font-weight: 800; color: #111; }
+.out-card-price-note { font-size: 10px; color: #9ca3af; margin-top: 1px; }
+.out-card-ota { display: flex; align-items: center; gap: 7px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #f0f0f0; }
+.out-card-ota-logo {
+  width: 52px; height: 22px; background: #e8003d; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.out-card-ota-name { font-size: 11px; font-weight: 700; color: #374151; }
+
+/* ── 캐시백 안내 배너 ── */
+.out-cb-banner {
+  background: linear-gradient(135deg, #ede9fe, #ddd6fe); border-radius: 10px;
+  padding: 12px 14px; margin: 14px 0 0; width: 100%;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.out-cb-icon { font-size: 20px; flex-shrink: 0; }
+.out-cb-text { flex: 1; }
+.out-cb-title { font-size: 12px; font-weight: 800; color: #4f46e5; margin-bottom: 3px; }
+.out-cb-desc { font-size: 11px; color: #5b21b6; line-height: 1.6; }
+
+/* ── 링크 열리지 않음 fallback ── */
+.out-retry-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  width: 100%; padding: 13px; background: #4f46e5; color: #fff; border: none;
+  border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer;
+  margin-top: 14px;
+}
+.out-back-link {
+  display: block; text-align: center; margin-top: 12px;
+  font-size: 12px; font-weight: 700; color: #9ca3af;
+  padding: 8px; cursor: pointer;
+}
+
+/* ── 프로그레스 바 (2초 카운트다운) ── */
+.out-progress-wrap { width: 100%; margin: 18px 0 0; }
+.out-progress-track {
+  width: 100%; height: 5px; background: #e5e7eb; border-radius: 3px; overflow: hidden;
+}
+.out-progress-fill {
+  height: 100%; background: #4f46e5; border-radius: 3px;
+  width: 0%; animation: out-progress-fill 2s linear forwards;
+}
+.out-progress-label {
+  font-size: 11px; color: #9ca3af; text-align: center; margin-top: 7px;
+}
+@keyframes out-progress-fill { from { width: 0%; } to { width: 100%; } }
+
+/* ── 비로그인 모달 (MODAL-A) ── */
+.out-modal-overlay {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,.55); z-index: 60; display: flex; align-items: flex-end;
+}
+.out-modal {
+  background: #fff; border-radius: 20px 20px 0 0; width: 100%; padding: 20px 20px 28px;
+}
+.out-modal-handle { width: 36px; height: 4px; background: #e5e7eb; border-radius: 2px; margin: 0 auto 16px; }
+.out-modal-badge { background: #ede9fe; color: #4f46e5; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 10px; }
+.out-modal-title { font-size: 17px; font-weight: 900; color: #111; line-height: 1.45; margin-bottom: 6px; }
+.out-modal-sub { font-size: 12px; color: #9ca3af; line-height: 1.7; margin-bottom: 16px; }
+.out-modal-cta-login {
+  display: block; width: 100%; padding: 14px; background: #4f46e5; color: #fff;
+  border: none; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; text-align: center; margin-bottom: 8px;
+}
+.out-modal-cta-guest {
+  display: block; width: 100%; padding: 13px; background: #f8f8f6; color: #374151;
+  border: 1.5px solid #e5e7eb; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; text-align: center;
+}
+</style>
+</head>
+<body>
+
+<nav class="page-nav">
+  <a class="page-nav-back" href="index.html">← 목록으로</a>
+  <span class="page-nav-sep">|</span>
+  <span class="page-nav-title">OUT01 — 외부 OTA 이동 중</span>
+  <span class="page-nav-route">모바일 375px · 아웃링크 이동 중간 페이지 · 정책서 v0.33</span>
+  <div class="page-nav-nav">
+    <a class="page-nav-pager" href="s02_hotel_detail.html">← 이전</a>
+    <span class="page-nav-pager-disabled">다음 →</span>
+  </div>
+</nav>
+
+<nav class="toc">
+  <div class="toc-inner">
+    <span class="toc-label">목차</span>
+    <a href="#out01-a" class="toc-link">OUT01-A 이동 중</a>
+    <span class="toc-sep"></span>
+    <a href="#out01-c" class="toc-link">OUT01-C 링크 실패</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- ════════════════════════════════════════════════
+  OUT01-A 이동 중 — 기본 상태
+════════════════════════════════════════════════ -->
+<div id="out01-a" class="sec-title">
+  <span class="sec-badge">OUT01-A</span>외부 OTA 이동 중 — 2초 노출 상태
+  <span style="font-size:12px;font-weight:400;color:#888">— [이동→] 탭 시 새탭으로 열림 · 2초 후 공급사로 자동 이동</span>
+</div>
+<div class="sec-sub">
+  S02 [이동→] 탭 시 <code>window.open()</code>으로 OUT01 새탭 오픈. OUT01에서 2초 동안 혜택·주요 메시지 노출 후 <code>window.location.href = bookUri</code>로 공급사 페이지로 직접 이동. CPA 발생 조건: 이 탭에서 예약 완료 시.<br>
+  프로그레스 바(2초) + 호텔·공급사 정보 카드 + 캐시백 안내 배너 구성.
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — OUT01 아웃링크 이동 전체</div>
+  <ul class="sec-policy-list">
+    <li><strong>진입 조건</strong>: 로그인 회원=[이동→] 직접 이동. 비로그인=로그인 유도 모달 → 건너뛰기 또는 로그인 후 이동 (7-1절)</li>
+    <li><strong>이동 방식 *(v0.32 확정)*</strong>: S02 [이동→] 탭 → <code>window.open()</code>으로 OUT01 새탭 오픈 → OUT01에서 <strong>2초 노출 후</strong> <code>window.location.href = bookUri</code>로 공급사 페이지 직접 이동. 공급사 별도 새탭 미사용 (7-1절)</li>
+    <li><strong>GNB ← 동작 *(v0.32 확정)*</strong>: <code>window.close()</code> → OUT01 탭 닫힘. 실패 시 진입 화면 fallback — S01 진입→S01, S02 진입→S02 (7-4절)</li>
+    <li><strong>userTrackId</strong>: 로그인 여부 무관 항상 포함 (7-2절)</li>
+    <li><strong>캐시백 안내 배너</strong>: 로그인 회원 + 해당 공급사 cashback 존재 시만 표시. 비로그인=미표시 (7-4절)</li>
+    <li><strong>캐시백 금액</strong>: <code>cashback.type = PERCENTAGE</code>이고 로그인 회원일 때만 <code>💸 캐시백 최대 N%</code> 표시 (7-4절)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.32 7-1절~7-4절</div>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- GNB -->
+        <div class="out-gnb">
+          <button class="out-gnb-back">←<span class="wf-cn">1</span></button>
+          <span class="out-gnb-title">가격 확인 중<span class="wf-cn">2</span></span>
+        </div>
+
+        <!-- 이동 중 바디 -->
+        <div class="out-body">
+
+          <!-- 공급사 로고 -->
+          <div class="out-spinner-wrap">
+            <div class="out-spinner-logo">A<span class="wf-cn">3</span></div>
+          </div>
+
+          <div class="out-msg-title">Agoda로 이동 중이에요 <span class="wf-cn">4</span></div>
+          <div class="out-msg-sub">
+            2초 후 자동으로 이동합니다.<br>
+            <b>투숙완료 확인 시 캐시백이 지급</b>됩니다. <span class="wf-cn">5</span>
+          </div>
+
+          <!-- 프로그레스 바 (2초 카운트다운) -->
+          <div class="out-progress-wrap">
+            <div class="out-progress-track">
+              <div class="out-progress-fill"></div>
+            </div>
+            <div class="out-progress-label">예약 완료까지 창을 닫지 마세요</div>
+          </div>
+
+          <!-- 호텔·공급사 카드 -->
+          <div class="out-card">
+            <div class="out-card-hotel">그랜드 하얏트 서울 <span class="wf-cn">6</span></div>
+            <div class="out-card-row">
+              <div class="out-card-meta">7월 22일 – 7월 23일 (1박) · 게스트 2명<span class="wf-cn">7</span></div>
+              <div class="out-card-price-wrap">
+                <div class="out-card-price">₩276,245<span class="wf-cn">8</span></div>
+                <div class="out-card-price-note">세금 포함</div>
+              </div>
+            </div>
+            <div class="out-card-ota">
+              <div class="out-card-ota-logo agoda" style="background:#e8003d;color:#fff;font-size:9px;font-weight:700;border-radius:4px;display:flex;align-items:center;justify-content:center;width:52px;height:22px;">agoda<span class="wf-cn">9</span></div>
+              <span class="out-card-ota-name">스탠다드 더블룸</span>
+            </div>
+          </div>
+
+          <!-- 캐시백 안내 배너 (로그인 회원 + cashback 존재 시만 노출) -->
+          <div class="out-cb-banner">
+            <span class="out-cb-icon">💸</span>
+            <div class="out-cb-text">
+              <div class="out-cb-title">캐시백 5.5% 지급 예정 <span class="wf-cn">10</span></div>
+              <div class="out-cb-desc">예약 완료 후 투숙 확인 시 <b>₩15,193</b>이 지급됩니다.</div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 주석 -->
+  <div class="ann">
+    <h3>OUT01-A 주석</h3>
+    <div class="ann-item">
+      <span class="cn">1</span>
+      <div class="ann-body">
+        <div class="ann-title">← 뒤로가기 (탭 닫기)</div>
+        <div class="ann-desc">
+          <ul>
+            <li><code>window.close()</code> 실행 → OUT01 탭 닫힘.</li>
+            <li><code>window.close()</code> 실패 시 (인앱 브라우저 등): <strong>S01에서 진입→S01, S02에서 진입→S02</strong>로 이동 (fallback).</li>
+            <li>2초 카운트다운 완료 전 탭을 닫으면 공급사 이동 취소됨.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 v0.32 7-4절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <span class="cn">2</span>
+      <div class="ann-body">
+        <div class="ann-title">GNB 타이틀</div>
+        <div class="ann-desc">
+          <ul>
+            <li>페이지 상태에 따라 텍스트로 변경.</li>
+            <li>이동 중(OUT01-A): "가격 확인 중"</li>
+            <li>오류 발생(OUT01-C): "연결 실패" (빨강 처리)</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 7-4절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <span class="cn">3</span>
+      <div class="ann-body">
+        <div class="ann-title">브랜드 로고 + 프로그레스 바</div>
+        <div class="ann-desc">
+          <ul>
+            <li>브랜드 로고 아이콘: 최종 리브랜딩 확정 후 에셋 교체.</li>
+            <li><strong>프로그레스 바:</strong> OUT01 탭 오픈 즉시 2초 카운트다운 시작 → 2초 완료 시 <code>window.location.href = bookUri</code> 실행.</li>
+            <li>하단 안내: "예약 완료까지 창을 닫지 마세요" — 전체 케이스 공통 표시 (7-4절 필수 요소).</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 v0.32 7-4절 — 프로그레스 바 2초 카운트다운.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <span class="cn">4</span>
+      <div class="ann-body">
+        <div class="ann-title">이동 중 메시지 — OTA명 동적 표시</div>
+        <div class="ann-desc">
+          <ul>
+            <li>"[공급사명]으로 이동 중이에요" — <code>providers[selectedProviderIndex].name</code> 값을 사용.</li>
+            <li>OUT01 탭 오픈 즉시 프로그레스 바 2초 카운트다운 시작 → 완료 시 <code>window.location.href = bookUri</code>로 공급사 페이지 이동.</li>
+            <li>bookUri API 오류(4xx/5xx) 시 OUT01-C로 전환.</li>
+          </ul>
+        </div>
+        <div class="ann-front">← providers[selectedProviderIndex].name</div>
+        <div class="ann-rule">정책서 v0.32 7-1절·7-4절 — OTA명 필수 표시. 2초 딜레이 후 window.location.href 이동.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <span class="cn">5</span>
+      <div class="ann-body">
+        <div class="ann-title">캐시백 안내 문구</div>
+        <div class="ann-desc">
+          <ul>
+            <li><b>로그인 회원:</b> 해당 공급사의 <code>cashback.type</code>이 PERCENTAGE 또는 FLAT인 경우에만 표시.</li>
+            <li><b>비로그인 사용자:</b> 미표시.</li>
+            <li>문구: "투숙완료 확인 시 캐시백이 지급됩니다" — 즉시 적립이 아닌 월 정산 후 지급임을 명확히 고지.</li>
+          </ul>
+        </div>
+        <div class="ann-front">← providers[selectedProviderIndex].cashback.type</div>
+        <div class="ann-rule">정책서 7-4절/9-6절. 데이터: KAYAK providers[].cashback 그대로 반영. 방식 2(실지급) Phase 2.</div>
+        <div class="ann-case">
+          ◼ 로그인 + cashback PERCENTAGE/FLAT: 문구 표시<br>
+          ◼ 비로그인 또는 cashback NONE: 문구 미표시
+        </div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <span class="cn">6</span>
+      <div class="ann-body">
+        <div class="ann-title">호텔명</div>
+        <div class="ann-desc">
+          <ul>
+            <li>S02에서 선택한 호텔의 이름.</li>
+            <li>OUT01 진입 시 URL params 또는 클라이언트 상태(context/store)로 전달.</li>
+            <li>API 재호출 없음.</li>
+          </ul>
+        </div>
+        <div class="ann-front">← S02에서 전달된 hotelName (URL params 또는 context)</div>
+        <div class="ann-rule">정책서 7-4절 — 호텔명 필수 표시.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <span class="cn">7</span>
+      <div class="ann-body">
+        <div class="ann-title">체크인·아웃, 인원 요약</div>
+        <div class="ann-desc">
+          <ul>
+            <li>S02 검색 조건을 그대로 표시.</li>
+            <li>표기 형식: "M월 D일 – M월 D일 (N박) · 게스트 N명"</li>
+            <li>OUT01 진입 시 함께 전달.</li>
+            <li>API 재호출 없음.</li>
+          </ul>
+        </div>
+        <div class="ann-front">← 검색 조건 (checkIn, checkOut, nights, guestCount)</div>
+        <div class="ann-rule">정책서 7-4절 — 날짜·인원 요약 필수 표시.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <span class="cn">8</span>
+      <div class="ann-body">
+        <div class="ann-title">가격</div>
+        <div class="ann-desc">
+          <ul>
+            <li>S02에서 사용자가 선택한 공급사 행의 <code>totalRate</code> (세금 포함 최종가).</li>
+            <li>"세금 포함" 라벨 함께 표시.</li>
+            <li>숙박 전체 기간 합산 금액 기준.</li>
+          </ul>
+        </div>
+        <div class="ann-front">← results[selectedIndex].totalRate</div>
+        <div class="ann-rule">정책서 7-4절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <span class="cn">9</span>
+      <div class="ann-body">
+        <div class="ann-title">공급사 로고 + 객실명</div>
+        <div class="ann-desc">
+          <ul>
+            <li>선택한 공급사의 브랜드 로고 + 객실명을 함께 표시.</li>
+            <li>사용자가 어떤 OTA·객실로 이동 중인지 명확히 인지하도록.</li>
+            <li>로고 이미지 미제공 시 공급사명 텍스트로 대체.</li>
+          </ul>
+        </div>
+        <div class="ann-front">← providers[selectedProviderIndex].logo / providers[].name + results[selectedIndex].roomName</div>
+        <div class="ann-rule">정책서 7-4절 — 이동 대상 OTA명·로고 필수 표시.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <span class="cn">10</span>
+      <div class="ann-body">
+        <div class="ann-title">캐시백 안내 배너</div>
+        <div class="ann-desc">
+          <ul>
+            <li><b>로그인 회원:</b> 해당 공급사의 <code>cashback</code> 필드가 존재하는 경우에만 노출.</li>
+            <li><b>비로그인 사용자:</b> 배너 영역 자체를 렌더링하지 않는다.</li>
+            <li>PERCENTAGE: 타이틀 "캐시백 N% 지급 예정" + 선택한 <code>totalRate</code> × value/100 환산 금액(₩) 표시.</li>
+            <li>FLAT: 타이틀 "캐시백 ₩N 지급 예정" 표시.</li>
+            <li>NONE: 배너 미표시.</li>
+            <li>지급 시점은 투숙 완료 확인 후 월 정산 방식임을 본문에 명시.</li>
+          </ul>
+        </div>
+        <div class="ann-front">← providers[selectedProviderIndex].cashback.type / .value</div>
+        <div class="ann-rule">정책서 7-4절/9-6절. 데이터: KAYAK providers[].cashback 그대로 반영. 방식 2(실지급) Phase 2.</div>
+        <div class="ann-case">
+          ◼ 로그인 + PERCENTAGE 5.5% + 가격 276,245원 → "캐시백 5.5% 지급 예정" + "₩15,193이 지급됩니다" (소수점 반올림)<br>
+          ◼ 로그인 + FLAT ₩10,000 → "캐시백 ₩10,000 지급 예정"<br>
+          ◼ 로그인 + NONE → 배너 영역 미표시<br>
+          ◼ 비로그인 → 배너 영역 미표시
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════════════════════════════════════════════════
+  OUT01-C 링크 오류 — 새 탭 차단 또는 열기 실패
+════════════════════════════════════════════════ -->
+<div id="out01-c" class="sec-title">
+  <span class="sec-badge">OUT01-C</span>링크 오류 — bookUri API 오류
+  <span style="font-size:12px;font-weight:400;color:#888">— bookUri 4xx/5xx 오류 시 (팝업 차단 없음 — v0.32 window.location.href 방식)</span>
+</div>
+<div class="sec-sub">
+  bookUri API 응답 오류 시 폴백 화면. [직접 이동하기] 버튼으로 수동 이동 유도.
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <div class="out-gnb">
+          <button class="out-gnb-back">←</button>
+          <span class="out-gnb-title" style="color:#dc2626;">연결 실패 <span class="wf-cn">1</span></span>
+        </div>
+
+        <div class="out-body">
+
+          <!-- 오류 아이콘 -->
+          <div class="out-check-wrap">
+            <div class="out-error-circle">⚠️<span class="wf-cn">2</span></div>
+          </div>
+
+          <div class="out-msg-title">연결에 실패했어요</div>
+          <div class="out-msg-sub">
+            일시적인 오류가 발생했어요.<br>
+            아래 버튼으로 직접 이동해 주세요. <span class="wf-cn">3</span>
+          </div>
+
+          <!-- 호텔·공급사 카드 -->
+          <div class="out-card">
+            <div class="out-card-hotel">그랜드 하얏트 서울</div>
+            <div class="out-card-row">
+              <div class="out-card-meta">7월 22일 – 7월 23일 (1박) · 게스트 2명</div>
+              <div class="out-card-price-wrap">
+                <div class="out-card-price">₩276,245</div>
+                <div class="out-card-price-note">세금 포함</div>
+              </div>
+            </div>
+            <div class="out-card-ota">
+              <div class="out-card-ota-logo" style="background:#e8003d;">agoda</div>
+              <span class="out-card-ota-name">스탠다드 더블룸</span>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <button class="out-retry-btn">
+            <span>↗</span> Agoda로 직접 이동하기 <span class="wf-cn">4</span>
+          </button>
+
+          <span class="out-back-link">← 다른 공급사 가격 보기</span>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <h3>OUT01-C 주석</h3>
+    <div class="ann-item">
+      <span class="cn">1</span>
+      <div class="ann-body">
+        <div class="ann-title">오류 상태 GNB</div>
+        <div class="ann-desc">
+          <ul>
+            <li>GNB 타이틀 빨강(#dc2626) 처리 + "연결 실패" 텍스트.</li>
+            <li>진입 조건: <code>bookUri</code> API 응답이 4xx/5xx인 경우.</li>
+            <li>팝업 차단 케이스 없음 — v0.32에서 <code>window.location.href</code> 방식 채택으로 팝업 차단 발생하지 않음.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 v0.32 7-4절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <span class="cn">2</span>
+      <div class="ann-body">
+        <div class="ann-title">경고 아이콘</div>
+        <div class="ann-desc">
+          <ul>
+            <li>빨강 원형 배경(#fee2e2) + ⚠️ 아이콘.</li>
+            <li>완료 상태의 초록 체크 아이콘과 동일한 영역·크기를 사용하여 오류 상태임을 즉시 인식하도록 표시.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 7-4절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <span class="cn">3</span>
+      <div class="ann-body">
+        <div class="ann-title">오류 메시지 — 원인별 분기</div>
+        <div class="ann-desc">
+          <ul>
+            <li>오류 원인을 클라이언트에서 판별하여 적합한 문구 표시.</li>
+            <li>팝업 차단은 <code>window.open()</code> 반환값 null로 감지.</li>
+            <li><code>bookUri</code> 오류는 API 응답 상태코드로 판별.</li>
+          </ul>
+        </div>
+        <div class="ann-case">
+          ◼ bookUri API 오류(4xx/5xx): "일시적인 오류가 발생했어요. 다시 시도해 주세요."<br>
+          <em style="color:#9ca3af">※ 팝업 차단 케이스 제거 — v0.32 window.location.href 방식에서 발생하지 않음</em>
+        </div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <span class="cn">4</span>
+      <div class="ann-body">
+        <div class="ann-title">[공급사명으로 직접 이동하기] CTA</div>
+        <div class="ann-desc">
+          <ul>
+            <li>팝업 차단 우회를 위해 <code>window.open()</code> 대신 <code>&lt;a href target="_blank"&gt;</code> anchor 태그 방식 사용.</li>
+            <li>사용자 제스처(touch/click event) 기반 호출이므로 팝업 차단 정책 우회 가능.</li>
+            <li><code>bookUri</code> API 오류 시에는 재시도 요청 후 버튼 표시.</li>
+          </ul>
+        </div>
+        <div class="ann-front">← results[selectedIndex].bookUri</div>
+        <div class="ann-rule">CPA 딥링크 — 정책서 7-1절.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</div><!-- /.page -->
+</body>
+</html>
