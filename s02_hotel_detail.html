@@ -1487,7 +1487,7 @@
   <span style="font-size:12px;font-weight:400;color:#888">— [호텔정보] 탭 선택</span>
 </div>
 <div class="sec-sub">
-  숙소 설명 + 편의시설(6개 + [모두 보기] 바텀시트) + 체크인·아웃 정책 + 취소 정책.
+  숙소 설명 + 편의시설(6개 + [모두 보기] 바텀시트) + 체크인·아웃 정책.
 </div>
 
 <div class="two-col">
@@ -1553,14 +1553,6 @@
           <div class="s02-policy-box">
             <div class="s02-policy-label">체크아웃</div>
             <div class="s02-policy-val">~12:00</div>
-          </div>
-        </div>
-
-        <!-- 취소 정책 -->
-        <div class="s02-info-section">
-          <div class="s02-info-title">취소 정책 <span class="wf-cn">6</span></div>
-          <div class="s02-desc">
-            체크인 24시간 전까지 무료 취소 가능. 이후 취소 시 1박 요금 부과.
           </div>
         </div>
 
@@ -1652,21 +1644,7 @@
             <li>데이터 없으면 섹션 전체 미노출.</li>
           </ul>
         </div>
-        <div class="ann-front">← policies[].checkIn / policies[].checkOut</div>
-        <div class="ann-rule">데이터 없는 섹션 미노출 규칙 — 정책서 6-2절</div>
-      </div>
-    </div>
-    <div class="ann-item">
-      <span class="cn">6</span>
-      <div class="ann-body">
-        <div class="ann-title">취소 정책</div>
-        <div class="ann-desc">
-          <ul>
-            <li>단일 검색(GET /hotel) 응답 <code>policies[]</code> 배열에서 취소 정책 텍스트 파싱하여 표시.</li>
-            <li>데이터 없으면 취소 정책 섹션 전체 미노출("정보 없음" 표시 금지).</li>
-          </ul>
-        </div>
-        <div class="ann-front">← policies[].cancellation (단일 검색 응답)</div>
+        <div class="ann-front">← policies[] 배열에서 code="checkin" 항목의 description / code="checkout" 항목의 description</div>
         <div class="ann-rule">데이터 없는 섹션 미노출 규칙 — 정책서 6-2절</div>
       </div>
     </div>
