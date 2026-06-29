@@ -178,11 +178,12 @@
     <li><strong>상단 고정</strong>: 총 적립금액 (지급완료 기준 누적 합계) (10-2절)</li>
     <li><strong>정렬</strong>: 지급완료일 최신순 (10-2절)</li>
     <li><strong>상태 배지</strong>: <code>Waiting</code>=적립예정 / <code>Approved</code>=지급완료 / <code>Cancelled</code>=취소·만료 (9-4·10-2절)</li>
-    <li><strong>적립금액</strong>: <code>cashbackAmountLocalised</code> 직접 사용. null 또는 0이면 미표시 (10-2절)</li>
+    <li><strong>예약금액</strong>: <code>localisedBookingValue</code> 직접 사용. null·0·cashbackType=NONE 공급사 예약 건은 미표시 (10-2절)</li>
+    <li><strong>적립금액</strong>: <code>cashbackAmountLocalised</code> 직접 사용. null·0·cashbackType=NONE 공급사 예약 건은 미표시 (10-2절)</li>
     <li><strong>캐시백 귀속</strong>: Label 필드 연계(회원ID ↔ <code>userTrackId</code> 연결). ⚠️ KAYAK 답변 대기 (9-5절)</li>
     <li><strong>포인트 사용 기능</strong>: MVP 제외 (안내 UI만) (10-2절)</li>
   </ul>
-  <div class="sec-policy-rule">기준: v0.29 9-4절·9-5절·10-2절·12-5절</div>
+  <div class="sec-policy-rule">기준: v0.35 9-4절·9-5절·10-2절·12-5절</div>
 </div>
 
 <div class="two-col">
@@ -493,8 +494,8 @@
           체크인/체크아웃 메타칩 → <code>clickStartDate</code> / <code>clickEndDate</code><br>
           예약 OTA명 메타칩 → <code>siteBrandCode</code> (예: Agoda, Booking.com)<br>
           예약일 → <code>bookingDate</code><br>
-          예약 금액 → <code>localisedBookingValue</code> (로컬 통화 환산값)<br>
-          적립 캐시백 금액 → <code>cashbackAmountLocalised</code> (null 또는 0이면 미표시)<br>
+          예약 금액 → <code>localisedBookingValue</code> (로컬 통화 환산값. null·0·cashbackType=NONE 공급사 예약 건 미표시)<br>
+          적립 캐시백 금액 → <code>cashbackAmountLocalised</code> (null·0·cashbackType=NONE 공급사 예약 건 미표시)<br>
           지급 월 → <code>paymentMonth</code> (Approved 전환 월)<br>
           예약 ID → <code>bookingId</code><br>
           상태값 → Transaction Report 상태 (Waiting / Approved / Cancelled)

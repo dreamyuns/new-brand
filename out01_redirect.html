@@ -196,10 +196,10 @@
     <li><strong>이동 방식 *(v0.32 확정)*</strong>: S02 [이동→] 탭 → <code>window.open()</code>으로 OUT01 새탭 오픈 → OUT01에서 <strong>2초 노출 후</strong> <code>window.location.href = bookUri</code>로 공급사 페이지 직접 이동. 공급사 별도 새탭 미사용 (7-1절)</li>
     <li><strong>GNB ← 동작 *(v0.32 확정)*</strong>: <code>window.close()</code> → OUT01 탭 닫힘. 실패 시 진입 화면 fallback — S01 진입→S01, S02 진입→S02 (7-4절)</li>
     <li><strong>userTrackId</strong>: 로그인 여부 무관 항상 포함 (7-2절)</li>
-    <li><strong>캐시백 안내 배너</strong>: 로그인 회원 + 해당 공급사 cashback 존재 시만 표시. 비로그인=미표시 (7-4절)</li>
-    <li><strong>캐시백 금액</strong>: <code>cashback.type = PERCENTAGE</code>이고 로그인 회원일 때만 <code>💸 캐시백 최대 N%</code> 표시 (7-4절)</li>
+    <li><strong>캐시백 안내 배너</strong>: 로그인 회원 + cashbackType ≠ NONE 시만 표시. 비로그인 또는 cashbackType=NONE=미표시 (7-4절)</li>
+    <li><strong>캐시백 금액</strong>: 로그인 회원이고 <code>cashback.type = PERCENTAGE</code>이면 <code>💸 캐시백 최대 N%</code>, <code>FLAT</code>이면 <code>💸 캐시백 최대 ₩N</code> 표시 (7-4절)</li>
   </ul>
-  <div class="sec-policy-rule">기준: v0.32 7-1절~7-4절</div>
+  <div class="sec-policy-rule">기준: v0.35 7-1절~7-4절</div>
 </div>
 
 <div class="two-col">
@@ -252,12 +252,12 @@
             </div>
           </div>
 
-          <!-- 캐시백 안내 배너 (로그인 회원 + cashback 존재 시만 노출) -->
+          <!-- 캐시백 안내 배너 (로그인 회원 + cashbackType ≠ NONE 시만 노출) -->
           <div class="out-cb-banner">
             <span class="out-cb-icon">💸</span>
             <div class="out-cb-text">
               <div class="out-cb-title">캐시백 5.5% 지급 예정 <span class="wf-cn">10</span></div>
-              <div class="out-cb-desc">예약 완료 후 투숙 확인 시 <b>₩15,193</b>이 지급됩니다.</div>
+              <div class="out-cb-desc">투숙완료 확인 시 캐시백이 지급됩니다.</div>
             </div>
           </div>
 
@@ -339,10 +339,11 @@
           </ul>
         </div>
         <div class="ann-front">← providers[selectedProviderIndex].cashback.type</div>
-        <div class="ann-rule">정책서 7-4절/9-6절. 데이터: KAYAK providers[].cashback 그대로 반영. 방식 2(실지급) Phase 2.</div>
+        <div class="ann-rule">정책서 v0.35 7-4절/9-6절. cashbackType=NONE → 배너·금액 표시 없음. 데이터: KAYAK providers[].cashback 그대로 반영. 방식 2(실지급) Phase 2.</div>
         <div class="ann-case">
-          ◼ 로그인 + cashback PERCENTAGE/FLAT: 문구 표시<br>
-          ◼ 비로그인 또는 cashback NONE: 문구 미표시
+          ◼ 로그인 + cashbackType=PERCENTAGE: 배너 표시 + 💸 캐시백 최대 N%<br>
+          ◼ 로그인 + cashbackType=FLAT: 배너 표시 + 💸 캐시백 최대 ₩N<br>
+          ◼ 비로그인 또는 cashbackType=NONE: 배너·금액 미표시
         </div>
       </div>
     </div>
@@ -415,17 +416,17 @@
           <ul>
             <li><b>로그인 회원:</b> 해당 공급사의 <code>cashback</code> 필드가 존재하는 경우에만 노출.</li>
             <li><b>비로그인 사용자:</b> 배너 영역 자체를 렌더링하지 않는다.</li>
-            <li>PERCENTAGE: 타이틀 "캐시백 N% 지급 예정" + 선택한 <code>totalRate</code> × value/100 환산 금액(₩) 표시.</li>
+            <li>PERCENTAGE: 타이틀 "캐시백 N% 지급 예정" 표시. 계산된 금액(₩)은 미표시 — 실제 지급 금액과 다를 수 있음.</li>
             <li>FLAT: 타이틀 "캐시백 ₩N 지급 예정" 표시.</li>
             <li>NONE: 배너 미표시.</li>
-            <li>지급 시점은 투숙 완료 확인 후 월 정산 방식임을 본문에 명시.</li>
+            <li>본문 안내 문구: "투숙완료 확인 시 캐시백이 지급됩니다." — 지급 시점만 명시, 금액 계산값 미노출.</li>
           </ul>
         </div>
         <div class="ann-front">← providers[selectedProviderIndex].cashback.type / .value</div>
         <div class="ann-rule">정책서 7-4절/9-6절. 데이터: KAYAK providers[].cashback 그대로 반영. 방식 2(실지급) Phase 2.</div>
         <div class="ann-case">
-          ◼ 로그인 + PERCENTAGE 5.5% + 가격 276,245원 → "캐시백 5.5% 지급 예정" + "₩15,193이 지급됩니다" (소수점 반올림)<br>
-          ◼ 로그인 + FLAT ₩10,000 → "캐시백 ₩10,000 지급 예정"<br>
+          ◼ 로그인 + PERCENTAGE 5.5% → "캐시백 5.5% 지급 예정" + "투숙완료 확인 시 캐시백이 지급됩니다." (계산 금액 미표시)<br>
+          ◼ 로그인 + FLAT ₩10,000 → "캐시백 ₩10,000 지급 예정" + "투숙완료 확인 시 캐시백이 지급됩니다."<br>
           ◼ 로그인 + NONE → 배너 영역 미표시<br>
           ◼ 비로그인 → 배너 영역 미표시
         </div>

@@ -145,7 +145,7 @@ body{
     <span class="pn-sep">|</span>
     <span class="pn-code">POLICY-P1</span>
     <span class="pn-name">— Phase 1 (MVP) 정책서</span>
-    <span class="pn-route">/ v0.33</span>
+    <span class="pn-route">/ v0.35</span>
   </div>
   <div class="pn-r">
     <span class="pn-btn disabled">← 이전</span>
@@ -157,8 +157,8 @@ body{
 <div class="p1-header">
   <div class="p1-header-label">allmytour meta — Phase 1 (MVP)</div>
   <div class="p1-header-title"><span class="phase">Phase 1</span> 정책서 — 신규 메타서치 MVP</div>
-  <div class="p1-header-meta">KAYAK API 기반 메타서치+OTA 하이브리드 신규 서비스 · 개발자확인용 · v0.33</div>
-  <div class="p1-header-badge">기준 정책서 <span>v0.33</span> — context/신규정책/phase1정책/신규_mvp_메타서치_v0.33.md</div>
+  <div class="p1-header-meta">KAYAK API 기반 메타서치+OTA 하이브리드 신규 서비스 · 개발자확인용 · v0.35</div>
+  <div class="p1-header-badge">기준 정책서 <span>v0.35</span> — context/신규정책/phase1정책/신규_mvp_메타서치_v0.35.md</div>
 </div>
 
 <!-- ── 바디 ── -->
@@ -217,8 +217,8 @@ body{
             <ul>
               <li><strong>수익 구조:</strong> KAYAK CPA 100% 의존 (자사 OTA 수익 없음 — MVP 한정)</li>
               <li><strong>수익 배분:</strong> 자사 60% : KAYAK 40%</li>
-              <li><strong>언어:</strong> 한국어(기본) + 영어·일본어·중국어</li>
-              <li><strong>통화:</strong> 원화(기본) + KAYAK Constants API 기반 전체 통화 지원</li>
+              <li><strong>언어:</strong> 한국어(기본) + 8개 언어 (영어·일본어·스페인어·인도네시아어·베트남어·중국어번체)</li>
+              <li><strong>통화:</strong> 원화(기본) + 카약 확정 20개 고정 목록</li>
             </ul>
           </div>
         </div>
@@ -511,7 +511,8 @@ body{
             <li style="margin-bottom:5px">OUT01 (이동 중 페이지) 표시</li>
             <li style="margin-bottom:5px">새탭으로 타 OTA 이동 (<code>window.open(bookUri)</code>)</li>
           </ol>
-          <p><strong>OUT01 필수 요소:</strong> 프로그레스 바 / 호텔명·공급사명 / 캐시백 안내 ("투숙완료 확인 시 캐시백이 지급됩니다") / 면책 고지문 / [건너뛰기] 버튼</p>
+          <p><strong>OUT01 필수 요소:</strong> 프로그레스 바 / 호텔명·공급사명 / 캐시백 안내 배너 ("투숙완료 확인 시 캐시백이 지급됩니다" — 로그인 회원 + cashbackType ≠ NONE 시만 표시) / 면책 고지문 / [건너뛰기] 버튼</p>
+          <p><strong>cashbackType=NONE 처리:</strong> cashbackType = NONE인 공급사는 캐시백 안내 배너·금액 모두 미표시 (v0.35 7-4절)</p>
           <p><strong>OUT01 GNB:</strong> ← 탭 시 <code>window.close()</code>, 실패 시 S02 fallback</p>
           <p><strong>userTrackId:</strong> 로그인 여부 무관 항상 생성. 세션 단위 UUID. 로그인 회원은 memberId 추가 전송.</p>
           <p><strong>건너뛰기 원칙:</strong> 비로그인 사용자도 아웃링크 이동 허용. 캐시백만 미적립.</p>
@@ -664,7 +665,7 @@ body{
             <ul>
               <li><strong>상단 고정:</strong> 총 적립금액 (지급완료 기준 누적 합계) + [캐시백 사용처 안내] 텍스트 버튼</li>
               <li><strong>목록:</strong> 전체 한 번에 표시, 지급완료일 최신순, 카드형</li>
-              <li><strong>카드 항목:</strong> 예약날짜·체크인아웃·호텔명·도시명·예약OTA·예약ID·예약금액·적립금액·지급월</li>
+              <li><strong>카드 항목:</strong> 예약날짜·체크인아웃·호텔명·도시명·예약OTA·예약ID·예약금액(null·0·cashbackType=NONE 공급사 건 미표시)·적립금액(동일 조건 미표시)·지급월</li>
               <li><strong>상태 배지:</strong> 적립예정 / 지급완료 / 취소·만료</li>
               <li><strong>빈 상태 문구:</strong> "아직 적립된 캐시백이 없어요. 호텔을 예약하고 첫 캐시백을 받아보세요!"</li>
             </ul>
@@ -689,11 +690,83 @@ body{
     <div id="sec-11" class="p1-section">
       <div class="p1-section-hdr"><span class="p1-art-badge">제11조</span><h2>다국어·통화 정책</h2></div>
       <div class="p1-section-body">
-        <div class="p1-text">
-          <p><strong>지원 언어:</strong> 한국어(기본) · 영어 · 일본어 · 중국어 (간체). MY01에서 수동 변경 가능.</p>
-          <p><strong>지원 통화:</strong> KRW(기본). KAYAK Constants API(<code>/api/4.0/constants-mapping</code>) 전체 통화 동적 사용 — 고정 목록 없음. 앱 초기화 시 캐싱.</p>
-          <p><strong>11-3절 IP 기반 언어 자동 감지 (A안 — 개발팀 확인사항):</strong> 앱 초기화 시 IP 기반 언어 자동 설정. localStorage 수동 변경값 우선. 불가 시 Phase 2.</p>
+
+        <div class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">11-1</span>지원 언어 <span class="tag-ok" style="font-size:10px">v0.35 전면 확장</span></div>
+          <div class="p1-text"><p>총 8개 언어 지원. 언어 선택 = 도메인 선택 (언어와 시장이 함께 결정됨).</p></div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>언어</th><th>KAYAK 코드</th><th>비고</th></tr></thead>
+              <tbody>
+                <tr><td>한국어</td><td><code>ko_KR</code></td><td>기본값 · affiliate-ko-kr</td></tr>
+                <tr><td>영어</td><td><code>en_US/en_GB</code></td><td>12개 시장(도메인) 커버</td></tr>
+                <tr><td>일본어</td><td><code>ja_JP</code></td><td>affiliate-ja-jp</td></tr>
+                <tr><td>스페인어 (멕시코)</td><td><code>es_MX</code></td><td>LATAM 대표</td></tr>
+                <tr><td>스페인어 (스페인)</td><td><code>es_ES</code></td><td>affiliate-es-es</td></tr>
+                <tr><td>인도네시아어</td><td><code>id_ID</code></td><td>affiliate-id-id</td></tr>
+                <tr><td>베트남어</td><td><code>vi_VN</code></td><td>affiliate-vi-vn</td></tr>
+                <tr><td>중국어 번체 (대만)</td><td><code>zh_TW</code></td><td>affiliate-zh-tw. zh_CN 미포함 (ICP)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p1-notice">UI 레이어(BCP-47) ↔ KAYAK API(언더스코어) 변환 필수. 예: <code>ko-KR</code> → <code>ko_KR</code></div>
         </div>
+
+        <div class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">11-2</span>지원 통화 <span class="tag-ok" style="font-size:10px">v0.34 20개 고정</span></div>
+          <div class="p1-text">
+            <p><strong>기본 통화:</strong> KRW. <strong>지원 통화:</strong> 카약 공식 확정 20개 고정 목록 (2026-06-29 카약 담당자 확인)</p>
+            <p>KRW · USD · GBP · AUD · CAD · NZD · SGD · INR · ZAR · EUR · MXN · ARS · COP · IDR · JPY · VND · TWD · HKD · MYR · PHP</p>
+          </div>
+          <div class="p1-warn">⚠️ <strong>JPY 주의:</strong> 일본어(JP) 지원 언어이지만 캐시백 미지원. JPY 통화 선택 시 캐시백 배지 비표시 처리 필요 (카약 답변 후 추가 확정 예정)</div>
+        </div>
+
+        <div class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">11-3</span>도메인 기반 언어·시장 선택 <span class="tag-ok" style="font-size:10px">v0.35 전면 재작성</span></div>
+          <div class="p1-text">
+            <p><strong>핵심 구조:</strong> KAYAK API 도메인(<code>affiliate-{language}-{market}.kayakaffiliates.com</code>)이 언어와 시장을 동시에 결정. 별도 Market 파라미터 없음.</p>
+            <ul>
+              <li><strong>초기 설정:</strong> 접속자 IP 기반 최적 도메인 자동 설정. 실패 시 기본값 <code>affiliate-ko-kr</code>. localStorage 저장, 재접속 시 유지.</li>
+              <li><strong>사용자 변경:</strong> MY01 > [언어·지역] 탭 → 도메인 선택 바텀시트(MY01-C). 선택 즉시 도메인 변경 + localStorage 갱신 + 현재 화면 유지.</li>
+              <li><strong>API 반영:</strong> 선택 도메인 기준 <code>languageCode</code> 파라미터 자동 결정. (예: affiliate-ko-kr → <code>ko_KR</code>)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">11-4</span>통화 독립 정책 · 지원 도메인 19개 <span class="tag-ok" style="font-size:10px">v0.35 신설</span></div>
+          <div class="p1-text">
+            <p><strong>통화 독립:</strong> 도메인(언어·시장) 변경 시 통화 설정은 자동 변경되지 않음. 사용자가 MY01-D에서 별도 변경해야 함.</p>
+          </div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>그룹</th><th>국가·지역</th><th>도메인</th><th>기본 통화</th></tr></thead>
+              <tbody>
+                <tr><td>한국어</td><td>한국</td><td>affiliate-ko-kr</td><td>KRW</td></tr>
+                <tr><td>日本語</td><td>日本</td><td>affiliate-ja-jp</td><td>JPY</td></tr>
+                <tr><td rowspan="12">English</td><td>United States</td><td>affiliate-en-us</td><td>USD</td></tr>
+                <tr><td>United Kingdom</td><td>affiliate-en-gb</td><td>GBP</td></tr>
+                <tr><td>Australia</td><td>affiliate-en-au</td><td>AUD</td></tr>
+                <tr><td>Canada</td><td>affiliate-en-ca</td><td>CAD</td></tr>
+                <tr><td>New Zealand</td><td>affiliate-en-nz</td><td>NZD</td></tr>
+                <tr><td>Singapore</td><td>affiliate-en-sg</td><td>SGD</td></tr>
+                <tr><td>India</td><td>affiliate-en-in</td><td>INR</td></tr>
+                <tr><td>South Africa</td><td>affiliate-en-za</td><td>ZAR</td></tr>
+                <tr><td>Philippines</td><td>affiliate-en-ph</td><td>PHP</td></tr>
+                <tr><td>Hong Kong</td><td>affiliate-en-hk</td><td>HKD</td></tr>
+                <tr><td>Malaysia</td><td>affiliate-en-my</td><td>MYR</td></tr>
+                <tr><td>Europe</td><td>affiliate-en-eu</td><td>EUR</td></tr>
+                <tr><td rowspan="2">Español</td><td>México</td><td>affiliate-es-mx</td><td>MXN</td></tr>
+                <tr><td>España</td><td>affiliate-es-es</td><td>EUR</td></tr>
+                <tr><td>Bahasa</td><td>Indonesia</td><td>affiliate-id-id</td><td>IDR</td></tr>
+                <tr><td>Tiếng Việt</td><td>Việt Nam</td><td>affiliate-vi-vn</td><td>VND</td></tr>
+                <tr><td>繁體中文</td><td>台灣</td><td>affiliate-zh-tw</td><td>TWD</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p1-warn">⚠️ <code>affiliate-en-eu</code> 도메인 존재 여부 카약 확인 필요. 미존재 시 <code>affiliate-en-gb</code> 폴백.</div>
+        </div>
+
       </div>
     </div>
 
@@ -786,7 +859,9 @@ body{
         <div class="p1-hist-item"><div class="p1-hist-ver">v0.30</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-19</div><div class="p1-hist-text">① 1-2절 통화 정책 수정 — Constants API 기반 전체 통화 지원 / ② 1-3절 어썸멤버십·광고 영역(preferredHotels)·Inline/CompareTo 광고 항목 삭제 / ③ 4-2절 자동완성 우선순위 3번 — 나머지 placeType 값 전체로 수정 (11개 타입 명시) / ④ 9-5절 Label 연계 방법 확정 — p= 파라미터, Reporting API labels 필터링 / ⑤ 14조 1번 해결 처리</div></div></div>
         <div class="p1-hist-item"><div class="p1-hist-ver">v0.31</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-22</div><div class="p1-hist-text">① 4-7절 최대 박수 30박·캘린더 렌더링 범위(오늘~오늘+365일)·과거날짜 비활성 추가 / ② 5-6-4절 필터 0개 문구 수정 / ③ 5-6-5절 필터 이중 상태(A/B) 관리 정책 + 재검색 시 필터 초기화 토스트 신설 / ④ 5-11-3~5절 가격 없는 핀 정책 수정 — S02 진입 허용, 회색·비활성 스타일 / ⑤ 6-1절 S02 진입 시 가격 로딩 스피너 정책 추가 / ⑥ 7-1절 OUT01 즉시 오픈 방식 명시</div></div></div>
         <div class="p1-hist-item"><div class="p1-hist-ver">v0.32</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-23</div><div class="p1-hist-text">① 3-3절 신설 — PC 화면 대응 전략 확정 (모바일 단일 + PC 래핑 채택, 출시 직후 적응형 PC 전용 전환) / ② 7-1절·7-4절 수정 — OUT01 이동 방식 변경 (즉시 오픈 → 의도적 2초 딜레이 후 OTA 새탭 오픈, 브랜드 혜택·주요 메시지 2초 노출 목적)</div></div></div>
-        <div class="p1-hist-item"><div class="p1-hist-ver" style="background:#e0e7ff;color:#3730a3;font-weight:900;">v0.33</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-23</div><div class="p1-hist-text">① 3-3절 보완 — PC 래핑 왼쪽 패널 상세 정책 신설 (구성 순서·sticky 고정·CTA 동작·바텀시트 노출 위치·언어통화 선택 UX·헤드카피 미확정 명시·적용 범위·하단 푸터 미결)</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver">v0.33</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-23</div><div class="p1-hist-text">① 3-3절 보완 — PC 래핑 왼쪽 패널 상세 정책 신설 (구성 순서·sticky 고정·CTA 동작·바텀시트 노출 위치·언어통화 선택 UX·헤드카피 미확정 명시·적용 범위·하단 푸터 미결)</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver">v0.34</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-29</div><div class="p1-hist-text">① 9-2절 CPC 기반 특정 공급사 예외 각주 신설 (캐시백 산출 제외, 100% 자사 수익 집계) / ② 9-2절 정산 기준 시간 추가 (EST 기준, 데이터 반영 시차 명시) / ③ 11-2절 지원 통화 변경 — Constants API 동적 사용 → 카약 확정 20개 고정 목록 / ④ 1-2절 통화 문구 동기화</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver" style="background:#e0e7ff;color:#3730a3;font-weight:900;">v0.35</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-29</div><div class="p1-hist-text">① 7-4절 OUT01 cashbackType=NONE 공급사 캐시백 안내 배너·금액 미표시 조건 추가 / ② 10-2절 예약금액 조건부 미표시 추가 (null·0·cashbackType=NONE 공급사 건) / ③ 11-1절 지원 언어 4개 → 8개 전면 확장 (zh_CN 제외·zh_TW 추가, es-ES·id-ID·vi-VN 신설) / ④ 11-3절 전면 재작성 — IP 기반 자동 감지 → 도메인 기반 언어+시장 선택 (MY01-C UI, 통화 독립 유지) / ⑤ 11-4절 신설 — 지원 도메인 19개 목록 및 도메인-로케일 매핑</div></div></div>
       </div>
     </div>
 
@@ -794,8 +869,8 @@ body{
 </div><!-- /p1-body -->
 
 <div class="p1-footer">
-  allmytour meta. Phase 1 (MVP) 정책서 v0.33 · 2026-06-23 · 대화창 2 산출물<br>
-  전체 내용: context/신규정책/phase1정책/신규_mvp_메타서치_v0.33.md · 경로: context/신규정책/new_wireframe/phase1_policy.html
+  allmytour meta. Phase 1 (MVP) 정책서 v0.35 · 2026-06-29 · 대화창 2 산출물<br>
+  전체 내용: context/신규정책/phase1정책/신규_mvp_메타서치_v0.35.md · 경로: context/신규정책/new_wireframe/phase1_policy.html
 </div>
 
 <script>
