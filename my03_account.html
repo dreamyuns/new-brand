@@ -145,6 +145,11 @@
   border: none; cursor: pointer;
 }
 .ac-save-btn.disabled { background: #e5e7eb; color: #9ca3af; }
+.ac-withdraw-btn {
+  width: 100%; padding: 11px; margin-top: 4px; border-radius: 12px;
+  background: transparent; color: #ef4444; font-size: 13px; font-weight: 600;
+  border: none; cursor: pointer; text-decoration: underline;
+}
 
 /* ── 바텀시트 오버레이 공통 ── */
 .sheet-overlay {
@@ -329,6 +334,7 @@
         <!-- 하단 저장 버튼 (sticky) -->
         <div class="ac-save-bar">
           <button class="ac-save-btn">저장 <span class="wf-cn">11</span></button>
+          <button class="ac-withdraw-btn" onclick="location.href='my05_withdrawal.html'">회원탈퇴<span class="wf-cn">12</span></button>
         </div>
 
       </div><!-- /m-screen -->
@@ -487,6 +493,21 @@
           </ul>
         </div>
         <div class="ann-rule">정책서 10-3절 (하단 저장 버튼 + 유효성 검사).</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">12</div>
+      <div class="ann-body">
+        <div class="ann-title">[회원탈퇴] 버튼 (저장 버튼 하단)</div>
+        <div class="ann-desc">
+          <ul>
+            <li>탭 시 MY05 회원탈퇴 화면으로 이동한다.</li>
+            <li>빨간색 텍스트로 표시되며, 탭하기 전까지는 아무 일도 일어나지 않는다.</li>
+            <li>탈퇴 진행은 MY05 화면에서 이메일 인증 후 단계별로 처리된다.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 8-11절 / 10-3절 (계정관리 화면 회원탈퇴 버튼 추가 — v0.36).</div>
+        <div class="ann-case">◼ 탭 → MY05 회원탈퇴 화면으로 이동</div>
       </div>
     </div>
   </div>
@@ -725,6 +746,7 @@
         <!-- 하단 저장 버튼 — 비활성 -->
         <div class="ac-save-bar">
           <button class="ac-save-btn disabled">저장 <span class="wf-cn">3</span></button>
+          <button class="ac-withdraw-btn" onclick="location.href='my05_withdrawal.html'">회원탈퇴</button>
         </div>
 
       </div><!-- /m-screen -->

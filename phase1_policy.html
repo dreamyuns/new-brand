@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Phase 1 (MVP) 정책서 v0.33 — allmytour meta</title>
+<title>Phase 1 (MVP) 정책서 v0.37 — allmytour meta</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{
@@ -145,7 +145,7 @@ body{
     <span class="pn-sep">|</span>
     <span class="pn-code">POLICY-P1</span>
     <span class="pn-name">— Phase 1 (MVP) 정책서</span>
-    <span class="pn-route">/ v0.35</span>
+    <span class="pn-route">/ v0.37</span>
   </div>
   <div class="pn-r">
     <span class="pn-btn disabled">← 이전</span>
@@ -157,8 +157,8 @@ body{
 <div class="p1-header">
   <div class="p1-header-label">allmytour meta — Phase 1 (MVP)</div>
   <div class="p1-header-title"><span class="phase">Phase 1</span> 정책서 — 신규 메타서치 MVP</div>
-  <div class="p1-header-meta">KAYAK API 기반 메타서치+OTA 하이브리드 신규 서비스 · 개발자확인용 · v0.35</div>
-  <div class="p1-header-badge">기준 정책서 <span>v0.35</span> — context/신규정책/phase1정책/신규_mvp_메타서치_v0.35.md</div>
+  <div class="p1-header-meta">KAYAK API 기반 메타서치+OTA 하이브리드 신규 서비스 · 개발자확인용 · v0.37</div>
+  <div class="p1-header-badge">기준 정책서 <span>v0.37</span> — context/신규정책/phase1정책/신규_mvp_메타서치_v0.37.md</div>
 </div>
 
 <!-- ── 바디 ── -->
@@ -178,21 +178,24 @@ body{
     <a class="p1-toc-sub" href="#sec-4-5">4-5. 자동완성 선택 동작</a>
     <a class="p1-toc-sub" href="#sec-4-7">4-7. 검색 파라미터</a>
     <a class="p1-toc-sub" href="#sec-4-9">4-9. 인원·객실 설정</a>
+    <a class="p1-toc-sub" href="#sec-4-10">4-10. M01 GNB·탭바 구조</a>
     <a class="p1-toc-art" href="#sec-5">제5조 검색결과 목록 (S01)</a>
     <a class="p1-toc-sub" href="#sec-5-2">5-2. 호텔 카드 구성</a>
     <a class="p1-toc-sub" href="#sec-5-6">5-6. 필터 옵션</a>
     <a class="p1-toc-sub" href="#sec-5-8">5-8. 로딩·더보기</a>
     <a class="p1-toc-sub" href="#sec-5-11">5-11. 지도 검색</a>
     <a class="p1-toc-art" href="#sec-6">제6조 숙소상세 (S02)</a>
-    <a class="p1-toc-sub" href="#sec-6-2">6-2. 5탭 구성</a>
+    <a class="p1-toc-sub" href="#sec-6-2">6-2. 화면 구성 (단일 스크롤)</a>
     <a class="p1-toc-sub" href="#sec-6-3">6-3. 가격비교 탭</a>
     <a class="p1-toc-art" href="#sec-7">제7조 아웃링크</a>
     <a class="p1-toc-art" href="#sec-8">제8조 회원·인증</a>
     <a class="p1-toc-sub" href="#sec-8-2">8-2. 이메일 인증코드</a>
     <a class="p1-toc-sub" href="#sec-8-6">8-6. 기능별 접근 정책</a>
+    <a class="p1-toc-sub" href="#sec-8-11">8-11. 회원탈퇴 프로세스</a>
     <a class="p1-toc-art" href="#sec-9">제9조 캐시백</a>
     <a class="p1-toc-sub" href="#sec-9-7">9-7. 배지 UI</a>
     <a class="p1-toc-art" href="#sec-10">제10조 마이페이지</a>
+    <a class="p1-toc-sub" href="#sec-10-4">10-4. 회원탈퇴 화면 (MY04)</a>
     <a class="p1-toc-art" href="#sec-11">제11조 다국어·통화</a>
     <a class="p1-toc-art" href="#sec-12">제12조 API 매핑</a>
     <a class="p1-toc-art" href="#sec-13">제13조 쿠키 동의</a>
@@ -272,12 +275,12 @@ body{
         <div class="p1-text">
           <p><strong>기본 플로우:</strong> M01(메인) → S01(검색결과) → S02(숙소상세, 새탭) → OUT01(아웃링크 이동중) → 타 OTA</p>
           <p><strong>지도 진입:</strong> S01 [지도] 탭 → S01-MAP(?layout=map) → 핀 선택 → S02 새탭</p>
-          <p><strong>GNB 패턴 원칙 (v0.13 확정):</strong></p>
+          <p><strong>GNB 패턴 원칙 (v0.37 수정):</strong></p>
           <ul>
-            <li><strong>랜딩형 (M01·S01):</strong> 로고 패턴 (비로그인: 로고+[로그인]+[☰] / 로그인: 로고+[☰])</li>
-            <li><strong>세부탐색형 (S02·AUTH·OUT01):</strong> ← 뒤로가기 + [로그인] + [☰]</li>
-            <li><strong>마이페이지 하위 (MY01~MY03):</strong> ← 뒤로가기만 (로그인·전체메뉴 없음)</li>
-            <li><strong>[☰ 전체메뉴]:</strong> 마이페이지(MY01) 직접 진입 (별도 드롭다운 없음)</li>
+            <li><strong>M01 (메인):</strong> 좌측 [로그인] 버튼(비로그인) / 아바타(로그인) + 중앙 브랜드 로고 + 우측 캐시백 버튼. [☰ 전체메뉴] 제거 (v0.37)</li>
+            <li><strong>S01 (검색결과):</strong> ← 뒤로가기 + 검색조건 요약(중앙) + 필터아이콘(우측). 로고 패턴 폐기 (v0.37 확정)</li>
+            <li><strong>세부탐색형 (S02·AUTH·OUT01):</strong> ← 뒤로가기 + [로그인] + [공유하기]</li>
+            <li><strong>마이페이지 하위 (MY01~MY04):</strong> ← 뒤로가기만 (로그인·전체메뉴 없음)</li>
           </ul>
           <p><strong>S01→S02 이동:</strong> <code>window.open()</code> 새탭. S02 GNB ← = <code>window.close()</code>, 실패 시 M01 fallback</p>
         </div>
@@ -368,6 +371,49 @@ body{
           </div>
         </div>
 
+        <div id="sec-4-10" class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">4-10</span>M01 메인화면 구조 (GNB·탭바 확정) <span class="tag-ok" style="font-size:10px">v0.37 신설</span></div>
+          <div class="p1-text"><p><strong>GNB (상단 고정):</strong></p></div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>위치</th><th>구성 요소</th><th>비고</th></tr></thead>
+              <tbody>
+                <tr><td>좌측</td><td>[로그인] 버튼 (비로그인) / 아바타 아이콘 (로그인)</td><td>탭 시 마이페이지(MY01) 진입</td></tr>
+                <tr><td>중앙</td><td>브랜드 로고</td><td>—</td></tr>
+                <tr><td>우측</td><td>캐시백 버튼</td><td>상태별 표시 정책 아래 참조</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p1-notice">v0.36까지 표기된 [☰ 전체메뉴] GNB 버튼은 v0.37 기준 제거됨. 마이페이지 진입은 좌측 아바타 탭으로 통합.</div>
+          <div class="p1-text"><p><strong>캐시백 버튼 표시 정책:</strong></p></div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>상태</th><th>표시 텍스트</th><th>탭 동작</th></tr></thead>
+              <tbody>
+                <tr><td>비로그인</td><td>"로그인 후 최대 혜택 적립"</td><td>로그인 바텀시트 진입</td></tr>
+                <tr><td>로그인 + Approved 0원</td><td>"로그인 후 최대 혜택 적립"</td><td>MY02 캐시백 내역 진입</td></tr>
+                <tr><td>로그인 + Approved 1원 이상</td><td>적립 금액 표시 (Approved 합계만)</td><td>MY02 캐시백 내역 진입</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p1-text"><p><strong>하단 탭바 (M01·MY02에만 노출):</strong></p></div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>#</th><th>탭명</th><th>아이콘</th><th>탭 동작</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>검색</td><td>🔍</td><td>M01 메인화면</td></tr>
+                <tr><td>2</td><td>적립</td><td>⭐</td><td>MY02 캐시백 내역 직접 진입 (마이페이지 경유 없음)</td></tr>
+                <tr><td>3</td><td>고객지원</td><td>🦚</td><td>FAQ 채팅 바텀시트 팝업</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p1-text">
+            <p><strong>노출 범위:</strong> M01 + MY02 2개 화면에만 탭바 표시. S01·S02·MY01·MY03·MY04·AUTH·OUT01 등 나머지 화면 미표시.</p>
+            <p><strong>공작새(고객지원) 탭:</strong> FAQ 채팅 바텀시트 팝업. 키워드 매칭 방식 (LLM/AI 챗봇 아님). 운영팀 FAQ 목록 설정 가능. 실시간 상담원 연결 미포함 (MVP).</p>
+            <p><strong>웰컴 메시지:</strong> 로그인 완료 후 M01에 표시. 이름 미노출 (가입 시 선택 입력이므로). 카피 문구 마케팅팀 확정 예정.</p>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -387,7 +433,7 @@ body{
                 <tr><td>성급</td><td><span class="tag-ok">✅</span></td><td><code>starRating</code></td></tr>
                 <tr><td>게스트 평점·리뷰 수</td><td><span class="tag-ok">✅</span></td><td><code>guestRating / numberOfReviews</code></td></tr>
                 <tr><td>공급사 최저가 1개</td><td><span class="tag-ok">✅</span></td><td><code>isCheapestRate:true</code> 기준 (topRates 중 최저가 식별)</td></tr>
-                <tr><td>캐시백 배지</td><td><span class="tag-ok">✅</span></td><td><code>providers[].cashback</code></td></tr>
+                <tr><td>캐시백 배지</td><td><span class="tag-ex">❌</span></td><td>S01 카드 미표시 (v0.37 확정). S02 공급사 행에만 표시.</td></tr>
                 <tr><td>식사 포함 배지</td><td><span class="tag-ok">✅</span></td><td><code>topRates[].inclusions[]</code></td></tr>
                 <tr><td>나중에 결제 배지</td><td><span class="tag-ok">✅</span></td><td><code>topRates[].canPayLater</code></td></tr>
                 <tr><td>잔여 객실 (≤3개)</td><td><span class="tag-ok">✅</span></td><td><code>topRates[].availableRooms</code></td></tr>
@@ -457,40 +503,45 @@ body{
             <ul>
               <li><strong>진입:</strong> S01 호텔 카드 탭 → 새탭(<code>window.open()</code>)</li>
               <li><strong>API:</strong> <code>GET /hotel</code> (단일 검색). 폴링 구조 (<code>isComplete</code> 필드)</li>
-              <li><strong>GNB:</strong> ← 뒤로가기(<code>window.close()</code>, 실패 시 M01 fallback) + [로그인] + [☰]</li>
-              <li><strong>Sticky:</strong> GNB + 5탭바만 상단 고정. 날짜·인원바·필터칩은 인라인.</li>
+              <li><strong>GNB:</strong> ← 뒤로가기(<code>window.close()</code>, 실패 시 M01 fallback) + [로그인] + [공유하기] (v0.36: GNB 우측 고정)</li>
+              <li><strong>Sticky:</strong> GNB + 하단 스티키 바(공급사 최저가 + [가격 보기] CTA)만 고정. 날짜·인원바는 공급사목록 섹션 상단 인라인. (v0.36)</li>
             </ul>
           </div>
         </div>
 
         <div id="sec-6-2" class="p1-sub">
-          <div class="p1-sub-title"><span class="p1-sub-num">6-2</span>5탭 구성 (기본 활성: 호텔정보)</div>
+          <div class="p1-sub-title"><span class="p1-sub-num">6-2</span>화면 구성 (단일 스크롤) <span class="tag-ok" style="font-size:10px">v0.36 전면 재작성</span></div>
+          <div class="p1-text"><p>5탭 구조 폐기 → 단일 스크롤 페이지. 섹션 순서:</p></div>
           <div class="p1-table-wrap">
             <table class="p1-table">
-              <thead><tr><th>탭</th><th>주요 내용</th></tr></thead>
+              <thead><tr><th>#</th><th>섹션</th><th>주요 내용</th><th>API 필드</th></tr></thead>
               <tbody>
-                <tr><td><strong>호텔정보</strong> (기본)</td><td>호텔명·성급·평점·주소·편의시설(대표6개/전체 바텀시트)·설명</td></tr>
-                <tr><td>가격비교</td><td>전체 공급사 목록 · 날짜·인원바 · 필터칩 4개 · accordion 더보기</td></tr>
-                <tr><td>사진</td><td>이미지 균등 2열 그리드. images[].tag 기반 카테고리</td></tr>
-                <tr><td>지도</td><td>Google Maps 임베드. 호텔 좌표 핀. 주변 명소 없음(데이터 없음 확인)</td></tr>
-                <tr><td>리뷰</td><td>KAYAK 리뷰 데이터 표시</td></tr>
+                <tr><td>1</td><td>이미지 갤러리</td><td>대표 이미지 + [갤러리 전체보기] 탭 → 바텀시트. 이미지 균등 2열 그리드.</td><td><code>images[]</code> (tag 기반 카테고리)</td></tr>
+                <tr><td>2</td><td>숙소요약정보</td><td>호텔명·성급·평점·주소</td><td><code>name</code> / <code>guestRatings.OVERALL</code> / <code>address</code></td></tr>
+                <tr><td>3</td><td>공급사목록</td><td>전체 공급사 목록 · 날짜·인원바 (섹션 상단 인라인) · 필터칩 4개 · 더보기 accordion</td><td><code>providers[]</code></td></tr>
+                <tr><td>4</td><td>숙소설명</td><td>호텔 설명 텍스트</td><td><code>description</code></td></tr>
+                <tr><td>5</td><td>리뷰</td><td>guestRatings 7개 카테고리 · 점수 높은 순 · 상위 4개 + 접기/펼치기</td><td><code>guestRatings</code></td></tr>
+                <tr><td>6</td><td>편의시설</td><td>대표 6개 + [전체보기] 탭 → 바텀시트 (featureSummary 텍스트, 아이콘 없음)</td><td><code>facilities[].tag</code> (17개 코드)</td></tr>
+                <tr><td>7</td><td>위치 (지도)</td><td>Google Maps 임베드. 호텔 좌표 핀. 주변 명소 없음(API 데이터 없음 확인)</td><td><code>latitude</code> / <code>longitude</code></td></tr>
+                <tr><td>8</td><td>체크인아웃</td><td>체크인·체크아웃 시간 안내</td><td><code>checkinTime</code> / <code>checkoutTime</code></td></tr>
               </tbody>
             </table>
           </div>
           <div class="p1-text">
-            <p><strong>편의시설:</strong> 대표 6개 = <code>facilities[].tag</code> (17개 코드). 전체 바텀시트 = <code>featureSummary</code> 텍스트 (아이콘 없이 텍스트만).</p>
             <p><strong>평점 레이블:</strong> 9.0+ 완벽 / 8.0+ 매우 좋음 / 7.0+ 좋음 / 6.0+ 괜찮음 / 6.0 미만 보통</p>
           </div>
         </div>
 
         <div id="sec-6-3" class="p1-sub">
-          <div class="p1-sub-title"><span class="p1-sub-num">6-3</span>가격비교 탭 — 공급사 목록</div>
+          <div class="p1-sub-title"><span class="p1-sub-num">6-3</span>공급사목록 섹션</div>
           <div class="p1-text">
             <ul>
+              <li><strong>목록 UI:</strong> <strong>B안 확정</strong> — 공급사별 row 나열, 공급사 간 구분선(divider) 표시. A안(카드형) 미채택. (v0.37)</li>
               <li><strong>필터 칩 4개:</strong> 무료취소 / 조식포함 / 나중에 결제 / 💸 캐시백 (클라이언트 필터)</li>
-              <li><strong>더보기 방식:</strong> Accordion 펼치기 (A안 확정)</li>
+              <li><strong>더보기 방식:</strong> Accordion 펼치기</li>
               <li><strong>잔여 객실:</strong> <code>availableRooms</code> 있으면 표시, 없으면 미표시</li>
-              <li><strong>날짜·인원 바:</strong> 가격비교 탭 내 인라인. 수정 후 동일 호텔 재조회. S01 목록 갱신 없음.</li>
+              <li><strong>날짜·인원 바:</strong> 공급사목록 섹션 상단 인라인. 수정 후 동일 호텔 재조회. S01 목록 갱신 없음.</li>
+              <li><strong>캐시백 배지:</strong> 공급사 행에 표시 (<code>providers[].cashback</code>). S01 카드에는 미표시.</li>
               <li><strong>올마이투어 자사 상품:</strong> MVP 미노출 (Phase 2)</li>
             </ul>
           </div>
@@ -569,6 +620,37 @@ body{
           </div>
         </div>
 
+        <div id="sec-8-11" class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">8-11</span>회원탈퇴 프로세스 <span class="tag-ok" style="font-size:10px">v0.36 신설</span></div>
+          <div class="p1-text">
+            <p><strong>MVP 탈퇴 플로우:</strong></p>
+            <div class="p1-notice" style="font-family:monospace;font-size:11px;line-height:1.8">계정관리(MY03) → [회원탈퇴] 탭 → 이메일 인증 (8-2절 동일 컴포넌트) → 탈퇴 사유 선택 (1개 이상 필수) → [탈퇴하기] → 탈퇴 완료 → M01 이동 + 세션 삭제</div>
+            <p style="margin-top:10px"><strong>탈퇴 사유 선택지 (6개, 복수 선택 가능):</strong></p>
+          </div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>#</th><th>선택지</th><th>활용 목적</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>자주 이용하지 않아요</td><td>리텐션 캠페인 대상 식별</td></tr>
+                <tr><td>2</td><td>원하는 숙소나 가격을 찾기 어려워요</td><td>상품 커버리지·가격 경쟁력 피드백</td></tr>
+                <tr><td>3</td><td>다른 서비스가 더 저렴하거나 편리해요</td><td>경쟁사 이탈 측정</td></tr>
+                <tr><td>4</td><td>개인정보 보호가 걱정돼요</td><td>신뢰도 관리</td></tr>
+                <tr><td>5</td><td>앱/서비스 사용이 불편해요</td><td>UX 개선 피드백</td></tr>
+                <tr><td>6</td><td>기타 (직접 입력)</td><td>미파악 사유 수집 (최대 200자)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p1-text">
+            <ul>
+              <li><strong>탈퇴 처리:</strong> 이메일 인증 완료 후 조건 없이 즉시 처리. 캐시백 전액 소멸·복구 불가 (Waiting·Approved 상태 구분 없음)</li>
+              <li><strong>재가입 제한:</strong> 탈퇴 완료일(KST) + <strong>7일 자정(00:00:00 KST)</strong>까지 동일 이메일 재가입 차단</li>
+              <li><strong>예시:</strong> 7월 1일 23:59 탈퇴 → 7월 8일 00:00:00부터 재가입 가능</li>
+              <li><strong>차단 안내 문구:</strong> "회원탈퇴 후 7일간 재가입이 제한됩니다. OO월 OO일 이후 다시 시도해주세요."</li>
+              <li><strong>Phase 2 추가 제한:</strong> 체크아웃 이전 예약 1건 이상 존재 시 탈퇴 불가 안내 화면 삽입 (MVP 적용 없음)</li>
+            </ul>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -595,11 +677,12 @@ body{
           <div class="p1-sub-title"><span class="p1-sub-num">9-4</span>예약 상태별 캐시백 처리</div>
           <div class="p1-table-wrap">
             <table class="p1-table">
-              <thead><tr><th>KAYAK 상태</th><th>배지</th></tr></thead>
+              <thead><tr><th>KAYAK 상태</th><th>MY02 표시</th></tr></thead>
               <tbody>
-                <tr><td>Waiting (체크아웃 전)</td><td>적립예정</td></tr>
-                <tr><td>Cancelled (취소)</td><td>취소·만료</td></tr>
-                <tr><td>Approved (KAYAK 확인 완료)</td><td>지급완료</td></tr>
+                <tr><td>Waiting (체크인 전 — 투숙예정)</td><td><strong>적립예정</strong> 배지</td></tr>
+                <tr><td>Waiting (체크인 ≤ 오늘 ≤ 체크아웃 — 투숙중)</td><td><strong>적립예정</strong> 배지</td></tr>
+                <tr><td>Approved (KAYAK 확인 완료 — 투숙완료)</td><td><strong>지급완료</strong> 배지</td></tr>
+                <tr><td>Cancelled (취소 — 예약취소)</td><td>배지 없음 + 금액 취소선 (예: <del>₩46,000</del>) (v0.37 변경)</td></tr>
               </tbody>
             </table>
           </div>
@@ -646,13 +729,13 @@ body{
 
         <div class="p1-sub">
           <div class="p1-sub-title"><span class="p1-sub-num">10-1</span>MY01 마이페이지 구성</div>
-          <div class="p1-text"><p><strong>진입:</strong> GNB [☰ 전체메뉴] 탭 → 전체화면. GNB: ← 뒤로가기만 (로그인·전체메뉴 없음).</p></div>
+          <div class="p1-text"><p><strong>진입:</strong> GNB 좌측 아바타(로그인 후) 탭 → 전체화면. GNB: ← 뒤로가기만 (로그인·전체메뉴 없음).</p></div>
           <div class="p1-table-wrap">
             <table class="p1-table">
               <thead><tr><th>상태</th><th>상단</th><th>메뉴</th></tr></thead>
               <tbody>
                 <tr><td>비로그인</td><td>[회원가입/로그인] 버튼</td><td>언어 변환 / 통화 변환 / 약관</td></tr>
-                <tr><td>로그인</td><td>이름·이메일 프로필</td><td>계정관리(MY03) / 캐시백 내역(MY02) / 언어 변환 / 통화 변환 / 약관 + 하단 [로그아웃]</td></tr>
+                <tr><td>로그인</td><td>이름·이메일 프로필</td><td>계정관리(MY03) / 캐시백 내역(MY02) <em>— 탭바 "적립" 탭에서도 직접 진입 가능 (v0.37)</em> / 언어 변환 / 통화 변환 / 약관 + 하단 [로그아웃]</td></tr>
               </tbody>
             </table>
           </div>
@@ -660,15 +743,33 @@ body{
         </div>
 
         <div class="p1-sub">
-          <div class="p1-sub-title"><span class="p1-sub-num">10-2</span>캐시백 내역 (MY02)</div>
+          <div class="p1-sub-title"><span class="p1-sub-num">10-2</span>캐시백 내역 (MY02) <span class="tag-ok" style="font-size:10px">v0.37 전면 재작성</span></div>
           <div class="p1-text">
+            <p><strong>진입 경로 (2가지):</strong></p>
+            <ol>
+              <li>마이페이지(MY01) &gt; [캐시백 내역] 탭 → 전체화면 이동</li>
+              <li><strong>하단 탭바 "적립(⭐)" 탭</strong> 직접 진입 (마이페이지 경유 없음). <em>MY02에서도 탭바 표시.</em></li>
+            </ol>
+            <p><strong>화면 구성:</strong></p>
             <ul>
-              <li><strong>상단 고정:</strong> 총 적립금액 (지급완료 기준 누적 합계) + [캐시백 사용처 안내] 텍스트 버튼</li>
-              <li><strong>목록:</strong> 전체 한 번에 표시, 지급완료일 최신순, 카드형</li>
-              <li><strong>카드 항목:</strong> 예약날짜·체크인아웃·호텔명·도시명·예약OTA·예약ID·예약금액(null·0·cashbackType=NONE 공급사 건 미표시)·적립금액(동일 조건 미표시)·지급월</li>
-              <li><strong>상태 배지:</strong> 적립예정 / 지급완료 / 취소·만료</li>
+              <li><strong>상단 고정:</strong> 상단 요약 2칸 — <code>적립완료 ₩N</code> (Approved 합계) + <code>적립예정 ₩N</code> (Waiting 합계) + [캐시백 사용처 안내] 버튼</li>
+              <li><strong>목록:</strong> 기본 4건 표시 → [더보기] 탭 시 4건씩 추가. 상태별 그룹 고정 정렬 (최신순 아님)</li>
               <li><strong>빈 상태 문구:</strong> "아직 적립된 캐시백이 없어요. 호텔을 예약하고 첫 캐시백을 받아보세요!"</li>
             </ul>
+          </div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>카드 상태</th><th>조건</th><th>배지</th></tr></thead>
+              <tbody>
+                <tr><td>투숙예정</td><td>Waiting + 체크인 전</td><td><strong>적립예정</strong></td></tr>
+                <tr><td>투숙중</td><td>Waiting + 체크인 ≤ 오늘 ≤ 체크아웃</td><td><strong>적립예정</strong></td></tr>
+                <tr><td>투숙완료</td><td>Approved</td><td><strong>지급완료</strong></td></tr>
+                <tr><td>예약취소</td><td>Cancelled</td><td>배지 없음 + 금액 취소선</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p1-text">
+            <p><strong>카드 표시 항목:</strong> 예약날짜 · 체크인아웃 · 호텔명 · 도시명 · 예약OTA · 예약ID · 예약금액(null·0·cashbackType=NONE 건 미표시) · 적립금액(동일 조건 미표시) · 지급월</p>
           </div>
         </div>
 
@@ -679,6 +780,31 @@ body{
               <li><strong>입력 필드:</strong> 이름(영문, 선택) / 성(영문, 선택) / 이메일(읽기전용, 인증완료 표시) / 국적(바텀시트) / 전화번호(+82 + 번호)</li>
               <li><strong>마케팅 토글:</strong> ON/OFF. 초기값 = 회원가입 시 선택값. [마케팅 약관 전문 보기] 바텀시트.</li>
               <li><strong>하단 [저장]:</strong> 필드별 유효성 검사. 오류 시 해당 필드 에러 메시지.</li>
+              <li><strong>[회원탈퇴] 버튼:</strong> [저장] 버튼 하단에 텍스트 버튼 배치 (위험 영역 — 회색 또는 붉은색). 탭 시 → MY04 회원탈퇴 전체화면으로 이동.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="sec-10-4" class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">10-4</span>회원탈퇴 화면 (MY04) <span class="tag-ok" style="font-size:10px">v0.36 신설</span></div>
+          <div class="p1-text">
+            <p><strong>진입:</strong> 계정관리(MY03) 하단 [회원탈퇴] 탭 → 별도 전체화면</p>
+            <p><strong>GNB:</strong> ← 뒤로가기만 (MY01~MY03과 동일 패턴)</p>
+          </div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>단계</th><th>화면 구성</th><th>동작</th></tr></thead>
+              <tbody>
+                <tr><td><strong>1</strong></td><td>이메일 인증</td><td>이메일 표시(읽기전용) + [인증코드 받기] → 6자리 코드 입력 → 자동 확인 (8-2절 동일 컴포넌트)</td></tr>
+                <tr><td><strong>2</strong></td><td>탈퇴 사유 선택</td><td>6개 선택지 (복수 선택 허용). 기타 선택 시 텍스트 입력 필드 노출. 1개 이상 선택 시 [탈퇴하기] 버튼 활성.</td></tr>
+                <tr><td><strong>3</strong></td><td>탈퇴 완료</td><td>"탈퇴가 완료되었습니다" 안내 후 M01 메인으로 이동 + 세션 삭제</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p1-text">
+            <ul>
+              <li><strong>탈퇴 사유 선택지:</strong> 8-11절 참조 (6개 + 기타 직접 입력)</li>
+              <li><strong>Phase 2 추가:</strong> 체크아웃 이전 예약 존재 시 탈퇴 불가 안내 화면 삽입 (8-11절 참조)</li>
             </ul>
           </div>
         </div>
@@ -861,7 +987,9 @@ body{
         <div class="p1-hist-item"><div class="p1-hist-ver">v0.32</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-23</div><div class="p1-hist-text">① 3-3절 신설 — PC 화면 대응 전략 확정 (모바일 단일 + PC 래핑 채택, 출시 직후 적응형 PC 전용 전환) / ② 7-1절·7-4절 수정 — OUT01 이동 방식 변경 (즉시 오픈 → 의도적 2초 딜레이 후 OTA 새탭 오픈, 브랜드 혜택·주요 메시지 2초 노출 목적)</div></div></div>
         <div class="p1-hist-item"><div class="p1-hist-ver">v0.33</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-23</div><div class="p1-hist-text">① 3-3절 보완 — PC 래핑 왼쪽 패널 상세 정책 신설 (구성 순서·sticky 고정·CTA 동작·바텀시트 노출 위치·언어통화 선택 UX·헤드카피 미확정 명시·적용 범위·하단 푸터 미결)</div></div></div>
         <div class="p1-hist-item"><div class="p1-hist-ver">v0.34</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-29</div><div class="p1-hist-text">① 9-2절 CPC 기반 특정 공급사 예외 각주 신설 (캐시백 산출 제외, 100% 자사 수익 집계) / ② 9-2절 정산 기준 시간 추가 (EST 기준, 데이터 반영 시차 명시) / ③ 11-2절 지원 통화 변경 — Constants API 동적 사용 → 카약 확정 20개 고정 목록 / ④ 1-2절 통화 문구 동기화</div></div></div>
-        <div class="p1-hist-item"><div class="p1-hist-ver" style="background:#e0e7ff;color:#3730a3;font-weight:900;">v0.35</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-29</div><div class="p1-hist-text">① 7-4절 OUT01 cashbackType=NONE 공급사 캐시백 안내 배너·금액 미표시 조건 추가 / ② 10-2절 예약금액 조건부 미표시 추가 (null·0·cashbackType=NONE 공급사 건) / ③ 11-1절 지원 언어 4개 → 8개 전면 확장 (zh_CN 제외·zh_TW 추가, es-ES·id-ID·vi-VN 신설) / ④ 11-3절 전면 재작성 — IP 기반 자동 감지 → 도메인 기반 언어+시장 선택 (MY01-C UI, 통화 독립 유지) / ⑤ 11-4절 신설 — 지원 도메인 19개 목록 및 도메인-로케일 매핑</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver">v0.35</div><div class="p1-hist-body"><div class="p1-hist-date">2026-06-29</div><div class="p1-hist-text">① 7-4절 OUT01 cashbackType=NONE 공급사 캐시백 안내 배너·금액 미표시 조건 추가 / ② 10-2절 예약금액 조건부 미표시 추가 (null·0·cashbackType=NONE 공급사 건) / ③ 11-1절 지원 언어 4개 → 8개 전면 확장 (zh_CN 제외·zh_TW 추가, es-ES·id-ID·vi-VN 신설) / ④ 11-3절 전면 재작성 — IP 기반 자동 감지 → 도메인 기반 언어+시장 선택 (MY01-C UI, 통화 독립 유지) / ⑤ 11-4절 신설 — 지원 도메인 19개 목록 및 도메인-로케일 매핑</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver" style="background:#e0e7ff;color:#3730a3;font-weight:900;">v0.36</div><div class="p1-hist-body"><div class="p1-hist-date">2026-07-01</div><div class="p1-hist-text">① 6-1절 GNB 구성 변경 — 공유하기 버튼 GNB 우측 고정 (기존 숙소요약정보 내 위치 폐기) / ② 6-2절 전면 재작성 — 5탭 구조 → 단일 스크롤 페이지 (섹션 순서: 이미지→숙소요약→공급사목록→숙소설명→리뷰→편의시설→위치→체크인아웃). 이미지 갤러리 바텀시트 방식 확정 / ③ 6-5절 수정 — 날짜·인원 바 위치: 공급사목록 섹션 상단 인라인 배치 / ④ 6-6절 수정 — Sticky 구조 변경: GNB + 하단 스티키 바(공급사 최저가+[가격 보기])만 고정 / ⑤ 6-8절 신설 — 리뷰 섹션 guestRatings 7개 카테고리·점수 높은 순·상위 4개+접기펼치기 / ⑥ 8-11절 신설 — 회원탈퇴 프로세스 (이메일 인증→사유 선택 6개→탈퇴 완료, 픽포인트 소멸, 7일 재가입 제한) / ⑦ 10-3절 수정 — 계정관리 화면 하단 회원탈퇴 버튼 추가 / ⑧ 10-4절 신설 — 회원탈퇴 화면 정책</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver" style="background:#dcfce7;color:#166534;font-weight:900;">v0.37</div><div class="p1-hist-body"><div class="p1-hist-date">2026-07-02</div><div class="p1-hist-text">① 4-10절 신설 — M01 GNB 구조 확정 (☰ 제거·좌측 로그인/아바타·우측 캐시백 버튼) / ② 4-10절 — 하단 탭바 구성·노출 범위 (3탭 검색🔍·적립⭐·고객지원🦚, M01+MY02에만 노출) / ③ 4-10절 — 공작새 탭 FAQ 채팅 바텀시트 (키워드 매칭 방식, LLM 아님) / ④ 4-10절 — 캐시백 버튼 상태별 표시 정책 / ⑤ 4-10절 — 웰컴 메시지 정책 / ⑥ 5-1절 수정 — S01 GNB 뒤로가기 패턴 확정 (← 뒤로가기 + 검색조건 요약 + 필터아이콘, 로고 패턴 폐기) / ⑦ 5-2절 수정 — S01 카드 캐시백 배지 미표시 확정 / ⑧ 6-3절 수정 — S02 공급사 목록 UI B안 확정 (row 나열, 구분선) / ⑨ 9-4절 수정 — Cancelled 표시: 배지 제거 → 금액 취소선 / ⑩ 10-1절·10-2절 전면 재작성 — MY02 탭바 "적립" 직접 진입·상단 요약 2칸·여행 카드 4상태·4건+더보기</div></div></div>
       </div>
     </div>
 
@@ -869,8 +997,8 @@ body{
 </div><!-- /p1-body -->
 
 <div class="p1-footer">
-  allmytour meta. Phase 1 (MVP) 정책서 v0.35 · 2026-06-29 · 대화창 2 산출물<br>
-  전체 내용: context/신규정책/phase1정책/신규_mvp_메타서치_v0.35.md · 경로: context/신규정책/new_wireframe/phase1_policy.html
+  allmytour meta. Phase 1 (MVP) 정책서 v0.37 · 2026-07-02 · 대화창 2 산출물<br>
+  전체 내용: context/신규정책/phase1정책/신규_mvp_메타서치_v0.37.md · 경로: context/신규정책/new_wireframe/phase1_policy.html
 </div>
 
 <script>

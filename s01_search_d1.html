@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S01 (디자인확정) — 검색결과 목록 | allmy meta 화면기획서</title>
+<link rel="stylesheet" href="./wf-styles.css">
+<style>
+.two-col { grid-template-columns: 480px 1fr; gap: 28px; }
+
+.mobile-wrap {
+  display: flex; justify-content: center; align-items: flex-start;
+  padding: 20px 16px; background: #2a2a2a; border-radius: 8px; min-height: 560px;
+}
+.mobile-device {
+  width: 375px; background: #1a1f2e; border-radius: 44px; padding: 10px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 20px 50px rgba(0,0,0,.5);
+}
+.m-notch { height: 22px; background: #111; border-radius: 11px 11px 0 0; display: flex; align-items: center; justify-content: center; }
+.m-notch-pill { width: 68px; height: 13px; background: #111; border-radius: 7px; }
+.m-screen {
+  background: #f8f8f8; height: 640px; overflow-y: auto; overflow-x: hidden;
+  border-radius: 0 0 6px 6px; font-size: 13px; position: relative;
+}
+.m-screen::-webkit-scrollbar { display: none; }
+
+/* ── GNB (확정 디자인) ── */
+.s01-gnb-d1 {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; background: #fff; border-bottom: 1px solid #f0f0f0;
+  position: sticky; top: 0; z-index: 30;
+}
+.gnb-back-btn {
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: #374151; background: none; border: none; cursor: pointer; flex-shrink: 0;
+}
+.gnb-search-summary {
+  flex: 1; min-width: 0; cursor: pointer;
+}
+.gnb-dest { font-size: 13px; font-weight: 700; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gnb-cond { font-size: 10px; color: #9ca3af; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gnb-filter-btn {
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: #374151; background: none; border: none; cursor: pointer; flex-shrink: 0;
+}
+
+/* ── 필터 칩 바 ── */
+.filter-bar {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px; overflow-x: auto; background: #fff; border-bottom: 1px solid #f0f0f0;
+  position: sticky; top: 52px; z-index: 20;
+}
+.filter-bar::-webkit-scrollbar { display: none; }
+.f-chip {
+  display: flex; align-items: center; gap: 3px;
+  padding: 5px 10px; border-radius: 16px; border: 1px solid #e5e7eb;
+  background: #fff; font-size: 11px; font-weight: 600; color: #374151;
+  white-space: nowrap; cursor: pointer; flex-shrink: 0;
+}
+.f-chip.active { background: #eef2ff; border-color: #4f46e5; color: #4f46e5; }
+.chip-cnt { background: #4f46e5; color: #fff; border-radius: 8px; padding: 1px 5px; font-size: 10px; }
+
+/* ── 결과 수 헤더 ── */
+.result-hdr { padding: 10px 14px 6px; background: #f8f8f8; }
+.result-count { font-size: 12px; font-weight: 700; color: #111; }
+.result-sub { font-size: 10px; color: #9ca3af; margin-top: 2px; }
+
+/* ── 스켈레톤 ── */
+.skeleton-card-d1 {
+  margin: 0 14px 2px; padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0; background: #fff;
+  display: flex; gap: 10px;
+}
+.sk-thumb { width: 80px; height: 80px; background: #ebebeb; border-radius: 10px; flex-shrink: 0; position: relative; overflow: hidden; }
+.sk-thumb::after { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent); animation:shimmer 1.3s infinite; }
+.sk-lines { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 7px; }
+.sk-line { background: #ebebeb; border-radius: 4px; position: relative; overflow: hidden; }
+.sk-line::after { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent); animation:shimmer 1.3s infinite; }
+@keyframes shimmer { to { left:100%; } }
+.sk-l1 { height:13px; width:65%; }
+.sk-l2 { height:11px; width:40%; }
+.sk-l3 { height:11px; width:30%; }
+
+/* ── 호텔 카드 (확정 디자인 — flat 리스트형) ── */
+.hotel-list-wrap { background: #fff; }
+.hotel-card-d1 {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 14px; border-bottom: 1px solid #f0f0f0;
+  cursor: pointer; background: #fff;
+}
+.hotel-card-d1:active { background: #f9fafb; }
+.hcd-img-wrap { position: relative; flex-shrink: 0; }
+.hcd-img {
+  width: 88px; height: 88px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; font-size: 24px;
+  overflow: hidden;
+}
+.ci1 { background: linear-gradient(135deg,#667eea,#764ba2); }
+.ci2 { background: linear-gradient(135deg,#f093fb,#f5576c); }
+.ci3 { background: linear-gradient(135deg,#4facfe,#00f2fe); }
+.ci4 { background: linear-gradient(135deg,#43e97b,#38f9d7); }
+.hcd-avail-badge {
+  position: absolute; bottom: 5px; left: 0; right: 0;
+  text-align: center;
+  background: rgba(220,38,38,0.88); color: #fff;
+  font-size: 9px; font-weight: 700; padding: 2px 4px;
+  border-radius: 0 0 8px 8px;
+  white-space: nowrap;
+}
+.hcd-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.hcd-name-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 1px; }
+.hcd-name { font-size: 13px; font-weight: 700; color: #111; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hcd-stars { font-size: 11px; color: #f59e0b; flex-shrink: 0; font-weight: 700; }
+.hcd-grade { font-size: 11px; color: #6b7280; }
+.hcd-loc { font-size: 11px; color: #9ca3af; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hcd-price-row { display: flex; justify-content: flex-end; align-items: baseline; gap: 3px; margin-top: 4px; }
+.hcd-price { font-size: 15px; font-weight: 800; color: #111; }
+.hcd-per { font-size: 10px; color: #9ca3af; font-weight: 400; }
+
+/* ── 지도 보기 플로팅 버튼 ── */
+.s01-fab {
+  position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
+  background: #1a1f2e; color: #fff; border: none; border-radius: 20px;
+  padding: 9px 18px; font-size: 12px; font-weight: 700;
+  box-shadow: 0 4px 14px rgba(0,0,0,.28);
+  display: flex; align-items: center; gap: 6px; cursor: pointer; z-index: 20; white-space: nowrap;
+}
+
+/* ── 목록 더보기 버튼 ── */
+.load-more-btn {
+  display: block; width: calc(100% - 28px); margin: 10px 14px;
+  padding: 12px; border: 1.5px solid #d1d5db; border-radius: 10px;
+  background: #fff; font-size: 13px; font-weight: 600; color: #374151; cursor: pointer;
+}
+
+/* ── 딤 오버레이 + 바텀시트 (필터용) ── */
+.dim-overlay {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5); z-index: 20;
+  display: flex; align-items: flex-end;
+}
+.sheet { background: #fff; border-radius: 16px 16px 0 0; width: 100%; max-height: 85%; display: flex; flex-direction: column; }
+.sheet-handle-wrap { padding: 8px 0 4px; display: flex; justify-content: center; }
+.sheet-handle { width: 36px; height: 4px; background: #d1d5db; border-radius: 2px; }
+.sheet-hdr { display: flex; align-items: center; justify-content: space-between; padding: 4px 16px 10px; border-bottom: 1px solid #f0f0f0; }
+.sheet-title { font-size: 15px; font-weight: 700; color: #111; }
+.sheet-close { background: none; border: none; font-size: 16px; color: #9ca3af; cursor: pointer; }
+.sheet-body { flex: 1; overflow-y: auto; padding-bottom: 8px; }
+.sheet-body::-webkit-scrollbar { display: none; }
+.filter-sec { padding: 12px 16px; border-bottom: 1px solid #f5f5f3; }
+.filter-sec-t { font-size: 12px; font-weight: 700; color: #111; margin-bottom: 9px; display: flex; align-items: center; gap: 4px; }
+.filter-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.fchk { padding: 5px 11px; border-radius: 16px; border: 1px solid #e5e7eb; font-size: 11px; font-weight: 600; color: #374151; cursor: pointer; }
+.fchk.on { background: #eef2ff; border-color: #4f46e5; color: #4f46e5; }
+.star-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.star-chk { padding: 5px 10px; border-radius: 16px; border: 1px solid #e5e7eb; font-size: 11px; cursor: pointer; color: #f59e0b; }
+.star-chk.on { background: #fffbeb; border-color: #f59e0b; }
+.price-wrap { padding: 4px 0; }
+.price-labels { display: flex; justify-content: space-between; font-size: 10px; color: #9ca3af; margin-bottom: 6px; }
+.price-track { position: relative; height: 4px; background: #e5e7eb; border-radius: 2px; margin: 10px 0; }
+.price-fill { position: absolute; left: 10%; right: 30%; height: 100%; background: #4f46e5; border-radius: 2px; }
+.price-thumb { position: absolute; top: -7px; width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 2px solid #4f46e5; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,.2); }
+.pt-l { left: calc(10% - 9px); }
+.pt-r { right: calc(30% - 9px); }
+.price-vals { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #111; }
+.sheet-footer { padding: 10px 16px; border-top: 1px solid #f0f0f0; display: flex; gap: 10px; align-items: center; }
+.sheet-reset { background: #fff; border: 1.5px solid #e5e7eb; color: #374151; font-size: 12px; font-weight: 700; border-radius: 8px; padding: 10px 16px; cursor: pointer; }
+.sheet-apply { flex: 1; background: #4f46e5; color: #fff; border: none; font-size: 13px; font-weight: 700; border-radius: 8px; padding: 12px; cursor: pointer; }
+.sort-row { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; cursor: pointer; border-bottom: 1px solid #f5f5f3; }
+.sort-row:last-child { border-bottom: none; }
+.sort-lbl { font-size: 13px; font-weight: 600; color: #111; }
+.sort-chk { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #e5e7eb; flex-shrink: 0; position: relative; }
+.sort-chk.on { border-color: #4f46e5; background: #4f46e5; }
+.sort-chk.on::after { content:''; position:absolute; top:50%;left:50%; transform:translate(-50%,-58%) rotate(45deg); width:4px;height:8px; border-right:2px solid #fff; border-bottom:2px solid #fff; }
+.more-btn { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 600; color: #4f46e5; padding: 6px 0; cursor: pointer; background: none; border: none; }
+.pad-bottom { height: 30px; }
+
+/* ── 재검색 오버레이 (S01_D1-A) ── */
+.search-expanded-d1 {
+  background: #fff; padding: 12px 14px 14px;
+  border-bottom: 2px solid #f0f0f0; position: relative; z-index: 22;
+}
+.sf-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: #f4f4f2; border-radius: 10px; margin-bottom: 8px; cursor: pointer; }
+.sf-icon { font-size: 16px; flex-shrink: 0; }
+.sf-info { flex: 1; min-width: 0; }
+.sf-label { font-size: 10px; color: #9ca3af; margin-bottom: 1px; }
+.sf-val { font-size: 13px; font-weight: 600; color: #111; }
+.sf-val.ph { color: #9ca3af; }
+.sf-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+.sf-search { width: 100%; background: #1952c7; color: #fff; border: none; border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 4px; }
+.search-dim-bg { position: relative; }
+.search-dim-bg::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.45); z-index: 21; pointer-events: none; }
+
+/* ── 논의 요약 테이블 ── */
+.disc-table-wrap { background:#fffbf0; border:1.5px solid #f59e0b; border-radius:10px; padding:20px 24px; margin-bottom:24px; }
+.disc-table-wrap h2 { font-size:15px; font-weight:700; color:#92400e; margin:0 0 6px; }
+.disc-table-wrap p { font-size:12px; color:#92400e; margin:0 0 14px; }
+.disc-table { width:100%; border-collapse:collapse; font-size:12px; }
+.disc-table th { background:#fef3c7; padding:7px 10px; text-align:left; font-weight:700; color:#78350f; border:1px solid #fde68a; white-space:nowrap; }
+.disc-table td { padding:8px 10px; border:1px solid #fde68a; color:#374151; vertical-align:top; line-height:1.7; }
+.disc-table tr:nth-child(even) td { background:#fffef8; }
+.disc-table td strong { color:#92400e; font-weight:700; }
+.disc-table td em { color:#d97706; font-style:normal; font-weight:600; }
+</style>
+</head>
+<body>
+
+<nav class="page-nav">
+  <a class="page-nav-back" href="index.html">← 목록으로</a>
+  <span class="page-nav-sep">|</span>
+  <span class="page-nav-title">S01 (디자인확정) — 검색결과 목록</span>
+  <span class="page-nav-route">/ 검색 후 진입 화면 · 정책서 v0.37 기준</span>
+  <div class="page-nav-nav">
+    <a class="page-nav-pager" href="m01_main_d1.html">← 이전</a>
+    <span class="page-nav-pager-disabled">다음 →</span>
+  </div>
+</nav>
+
+<!-- ── 목차 (TOC) ── -->
+<nav class="toc">
+  <div class="toc-inner">
+    <span class="toc-label">목차</span>
+    <a href="#s01d1-main" class="toc-link">S01_D1 메인</a>
+    <span class="toc-sep"></span>
+    <a href="#s01-a" class="toc-link">S01-A 재검색</a>
+    <span class="toc-sep"></span>
+    <a href="#s01-d" class="toc-link">S01-D 전체필터</a>
+    <a href="#s01-d1" class="toc-link">D-1 가격</a>
+    <a href="#s01-d2" class="toc-link">D-2 성급</a>
+    <a href="#s01-d3" class="toc-link">D-3 숙소유형</a>
+    <a href="#s01-d4" class="toc-link">D-4 브랜드·체인</a>
+    <a href="#s01-d5" class="toc-link">D-5 평점 7.0+</a>
+    <a href="#s01-d-zero" class="toc-link">D-zero 결과없음</a>
+    <span class="toc-sep"></span>
+    <a href="#s01-e" class="toc-link">S01-E 정렬</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- ════════════════════════════════════════════════
+  S01_D1 메인 — 검색결과 목록 (확정 디자인)
+════════════════════════════════════════════════ -->
+<div id="s01d1-main" class="sec-title">
+  <span class="sec-badge">S01_D1</span>검색결과 목록 — 메인
+  <span style="font-size:12px;font-weight:400;color:#888">— 확정 디자인 기준</span>
+</div>
+<div class="sec-sub">
+  검색 실행 후 진입 화면. GNB ← + 검색조건 요약 + 필터아이콘 · 필터 칩 바 · flat 리스트형 호텔 카드 · 하단 고정 "지도로 보기" 버튼.<br>
+  플로우: GNB 검색조건 탭 → 재검색 슬라이드다운(S01-A) / 카드 탭 → S02 숙소상세 / 필터 칩 탭 → 필터 바텀시트 / 🗺 지도로 보기 탭 → 지도 화면
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — S01 검색결과 화면 전체 (디자인확정 기준)</div>
+  <ul class="sec-policy-list">
+    <li><strong>API</strong>: <code>GET /api/3.0/hotels?destination=kplace:{entityKey}</code> (5절, 12-1절)</li>
+    <li><strong>필수 파라미터</strong>: <code>pageSize=50</code>, <code>responseOptions=topRates,images,filter</code>, <code>userTrackId</code>, <code>includeTaxesInTotal=true</code> (12-2절)</li>
+    <li><strong>가격 표시</strong>: 세금 포함 최종가. <code>isCheapestRate:true</code> 기준 최저가 1건만 카드에 표시 (5-3절)</li>
+    <li><strong>GNB 패턴 변경</strong>: ← 뒤로가기 + 검색조건 요약(목적지·날짜·인원) + 필터아이콘. 로고·[☰] 제거 (확정 디자인)</li>
+    <li><strong>페이지네이션</strong>: [목록 더보기] 버튼 방식. 종료 시 "총 N개 숙소가 모두 표시됐습니다" (5-8절)</li>
+    <li><strong>비로그인 허용</strong>: 검색·가격조회 모두 허용 (8-6절)</li>
+    <li><strong>캐시백 배지</strong>: S01 카드에서 미표시. S02 상세에서 표시 (확정 디자인 기준. ⚠️ 대표 논의 필요)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.37 5절·8-6절·12-1절</div>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- GNB (확정 디자인) -->
+        <div class="s01-gnb-d1">
+          <button class="gnb-back-btn">← <span class="wf-cn">1</span></button>
+          <div class="gnb-search-summary">
+            <div class="gnb-dest">서울 <span class="wf-cn">2</span></div>
+            <div class="gnb-cond">6/18(목) ~ 6/19(금) · 성인 2명 · 객실 1개</div>
+          </div>
+          
+        </div>
+
+        <!-- 필터/정렬 칩 바 -->
+        <div class="filter-bar">
+          <div class="f-chip active">⊟ 전체 <span class="chip-cnt">2</span> <span class="wf-cn">3</span></div>
+          <div class="f-chip">인기순 ↕ <span class="wf-cn">4</span></div>
+          <div class="f-chip">1박 가격 ∨ <span class="wf-cn">5</span></div>
+          <div class="f-chip">성급 ∨</div>
+          <div class="f-chip">숙소유형 ∨</div>
+          <div class="f-chip">브랜드·체인 ∨</div>
+          <div class="f-chip">평점 7.0+</div>
+        </div>
+
+        <!-- 결과 수 헤더 -->
+        <div class="result-hdr">
+          <div class="result-count">서울 · 총 843개 숙소 <span class="wf-cn">6</span></div>
+          <div class="result-sub">6월 18일(목) — 19일(금) · 성인 2명 · 1박</div>
+        </div>
+
+        <!-- 스켈레톤 -->
+        <div class="hotel-list-wrap">
+          <div class="skeleton-card-d1">
+            <div class="sk-thumb"></div>
+            <div class="sk-lines">
+              <div class="sk-line sk-l1"></div>
+              <div class="sk-line sk-l2"></div>
+              <div class="sk-line sk-l3"></div>
+            </div>
+            <span class="wf-cn" style="align-self:flex-start;margin-top:0;">7</span>
+          </div>
+
+          <!-- 카드 1 (남은 객실 배지 있음) -->
+          <div class="hotel-card-d1">
+            <div class="hcd-img-wrap">
+              <div class="hcd-img ci1">🏨 <span class="wf-cn" style="position:absolute;top:4px;right:4px;z-index:11;">8</span></div>
+              <div class="hcd-avail-badge">남은 객실 2개<span class="wf-cn">10</span></div>
+            </div>
+            <div class="hcd-info">
+              <div class="hcd-name-row">
+                <span class="hcd-name">포시즌스 호텔 서울</span><span class="wf-cn">9</span>
+                <span class="hcd-stars">★ 4.9</span>
+              </div>
+              <div class="hcd-grade">5성급 · 호텔</div>
+              <div class="hcd-loc">📍 종로구 사직로 100</div>
+              <div class="hcd-price-row">
+                <span class="hcd-price">₩388,000</span>
+                <span class="hcd-per">/1박</span><span class="wf-cn">11</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 카드 2 (배지 없음) -->
+          <div class="hotel-card-d1">
+            <div class="hcd-img-wrap">
+              <div class="hcd-img ci2">🏩</div>
+            </div>
+            <div class="hcd-info">
+              <div class="hcd-name-row">
+                <span class="hcd-name">롯데호텔 서울</span>
+                <span class="hcd-stars">★ 4.7</span>
+              </div>
+              <div class="hcd-grade">5성급 · 호텔</div>
+              <div class="hcd-loc">📍 중구 소공로 30</div>
+              <div class="hcd-price-row">
+                <span class="hcd-price">₩245,000</span>
+                <span class="hcd-per">/1박</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 카드 3 (남은 객실 배지 있음) -->
+          <div class="hotel-card-d1">
+            <div class="hcd-img-wrap">
+              <div class="hcd-img ci3">🛎️</div>
+              <div class="hcd-avail-badge">남은 객실 1개</div>
+            </div>
+            <div class="hcd-info">
+              <div class="hcd-name-row">
+                <span class="hcd-name">노보텔 앰배서더 동대문</span>
+                <span class="hcd-stars">★ 4.1</span>
+              </div>
+              <div class="hcd-grade">4성급 · 호텔</div>
+              <div class="hcd-loc">📍 동대문구 천호대로 238</div>
+              <div class="hcd-price-row">
+                <span class="hcd-price">₩128,000</span>
+                <span class="hcd-per">/1박</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 카드 4 -->
+          <div class="hotel-card-d1">
+            <div class="hcd-img-wrap">
+              <div class="hcd-img ci4">🏨</div>
+            </div>
+            <div class="hcd-info">
+              <div class="hcd-name-row">
+                <span class="hcd-name">나인트리 바이 파르나스</span>
+                <span class="hcd-stars">★ 4.4</span>
+              </div>
+              <div class="hcd-grade">4성급 · 호텔</div>
+              <div class="hcd-loc">📍 중구 을지로 238</div>
+              <div class="hcd-price-row">
+                <span class="hcd-price">₩172,000</span>
+                <span class="hcd-per">/1박</span>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /hotel-list-wrap -->
+
+        <!-- 목록 더보기 버튼 -->
+        <button class="load-more-btn">목록 더보기 (843개 중 50개 표시) <span class="wf-cn">12</span></button>
+
+        <!-- 전체 로드 완료 토스트 (전체 결과 로드 완료 시 · 이 시점에 더보기 버튼 미노출 처리) -->
+        <div style="padding:10px 14px;text-align:center;">
+          <span style="display:inline-flex;align-items:center;gap:6px;background:#1a1f2e;color:#fff;font-size:11px;font-weight:600;padding:8px 18px;border-radius:100px;">✓ 총 843개 숙소가 모두 표시됐습니다 <span class="wf-cn">13</span></span>
+        </div>
+
+        <!-- 지도 보기 플로팅 버튼 -->
+        <button class="s01-fab">🗺 지도로 보기 <span class="wf-cn">14</span></button>
+        <div class="pad-bottom"></div>
+
+      </div>
+    </div>
+  </div><!-- /mobile-wrap -->
+
+  <!-- 주석 패널 S01_D1 -->
+  <div class="ann">
+    <h3>화면 주석 — S01_D1</h3>
+
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">GNB 좌측 — 뒤로가기</div>
+        <div class="ann-desc"><ul><li>← 버튼 탭 시 이전 화면(M01 메인)으로 이동.</li><li>확정 디자인 기준 — 기존 로고 제거, 뒤로가기로 교체.</li></ul></div>
+        <div class="ann-rule">확정 디자인 기준. 정책서 5-1절 변경 예정.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">GNB 중앙 — 검색조건 요약</div>
+        <div class="ann-desc"><ul><li>상단 줄: 목적지명 (굵게).</li><li>하단 줄: "체크인~체크아웃 · 성인 N명 · 객실 N개" 요약.</li><li>탭 시 → 재검색 슬라이드다운(S01-A) 진입.</li></ul></div>
+        <div class="ann-rule">정책서 5-1절. 재검색 상세 동작은 S01-A 케이스 참조.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">⊟ 전체 필터 칩</div>
+        <div class="ann-desc"><ul><li>탭 시 → S01-D 전체 필터 바텀시트 진입.</li><li>필터 적용 중이면 파란 배경 활성화 + 숫자 배지 (적용된 필터 수).</li></ul></div>
+        <div class="ann-rule">정책서 5-6절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">정렬 칩</div>
+        <div class="ann-desc"><ul><li>기본값: "인기순".</li><li>탭 시 → S01-E 정렬 바텀시트 진입.</li><li>선택된 정렬 기준 칩에 표시.</li></ul></div>
+        <div class="ann-rule">정책서 5-6-1절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">5</div>
+      <div class="ann-body">
+        <div class="ann-title">개별 필터 칩 (가격·성급·숙소유형 등)</div>
+        <div class="ann-desc"><ul><li>각 칩 탭 시 해당 개별 필터 바텀시트 진입 (S01-D-1 ~ D-5).</li><li>필터 적용 중이면 파란 배경 활성화.</li></ul></div>
+        <div class="ann-rule">정책서 5-6절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">6</div>
+      <div class="ann-body">
+        <div class="ann-title">결과 수 헤더</div>
+        <div class="ann-desc"><ul><li>상단: "목적지 · 총 N개 숙소" (API 응답 totalCount 기준).</li><li>하단: 검색조건 요약 (날짜·인원·박수).</li></ul></div>
+        <div class="ann-rule">정책서 5-5절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">7</div>
+      <div class="ann-body">
+        <div class="ann-title">스켈레톤 (로딩 중 임시 표시)</div>
+        <div class="ann-desc"><ul><li>API 응답 전까지 카드 자리에 회색 사각형이 깜빡이는 형태로 표시됨.</li><li>응답 완료 후 실제 카드로 교체.</li></ul></div>
+        <div class="ann-rule">정책서 5-2절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">8</div>
+      <div class="ann-body">
+        <div class="ann-title">카드 이미지 — 좌측 정사각형 썸네일</div>
+        <div class="ann-desc"><ul><li>확정 디자인: 88×88px 정사각형, 모서리 둥글게.</li><li>이미지 출처: KAYAK API <code>images[0].url</code>.</li><li>이미지 없을 때: 회색 플레이스홀더.</li><li>카드 탭 시 → S02 숙소상세로 이동 (이미지 포함 카드 전체 탭 영역).</li></ul></div>
+        <div class="ann-rule">정책서 5-3절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">9</div>
+      <div class="ann-body">
+        <div class="ann-title">호텔명 / 성급 / 위치 / 별점</div>
+        <div class="ann-desc"><ul>
+          <li>호텔명: <code>name</code> (굵게, 1줄 말줄임).</li>
+          <li>별점: <code>guestRating</code> → "★ N.N" 형식 (예: "★ 8.6").</li>
+          <li>성급: <code>starRating</code> (정수 1~5) → "N성급" 표시. null이면 미표시.</li>
+          <li>숙소 유형: <code>propertyType</code> (정수 코드) → 필터 API <code>propertyTypes[].id</code>↔<code>name</code> 매핑으로 변환 (예: 0→호텔, 6→리조트, 8→게스트하우스). null이면 미표시.</li>
+          <li>위치: <code>address</code> (1줄 말줄임).</li>
+        </ul></div>
+        <div class="ann-rule">정책서 5-3절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">10</div>
+      <div class="ann-body">
+        <div class="ann-title">잔여 객실 배지 — "남은 객실 N개"</div>
+        <div class="ann-desc"><ul><li>카드 이미지 하단 오버레이 영역에 빨간 배지로 표시.</li><li>노출 조건: 잔여 객실 수가 일정 수 이하일 때만 표시 (임계값 미확정).</li><li>데이터 없거나 임계값 초과 시 배지 미표시.</li></ul></div>
+        <div class="ann-rule">⚠️ 미확정 — 잔여 객실 API 필드 및 임계값 개발팀 확인 필요.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">11</div>
+      <div class="ann-body">
+        <div class="ann-title">카드 최저가 — 우하단 단일 표시</div>
+        <div class="ann-desc"><ul><li>확정 디자인: 공급사 행 제거, 최저가만 카드 우하단에 표시.</li><li>금액: <code>topRates[0].price</code> (<code>isCheapestRate:true</code> 기준).</li><li>세금 포함 최종가. "/N박" 단위 함께 표시 — <strong>N은 검색 박수(체크아웃 - 체크인 일수)</strong>. 2박 검색 시 "/2박", 3박 검색 시 "/3박"으로 자동 변경.</li><li>표시 금액도 검색 박수에 맞는 합산 금액으로 계산 (예: 1박 ₩200,000 × 2박 검색 = ₩400,000 표시).</li><li>천 단위 구분 쉼표, ₩ 기호 표기.</li></ul></div>
+        <div class="ann-front">← 금액 참조: <code>topRates[0].price (isCheapestRate:true)</code></div>
+        <div class="ann-rule">정책서 5-3절·5-4절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">12</div>
+      <div class="ann-body">
+        <div class="ann-title">[목록 더보기] 버튼</div>
+        <div class="ann-desc"><ul><li>탭 시 다음 페이지 50개 추가 로드. <code>pageIndex</code> 1씩 증가.</li><li>버튼 문구: "목록 더보기 (전체 N개 중 M개 표시)".</li><li>전체 목록 로드 완료 시 → 버튼 자체를 화면에서 숨긴다 (미노출 처리). 완료 토스트(13번)가 대신 나타남.</li></ul></div>
+        <div class="ann-rule">정책서 5-8절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">13</div>
+      <div class="ann-body">
+        <div class="ann-title">전체 로드 완료 — 토스트 팝업</div>
+        <div class="ann-desc"><ul><li>전체 목록을 다 불러온 순간, 더보기 버튼(12번)이 화면에서 사라지고 이 토스트 팝업이 나타난다.</li><li>팝업은 화면 하단 중앙에 진한 바탕 알약(캡슐) 모양으로 표시.</li><li>문구: "✓ 총 N개 숙소가 모두 표시됐습니다" (N = API <code>totalCount</code> 값).</li><li>토스트 자동 사라짐 여부: 미확정 (페이지에 고정 표시 vs 3초 후 소멸).</li></ul></div>
+        <div class="ann-rule">정책서 5-8절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">14</div>
+      <div class="ann-body">
+        <div class="ann-title">🗺 지도로 보기 플로팅 버튼</div>
+        <div class="ann-desc"><ul><li>화면 하단 중앙에 항상 고정.</li><li>탭 시 → 지도 화면으로 이동.</li></ul></div>
+        <div class="ann-rule">⚠️ 미확정 — 지도 화면 MVP 포함 여부 별도 확인 필요.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn" style="background:#e0e7ef;color:#374151;">i</div>
+      <div class="ann-body">
+        <div class="ann-title">MVP 미포함</div>
+        <div class="ann-desc"><ul><li>올마이투어 자사 상품 행: MVP 제외 (Phase 2)</li><li>공급사별 가격 행: 카드에서 제거 → S02에서 확인</li><li>무료취소·나중에결제 배지: 카드에서 제거</li><li>캐시백 배지: S01 카드 미표시 (⚠️ 대표 논의 필요)</li></ul></div>
+        <div class="ann-rule">정책서 5-7절.</div>
+      </div>
+    </div>
+
+  </div><!-- /ann -->
+</div><!-- /two-col S01_D1 -->
+
+<hr class="sec-divider">
+
+<div id="s01-a" class="sec-title">
+  <span class="sec-badge">S01-A</span>재검색 오버레이 — 재검색바 탭 시
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — S01-A 재검색 오버레이</div>
+  <ul class="sec-policy-list">
+    <li><strong>진입</strong>: 재검색바 전체 행 탭 → GNB 아래 검색폼 슬라이드다운. 별도 [수정] 버튼 없음 (5-1절)</li>
+    <li><strong>컴포넌트</strong>: M01 검색폼과 동일. 자동완성·달력·인원설정 동작 동일 (5-1절)</li>
+    <li><strong>자동완성</strong>: M01-B와 동일 로직 적용 (4-5절)</li>
+    <li><strong>닫기</strong>: 딤 영역 탭 또는 [검색] 실행 시 슬라이드업 닫힘 (5-1절)</li>
+    <li><strong>재검색 시 필터 초기화</strong>: 날짜·지역·인원 변경 후 [검색하기] 탭 시 적용 중인 필터 전체 초기화 + 토스트 "필터가 초기화됐습니다" 표시 (5-6-5절)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.32 5-1절·4-5절·5-6-5절</div>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- GNB (확정 디자인) -->
+        <div class="s01-gnb-d1" style="position:sticky;top:0;z-index:40;">
+          <button class="gnb-back-btn">←</button>
+          <div class="gnb-search-summary">
+            <div class="gnb-dest">서울</div>
+            <div class="gnb-cond">6/18(목) ~ 6/19(금) · 성인 2명 · 객실 1개</div>
+          </div>
+          
+        </div>
+
+        <!-- 검색폼 (확장 상태 · GNB를 덮는 오버레이) -->
+        <div class="search-expanded" style="position:absolute;top:0;left:0;right:0;z-index:50;background:#fff;padding:12px 14px 14px;">
+          <div class="sf-row">
+            <span class="sf-icon">📍</span>
+            <div class="sf-info">
+              <div class="sf-label">목적지</div>
+              <div class="sf-val">서울</div>
+            </div>
+            <span class="wf-cn">1</span>
+          </div>
+          <div class="sf-2col">
+            <div class="sf-row" style="margin-bottom:0;">
+              <span class="sf-icon">📅</span>
+              <div class="sf-info">
+                <div class="sf-label">체크인</div>
+                <div class="sf-val">6월 18일 (목)</div>
+              </div>
+              <span class="wf-cn">2</span>
+            </div>
+            <div class="sf-row" style="margin-bottom:0;">
+              <span class="sf-icon">📅</span>
+              <div class="sf-info">
+                <div class="sf-label">체크아웃</div>
+                <div class="sf-val">6월 19일 (금)</div>
+              </div>
+            </div>
+          </div>
+          <div class="sf-row" style="margin-top:8px;">
+            <span class="sf-icon">👤</span>
+            <div class="sf-info">
+              <div class="sf-label">인원 · 객실</div>
+              <div class="sf-val">성인 2명 · 객실 1개</div>
+            </div>
+            <span class="wf-cn">3</span>
+          </div>
+          <button class="sf-search">검색하기 <span class="wf-cn">4</span></button>
+        </div>
+
+        <!-- 딤 처리된 배경 (필터 + 결과) -->
+        <div class="search-dim-bg">
+          <div class="filter-bar" style="pointer-events:none;">
+            <div class="f-chip active">⊟ 전체 <span class="chip-cnt">2</span></div>
+            <div class="f-chip">인기순 ↕</div>
+            <div class="f-chip">숙소형태</div>
+            <div class="f-chip">성급</div>
+          </div>
+          <div class="result-hdr">
+            <div class="result-count">서울 · 총 843개 숙소</div>
+            <div class="result-sub">6월 18일(목) — 19일(금) · 성인 2명 · 1박</div>
+          </div>
+          <div class="hotel-card-d1" style="pointer-events:none;opacity:0.6;">
+            <div class="hcd-img-wrap"><div class="hcd-img ci1">🏨</div></div>
+            <div class="hcd-info">
+              <div class="hcd-name-row"><span class="hcd-name">포시즌스 호텔 서울</span><span class="hcd-stars">★ 4.9</span></div>
+              <div class="hcd-grade">5성급 · 호텔</div>
+              <div class="hcd-loc">📍 종로구 사직로 100</div>
+              <div class="hcd-price-row"><span class="hcd-price">₩388,000</span><span class="hcd-per">/1박</span></div>
+            </div>
+          </div>
+          <div class="hotel-card-d1" style="pointer-events:none;opacity:0.6;">
+            <div class="hcd-img-wrap"><div class="hcd-img ci2">🏩</div></div>
+            <div class="hcd-info">
+              <div class="hcd-name-row"><span class="hcd-name">롯데호텔 서울</span><span class="hcd-stars">★ 4.7</span></div>
+              <div class="hcd-grade">5성급 · 호텔</div>
+              <div class="hcd-loc">📍 중구 소공로 30</div>
+              <div class="hcd-price-row"><span class="hcd-price">₩245,000</span><span class="hcd-per">/1박</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 주석 패널 S01-A -->
+  <div class="ann">
+    <h3>화면 주석 — S01-A</h3>
+    <div class="ann-item">
+      <div class="cn">진입</div>
+      <div class="ann-body">
+        <div class="ann-title">검색폼 오버레이 방식 ★</div>
+        <div class="ann-desc"><ul><li>재검색바 전체 탭 → 검색폼이 화면 최상단(top:0)부터 GNB 전체를 덮는 오버레이로 등장 (슬라이드다운).</li><li>GNB(← 뒤로가기·검색요약)는 검색폼 아래로 가려짐.</li><li>검색폼 아래 필터바·결과 영역은 반투명 딤(<code>rgba 0,0,0,0.45</code>)으로 처리 (<code>pointer-events:none</code>으로 인터랙션 차단).</li><li><b>닫힘 조건:</b> ① 딤 영역 탭 ② [검색하기] 버튼 탭 → 슬라이드업으로 닫힘.</li></ul></div>
+        <div class="ann-rule">검색폼 z-index:50 > GNB z-index:40. 검색폼이 GNB를 덮는 구조.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">목적지 행</div>
+        <div class="ann-desc"><ul><li>현재 검색 목적지 선입력 상태로 표시. 탭 시 자동완성 오버레이로 전환 (M01-B와 동일 컴포넌트 재사용).</li><li>자동완성 결과 노출 순서: <code>city</code> 최상단 → <code>neighborhood</code> → <code>hotel</code> 순 클라이언트 정렬.</li></ul></div>
+        <div class="ann-front">← Autocomplete API. city 우선 → neighborhood → hotel 순 정렬.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">날짜 행 (체크인 / 체크아웃)</div>
+        <div class="ann-desc"><ul><li>현재 선택된 체크인·체크아웃 날짜 선입력 상태로 표시. 탭 시 달력 오버레이 전환 (M01-C와 동일 컴포넌트 재사용).</li><li>체크인 행 탭 시 달력 오픈 → 날짜 선택 → 자동으로 체크아웃 선택 모드 전환.</li></ul></div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">인원 · 객실 행</div>
+        <div class="ann-desc"><ul><li>현재 설정된 성인 수·객실 수 선입력 상태로 표시 (예: "성인 2명 · 객실 1개"). 탭 시 인원설정 오버레이 전환 (M01-D와 동일 컴포넌트 재사용).</li></ul></div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">[검색하기] 버튼</div>
+        <div class="ann-desc"><ul><li>탭 시 변경된 조건으로 S01 결과 갱신 (API 재호출). 검색폼 슬라이드업으로 닫힘.</li><li><b>필터 초기화 조건:</b> 날짜·지역·인원 변경 시 적용 중인 필터(A 상태) 전체 초기화. 토스트 "필터가 초기화됐습니다" 표시.</li><li>동일 조건 탭 시: 필터 유지 + 재검색 실행.</li></ul></div>
+        <div class="ann-rule">정책서 v0.32 5-6-5절 — 재검색 시 필터 초기화 + 토스트.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════ S01-D 전체 필터 ════ -->
+<div id="s01-d" class="sec-title">
+  <span class="sec-badge">S01-D</span>전체 필터 바텀시트 — [⊟ 전체] 칩 탭
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — S01-D 필터 바텀시트</div>
+  <ul class="sec-policy-list">
+    <li><strong>필터 항목 5개</strong>: 가격슬라이더 / 성급 / 숙소유형 / 브랜드·체인 / 평점 7.0+. 무료취소 제외 확정 (<code>hasFreeCancellation</code> 필드 없음) (5-6-1절)</li>
+    <li><strong>필터 옵션 출처</strong>: <code>responseOptions=filter</code> 포함 → KAYAK 집계 반환 (<code>chains</code>, <code>propertyTypes</code>, <code>starRatings</code>, <code>priceRanges</code>). 성급·평점은 고정 (5-6-2절)</li>
+    <li><strong>가격 슬라이더 범위</strong>: min = <code>postFilterLowestTotalRate</code> 동적 / max = <code>postFilterHighestTotalRate</code> 동적. ₩5,000 단위. 1박 기준 (5-6-3절)</li>
+    <li><strong>숙소유형·브랜드체인</strong>: 초기 5개 표시 → [더보기] 탭 시 나머지 전체 노출 (최대 10개, 총 최대 15개). <code>hotelCount</code> 내림차순. 0개 항목 제외 (5-6-3절)</li>
+    <li><strong>필터 이중 상태</strong>: A(검색에 반영된 상태) / B(바텀시트 내 조작 중 상태). [적용] = B→A 반영 후 재검색. X 닫기 = B 무시·A 유지 (5-6-5절)</li>
+    <li><strong>필터 적용 방식</strong>: [결과 N개 보기] 버튼 탭 시 API 재호출. <code>pageIndex=0</code> 리셋 (5-6-5절)</li>
+    <li><strong>결과 0개 처리</strong>: 기존 목록 유지 + 상단 안내 배너 + [필터 초기화] 버튼 (5-6-4절)</li>
+    <li><strong>활성 필터 수</strong>: ⊟ 전체 칩 배지로 표시 (예: <code>⊟ 전체 2</code>) (5-6-5절)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.32 5-6절</div>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen" style="position:relative;">
+        <div class="dim-overlay">
+          <div class="sheet">
+            <div class="sheet-handle-wrap"><div class="sheet-handle"></div></div>
+            <div class="sheet-hdr">
+              <span class="sheet-title">전체 필터 <span class="wf-cn">1</span></span>
+              <button class="sheet-close">✕</button>
+            </div>
+            <div class="sheet-body">
+              <!-- ① 1박 가격 범위 -->
+              <div class="filter-sec">
+                <div class="filter-sec-t">1박 가격 범위 <span class="wf-cn">2</span></div>
+                <div class="price-wrap">
+                  <div class="price-labels"><span>최저 ₩N <span class="wf-cn">3</span></span><span>최고 ₩N+</span></div>
+                  <div class="price-track"><div class="price-fill"></div><div class="price-thumb pt-l"></div><div class="price-thumb pt-r"></div></div>
+                  <div class="price-vals"><span>₩50,000</span><span>₩350,000</span></div>
+                </div>
+              </div>
+              <!-- ② 성급 -->
+              <div class="filter-sec">
+                <div class="filter-sec-t">성급 <span class="wf-cn">4</span></div>
+                <div class="star-row">
+                  <span class="star-chk" style="font-size:11px;padding:4px 6px;">성급없음</span>
+                  <span class="star-chk">★</span><span class="star-chk">★★</span>
+                  <span class="star-chk on">★★★</span><span class="star-chk on">★★★★</span><span class="star-chk">★★★★★</span>
+                </div>
+              </div>
+              <!-- ③ 숙소유형 -->
+              <div class="filter-sec">
+                <div class="filter-sec-t">숙소유형 <span class="wf-cn">5</span></div>
+                <div class="filter-chips">
+                  <span class="fchk on">호텔</span><span class="fchk">리조트</span>
+                  <span class="fchk on">아파트</span><span class="fchk">게스트하우스</span>
+                  <span class="fchk">호스텔</span>
+                </div>
+                <button class="more-btn">+ 3개 더보기 ▾ <span class="wf-cn">6</span></button>
+              </div>
+              <!-- ④ 브랜드·체인 -->
+              <div class="filter-sec">
+                <div class="filter-sec-t">브랜드·체인 <span class="wf-cn">5</span></div>
+                <div class="filter-chips">
+                  <span class="fchk">메리어트</span><span class="fchk">힐튼</span>
+                  <span class="fchk">IHG</span><span class="fchk">하얏트</span>
+                  <span class="fchk">아코르</span>
+                </div>
+                <button class="more-btn">+ 5개 더보기 ▾</button>
+              </div>
+              <!-- ⑤ 평점 7.0+ -->
+              <div class="filter-sec" style="border-bottom:none;">
+                <div class="filter-sec-t">평점 <span class="wf-cn">7</span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;">
+                  <span style="font-size:13px;color:#222;">7.0점 이상만 보기</span>
+                  <div style="width:40px;height:22px;border-radius:11px;background:#4f46e5;position:relative;cursor:pointer;">
+                    <div style="width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:2px;right:2px;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="sheet-footer">
+              <button class="sheet-reset">초기화</button>
+              <button class="sheet-apply">결과 843개 보기 <span class="wf-cn">8</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ann">
+    <h3>화면 주석 — S01-D</h3>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">딤 + 바텀시트 슬라이드업</div>
+        <div class="ann-desc"><ul><li>검정 반투명 딤(<code>rgba 0,0,0,0.5</code>) 위에 바텀시트가 화면 하단에서 슬라이드업으로 진입.</li><li><b>닫힘 조건:</b> ① 딤 탭 ② [✕] 버튼 탭 ③ [결과 N개 보기] 탭 → 슬라이드다운으로 닫힘.</li><li>바텀시트 최대 높이: 화면의 85%. 내용이 많으면 시트 내 스크롤.</li></ul></div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">1박 가격 범위 슬라이더</div>
+        <div class="ann-desc"><ul><li>min·max 핸들 2개. 핸들 이동 시 현재 값 실시간 표시.</li><li><b>이동 단위:</b> ₩5,000 단위.</li><li><b>범위:</b> min = <code>postFilterLowestTotalRate</code> 동적 설정 / max = <code>postFilterHighestTotalRate</code> 동적 설정.</li><li><b>초기값:</b> 전체 범위 선택 상태 (min=동적 최저가, max=동적 최고가).</li></ul></div>
+        <div class="ann-front">← API: minPrice / maxPrice / postFilterLowestTotalRate (동적 min) / postFilterHighestTotalRate (동적 max)</div>
+        <div class="ann-rule">확정: 2026-06-16 / 정책서 v0.29 5-6-3절 ①.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">가격 슬라이더 min·max — 동적 범위 ★</div>
+        <div class="ann-desc"><ul><li>슬라이더 양쪽 끝값: 현재 검색 결과 기준 동적 설정.</li><li><b>min = <code>postFilterLowestTotalRate</code></b>: 왼쪽 끝값. 레이블: "최저 ₩{N}" 형식.</li><li><b>max = <code>postFilterHighestTotalRate</code></b>: 오른쪽 끝값. 레이블: "최고 ₩{N}+" 형식.</li><li>검색 조건 변경 또는 필터 초기화 시 재호출 응답값으로 갱신.</li></ul></div>
+        <div class="ann-front">← postFilterLowestTotalRate / postFilterHighestTotalRate (filter responseOption)</div>
+        <div class="ann-rule">확정: 2026-06-16 / 정책서 v0.29 5-6-3절 ①.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">성급 — 성급없음(0성) 포함</div>
+        <div class="ann-desc"><ul><li>성급없음(0성) + ★~★★★★★ 복수 선택 가능.</li><li><b>성급없음:</b> <code>starRating=0</code> — 성급 미분류 숙소 (호스텔·게스트하우스 등). 텍스트 칩으로 표시.</li><li><b>★~★★★★★:</b> 선택 시 노란 강조(<code>#fffbeb</code> 배경, <code>#f59e0b</code> 테두리).</li><li>API 파라미터: 파이프(<code>|</code>) 구분 (예: <code>0|3|4</code>).</li></ul></div>
+        <div class="ann-front">← API: starRating (파이프 구분, 예: 0|3|4|5)</div>
+        <div class="ann-rule">확정: 2026-06-16 / 정책서 v0.29 5-6-3절 ②.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">5</div>
+      <div class="ann-body">
+        <div class="ann-title">숙소유형 / 브랜드·체인 — 동적 목록 + 더보기/접기 ★</div>
+        <div class="ann-desc"><ul><li>복수 선택 가능. 선택 시 파란 강조(<code>#eef2ff</code> 배경, <code>#4f46e5</code> 텍스트·테두리).</li><li><b>목록 출처:</b> filter responseOption <code>propertyTypes[]</code> / <code>chains[]</code> 동적 반환값 사용.</li><li><b>정렬:</b> hotelCount 내림차순 → 동수 시 가나다/abc 순. hotelCount=0 항목 제외.</li></ul></div>
+        <div class="ann-front">← API: propertyTypes / chains (filter responseOption 동적 집계)</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">6</div>
+      <div class="ann-body">
+        <div class="ann-title">더보기 / 접기 동작 ★</div>
+        <div class="ann-desc"><ul><li><b>초기 표시:</b> 최대 5개. 총 항목 수 6개 이상일 때만 [+ N개 더보기 ▾] 버튼 노출.</li><li><b>[더보기] 탭:</b> 나머지 전체 노출. 1회 탭으로 전체 공개.</li><li><b>N 값:</b> 나머지 항목 수 (예: 현재 5개 표시 중 총 8개이면 "+ 3개 더보기").</li><li><b>[접기 ▴] 버튼:</b> 전체 펼쳐진 상태에서 표시 → 탭 시 초기 5개로 복원.</li><li><b>최대 표시:</b> 초기 5개 + 더보기 최대 10개 = 전체 최대 15개.</li></ul></div>
+        <div class="ann-rule">확정: 2026-06-16 / 정책서 v0.32 5-6-3절 ③④.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">7</div>
+      <div class="ann-body">
+        <div class="ann-title">평점 7.0+ — 단일 토글</div>
+        <div class="ann-desc"><ul><li>ON/OFF 단일 토글. <b>기본값: OFF</b> (전체 표시).</li><li>ON 상태: <code>guestRatings=7</code> 파라미터 전송 → 7.0점 이상 숙소만 노출.</li><li>토글 ON 시 파란 배경(<code>#4f46e5</code>)으로 표시.</li></ul></div>
+        <div class="ann-front">← API: guestRatings=7 (ON 시에만 전송)</div>
+        <div class="ann-rule">확정: 2026-06-16 / 정책서 v0.29 5-6-3절 ⑤.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">8</div>
+      <div class="ann-body">
+        <div class="ann-title">[결과 N개 보기] 실시간 업데이트</div>
+        <div class="ann-desc"><ul><li>필터 선택 변경 시 백그라운드 API 재호출 → 버튼 텍스트 내 결과 수 실시간 반영 (예: "결과 312개 보기").</li><li>API 응답 대기 중 버튼 로딩 상태(스피너 또는 흐림) 처리.</li><li>탭 시: 필터 적용 상태로 S01 결과 갱신 + 바텀시트 닫힘 + ⊟ 전체 칩 뱃지 수 업데이트.</li><li>[초기화] 탭 시: 전체 필터 선택 해제.</li></ul></div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">9</div>
+      <div class="ann-body">
+        <div class="ann-title">전체 필터 ↔ 개별 필터 상태 동기화</div>
+        <div class="ann-desc"><ul><li><b>전체 필터(S01-D)</b>와 <b>개별 필터 바텀시트(S01-D-1~D-5)</b>는 동일한 필터 상태(선택값)를 공유하며 양방향으로 동기화.</li><li>전체 필터에서 일부 항목을 선택한 상태로 닫은 뒤, 해당 개별 칩 탭 시 → 개별 바텀시트가 이미 선택된 상태로 열림.</li><li>선택 상태는 클라이언트 전역 필터 스토어에서 단일 관리. 각 바텀시트는 동일 스토어를 읽고 씀.</li></ul></div>
+        <div class="ann-rule">전체/개별 필터 상태 공유 구조 — 정책서 v0.29 5-6절.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════ S01-D-3 숙소유형 ════ -->
+<div id="s01-d3" class="sec-title"><span class="sec-badge">S01-D-3</span>숙소유형 필터 — [숙소유형] 칩 탭</div>
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen" style="position:relative;">
+        <div class="dim-overlay">
+          <div class="sheet" style="max-height:55%;">
+            <div class="sheet-handle-wrap"><div class="sheet-handle"></div></div>
+            <div class="sheet-hdr"><span class="sheet-title">숙소유형</span><button class="sheet-close">✕</button></div>
+            <div class="sheet-body">
+              <div class="filter-sec" style="border-bottom:none;">
+                <div class="filter-chips">
+                  <span class="fchk on">호텔</span><span class="fchk">리조트</span>
+                  <span class="fchk on">아파트</span><span class="fchk">게스트하우스</span>
+                  <span class="fchk">호스텔</span>
+                </div>
+                <button class="more-btn">+ 3개 더보기 ▾ <span class="wf-cn">1</span></button>
+              </div>
+            </div>
+            <div class="sheet-footer"><button class="sheet-reset">초기화</button><button class="sheet-apply">결과 보기</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ann">
+    <h3>화면 주석 — S01-D-3</h3>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">숙소유형 개별 바텀시트 — 더보기/접기 ★</div>
+        <div class="ann-desc"><ul><li>복수 선택 가능. 선택 시 파란 강조(<code>#eef2ff</code> 배경, <code>#4f46e5</code> 테두리).</li><li><b>동적 목록:</b> filter responseOption <code>propertyTypes[]</code> 값 사용. hotelCount 내림차순 정렬. hotelCount=0 항목 제외.</li><li><b>초기 5개 표시.</b> 6개 이상일 때만 [+ N개 더보기 ▾] 버튼 노출 → 탭 시 나머지 전체 노출 (최대 10개, 총 최대 15개).</li><li><b>[접기 ▴]:</b> 전체 펼쳐진 상태에서 노출 → 탭 시 초기 5개로 복원.</li><li>[결과 보기] 탭 시 필터 적용 + 닫힘. 필터바 [숙소유형] 칩 파란 강조.</li></ul></div>
+        <div class="ann-front">← API: propertyTypes (filter responseOption 동적 집계)</div>
+        <div class="ann-rule">확정: 2026-06-16 / 정책서 v0.32 5-6-3절 ③.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════ S01-D-2 성급 ════ -->
+<div id="s01-d2" class="sec-title"><span class="sec-badge">S01-D-2</span>성급 필터 — [성급] 칩 탭</div>
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen" style="position:relative;">
+        <div class="dim-overlay">
+          <div class="sheet" style="max-height:45%;">
+            <div class="sheet-handle-wrap"><div class="sheet-handle"></div></div>
+            <div class="sheet-hdr"><span class="sheet-title">성급</span><button class="sheet-close">✕</button></div>
+            <div class="sheet-body">
+              <div class="filter-sec" style="border-bottom:none;">
+                <div class="star-row">
+                  <span class="star-chk" style="font-size:11px;padding:4px 7px;">성급없음 <span class="wf-cn">1</span></span>
+                  <span class="star-chk">★</span><span class="star-chk">★★</span>
+                  <span class="star-chk on">★★★</span><span class="star-chk on">★★★★</span><span class="star-chk">★★★★★</span>
+                </div>
+              </div>
+            </div>
+            <div class="sheet-footer"><button class="sheet-reset">초기화</button><button class="sheet-apply">결과 보기</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ann">
+    <h3>화면 주석 — S01-D-2</h3>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">성급없음(0성) 포함 ★</div>
+        <div class="ann-desc"><ul><li><b>성급없음:</b> <code>starRating=0</code> — 성급 미분류 숙소(호스텔·게스트하우스 등). 가장 왼쪽에 텍스트 칩으로 표시.</li><li>★~★★★★★ 복수 선택 가능. 성급없음도 동시 선택 가능.</li><li>성급 칩 선택 시 노란 강조(<code>#fffbeb</code> 배경, <code>#f59e0b</code> 테두리). 성급없음 칩 선택 시 파란 강조.</li><li>API 파라미터: 파이프(<code>|</code>) 구분 (예: 성급없음+3성+4성 → <code>0|3|4</code>).</li><li>[결과 보기] 탭 시 필터 적용 + 닫힘. 필터바 [성급] 칩 파란 강조.</li></ul></div>
+        <div class="ann-front">← API: starRating (파이프 구분, 예: 0|3|4|5)</div>
+        <div class="ann-rule">확정: 2026-06-16 / 정책서 v0.29 5-6-3절 ②.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════ S01-D-1 가격 ════ -->
+<div id="s01-d1" class="sec-title"><span class="sec-badge">S01-D-1</span>1박 가격 범위 — [1박 가격] 칩 탭</div>
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen" style="position:relative;">
+        <div class="dim-overlay">
+          <div class="sheet" style="max-height:42%;">
+            <div class="sheet-handle-wrap"><div class="sheet-handle"></div></div>
+            <div class="sheet-hdr"><span class="sheet-title">1박 가격 범위</span><button class="sheet-close">✕</button></div>
+            <div class="sheet-body">
+              <div class="filter-sec" style="border-bottom:none;">
+                <div class="price-wrap" style="padding:8px 0;">
+                  <div class="price-labels"><span>최저 ₩N <span class="wf-cn">1</span></span><span>최고 ₩N+</span></div>
+                  <div class="price-track"><div class="price-fill"></div><div class="price-thumb pt-l"></div><div class="price-thumb pt-r"></div></div>
+                  <div class="price-vals"><span>₩50,000</span><span>₩350,000</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="sheet-footer"><button class="sheet-reset">초기화</button><button class="sheet-apply">결과 보기</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ann">
+    <h3>화면 주석 — S01-D-1</h3>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">가격 범위 개별 바텀시트 — max 동적 설정 ★</div>
+        <div class="ann-desc"><ul><li>min·max 핸들 2개. 핸들 이동 시 현재 값 실시간 표시. <b>이동 단위:</b> ₩5,000 단위.</li><li><b>범위:</b> min = <code>postFilterLowestTotalRate</code> 동적 설정 / max = <code>postFilterHighestTotalRate</code> 동적 설정.</li><li>레이블 좌측: "최저 ₩{N}" / 레이블 우측: "최고 ₩{N}+" 형식으로 표기.</li><li><b>초기값:</b> 전체 범위 선택 상태 (min=동적 최저가, max=동적 최고가).</li></ul></div>
+        <div class="ann-front">← API: minPrice / maxPrice / postFilterLowestTotalRate (동적 min) / postFilterHighestTotalRate (동적 max)</div>
+        <div class="ann-rule">확정: 2026-06-16 / 정책서 v0.29 5-6-3절 ①.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════ S01-D-4 브랜드·체인 ════ -->
+<div id="s01-d4" class="sec-title"><span class="sec-badge">S01-D-4</span>브랜드·체인 필터 — [브랜드·체인] 칩 탭</div>
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen" style="position:relative;">
+        <div class="dim-overlay">
+          <div class="sheet" style="max-height:55%;">
+            <div class="sheet-handle-wrap"><div class="sheet-handle"></div></div>
+            <div class="sheet-hdr"><span class="sheet-title">브랜드·체인</span><button class="sheet-close">✕</button></div>
+            <div class="sheet-body">
+              <div class="filter-sec" style="border-bottom:none;">
+                <div class="filter-chips">
+                  <span class="fchk on">메리어트</span><span class="fchk">힐튼</span>
+                  <span class="fchk">IHG</span><span class="fchk">하얏트</span>
+                  <span class="fchk">아코르</span>
+                </div>
+                <button class="more-btn">+ 5개 더보기 ▾ <span class="wf-cn">1</span></button>
+              </div>
+            </div>
+            <div class="sheet-footer"><button class="sheet-reset">초기화</button><button class="sheet-apply">결과 보기</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ann">
+    <h3>화면 주석 — S01-D-4</h3>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">브랜드·체인 개별 바텀시트 — 더보기/접기 ★</div>
+        <div class="ann-desc"><ul><li>복수 선택 가능. 선택 시 파란 강조(<code>#eef2ff</code> 배경, <code>#4f46e5</code> 테두리).</li><li><b>동적 목록:</b> filter responseOption <code>chains[]</code> 값 사용. hotelCount 내림차순 정렬. hotelCount=0 항목 제외.</li><li><b>초기 5개 표시.</b> 6개 이상일 때만 [+ N개 더보기 ▾] 버튼 노출 → 탭 시 나머지 전체 노출 (최대 10개, 총 최대 15개).</li><li><b>[접기 ▴]:</b> 전체 펼쳐진 상태에서 노출 → 탭 시 초기 5개로 복원.</li><li>[결과 보기] 탭 시 필터 적용 + 닫힘. 필터바 [브랜드·체인] 칩 파란 강조.</li></ul></div>
+        <div class="ann-front">← API: chains (filter responseOption 동적 집계)</div>
+        <div class="ann-rule">확정: 2026-06-16 / 정책서 v0.32 5-6-3절 ④.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════ S01-D-5 평점 7.0+ ════ -->
+<div id="s01-d5" class="sec-title"><span class="sec-badge">S01-D-5</span>평점 7.0+ — [평점 7.0+] 칩 탭</div>
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen" style="position:relative;">
+        <div class="dim-overlay">
+          <div class="sheet" style="max-height:32%;">
+            <div class="sheet-handle-wrap"><div class="sheet-handle"></div></div>
+            <div class="sheet-hdr"><span class="sheet-title">평점</span><button class="sheet-close">✕</button></div>
+            <div class="sheet-body">
+              <div class="filter-sec" style="border-bottom:none;">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;">
+                  <div>
+                    <div style="font-size:13px;font-weight:600;color:#222;">7.0점 이상만 보기 <span class="wf-cn">1</span></div>
+                    <div style="font-size:11px;color:#888;margin-top:2px;">좋음 이상 숙소만 표시</div>
+                  </div>
+                  <div style="width:44px;height:24px;border-radius:12px;background:#4f46e5;position:relative;cursor:pointer;flex-shrink:0;">
+                    <div style="width:20px;height:20px;border-radius:50%;background:#fff;position:absolute;top:2px;right:2px;box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="sheet-footer"><button class="sheet-reset">초기화</button><button class="sheet-apply">결과 보기</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ann">
+    <h3>화면 주석 — S01-D-5</h3>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">평점 7.0+ 단일 토글 ★</div>
+        <div class="ann-desc"><ul><li>ON/OFF 단일 토글. <b>기본값: OFF</b> (전체 표시).</li><li><b>ON 상태:</b> <code>guestRatings=7</code> 파라미터 전송 → 7.0점 이상 숙소만 노출. 토글 파란색(<code>#4f46e5</code>)으로 표시.</li><li><b>OFF 상태:</b> 파라미터 미전송, 회색 토글.</li><li>토글 변경 즉시 [결과 보기] 버튼의 결과 수 실시간 반영.</li><li>[결과 보기] 탭 시 필터 적용 + 닫힘. 필터바 [평점 7.0+] 칩 파란 강조.</li></ul></div>
+        <div class="ann-front">← API: guestRatings=7 (ON 시에만 전송)</div>
+        <div class="ann-rule">확정: 2026-06-16 / 정책서 v0.29 5-6-3절 ⑤.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════ S01-D-zero 필터 결과 없음 ════ -->
+<div id="s01-d-zero" class="sec-title"><span class="sec-badge">S01-D-zero</span>필터 결과 0개 — 안내 배너 + [필터 초기화]</div>
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- GNB (확정 디자인) -->
+        <div class="s01-gnb-d1">
+          <button class="gnb-back-btn">←</button>
+          <div class="gnb-search-summary">
+            <div class="gnb-dest">서울</div>
+            <div class="gnb-cond">6/18(목) ~ 6/19(금) · 성인 2명 · 객실 1개</div>
+          </div>
+          
+        </div>
+
+        <!-- 필터/정렬 바 (필터 적용 상태) -->
+        <div class="filter-bar">
+          <div class="f-chip active">⊟ 전체 <span class="chip-cnt">2</span></div>
+          <div class="f-chip">인기순 ↕</div>
+          <div class="f-chip active">★★★★★ <span class="wf-cn">2</span></div>
+          <div class="f-chip active">₩300,000+</div>
+        </div>
+
+        <!-- 안내 배너 -->
+        <div style="margin:10px;padding:12px 14px;background:#fef3c7;border:1px solid #f59e0b;border-radius:10px;display:flex;align-items:center;gap:10px;">
+          <span style="font-size:18px;">⚠️</span>
+          <div style="flex:1;">
+            <div style="font-size:12px;font-weight:600;color:#92400e;line-height:1.4;">현재 필터 조건에 맞는 숙소가 없습니다. 필터를 초기화할까요? <span class="wf-cn">1</span></div>
+          </div>
+          <button style="font-size:11px;font-weight:600;color:#4f46e5;background:none;border:1px solid #4f46e5;border-radius:6px;padding:5px 8px;white-space:nowrap;">필터 초기화 <span class="wf-cn">3</span></button>
+        </div>
+
+        <!-- 기존 목록 — 투명도 없이 그대로 표시 -->
+        <div class="hotel-card-d1">
+          <div class="hcd-img-wrap"><div class="hcd-img ci1">🏨</div></div>
+          <div class="hcd-info">
+            <div class="hcd-name-row"><span class="hcd-name">포시즌스 호텔 서울</span><span class="hcd-stars">★ 4.9</span></div>
+            <div class="hcd-grade">5성급 · 호텔</div>
+            <div class="hcd-loc">📍 종로구 사직로 100</div>
+            <div class="hcd-price-row"><span class="hcd-price">₩388,000</span><span class="hcd-per">/1박</span></div>
+          </div>
+        </div>
+
+        <div class="pad-bottom"></div>
+      </div>
+    </div>
+  </div>
+  <div class="ann">
+    <h3>화면 주석 — S01-D-zero</h3>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">안내 배너 문구 ★</div>
+        <div class="ann-desc"><ul><li>필터 적용 결과가 0개일 때 목록 최상단에 황색 안내 배너 표시.</li><li><b>문구:</b> "현재 필터 조건에 맞는 숙소가 없습니다. 필터를 초기화할까요?"</li><li>배너는 스크롤되지 않고 필터바 바로 아래에 고정 (sticky는 아님 — 스크롤 시 함께 올라감).</li></ul></div>
+        <div class="ann-rule">정책서 v0.32 5-6-4절 — 문구 변경.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">필터 적용 상태 표시</div>
+        <div class="ann-desc"><ul><li>결과가 0개더라도 현재 적용된 필터 칩은 그대로 표시 (활성 강조 상태 유지).</li><li>사용자가 어떤 필터 때문에 결과가 없는지 확인할 수 있어야 함.</li></ul></div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">[필터 초기화] 버튼</div>
+        <div class="ann-desc"><ul><li>안내 배너 우측에 인라인으로 배치.</li><li>탭 시: 전체 필터 초기화 → API 재호출 → 결과 목록 갱신. ⊟ 전체 칩 뱃지 제거.</li><li>개별 칩 [초기화]와 동일 동작이지만 전체 필터 대상.</li></ul></div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">기존 목록 — 그대로 표시</div>
+        <div class="ann-desc"><ul><li>필터 적용 전 마지막 결과 목록을 투명도 없이 그대로 유지합니다.</li><li>빈 화면 대신 이전에 보던 목록이 그대로 남아 사용자가 어떤 숙소들이 있었는지 참고할 수 있습니다.</li><li>결과 수 헤더("서울 · 총 N개 숙소")는 표시하지 않습니다 — 최상단 검색창에 이미 목적지 정보가 표시되어 있어 중복입니다.</li></ul></div>
+        <div class="ann-rule">정책서 v0.33 5-6-4절 — 기존 결과 목록 유지. 투명도 제거 확정.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════ S01-E 정렬 ════ -->
+<div id="s01-e" class="sec-title"><span class="sec-badge">S01-E</span>정렬 바텀시트 — [인기순 ↕] 칩 탭</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — S01-E 정렬 바텀시트</div>
+  <ul class="sec-policy-list">
+    <li><strong>정렬 옵션 4개</strong>: 인기순 기본(<code>popularity</code>) / 가격 낮은 순(<code>minRate</code>) / 평점 높은 순(<code>consumerRating</code>) / 거리순(<code>distance</code>, 좌표 검색 시만 유효) (5-5절)</li>
+    <li><strong>정렬 변경 시</strong>: API 재호출 + <code>pageIndex=0</code> 리셋 (5-6-5절)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.29 5-5절</div>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen" style="position:relative;">
+        <div class="dim-overlay">
+          <div class="sheet" style="max-height:48%;">
+            <div class="sheet-handle-wrap"><div class="sheet-handle"></div></div>
+            <div class="sheet-hdr"><span class="sheet-title">정렬</span><button class="sheet-close">✕</button></div>
+            <div class="sheet-body">
+              <div class="sort-row"><span class="sort-lbl">인기순 <span class="wf-cn">1</span></span><div class="sort-chk on"></div></div>
+              <div class="sort-row"><span class="sort-lbl">낮은 가격순</span><div class="sort-chk"></div></div>
+              <div class="sort-row"><span class="sort-lbl">평점 높은순</span><div class="sort-chk"></div></div>
+              <div class="sort-row"><span class="sort-lbl">거리순</span><div class="sort-chk"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ann">
+    <h3>화면 주석 — S01-E</h3>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">정렬 기준 (단일 선택)</div>
+        <div class="ann-desc"><ul><li>단일 선택 (라디오 방식). 기본값: 인기순(<code>popularity</code>).</li><li>선택 즉시 바텀시트 자동 닫힘 + API <code>sortField</code> 변경으로 S01 결과 재호출 + 필터바 정렬 칩 텍스트 업데이트.</li><li><b>선택 옵션 및 API 값:</b></li><li>인기순 → <code>sortField=popularity</code></li><li>낮은 가격순 → <code>sortField=minRate</code></li><li>평점 높은순 → <code>sortField=consumerRating</code></li><li>거리순 → <code>sortField=distance</code> — KAYAK 서버 처리. 좌표(klatlon·kpolygon) 검색 시 유효. ⚠️ 도시(kplace) 검색 시 표시 여부 미결 — 개발 시 실 테스트 필요.</li></ul></div>
+        <div class="ann-front">← API sortField: popularity / minRate / consumerRating / distance</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+</body>
+</html>

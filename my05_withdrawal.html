@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MY05 — 회원탈퇴 | allmy meta 화면기획서</title>
+<link rel="stylesheet" href="./wf-styles.css">
+<style>
+.two-col { grid-template-columns: 480px 1fr; gap: 28px; }
+
+/* ── 모바일 프레임 ── */
+.mobile-wrap {
+  display: flex; justify-content: center; align-items: flex-start;
+  padding: 20px 16px; background: #2a2a2a; border-radius: 8px; min-height: 560px;
+}
+.mobile-device {
+  width: 375px; background: #1a1f2e; border-radius: 44px; padding: 10px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 20px 50px rgba(0,0,0,.5);
+}
+.m-notch { height: 22px; background: #111; border-radius: 11px 11px 0 0; display: flex; align-items: center; justify-content: center; }
+.m-notch-pill { width: 68px; height: 13px; background: #111; border-radius: 7px; }
+.m-screen {
+  background: #f8f8f6; height: 640px; overflow: hidden;
+  border-radius: 0 0 6px 6px; font-size: 13px; position: relative;
+  display: flex; flex-direction: column;
+}
+
+/* ── GNB 바 (뒤로가기만) ── */
+.my-gnb {
+  flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 14px; background: #fff; border-bottom: 1px solid #f0f0f0;
+  height: 45px;
+}
+.my-gnb-back {
+  width: 32px; height: 32px; background: #f5f5f5; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; border: none; color: #333; cursor: pointer;
+}
+.my-gnb-title {
+  flex: 1; text-align: center; font-size: 14px; font-weight: 800; color: #111;
+}
+.my-gnb-spacer { width: 32px; }
+
+/* ── 스크롤 영역 ── */
+.my-scroll { flex: 1; overflow-y: auto; overflow-x: hidden; }
+.my-scroll::-webkit-scrollbar { display: none; }
+
+/* ── 콘텐츠 패딩 ── */
+.wd-section { padding: 20px 16px; }
+
+/* ── 안내 헤더 ── */
+.wd-header { margin-bottom: 20px; }
+.wd-header-title { font-size: 17px; font-weight: 800; color: #111; margin-bottom: 6px; }
+.wd-header-desc { font-size: 12px; color: #6b7280; line-height: 1.6; }
+.wd-header-warn {
+  margin-top: 12px; padding: 12px 14px; border-radius: 10px;
+  background: #fef2f2; border: 1px solid #fecaca;
+}
+.wd-warn-title { font-size: 12px; font-weight: 700; color: #dc2626; margin-bottom: 5px; }
+.wd-warn-item { font-size: 11px; color: #6b7280; line-height: 1.7; }
+.wd-warn-item::before { content: "• "; }
+
+/* ── 이메일 인증 폼 ── */
+.wd-email-row {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+}
+.wd-email-readonly {
+  flex: 1; padding: 12px 14px; border-radius: 10px;
+  background: #f3f4f6; border: 1.5px solid #e5e7eb;
+  font-size: 13px; color: #374151;
+}
+.wd-send-btn {
+  padding: 12px 14px; border-radius: 10px; white-space: nowrap;
+  background: #4f46e5; color: #fff; font-size: 12px; font-weight: 700;
+  border: none; cursor: pointer; flex-shrink: 0;
+}
+.wd-send-btn.sent { background: #6b7280; }
+
+/* ── 6자리 인증 코드 박스 ── */
+.wd-code-wrap { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; }
+.wd-code-box {
+  width: 42px; height: 48px; border-radius: 10px; border: 1.5px solid #e5e7eb;
+  background: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 700; color: #111;
+}
+.wd-code-box.filled { border-color: #4f46e5; }
+.wd-code-box.active { border-color: #4f46e5; border-width: 2px; }
+.wd-code-timer { text-align: center; font-size: 11px; color: #9ca3af; margin-bottom: 8px; }
+.wd-code-resend { text-align: center; }
+.wd-code-resend-btn { font-size: 12px; color: #4f46e5; font-weight: 600; background: none; border: none; cursor: pointer; text-decoration: underline; }
+
+/* ── 사유 선택 ── */
+.wd-reason-item {
+  display: flex; align-items: flex-start; gap: 10px; padding: 13px 14px;
+  background: #fff; border-radius: 10px; border: 1.5px solid #e5e7eb;
+  margin-bottom: 8px; cursor: pointer;
+}
+.wd-reason-item.checked { border-color: #4f46e5; background: #f5f3ff; }
+.wd-reason-check {
+  width: 20px; height: 20px; border-radius: 50%; border: 2px solid #d1d5db;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+}
+.wd-reason-item.checked .wd-reason-check { background: #4f46e5; border-color: #4f46e5; color: #fff; font-size: 11px; }
+.wd-reason-text { font-size: 13px; color: #374151; line-height: 1.4; }
+.wd-reason-textarea {
+  width: 100%; margin-top: 8px; padding: 10px 12px; border-radius: 8px;
+  border: 1.5px solid #d1d5db; font-size: 12px; color: #374151;
+  resize: none; box-sizing: border-box; height: 72px; font-family: inherit;
+}
+
+/* ── 하단 버튼 바 ── */
+.wd-btn-bar {
+  flex-shrink: 0; padding: 10px 16px;
+  background: #fff; border-top: 1px solid #f0f0f0;
+}
+.wd-confirm-btn {
+  width: 100%; padding: 14px; border-radius: 12px;
+  background: #ef4444; color: #fff; font-size: 14px; font-weight: 700;
+  border: none; cursor: pointer;
+}
+.wd-confirm-btn.disabled { background: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
+
+/* ── 탈퇴 완료 화면 ── */
+.wd-done-wrap {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 24px; text-align: center;
+}
+.wd-done-icon { font-size: 52px; margin-bottom: 18px; }
+.wd-done-title { font-size: 18px; font-weight: 800; color: #111; margin-bottom: 10px; }
+.wd-done-desc { font-size: 13px; color: #6b7280; line-height: 1.7; margin-bottom: 28px; }
+.wd-done-btn {
+  padding: 14px 40px; border-radius: 12px;
+  background: #4f46e5; color: #fff; font-size: 14px; font-weight: 700;
+  border: none; cursor: pointer;
+}
+
+/* ── 단계 표시 ── */
+.wd-step-bar {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 10px 16px 0;
+}
+.wd-step { display: flex; align-items: center; gap: 6px; }
+.wd-step-dot {
+  width: 22px; height: 22px; border-radius: 50%; font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.wd-step-dot.done { background: #4f46e5; color: #fff; }
+.wd-step-dot.active { background: #4f46e5; color: #fff; border: 2px solid #c7d2fe; }
+.wd-step-dot.inactive { background: #e5e7eb; color: #9ca3af; }
+.wd-step-label { font-size: 10px; font-weight: 600; color: #9ca3af; }
+.wd-step-label.active { color: #4f46e5; }
+.wd-step-line { width: 20px; height: 2px; background: #e5e7eb; margin: 0 2px; }
+.wd-step-line.done { background: #4f46e5; }
+</style>
+</head>
+<body>
+
+<nav class="page-nav">
+  <a class="page-nav-back" href="index.html">← 목록으로</a>
+  <span class="page-nav-sep">|</span>
+  <span class="page-nav-title">MY05 — 회원탈퇴</span>
+  <span class="page-nav-route">정책서 v0.36 기준</span>
+  <div class="page-nav-nav">
+    <a class="page-nav-pager" href="my04_terms.html">← 이전</a>
+    <span class="page-nav-pager-disabled">다음 →</span>
+  </div>
+</nav>
+
+<nav class="toc">
+  <div class="toc-inner">
+    <span class="toc-label">목차</span>
+    <a href="#my05-a" class="toc-link">MY05-A 이메일 인증</a>
+    <span class="toc-sep"></span>
+    <a href="#my05-b" class="toc-link">MY05-B 탈퇴 사유 선택</a>
+    <span class="toc-sep"></span>
+    <a href="#my05-c" class="toc-link">MY05-C 탈퇴 완료</a>
+  </div>
+</nav>
+
+<div class="page">
+
+
+  <!-- ────────────── MY05-A 이메일 인증 ────────────── -->
+  <div class="sec" id="my05-a">
+    <div class="sec-title">
+      MY05-A — 회원탈퇴 1단계: 이메일 인증
+      <div class="sec-badge-wrap">
+        <span class="sec-badge">본인 확인</span>
+        <span class="sec-badge">이메일 인증</span>
+      </div>
+    </div>
+
+    <!-- 공통정책 블록 -->
+    <div class="sec-policy">
+      <div class="sec-policy-hdr">⚙ 공통 정책 — 회원탈퇴 화면</div>
+      <ul class="sec-policy-list">
+        <li>진입 경로: 계정관리(MY03) 하단 [회원탈퇴] 버튼 탭 → 이 화면으로 이동. (10-4절)</li>
+        <li>로그인 전용 화면. 비로그인 상태에서는 진입이 불가능하다. (10-4절)</li>
+        <li>GNB는 [← 뒤로가기] 버튼만 표시한다. [로그인] 및 [☰ 전체메뉴] 버튼은 없다. (10-1절 패턴)</li>
+        <li>인증 방식은 8-2절 이메일 인증 컴포넌트와 동일하다. 6자리 코드, 유효시간 5분, 재전송 횟수 제한 없음.</li>
+      </ul>
+      <div class="sec-policy-rule">기준: v0.36 8-11절 / 10-4절</div>
+    </div>
+
+    <div class="two-col">
+      <div class="mobile-wrap">
+        <div class="mobile-device">
+          <div class="m-notch"><div class="m-notch-pill"></div></div>
+          <div class="m-screen">
+            <!-- GNB: 뒤로가기만 -->
+            <div class="my-gnb">
+              <button class="my-gnb-back">←<span class="wf-cn">1</span></button>
+              <div class="my-gnb-title">회원탈퇴<span class="wf-cn">2</span></div>
+              <div class="my-gnb-spacer"></div>
+            </div>
+
+            <div class="my-scroll">
+              <!-- 단계 표시 -->
+              <div class="wd-step-bar">
+                <div class="wd-step">
+                  <div class="wd-step-dot active">1</div>
+                  <span class="wd-step-label active">본인 확인</span>
+                </div>
+                <div class="wd-step-line"></div>
+                <div class="wd-step">
+                  <div class="wd-step-dot inactive">2</div>
+                  <span class="wd-step-label">사유 선택</span>
+                </div>
+                <div class="wd-step-line"></div>
+                <div class="wd-step">
+                  <div class="wd-step-dot inactive">3</div>
+                  <span class="wd-step-label">완료</span>
+                </div>
+              </div>
+
+              <div class="wd-section">
+                <!-- 안내 헤더 -->
+                <div class="wd-header">
+                  <div class="wd-header-title">먼저 본인 확인을 해주세요<span class="wf-cn">3</span></div>
+                  <div class="wd-header-desc">회원 탈퇴를 위해 가입하신 이메일로 인증 코드를 보내드립니다.</div>
+                  <div class="wd-header-warn">
+                    <div class="wd-warn-title">탈퇴 전 꼭 확인하세요</div>
+                    <div class="wd-warn-item">적립된 캐시백은 탈퇴 즉시 전액 사라집니다. 되돌릴 수 없습니다.</div>
+                    <div class="wd-warn-item">탈퇴 후 7일 동안은 같은 이메일로 다시 가입할 수 없습니다.</div>
+                  </div>
+                </div>
+
+                <!-- 이메일 표시 + 인증코드 받기 버튼 -->
+                <div style="margin-bottom:6px;font-size:11px;font-weight:600;color:#374151;">가입 이메일<span class="wf-cn">4</span></div>
+                <div class="wd-email-row">
+                  <div class="wd-email-readonly">dreamyuns@gmail.com</div>
+                  <button class="wd-send-btn">인증코드<br>받기<span class="wf-cn">5</span></button>
+                </div>
+
+                <!-- 6자리 코드 입력 박스 -->
+                <div style="margin-bottom:8px;font-size:11px;font-weight:600;color:#374151;">인증 코드 6자리 입력<span class="wf-cn">6</span></div>
+                <div class="wd-code-wrap">
+                  <div class="wd-code-box filled">2</div>
+                  <div class="wd-code-box filled">5</div>
+                  <div class="wd-code-box filled">0</div>
+                  <div class="wd-code-box active"></div>
+                  <div class="wd-code-box"></div>
+                  <div class="wd-code-box"></div>
+                </div>
+                <div class="wd-code-timer">남은 시간: 4:21<span class="wf-cn">7</span></div>
+                <div class="wd-code-resend">
+                  <button class="wd-code-resend-btn">인증코드 다시 받기<span class="wf-cn">8</span></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 하단 버튼 -->
+            <div class="wd-btn-bar">
+              <button class="wd-confirm-btn disabled">다음 단계로<span class="wf-cn">9</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 주석 패널 MY05-A -->
+      <div class="ann">
+        <h3>화면 주석 — MY05-A (이메일 인증)</h3>
+        <div class="ann-item">
+          <div class="cn">진입</div>
+          <div class="ann-body">
+            <div class="ann-title">MY05 회원탈퇴 화면 진입 경로</div>
+            <div class="ann-desc">
+              <ul>
+                <li>계정관리(MY03) 하단 [회원탈퇴] 버튼을 탭하면 이 화면으로 이동한다.</li>
+                <li>로그인한 회원만 진입할 수 있다. 비로그인 상태에서는 이 화면에 접근할 수 없다.</li>
+              </ul>
+            </div>
+            <div class="ann-rule">정책서 10-4절 (회원탈퇴 화면 진입).</div>
+          </div>
+        </div>
+        <div class="ann-item">
+          <div class="cn">1</div>
+          <div class="ann-body">
+            <div class="ann-title">[← 뒤로가기] 버튼</div>
+            <div class="ann-desc">
+              <ul>
+                <li>탭 시 이전 화면(MY03 계정관리)으로 돌아간다.</li>
+                <li>탈퇴가 완료되기 전까지는 언제든지 뒤로 돌아갈 수 있다.</li>
+              </ul>
+            </div>
+            <div class="ann-rule">정책서 10-4절 (GNB 뒤로가기만 표시).</div>
+          </div>
+        </div>
+        <div class="ann-item">
+          <div class="cn">2</div>
+          <div class="ann-body">
+            <div class="ann-title">화면 제목 "회원탈퇴"</div>
+            <div class="ann-desc">
+              <ul>
+                <li>GNB 가운데에 고정으로 표시된다.</li>
+                <li>[로그인] 버튼과 [☰ 전체메뉴] 버튼은 이 화면에서 나타나지 않는다. (MY01~MY05 마이페이지 계열 공통)</li>
+              </ul>
+            </div>
+            <div class="ann-rule">정책서 10-1절 (마이페이지 하위 화면 GNB 패턴).</div>
+          </div>
+        </div>
+        <div class="ann-item">
+          <div class="cn">3</div>
+          <div class="ann-body">
+            <div class="ann-title">탈퇴 전 안내 문구 및 경고</div>
+            <div class="ann-desc">
+              <ul>
+                <li>탈퇴하면 적립된 캐시백이 전액 사라진다는 점을 빨간 박스로 강조 표시한다.</li>
+                <li>"Waiting(적립예정)" 상태와 "Approved(지급완료)" 상태 구분 없이 모두 소멸된다.</li>
+                <li>탈퇴 후 7일간 같은 이메일로 재가입이 제한됨을 안내한다.</li>
+              </ul>
+            </div>
+            <div class="ann-rule">정책서 8-11절 (캐시백 소멸 + 재가입 제한 안내).</div>
+            <div class="ann-case">◼ 캐시백 잔액 있는 회원: 경고 박스 표시 (현재 화면) ◼ 잔액 없는 회원: 동일 화면 표시 (소멸 금액 0원)</div>
+          </div>
+        </div>
+        <div class="ann-item">
+          <div class="cn">4</div>
+          <div class="ann-body">
+            <div class="ann-title">가입 이메일 표시 (읽기 전용)</div>
+            <div class="ann-desc">
+              <ul>
+                <li>현재 로그인 중인 계정의 이메일 주소가 자동으로 채워진다.</li>
+                <li>변경할 수 없다 (읽기 전용).</li>
+                <li>이 이메일 주소로 인증 코드가 발송된다.</li>
+              </ul>
+            </div>
+            <div class="ann-rule">정책서 10-4절 (이메일 읽기전용 표시).</div>
+          </div>
+        </div>
+        <div class="ann-item">
+          <div class="cn">5</div>
+          <div class="ann-body">
+            <div class="ann-title">[인증코드 받기] 버튼</div>
+            <div class="ann-desc">
+              <ul>
+                <li>탭 시 위 이메일 주소로 6자리 인증 코드가 발송된다.</li>
+                <li>발송 후 버튼이 회색으로 바뀌고, 5분 카운트다운이 시작된다.</li>
+                <li>5분이 지나면 [인증코드 다시 받기] 버튼으로 새 코드를 받을 수 있다.</li>
+              </ul>
+            </div>
+            <div class="ann-rule">정책서 8-2절 / 10-4절 (이메일 인증코드 발송, 동일 컴포넌트).</div>
+            <div class="ann-case">◼ 코드 발송 전: 인디고 버튼 활성 ◼ 발송 후: 회색 비활성, 타이머 시작</div>
+          </div>
+        </div>
+        <div class="ann-item">
+          <div class="cn">6</div>
+          <div class="ann-body">
+            <div class="ann-title">6자리 인증 코드 입력 박스</div>
+            <div class="ann-desc">
+              <ul>
+                <li>숫자 1자리씩 입력할 수 있는 박스 6개가 나란히 있다.</li>
+                <li>현재 입력 중인 박스에 파란 테두리가 표시된다.</li>
+                <li>6자리를 모두 입력하는 순간 자동으로 코드 확인이 실행된다. 별도 버튼을 탭하지 않아도 된다.</li>
+                <li>코드가 올바르면 다음 단계(2단계: 탈퇴 사유)로 자동 이동한다.</li>
+                <li>코드가 틀리면 입력칸이 빨간색으로 표시되고 "인증 코드가 올바르지 않습니다" 메시지가 나타난다.</li>
+              </ul>
+            </div>
+            <div class="ann-rule">정책서 8-2절 (6자리 자동 확인 — 동일 컴포넌트).</div>
+          </div>
+        </div>
+        <div class="ann-item">
+          <div class="cn">7</div>
+          <div class="ann-body">
+            <div class="ann-title">남은 유효 시간 표시</div>
+            <div class="ann-desc">
+              <ul>
+                <li>인증 코드의 유효 시간(5분)이 얼마나 남았는지 카운트다운으로 표시된다.</li>
+                <li>0:00이 되면 코드가 만료되고, 새 코드를 받아야 한다.</li>
+              </ul>
+            </div>
+            <div class="ann-rule">정책서 8-2절 (인증코드 유효시간 5분).</div>
+          </div>
+        </div>
+        <div class="ann-item">
+          <div class="cn">8</div>
+          <div class="ann-body">
+            <div class="ann-title">[인증코드 다시 받기] 버튼</div>
+            <div class="ann-desc">
+              <ul>
+                <li>탭 시 새 인증 코드가 발송되고 타이머가 5분으로 초기화된다.</li>
+                <li>재전송 횟수 제한은 없다.</li>
+              </ul>
+            </div>
+            <div class="ann-rule">정책서 8-2절 (재전송 횟수 제한 없음).</div>
+          </div>
+        </div>
+        <div class="ann-item">
+          <div class="cn">9</div>
+          <div class="ann-body">
+            <div class="ann-title">[다음 단계로] 버튼 (하단 고정)</div>
+            <div class="ann-desc">
+              <ul>
+                <li>6자리 코드가 올바르게 입력될 때까지 회색 비활성 상태로 유지된다.</li>
+                <li>인증이 완료되면 자동으로 다음 단계(탈퇴 사유 선택)로 넘어간다. 이 버튼을 별도로 탭할 필요 없다.</li>
+              </ul>
+            </div>
+            <div class="ann-rule">정책서 10-4절 (인증 완료 후 자동 다음 단계 이동).</div>
+            <div class="ann-case">◼ 인증 전: 회색 비활성 ◼ 인증 완료: 자동으로 MY05-B로 전환</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+
+  <!-- ────────────── MY05-B 탈퇴 사유 선택 ────────────── -->
+  <div class="sec" id="my05-b">
+    <div class="sec-title">
+      MY05-B — 회원탈퇴 2단계: 탈퇴 사유 선택
+      <div class="sec-badge-wrap">
+        <span class="sec-badge">복수 선택 가능</span>
+        <span class="sec-badge">기타 입력 필드</span>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="mobile-wrap">
+        <div class="mobile-device">
+          <div class="m-notch"><div class="m-notch-pill"></div></div>
+          <div class="m-screen">
+            <!-- GNB -->
+            <div class="my-gnb">
+              <button class="my-gnb-back">←<span class="wf-cn">1</span></button>
+              <div class="my-gnb-title">회원탈퇴</div>
+              <div class="my-gnb-spacer"></div>
+            </div>
+
+            <div class="my-scroll">
+              <!-- 단계 표시 -->
+              <div class="wd-step-bar">
+                <div class="wd-step">
+                  <div class="wd-step-dot done">✓</div>
+                  <span class="wd-step-label">본인 확인</span>
+                </div>
+                <div class="wd-step-line done"></div>
+                <div class="wd-step">
+                  <div class="wd-step-dot active">2</div>
+                  <span class="wd-step-label active">사유 선택</span>
+                </div>
+                <div class="wd-step-line"></div>
+                <div class="wd-step">
+                  <div class="wd-step-dot inactive">3</div>
+                  <span class="wd-step-label">완료</span>
+                </div>
+              </div>
+
+              <div class="wd-section">
+                <div class="wd-header">
+                  <div class="wd-header-title">탈퇴 사유를 알려주세요<span class="wf-cn">2</span></div>
+                  <div class="wd-header-desc">1개 이상 선택해 주세요. 서비스 개선에 소중하게 사용됩니다.</div>
+                </div>
+
+                <!-- 사유 1 — 선택됨 -->
+                <div class="wd-reason-item checked">
+                  <div class="wd-reason-check">✓</div>
+                  <div class="wd-reason-text">자주 이용하지 않아요<span class="wf-cn">3</span></div>
+                </div>
+
+                <!-- 사유 2 -->
+                <div class="wd-reason-item">
+                  <div class="wd-reason-check"></div>
+                  <div class="wd-reason-text">원하는 숙소나 가격을 찾기 어려워요</div>
+                </div>
+
+                <!-- 사유 3 -->
+                <div class="wd-reason-item">
+                  <div class="wd-reason-check"></div>
+                  <div class="wd-reason-text">다른 서비스가 더 저렴하거나 편리해요</div>
+                </div>
+
+                <!-- 사유 4 -->
+                <div class="wd-reason-item">
+                  <div class="wd-reason-check"></div>
+                  <div class="wd-reason-text">개인정보 보호가 걱정돼요</div>
+                </div>
+
+                <!-- 사유 5 -->
+                <div class="wd-reason-item">
+                  <div class="wd-reason-check"></div>
+                  <div class="wd-reason-text">앱/서비스 사용이 불편해요</div>
+                </div>
+
+                <!-- 사유 6 기타 — 선택됨 + 텍스트 입력 노출 -->
+                <div class="wd-reason-item checked">
+                  <div class="wd-reason-check">✓</div>
+                  <div style="flex:1;">
+                    <div class="wd-reason-text">기타 (직접 입력)<span class="wf-cn">4</span></div>
+                    <textarea class="wd-reason-textarea" placeholder="탈퇴 사유를 직접 입력해 주세요 (최대 200자)"></textarea>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- 하단 버튼 -->
+            <div class="wd-btn-bar">
+              <button class="wd-confirm-btn">탈퇴하기<span class="wf-cn">5</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 주석 패널 MY05-B -->
+      <div class="ann">
+        <h3>화면 주석 — MY05-B (탈퇴 사유 선택)</h3>
+        <div class="ann-item">
+          <div class="cn">1</div>
+          <div class="ann-body">
+            <div class="ann-title">[← 뒤로가기] 버튼</div>
+            <div class="ann-desc">
+              <ul>
+                <li>탭 시 이전 단계(이메일 인증 화면)로 돌아간다.</li>
+                <li>이미 선택한 사유는 초기화된다.</li>
+              </ul>
+            </div>
+            <div class="ann-rule">정책서 10-4절.</div>
+          </div>
+        </div>
+        <div class="ann-item">
+          <div class="cn">2</div>
+          <div class="ann-body">
+            <div class="ann-title">탈퇴 사유 선택 안내</div>
+            <div class="ann-desc">
+              <ul>
+                <li>아래 6개 항목 중 1개 이상 선택해야 [탈퇴하기] 버튼이 활성화된다.</li>
+                <li>여러 개를 동시에 선택할 수 있다.</li>
+                <li>선택한 사유는 서비스 개선을 위한 내부 데이터로만 사용된다.</li>
+              </ul>
+            </div>
+            <div class="ann-rule">정책서 8-11절 (탈퇴 사유 6개 + 복수 선택).</div>
+          </div>
+        </div>
+        <div class="ann-item">
+          <div class="cn">3</div>
+          <div class="ann-body">
+            <div class="ann-title">탈퇴 사유 선택 항목 (1~5번)</div>
+            <div class="ann-desc">
+              <ul>
+                <li>항목을 탭하면 동그라미에 체크 표시가 나타나고 파란 테두리가 생긴다.</li>
+                <li>다시 탭하면 선택이 해제된다.</li>
+                <li>선택된 항목이 1개 이상이면 하단 [탈퇴하기] 버튼이 빨간색으로 활성화된다.</li>
+              </ul>
+            </div>
+            <div class="ann-rule">정책서 8-11절 (1개 이상 선택 필수).</div>
+            <div class="ann-case">◼ 선택 전: 흰 배경 + 회색 테두리 ◼ 선택 후: 연보라 배경 + 파란 테두리 + 체크 표시</div>
+          </div>
+        </div>
+        <div class="ann-item">
+          <div class="cn">4</div>
+          <div class="ann-body">
+            <div class="ann-title">기타 항목 선택 시 텍스트 입력 필드 노출</div>
+            <div class="ann-desc">
+              <ul>
+                <li>"기타 (직접 입력)" 항목을 탭하면 아래에 텍스트 입력 박스가 나타난다.</li>
+                <li>최대 200자까지 입력할 수 있다.</li>
+                <li>입력은 선택 사항이다. 텍스트를 입력하지 않아도 [탈퇴하기] 버튼을 탭할 수 있다.</li>
+              </ul>
+            </div>
+            <div class="ann-rule">정책서 8-11절 (기타 선택 시 텍스트 입력 필드 노출, 최대 200자).</div>
+          </div>
+        </div>
+        <div class="ann-item">
+          <div class="cn">5</div>
+          <div class="ann-body">
+            <div class="ann-title">[탈퇴하기] 버튼 (하단 고정) ★</div>
+            <div class="ann-desc">
+              <ul>
+                <li>사유를 1개 이상 선택하면 빨간색으로 활성화된다. 선택 전에는 회색 비활성 상태이다.</li>
+                <li>탭 시 선택한 사유 데이터를 서버로 보내고 계정을 삭제한다.</li>
+                <li>삭제가 완료되면 세션(로그인 상태)이 자동으로 지워지고 MY05-C(탈퇴 완료) 화면으로 이동한다.</li>
+                <li>적립된 캐시백은 이 순간 전액 소멸되며 되돌릴 수 없다.</li>
+              </ul>
+            </div>
+            <div class="ann-rule">정책서 8-11절 / 10-4절 (탈퇴 처리 + 세션 삭제 + 캐시백 소멸).</div>
+            <div class="ann-case">◼ 사유 미선택: 회색 비활성 ◼ 1개 이상 선택: 빨간색 활성 ◼ 탭 후: 서버 처리 → MY05-C 이동</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sec-divider">
+
+  <!-- ────────────── MY05-C 탈퇴 완료 ────────────── -->
+  <div class="sec" id="my05-c">
+    <div class="sec-title">
+      MY05-C — 회원탈퇴 3단계: 탈퇴 완료
+      <div class="sec-badge-wrap">
+        <span class="sec-badge">세션 삭제</span>
+        <span class="sec-badge">메인 이동</span>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="mobile-wrap">
+        <div class="mobile-device">
+          <div class="m-notch"><div class="m-notch-pill"></div></div>
+          <div class="m-screen">
+            <!-- GNB (뒤로가기 비활성: 탈퇴 완료 후 돌아갈 수 없음) -->
+            <div class="my-gnb">
+              <div class="my-gnb-spacer"></div>
+              <div class="my-gnb-title">회원탈퇴</div>
+              <div class="my-gnb-spacer"></div>
+            </div>
+
+            <!-- 탈퇴 완료 메시지 -->
+            <div class="wd-done-wrap">
+              <div class="wd-done-icon">👋</div>
+              <div class="wd-done-title">탈퇴가 완료되었습니다<span class="wf-cn">1</span></div>
+              <div class="wd-done-desc">
+                그동안 이용해 주셔서 감사합니다.<br>
+                <br>
+                탈퇴 후 7일 동안은 같은 이메일로<br>
+                다시 가입하실 수 없습니다.<span class="wf-cn">2</span><br>
+                <br>
+                <span style="font-size:12px;color:#9ca3af;">
+                  재가입 가능일: <strong>2026년 7월 8일 이후</strong>
+                </span>
+              </div>
+              <button class="wd-done-btn">메인으로 이동<span class="wf-cn">3</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 주석 패널 MY05-C -->
+      <div class="ann">
+        <h3>화면 주석 — MY05-C (탈퇴 완료)</h3>
+        <div class="ann-item">
+          <div class="cn">1</div>
+          <div class="ann-body">
+            <div class="ann-title">탈퇴 완료 메시지</div>
+            <div class="ann-desc">
+              <ul>
+                <li>계정 삭제가 완료되면 이 화면이 나타난다.</li>
+                <li>이 시점에서 세션(로그인 상태)은 이미 삭제된 상태이다. 즉, 비로그인 상태로 전환된다.</li>
+                <li>GNB의 뒤로가기 버튼은 없다. 탈퇴를 되돌릴 수 없기 때문이다.</li>
+              </ul>
+            </div>
+            <div class="ann-rule">정책서 8-11절 / 10-4절 (탈퇴 완료 후 세션 삭제).</div>
+          </div>
+        </div>
+        <div class="ann-item">
+          <div class="cn">2</div>
+          <div class="ann-body">
+            <div class="ann-title">재가입 제한 안내 문구 및 날짜 표시</div>
+            <div class="ann-desc">
+              <ul>
+                <li>탈퇴한 날짜(KST 기준) 기준으로 7일 후부터 같은 이메일로 재가입이 가능하다.</li>
+                <li>예시: 7월 1일 탈퇴 → 7월 8일 00:00 이후 재가입 가능.</li>
+                <li>재가입 가능 날짜를 "YYYY년 MM월 DD일 이후" 형식으로 표시한다.</li>
+                <li>만약 7일 안에 같은 이메일로 가입을 시도하면, 로그인 화면에서 "회원탈퇴 후 7일간 재가입이 제한됩니다. OO월 OO일 이후 다시 시도해주세요." 메시지가 나타난다.</li>
+              </ul>
+            </div>
+            <div class="ann-rule">정책서 8-11절 (탈퇴일+7일 재가입 제한 + 차단 안내 문구).</div>
+            <div class="ann-case">◼ 7일 이내 재가입 시도: 로그인 화면에서 재가입 차단 안내 문구 표시</div>
+          </div>
+        </div>
+        <div class="ann-item">
+          <div class="cn">3</div>
+          <div class="ann-body">
+            <div class="ann-title">[메인으로 이동] 버튼</div>
+            <div class="ann-desc">
+              <ul>
+                <li>탭 시 서비스 첫 화면(M01 메인)으로 이동한다.</li>
+                <li>비로그인 상태로 메인 화면이 열린다.</li>
+                <li>이 버튼을 탭하지 않아도 일정 시간 후 자동으로 메인으로 이동할 수 있다. (구현 시 결정)</li>
+              </ul>
+            </div>
+            <div class="ann-rule">정책서 10-4절 (탈퇴 완료 후 M01 메인으로 이동 + 세션 삭제).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /.page -->
+</body>
+</html>

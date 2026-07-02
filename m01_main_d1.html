@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M01 (디자인확정) — 메인 화면 | allmy meta 화면기획서</title>
+<link rel="stylesheet" href="./wf-styles.css">
+<style>
+/* ── two-col override ── */
+.two-col { grid-template-columns: 480px 1fr; gap: 28px; }
+
+/* ── 모바일 프레임 ── */
+.mobile-wrap { display:flex; justify-content:center; align-items:flex-start; padding:20px 16px; background:#2a2a2a; border-radius:8px; min-height:560px; }
+.mobile-device { width:375px; background:#1a1f2e; border-radius:44px; padding:10px; box-shadow:0 0 0 1px rgba(255,255,255,.08),0 20px 50px rgba(0,0,0,.5); }
+.m-notch { height:22px; background:#111; border-radius:11px 11px 0 0; display:flex; align-items:center; justify-content:center; }
+.m-notch-pill { width:68px; height:13px; background:#111; border-radius:7px; }
+.m-screen { background:#f5f5f5; height:640px; overflow:hidden; border-radius:0 0 6px 6px; font-size:13px; display:flex; flex-direction:column; }
+.m-screen::-webkit-scrollbar { display:none; }
+.m-scroll { flex:1; overflow-y:auto; }
+.m-scroll::-webkit-scrollbar { display:none; }
+
+/* ── 논의 요약 테이블 ── */
+.disc-table-wrap { background:#fffbf0; border:1.5px solid #f59e0b; border-radius:10px; padding:20px 24px; margin-bottom:24px; }
+.disc-table-wrap h2 { font-size:15px; font-weight:700; color:#92400e; margin:0 0 6px; }
+.disc-table-wrap p { font-size:12px; color:#92400e; margin:0 0 14px; }
+.disc-table { width:100%; border-collapse:collapse; font-size:12px; }
+.disc-table th { background:#fef3c7; padding:7px 10px; text-align:left; font-weight:700; color:#78350f; border:1px solid #fde68a; white-space:nowrap; }
+.disc-table td { padding:8px 10px; border:1px solid #fde68a; color:#374151; vertical-align:top; line-height:1.7; }
+.disc-table tr:nth-child(even) td { background:#fffef8; }
+.disc-table td strong { color:#92400e; font-weight:700; }
+.disc-table td em { color:#d97706; font-style:normal; font-weight:600; }
+.disc-table .col-reason { min-width:340px; font-size:11.5px; }
+
+/* ── 파란 배경 히어로 ── */
+.main-hero { background:linear-gradient(180deg,#1952c7 0%,#2563eb 60%,#3b82f6 100%); padding:12px 14px 14px; flex-shrink:0; }
+
+/* ── GNB (새 디자인) ── */
+.gnb-new { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.gnb-login-btn {
+  height:32px; padding:0 14px;
+  background:rgba(255,255,255,0.2); border:1.5px solid rgba(255,255,255,0.55);
+  border-radius:20px; font-size:12px; font-weight:700; color:#fff; cursor:pointer;
+  display:flex; align-items:center; gap:5px; flex-shrink:0;
+}
+.gnb-avatar-btn {
+  width:32px; height:32px;
+  background:rgba(255,255,255,0.2); border:1.5px solid rgba(255,255,255,0.55);
+  border-radius:50%; font-size:15px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.gnb-cashback-btn {
+  height:auto; min-height:32px; padding:4px 12px;
+  background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.35);
+  border-radius:20px; font-size:11px; font-weight:600; color:#fff; cursor:pointer;
+  display:flex; align-items:center; gap:6px; max-width:196px;
+}
+.gnb-cb-label { font-size:10px; color:rgba(255,255,255,0.8); line-height:1.3; }
+.gnb-cb-amt { font-size:12px; font-weight:800; color:#fff; line-height:1.3; }
+.gnb-cb-placeholder { font-size:10px; color:rgba(255,255,255,0.85); line-height:1.4; }
+
+/* ── 웰컴 메시지 ── */
+.welcome-bar { padding:0 0 10px; }
+.welcome-txt { font-size:14px; font-weight:700; color:#fff; }
+.welcome-sub { font-size:11px; color:rgba(255,255,255,0.75); margin-top:2px; }
+
+/* ── AI 검색바 ── */
+.ai-search-bar {
+  background:rgba(255,255,255,0.18); border:1.5px solid rgba(255,255,255,0.4);
+  border-radius:12px; padding:10px 13px;
+  display:flex; align-items:center; gap:8px; margin-bottom:12px; cursor:pointer;
+}
+.ai-icon { font-size:14px; color:#fbbf24; flex-shrink:0; }
+.ai-placeholder { font-size:13px; color:rgba(255,255,255,0.8); flex:1; }
+.ai-badge {
+  font-size:9px; background:rgba(255,255,255,0.2); color:#fff;
+  padding:2px 7px; border-radius:6px; font-weight:700; flex-shrink:0;
+}
+
+/* ── 검색폼 카드 ── */
+.search-card-new { background:#fff; border-radius:14px; box-shadow:0 4px 20px rgba(0,0,0,.18); overflow:hidden; }
+.f-row { display:flex; align-items:center; padding:11px 13px; gap:10px; border-bottom:1px solid #f0f0f0; cursor:pointer; }
+.f-row:last-of-type { border-bottom:none; }
+.f-icon { font-size:14px; flex-shrink:0; color:#9ca3af; }
+.f-info { flex:1; }
+.f-label { font-size:10px; color:#9ca3af; }
+.f-val { font-size:13px; font-weight:600; color:#111; }
+.f-val.ph { color:#9ca3af; font-weight:400; }
+.f-2col { display:flex; border-bottom:1px solid #f0f0f0; }
+.f-2col .f-row { flex:1; border-bottom:none; }
+.f-2col .f-row:first-child { border-right:1px solid #f0f0f0; }
+.search-btn-new {
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  width:calc(100% - 20px); margin:10px; padding:13px;
+  background:#1952c7; color:#fff; border:none; border-radius:10px;
+  font-size:14px; font-weight:700; cursor:pointer;
+}
+
+/* ── 흰 바디 ── */
+.main-body { background:#fff; }
+.home-sec { padding:14px 14px 6px; }
+.home-sec-hdr { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.home-sec-title { font-size:13px; font-weight:700; color:#111; }
+.home-sec-more { font-size:11px; color:#1952c7; }
+.recent-row { display:flex; align-items:center; gap:10px; padding:9px 12px; background:#f8fafc; border-radius:10px; margin-bottom:6px; border:1px solid #f0f0f0; cursor:pointer; }
+.r-icon { font-size:14px; color:#9ca3af; }
+.r-info { flex:1; }
+.r-dest { font-size:12px; font-weight:600; color:#111; }
+.r-detail { font-size:10px; color:#9ca3af; margin-top:1px; }
+.r-del { font-size:13px; color:#d1d5db; cursor:pointer; }
+.rec-scroll { display:flex; gap:10px; overflow-x:auto; padding:4px 14px 14px; margin-left:-14px; padding-left:14px; }
+.rec-scroll::-webkit-scrollbar { display:none; }
+.rec-card { flex-shrink:0; width:148px; background:#fff; border-radius:12px; overflow:hidden; border:1px solid #e5e7eb; }
+.rec-img { height:96px; display:flex; align-items:center; justify-content:center; font-size:24px; }
+.ri1 { background:linear-gradient(135deg,#667eea,#764ba2); }
+.ri2 { background:linear-gradient(135deg,#f093fb,#f5576c); }
+.ri3 { background:linear-gradient(135deg,#4facfe,#00f2fe); }
+.rec-body { padding:8px 10px; }
+.rc-name { font-size:12px; font-weight:600; margin-bottom:2px; line-height:1.3; }
+.rc-loc { font-size:10px; color:#9ca3af; margin-bottom:4px; }
+.rc-orig { font-size:10px; color:#9ca3af; text-decoration:line-through; }
+.rc-price { font-size:13px; font-weight:700; color:#1952c7; }
+
+/* ── 하단 탭바 ── */
+.tab-bar { display:flex; background:#fff; border-top:1px solid #e5e7eb; padding:6px 0 10px; flex-shrink:0; }
+.tab-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; cursor:pointer; padding:4px 0; }
+.tab-icon { font-size:20px; }
+.tab-label { font-size:10px; color:#9ca3af; font-weight:500; }
+.tab-item.active .tab-label { color:#1952c7; font-weight:700; }
+.tab-dot { width:4px; height:4px; background:#1952c7; border-radius:50%; margin-top:1px; }
+
+/* ── 참조 안내 박스 ── */
+.ref-box { background:#f8fafc; border:1px solid #e5e7eb; border-radius:10px; padding:16px 20px; margin-bottom:24px; }
+.ref-box h3 { font-size:13px; font-weight:700; color:#374151; margin:0 0 6px; }
+.ref-box p { font-size:12px; color:#6b7280; margin:0; line-height:1.6; }
+.ref-box a { color:#1952c7; }
+</style>
+</head>
+<body>
+
+<!-- ── 상단 네비 ── -->
+<nav class="page-nav">
+  <a class="page-nav-back" href="index.html">← 목록으로</a>
+  <span class="page-nav-sep">|</span>
+  <span class="page-nav-title">M01 (디자인확정) — 메인 화면</span>
+  <span class="page-nav-route">/ · 검색 진입 화면 · 정책서 v0.37 기준</span>
+  <div class="page-nav-nav">
+    <span class="page-nav-pager-disabled">← 이전</span>
+    <a class="page-nav-pager" href="s01_search.html">다음 →</a>
+  </div>
+</nav>
+
+<!-- ── 목차 (TOC) ── -->
+<nav class="toc">
+  <div class="toc-inner">
+    <span class="toc-label">목차</span>
+    <a href="#disc-table" class="toc-link">📋 논의 요약</a>
+    <span class="toc-sep"></span>
+    <a href="#m01d1-a" class="toc-link">A 비로그인</a>
+    <span class="toc-sep"></span>
+    <a href="#m01d1-b" class="toc-link">B 로그인 후</a>
+    <span class="toc-sep"></span>
+    <a href="#m01d1-c" class="toc-link">C 고객지원 채팅</a>
+    <span class="toc-sep"></span>
+    <a href="#m01d1-note" class="toc-link">참조 섹션</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- ════════════════════════════════════════════════
+  논의 요약 테이블
+════════════════════════════════════════════════ -->
+<div id="disc-table">
+  <div class="disc-table-wrap">
+    <h2>📋 논의 요약 — M01 메인 화면 (디자인확정 기준)</h2>
+    <p>기준 날짜: 2026-07-02 &nbsp;·&nbsp; 기준 정책서: v0.37</p>
+    <table class="disc-table">
+      <colgroup>
+        <col style="width:70px">
+        <col style="width:100px">
+        <col style="width:140px">
+        <col style="width:150px">
+        <col>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>섹션번호</th>
+          <th>논의항목</th>
+          <th>선택지</th>
+          <th>현재 적용안</th>
+          <th class="col-reason">적용 근거(이유)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>M01_D1-A<br>M01_D1-B</td>
+          <td>GNB 우측 캐시백 버튼</td>
+          <td>비로그인/0원: 안내 문구<br>로그인+1원↑: 금액 표시</td>
+          <td>"로그인 후 최대 혜택 적립"<br>적립완료(Approved)만 표시</td>
+          <td>적립완료 금액만 표시 — 실제로 확정된 금액 기준이 사용자에게 더 신뢰감을 줌. 비로그인 문구는 로그인 CTA 역할 겸용. HotelsCombined·Rakuten Travel 동일 패턴.<br><em>⚠️ 대표 논의 필요 — 적립예정 합산 여부 최종 확인</em></td>
+        </tr>
+        <tr>
+          <td>M01_D1-B</td>
+          <td>마이페이지 진입점</td>
+          <td>A. 아바타 탭 → MY01<br>B. 적립탭 하단 통합<br>C. 기타</td>
+          <td>확정 디자인에서 [☰] 제거됨<br><em>진입점 미확정</em></td>
+          <td>Airbnb·Booking.com·KAYAK 모두 2023년 이후 [☰] → 탭바·아바타로 전환. 햄버거 메뉴는 모바일 UX 인지 장벽으로 업계 이탈 중.<br><em>⚠️ 대표 논의 후 확정</em></td>
+        </tr>
+        <tr>
+          <td>M01_D1-A<br>M01_D1-B</td>
+          <td>하단 탭바 노출 범위</td>
+          <td>A. 전 화면<br>B. 1뎁스(M01·적립탭)만</td>
+          <td>B안 — 1뎁스(메인·적립탭)만 노출<br>S01·S02 미노출</td>
+          <td>Vio.com·KAYAK·Expedia 모두 검색결과·숙소상세에서 탭바 숨김. 예약 퍼널 진입 후 탈출구 최소화가 전환율 향상에 직결됨.</td>
+        </tr>
+        <tr>
+          <td>M01_D1-C</td>
+          <td>공작새 탭 기능</td>
+          <td>A. AI 챗봇(LLM)<br>B. FAQ 채팅 UI</td>
+          <td>B안 — FAQ 채팅창 바텀시트</td>
+          <td>MVP 출시 시점에 LLM 오답·비용 리스크 관리가 어려움. 고정 시나리오 기반 채팅 UI로 CS 문의 80% 자동 처리 후 추후 LLM 업그레이드.</td>
+        </tr>
+        <tr>
+          <td>M01_D1-A<br>M01_D1-B</td>
+          <td>AI 검색창 기능</td>
+          <td>A. 자연어 처리<br>B. 키워드 검색</td>
+          <td>UI 위치·형태 확정<br>기능 상세 추후 확정</td>
+          <td>Google Hotels·KAYAK·Expedia 메인 화면 상단 자연어 검색창 채택 추세. 멀티스텝 검색폼 대비 입력 마찰 감소.<br><em>⚠️ 자연어 파싱 방식 별도 확정 필요</em></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════
+  M01_D1-A  메인 홈 — 비로그인 상태
+════════════════════════════════════════════════ -->
+<div id="m01d1-a" class="sec-title">
+  <span class="sec-badge">M01_D1-A</span>메인 홈 — 비로그인 상태
+  <span style="font-size:12px;font-weight:400;color:#888">— 확정 디자인 기준</span>
+</div>
+<div class="sec-sub">
+  서비스 진입 시 최초 노출 화면. 파란 배경 GNB + AI 검색바 + 검색폼(목적지·날짜·인원) + 하단 탭바(3탭).<br>
+  플로우: AI검색바 탭 → 검색결과 이동(논의중) / 목적지 탭 → 자동완성 / 날짜 탭 → 캘린더 / 인원 탭 → 인원설정 / [검색하기] → S01 / 캐시백 버튼 탭 → 적립 탭
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — M01 메인 화면 전체 (디자인확정 기준)</div>
+  <ul class="sec-policy-list">
+    <li><strong>GNB 구조 변경</strong>: 좌측=[로그인] 버튼 / 우측=캐시백 정보 버튼. [☰] 전체메뉴 제거. 마이페이지 진입점 미확정 (5-1절 변경 예정)</li>
+    <li><strong>캐시백 버튼 — 비로그인 또는 0원</strong>: "로그인 후 최대 혜택 적립" 문구. 탭 시 적립 탭 이동 (9-1절)</li>
+    <li><strong>캐시백 버튼 — 로그인 + 1원 이상</strong>: 적립완료(Approved) 금액만 표시. 탭 시 적립 탭 이동 (9-1절) ⚠️ 대표 논의 필요 — 적립예정 합산 여부 최종 확인</li>
+    <li><strong>하단 탭바</strong>: 1뎁스(메인·적립탭)에만 노출. 검색결과(S01) 이후 미노출 (확정)</li>
+    <li><strong>비로그인 허용</strong>: 검색·가격조회 모두 가능 (8-6절)</li>
+    <li><strong>날짜 기본값</strong>: 체크인=오늘+7일, 체크아웃=체크인+1일 (4-7절)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.37 4-7·4-10·5-1·8-6절</div>
+</div>
+
+<div class="two-col">
+  <!-- 모바일 프레임 -->
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- 파란 배경 히어로 -->
+        <div class="main-hero">
+          <!-- GNB -->
+          <div class="gnb-new">
+            <button class="gnb-login-btn">👤 로그인 <span class="wf-cn">1</span></button>
+            <button class="gnb-cashback-btn">
+              <span style="font-size:13px;flex-shrink:0;">💰</span>
+              <span class="gnb-cb-placeholder">로그인 후 최대 혜택 적립 <span class="wf-cn">2</span></span>
+            </button>
+          </div>
+          <!-- AI 검색바 -->
+          <div class="ai-search-bar">
+            <span class="ai-icon">✦</span>
+            <span class="ai-placeholder">어디로 떠나세요? <span class="wf-cn">3</span></span>
+            <span class="ai-badge">AI</span>
+          </div>
+          <!-- 검색폼 -->
+          <div class="search-card-new">
+            <div class="f-row">
+              <span class="f-icon">📍</span>
+              <div class="f-info">
+                <div class="f-label">목적지</div>
+                <div class="f-val ph">어디로 가시나요?</div>
+              </div>
+              <span class="wf-cn">4</span>
+            </div>
+            <div class="f-2col">
+              <div class="f-row">
+                <span class="f-icon">📅</span>
+                <div class="f-info">
+                  <div class="f-label">체크인</div>
+                  <div class="f-val">7월 9일 (목)</div>
+                </div>
+                <span class="wf-cn">5</span>
+              </div>
+              <div class="f-row">
+                <span class="f-icon">📅</span>
+                <div class="f-info">
+                  <div class="f-label">체크아웃</div>
+                  <div class="f-val">7월 10일 (금)</div>
+                </div>
+              </div>
+            </div>
+            <div class="f-row">
+              <span class="f-icon">👤</span>
+              <div class="f-info">
+                <div class="f-label">인원 · 객실</div>
+                <div class="f-val">성인 2명 · 객실 1개</div>
+              </div>
+              <span class="wf-cn">6</span>
+            </div>
+            <button class="search-btn-new">🔍 검색하기 <span class="wf-cn">7</span></button>
+          </div>
+        </div><!-- /main-hero -->
+
+        <!-- 흰 바디 (비어 있음 — 검색폼 하단 콘텐츠 없음) -->
+        <div class="m-scroll">
+          <div class="main-body" style="height:100%;"></div>
+        </div><!-- /m-scroll -->
+
+        <!-- 하단 탭바 -->
+        <div class="tab-bar">
+          <div class="tab-item active">
+            <span class="tab-icon">🔍</span>
+            <span class="tab-label" style="color:#1952c7;">검색</span>
+            <div class="tab-dot"></div>
+          </div>
+          <div class="tab-item">
+            <span class="tab-icon">⭐</span>
+            <span class="tab-label">적립 <span class="wf-cn">8</span></span>
+          </div>
+          <div class="tab-item">
+            <span style="font-size:22px; line-height:1;">🦚</span>
+            <span class="tab-label">고객지원 <span class="wf-cn">9</span></span>
+          </div>
+        </div>
+
+      </div><!-- /m-screen -->
+    </div>
+  </div><!-- /mobile-wrap -->
+
+  <!-- 주석 패널 -->
+  <div class="ann">
+    <h3>화면 주석 — M01_D1-A (비로그인)</h3>
+
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">GNB 좌측 — [로그인] 버튼</div>
+        <div class="ann-desc"><ul><li>비로그인 상태: 흰색 반투명 알약 형태 [로그인] 버튼 표시.</li><li>탭 시 로그인 바텀시트(auth_login.html) 진입.</li><li>로그인 완료 후: 아바타 원형 아이콘으로 전환 (B케이스 주석 참조).</li></ul></div>
+        <div class="ann-rule">⚠️ 미확정 — 로그인 후 좌측 영역(아바타 아이콘 vs 로고 등) 대표 논의 필요. 현재 B케이스에 아바타 임시 표현.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">GNB 우측 — 캐시백 정보 버튼</div>
+        <div class="ann-desc"><ul><li><b>비로그인 또는 캐시백 0원 상태:</b> "로그인 후 최대 혜택 적립" 문구를 버튼 형태로 표시.</li><li><b>로그인 후 1원 이상 상태:</b> "내 캐시백 / N,NNN원" 형태로 금액 표시 (B케이스 참조).</li><li>탭 시: 로그인·비로그인 모두 적립 탭(하단 탭바 2번)으로 이동.</li></ul></div>
+        <div class="ann-front">← 표시 금액: <code>cashback.approved</code> (적립완료 금액만)</div>
+        <div class="ann-rule">정책서 9-1절. 적립완료(Approved) 금액만 표시. ⚠️ 대표 논의 필요 — 적립예정 합산 여부 최종 확인.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">AI 검색바</div>
+        <div class="ann-desc"><ul><li>"어디로 떠나세요?" 플레이스홀더가 있는 텍스트 입력창.</li><li>탭 시 텍스트 직접 입력 가능.</li><li>입력 후 확인(엔터 또는 돋보기 탭) 시 S01(검색결과) 이동.</li><li>✦ 아이콘: AI 기능을 나타내는 시각 요소. 우측 [AI] 배지 함께 표시.</li></ul></div>
+        <div class="ann-rule">⚠️ 논의중 — AI 검색창 상세 기능(자연어 처리 방식, 파라미터 변환 등) 추후 확정 예정. 현재는 UI 위치·형태만 표현. 확정 후 주석 업데이트.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">목적지 입력 필드</div>
+        <div class="ann-desc"><ul><li>기본 상태: "어디로 가시나요?" 플레이스홀더 표시.</li><li>탭 시 자동완성 전체화면으로 전환 (기존 m01_main.html M01-B와 동일).</li><li>목적지 미선택 시 [검색하기] 탭 → 목적지 필드에 포커스 + 토스트 "목적지를 입력해주세요."</li></ul></div>
+        <div class="ann-front">← Autocomplete API: <code>GET /api/affiliate/autocomplete/v1/hotels?query={입력값}&languageCode=ko_KR</code></div>
+        <div class="ann-rule">정책서 4-1절. 자동완성 상세 동작은 기존 m01_main.html M01-B와 동일.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">5</div>
+      <div class="ann-body">
+        <div class="ann-title">체크인 · 체크아웃 날짜</div>
+        <div class="ann-desc"><ul><li>각 필드 탭 시 날짜 선택 캘린더 전체화면 전환.</li><li>기본값: 체크인=오늘+7일, 체크아웃=체크인+1일.</li><li>표시 형식: "M월 D일 (요일)".</li></ul></div>
+        <div class="ann-front">← API 파라미터: <code>checkIn=YYYY-MM-DD</code>, <code>checkOut=YYYY-MM-DD</code></div>
+        <div class="ann-rule">정책서 4-7절. 캘린더 상세 동작은 기존 m01_main.html M01-C와 동일.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">6</div>
+      <div class="ann-body">
+        <div class="ann-title">인원 · 객실 필드</div>
+        <div class="ann-desc"><ul><li>탭 시 인원·객실 설정 전체화면 전환.</li><li>기본값: 객실 1개 / 성인 2명 / 아동 0명.</li><li>표시 형식: "성인 N명 · 객실 N개" (아동 있을 경우: "성인 N명 · 아동 N명 · 객실 N개").</li></ul></div>
+        <div class="ann-front">← API 파라미터: <code>rooms</code> (예: 성인2 = "2", 성인2+아동8세 = "2:8")</div>
+        <div class="ann-rule">정책서 4-9절. 인원설정 상세 동작은 기존 m01_main.html M01-D와 동일.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">7</div>
+      <div class="ann-body">
+        <div class="ann-title">[검색하기] 버튼</div>
+        <div class="ann-desc"><ul><li>목적지 선택 필수. 날짜·인원은 기본값 자동 적용.</li><li>탭 시 검색 조건을 로컬 스토리지에 최근 검색으로 저장 후 S01(검색결과) 화면으로 이동.</li><li>목적지 미선택 시 S01 미이동 — 유효성 오류 처리.</li></ul></div>
+        <div class="ann-front">← <code>GET /api/affiliate/search/v1/hotels</code> 호출. 파라미터: <code>destination</code>, <code>checkIn</code>, <code>checkOut</code>, <code>rooms</code>, <code>currencyCode=KRW</code>, <code>languageCode=ko_KR</code>, <code>includeTaxesInTotal=true</code></div>
+        <div class="ann-rule">정책서 4-7절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">8</div>
+      <div class="ann-body">
+        <div class="ann-title">하단 탭바 — [적립] 탭</div>
+
+        <div class="ann-desc"><ul><li>탭 시 적립 탭 전체화면으로 이동 (신규 화면, 별도 제작 예정).</li><li>탭바는 1뎁스 화면(메인·적립탭)에만 표시됨. 검색결과(S01) 이후 화면에서는 미표시.</li></ul></div>
+        <div class="ann-rule">확정. 적립 탭 화면은 별도 파일로 신규 제작 예정.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">9</div>
+      <div class="ann-body">
+        <div class="ann-title">하단 탭바 — [공작새/고객지원] 탭</div>
+        <div class="ann-desc"><ul><li>탭 시 서비스 FAQ 채팅창 화면으로 진입.</li><li>채팅창에서 서비스 관련 질의응답 가능.</li></ul></div>
+        <div class="ann-rule">⚠️ 미확정 — 채팅창 상세 기능(AI 챗봇 vs 정적 FAQ 등) 대표 논의 필요. 확정 후 별도 화면기획서 제작. 현재는 탭 진입 동작만 표현.</div>
+      </div>
+    </div>
+
+  </div><!-- /ann -->
+</div><!-- /two-col M01_D1-A -->
+
+<hr class="sec-divider">
+
+
+<!-- ════════════════════════════════════════════════
+  M01_D1-B  메인 홈 — 로그인 상태
+════════════════════════════════════════════════ -->
+<div id="m01d1-b" class="sec-title">
+  <span class="sec-badge">M01_D1-B</span>메인 홈 — 로그인 상태
+  <span style="font-size:12px;font-weight:400;color:#888">— 캐시백 1원 이상 기준</span>
+</div>
+<div class="sec-sub">
+  로그인 후 상태. GNB 좌측 아바타 아이콘(임시, 미확정) + 우측 캐시백 금액 버튼(합산 금액). 검색폼 위 "반가워요 👋 N님" 웰컴 메시지 추가. 검색폼에 이전 검색 조건 채워진 상태.
+</div>
+
+<div class="two-col">
+  <!-- 모바일 프레임 -->
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- 파란 배경 히어로 -->
+        <div class="main-hero">
+          <!-- GNB -->
+          <div class="gnb-new">
+            <button class="gnb-avatar-btn">👤 <span class="wf-cn">1</span></button>
+            <button class="gnb-cashback-btn">
+              <span style="font-size:13px;flex-shrink:0;">💰</span>
+              <div>
+                <div class="gnb-cb-label">내 캐시백</div>
+                <div class="gnb-cb-amt">137,000원 <span class="wf-cn">2</span></div>
+              </div>
+            </button>
+          </div>
+          <!-- 웰컴 메시지 -->
+          <div class="welcome-bar">
+            <div class="welcome-txt">반가워요 👋 <span class="wf-cn">3</span></div>
+            <div class="welcome-sub">오늘도 최저가 호텔을 찾아드릴게요</div>
+          </div>
+          <!-- AI 검색바 -->
+          <div class="ai-search-bar">
+            <span class="ai-icon">✦</span>
+            <span class="ai-placeholder">어디로 떠나세요?</span>
+            <span class="ai-badge">AI</span>
+          </div>
+          <!-- 검색폼 (이전 검색값 채워진 상태) -->
+          <div class="search-card-new">
+            <div class="f-row">
+              <span class="f-icon">📍</span>
+              <div class="f-info">
+                <div class="f-label">목적지</div>
+                <div class="f-val">제주도, 대한민국</div>
+              </div>
+              <span class="wf-cn">4</span>
+            </div>
+            <div class="f-2col">
+              <div class="f-row">
+                <span class="f-icon">📅</span>
+                <div class="f-info">
+                  <div class="f-label">체크인</div>
+                  <div class="f-val">7월 9일 (목)</div>
+                </div>
+              </div>
+              <div class="f-row">
+                <span class="f-icon">📅</span>
+                <div class="f-info">
+                  <div class="f-label">체크아웃</div>
+                  <div class="f-val">7월 10일 (금)</div>
+                </div>
+              </div>
+            </div>
+            <div class="f-row">
+              <span class="f-icon">👤</span>
+              <div class="f-info">
+                <div class="f-label">인원 · 객실</div>
+                <div class="f-val">성인 2명 · 객실 1개</div>
+              </div>
+            </div>
+            <button class="search-btn-new">🔍 검색하기</button>
+          </div>
+        </div><!-- /main-hero -->
+
+        <!-- 흰 바디 -->
+        <div class="m-scroll">
+          <div class="main-body">
+            <div class="home-sec">
+              <div class="home-sec-hdr">
+                <div class="home-sec-title">최근 검색</div>
+              </div>
+              <div class="recent-row">
+                <span class="r-icon">🕐</span>
+                <div class="r-info">
+                  <div class="r-dest">제주도, 대한민국</div>
+                  <div class="r-detail">7/9 – 7/10 · 성인 2명 · 객실 1개</div>
+                </div>
+                <span class="r-del">✕</span>
+              </div>
+              <div class="recent-row">
+                <span class="r-icon">🕐</span>
+                <div class="r-info">
+                  <div class="r-dest">오사카, 일본</div>
+                  <div class="r-detail">9/5 – 9/7 · 성인 2명 · 객실 1개</div>
+                </div>
+                <span class="r-del">✕</span>
+              </div>
+            </div>
+            <div class="home-sec">
+              <div class="home-sec-hdr">
+                <div class="home-sec-title">지금 인기 숙소</div>
+                <div class="home-sec-more">모두 보기 →</div>
+              </div>
+              <div class="rec-scroll">
+                <div class="rec-card">
+                  <div class="rec-img ri1">🏨</div>
+                  <div class="rec-body">
+                    <div class="rc-name">서울 가든 호텔</div>
+                    <div class="rc-loc">📍 도화동, 서울</div>
+                    <div class="rc-orig">₩167,699</div>
+                    <div class="rc-price">₩122,972</div>
+                  </div>
+                </div>
+                <div class="rec-card">
+                  <div class="rec-img ri2">🏨</div>
+                  <div class="rec-body">
+                    <div class="rc-name">코리아나 호텔</div>
+                    <div class="rc-loc">📍 중구, 서울</div>
+                    <div class="rc-orig">₩370,910</div>
+                    <div class="rc-price">₩276,245</div>
+                  </div>
+                </div>
+                <div class="rec-card">
+                  <div class="rec-img ri3">🏨</div>
+                  <div class="rec-body">
+                    <div class="rc-name">롯데호텔 서울</div>
+                    <div class="rc-loc">📍 중구, 서울</div>
+                    <div class="rc-orig">₩1,200,000</div>
+                    <div class="rc-price">₩925,650</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="height:8px;"></div>
+          </div>
+        </div><!-- /m-scroll -->
+
+        <!-- 하단 탭바 -->
+        <div class="tab-bar">
+          <div class="tab-item active">
+            <span class="tab-icon">🔍</span>
+            <span class="tab-label" style="color:#1952c7;">검색</span>
+            <div class="tab-dot"></div>
+          </div>
+          <div class="tab-item">
+            <span class="tab-icon">⭐</span>
+            <span class="tab-label">적립</span>
+          </div>
+          <div class="tab-item">
+            <span style="font-size:22px;line-height:1;">🦚</span>
+            <span class="tab-label">고객지원</span>
+          </div>
+        </div>
+
+      </div><!-- /m-screen -->
+    </div>
+  </div><!-- /mobile-wrap -->
+
+  <!-- 주석 패널 -->
+  <div class="ann">
+    <h3>화면 주석 — M01_D1-B (로그인 후)</h3>
+
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">GNB 좌측 — 로그인 후 (임시: 아바타 아이콘)</div>
+        <div class="ann-desc"><ul><li>로그인 완료 후 [로그인] 버튼 자리에 아바타 원형 아이콘으로 전환 (현재 임시 표현).</li><li>마이페이지 진입점과 연계하여 최종 처리 방법 결정 필요.</li></ul></div>
+        <div class="ann-rule">⚠️ 미확정 — 선택지 3가지 대표 논의 필요:<br>A안: 아바타 아이콘 탭 → MY01(마이페이지) 이동<br>B안: 로고 표시 (마이페이지는 적립 탭 하단에 통합)<br>C안: 기타 방안</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">GNB 우측 — 캐시백 금액 표시</div>
+        <div class="ann-desc"><ul><li>로그인 후 캐시백이 1원 이상인 경우 "내 캐시백 / N,NNN원" 형태로 표시.</li><li>표시 금액: 적립완료(Approved) 금액만 표시.</li><li>탭 시 적립 탭(하단 탭바 2번)으로 이동.</li><li>천 단위 구분 쉼표 표기 (예: 137,000원).</li></ul></div>
+        <div class="ann-front">← 금액 참조: <code>cashback.approved</code></div>
+        <div class="ann-rule">2026-07-02 논의 — 적립완료(Approved)만 표시. ⚠️ 대표 논의 필요 — 적립예정 합산 여부 최종 확인.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">웰컴 메시지</div>
+        <div class="ann-desc"><ul><li>로그인 후에만 표시되는 인사 문구.</li><li>표시 형식: "반가워요 👋" (이름 미노출).</li><li>서브 텍스트: "오늘도 최저가 호텔을 찾아드릴게요" (고정 문구).</li></ul></div>
+        <div class="ann-rule">사용자 이름 미노출 — 이름 데이터 미입력 가능성 및 개인정보 노출 최소화 방침.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">검색폼 — 이전 검색 조건 복원</div>
+        <div class="ann-desc"><ul><li>로그인 후 메인 진입 시, 마지막 검색 조건(목적지·날짜·인원)이 검색폼에 복원되어 표시.</li><li>복원 데이터 출처: 로컬 스토리지의 최근 검색 1번째 항목.</li><li>최근 검색이 없는 경우: 기본값(목적지 빈칸, 날짜 오늘+7일, 인원 성인2+객실1) 표시.</li></ul></div>
+        <div class="ann-rule">정책서 4-8절. 로컬 스토리지 기반으로 기기 변경 시 초기화.</div>
+      </div>
+    </div>
+
+  </div><!-- /ann -->
+</div><!-- /two-col M01_D1-B -->
+
+<hr class="sec-divider">
+
+
+<!-- ════════════════════════════════════════════════
+  M01_D1-C  고객지원 채팅창 바텀시트
+════════════════════════════════════════════════ -->
+<div id="m01d1-c" class="sec-title">
+  <span class="sec-badge">M01_D1-C</span>고객지원 채팅창 — 공작새 탭 탭 시 노출
+  <span style="font-size:12px;font-weight:400;color:#888">— 바텀시트 형태</span>
+</div>
+<div class="sec-sub">
+  하단 탭바 [🦚 고객지원] 탭 → 채팅창 바텀시트 오버레이 노출. 대화 형식 FAQ UI. 서비스 외 문의 시 "답변 불가" 메시지 자동 응답.
+</div>
+
+<div class="two-col">
+  <!-- 모바일 프레임 -->
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen" style="position:relative;">
+
+        <!-- 배경 (메인 화면 dim 처리) -->
+        <div style="flex:1;background:#f5f5f5;display:flex;align-items:flex-end;position:relative;">
+
+          <!-- dim overlay -->
+          <div style="position:absolute;inset:0;background:rgba(0,0,0,0.45);z-index:1;border-radius:0 0 6px 0;"></div>
+
+          <!-- 채팅창 바텀시트 -->
+          <div style="position:relative;z-index:2;width:100%;background:#fff;border-radius:20px 20px 0 0;max-height:520px;display:flex;flex-direction:column;box-shadow:0 -4px 24px rgba(0,0,0,0.18);">
+
+            <!-- 시트 핸들 + 헤더 -->
+            <div style="padding:10px 16px 0;flex-shrink:0;">
+              <div style="width:36px;height:4px;background:#e5e7eb;border-radius:2px;margin:0 auto 12px;"></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:10px;border-bottom:1px solid #f3f4f6;">
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span style="font-size:20px;line-height:1;">🦚</span>
+                  <div>
+                    <div style="font-size:13px;font-weight:700;color:#111;">고객지원</div>
+                    <div style="font-size:10px;color:#6b7280;">서비스 관련 문의를 도와드려요</div>
+                  </div>
+                </div>
+                <div style="width:28px;height:28px;background:#f3f4f6;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;color:#6b7280;cursor:pointer;">✕ <span class="wf-cn" style="right:-8px;top:-8px;">1</span></div>
+              </div>
+            </div>
+
+            <!-- 채팅 메시지 영역 -->
+            <div style="flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-height:0;">
+
+              <!-- 공작새 메시지 (좌측) -->
+              <div style="display:flex;align-items:flex-start;gap:8px;">
+                <div style="width:28px;height:28px;background:#f0fdf4;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🦚</div>
+                <div style="background:#f3f4f6;border-radius:4px 12px 12px 12px;padding:9px 12px;max-width:220px;">
+                  <div style="font-size:12px;color:#111;line-height:1.5;">안녕하세요! 무엇이든 물어보세요 😊<br>예약·캐시백·계정 관련 궁금한 점을 알려드릴게요.</div>
+                </div>
+              </div>
+
+              <!-- 빠른 질문 버튼 -->
+              <div style="display:flex;flex-direction:column;gap:6px;padding-left:36px;">
+                <div style="padding:7px 12px;background:#fff;border:1px solid #e5e7eb;border-radius:20px;font-size:11px;color:#374151;cursor:pointer;">캐시백은 언제 지급되나요?</div>
+                <div style="padding:7px 12px;background:#fff;border:1px solid #e5e7eb;border-radius:20px;font-size:11px;color:#374151;cursor:pointer;">예약 취소는 어떻게 하나요?</div>
+                <div style="padding:7px 12px;background:#fff;border:1px solid #e5e7eb;border-radius:20px;font-size:11px;color:#374151;cursor:pointer;">회원 가입은 어떻게 하나요?</div>
+              </div>
+
+              <!-- 사용자 메시지 (우측) — 서비스 외 문의 예시 -->
+              <div style="display:flex;justify-content:flex-end;">
+                <div style="background:#1952c7;border-radius:12px 4px 12px 12px;padding:9px 12px;max-width:220px;">
+                  <div style="font-size:12px;color:#fff;line-height:1.5;">날씨가 좋은 곳 추천해줘</div>
+                </div>
+              </div>
+
+              <!-- 공작새 답변 — 서비스 외 문의 불가 메시지 -->
+              <div style="display:flex;align-items:flex-start;gap:8px;">
+                <div style="width:28px;height:28px;background:#f0fdf4;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🦚</div>
+                <div style="background:#f3f4f6;border-radius:4px 12px 12px 12px;padding:9px 12px;max-width:220px;">
+                  <div style="font-size:12px;color:#111;line-height:1.5;">죄송해요 😅 저는 <strong>서비스 이용 관련 문의</strong>만 도와드릴 수 있어요.<br>예약·캐시백·계정 관련 질문을 주시면 바로 답해드릴게요!</div>
+                  <span class="wf-cn" style="position:static;display:inline-block;margin-top:4px;">2</span>
+                </div>
+              </div>
+
+            </div><!-- /채팅 메시지 -->
+
+            <!-- 입력창 -->
+            <div style="padding:10px 14px 14px;border-top:1px solid #f3f4f6;flex-shrink:0;display:flex;gap:8px;align-items:center;">
+              <div style="flex:1;background:#f9fafb;border:1px solid #e5e7eb;border-radius:22px;padding:9px 14px;font-size:12px;color:#9ca3af;">궁금한 점을 입력하세요...</div>
+              <div style="width:34px;height:34px;background:#1952c7;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;flex-shrink:0;">➤</div>
+            </div>
+
+          </div><!-- /바텀시트 -->
+        </div><!-- /배경 -->
+
+        <!-- 하단 탭바 (바텀시트 아래 고정) -->
+        <div class="tab-bar">
+          <div class="tab-item">
+            <span class="tab-icon">🔍</span>
+            <span class="tab-label">검색</span>
+          </div>
+          <div class="tab-item">
+            <span class="tab-icon">⭐</span>
+            <span class="tab-label">적립</span>
+          </div>
+          <div class="tab-item active">
+            <span style="font-size:22px;line-height:1;">🦚</span>
+            <span class="tab-label" style="color:#1952c7;">고객지원</span>
+            <div class="tab-dot"></div>
+          </div>
+        </div>
+
+      </div><!-- /m-screen -->
+    </div>
+  </div><!-- /mobile-wrap -->
+
+  <!-- 주석 패널 -->
+  <div class="ann">
+    <h3>화면 주석 — M01_D1-C (고객지원 채팅창 바텀시트)</h3>
+
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">채팅창 바텀시트 — 닫기</div>
+        <div class="ann-desc"><ul>
+          <li>하단 탭바 [🦚 고객지원] 탭을 탭하면 이 바텀시트가 화면 아래에서 올라오는 방식으로 열림.</li>
+          <li>바텀시트가 열려도 하단 탭바는 계속 보임 (탭바 위에 바텀시트가 겹쳐지지 않음).</li>
+          <li>화면 배경이 어둡게 바뀜 (반투명 검정 레이어 처리).</li>
+          <li>닫기 [✕] 버튼 탭 → 바텀시트 닫힘, 이전 화면으로 돌아감.</li>
+          <li>어두운 배경 영역 탭 → 바텀시트 닫힘.</li>
+        </ul></div>
+        <div class="ann-rule">TAB-2 확정 (2026-07-02). 바텀시트 진입·닫기 동작.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">서비스 외 문의 — 답변 불가 메시지</div>
+        <div class="ann-desc"><ul>
+          <li>사용자가 서비스(예약·캐시백·계정)와 관계없는 질문을 입력한 경우 자동으로 아래 메시지를 보내줌.</li>
+          <li>메시지 내용(안): "죄송해요 😅 저는 서비스 이용 관련 문의만 도와드릴 수 있어요. 예약·캐시백·계정 관련 질문을 주시면 바로 답해드릴게요!"</li>
+          <li>서비스 외 판단 기준: 키워드 매칭 방식 (날씨·음식·교통 등 숙박 서비스 무관 주제 감지).</li>
+        </ul></div>
+        <div class="ann-rule">확정. 서비스 외 질문에 대한 답변 불가 메시지 자동 응답.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn" style="background:#e0e7ef;color:#374151;">i</div>
+      <div class="ann-body">
+        <div class="ann-title">빠른 질문 버튼 (FAQ 바로가기)</div>
+        <div class="ann-desc"><ul>
+          <li>채팅창 첫 진입 시 자주 묻는 질문 3개를 버튼으로 제공.</li>
+          <li>버튼 탭 → 해당 질문이 입력된 것처럼 처리되어 자동으로 답변 메시지 표시.</li>
+          <li>표시 항목(예시): "캐시백은 언제 지급되나요?" / "예약 취소는 어떻게 하나요?" / "회원 가입은 어떻게 하나요?"</li>
+          <li>항목 수·내용은 추후 CS 팀 협의 후 확정.</li>
+        </ul></div>
+        <div class="ann-rule">⚠️ 미확정 — FAQ 항목 목록 CS 팀 협의 필요.</div>
+      </div>
+    </div>
+
+  </div><!-- /ann -->
+</div><!-- /two-col M01_D1-C -->
+
+<hr class="sec-divider">
+
+
+<!-- ════════════════════════════════════════════════
+  참조 섹션 안내
+════════════════════════════════════════════════ -->
+<div id="m01d1-note" class="sec-title">
+  <span class="sec-badge" style="background:#9ca3af;">참조</span>자동완성 · 캘린더 · 인원설정
+  <span style="font-size:12px;font-weight:400;color:#888">— 기존 파일과 동일</span>
+</div>
+<div class="sec-sub">
+  아래 3개 섹션은 디자인 확정 기준에서 변경사항이 없습니다. 상세 주석은 기존 화면기획서를 참조하세요.
+</div>
+
+<div class="ref-box">
+  <h3>🔗 참조 섹션</h3>
+  <p>
+    <b>자동완성 (목적지 입력)</b> → <a href="m01_main.html#m01-b">m01_main.html M01-B</a><br>
+    <b>날짜 선택 캘린더</b> → <a href="m01_main.html#m01-c">m01_main.html M01-C</a><br>
+    <b>인원 · 객실 설정</b> → <a href="m01_main.html#m01-d">m01_main.html M01-D</a>
+  </p>
+  <p style="margin-top:8px;color:#9ca3af;">
+    위 화면들은 전체화면 오버레이 방식으로 하단 탭바가 가려지므로, 탭바 미노출 처리 적용됩니다.
+  </p>
+</div>
+
+</div><!-- /page -->
+</body>
+</html>

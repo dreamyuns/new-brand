@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MY02-D1 — 적립 | allmy meta 화면기획서</title>
+<link rel="stylesheet" href="./wf-styles.css">
+<style>
+.two-col { grid-template-columns: 480px 1fr; gap: 28px; }
+
+/* ── 모바일 프레임 ── */
+.mobile-wrap {
+  display: flex; justify-content: center; align-items: flex-start;
+  padding: 20px 16px; background: #2a2a2a; border-radius: 8px; min-height: 580px;
+}
+.mobile-device {
+  width: 375px; background: #1a1f2e; border-radius: 44px; padding: 10px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 20px 50px rgba(0,0,0,.5);
+}
+.m-notch { height: 22px; background: #111; border-radius: 11px 11px 0 0; display: flex; align-items: center; justify-content: center; }
+.m-notch-pill { width: 68px; height: 13px; background: #111; border-radius: 7px; }
+.m-screen {
+  background: #f2f2f0; height: 640px; overflow: hidden;
+  border-radius: 0 0 6px 6px; font-size: 13px; position: relative;
+  display: flex; flex-direction: column;
+}
+
+/* ── 초록 배경 상단 헤더 ── */
+.earn-header {
+  background: #3d6b50;
+  padding: 12px 16px 0;
+  flex-shrink: 0;
+}
+
+/* 상단 바 (우측 버튼) */
+.earn-top-bar {
+  display: flex; justify-content: flex-end; margin-bottom: 10px;
+}
+.earn-login-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: #fff; border-radius: 99px;
+  padding: 6px 14px; font-size: 11px; font-weight: 700; color: #333;
+  border: none; cursor: pointer;
+}
+.earn-user-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255,255,255,.2); border: 1.5px solid rgba(255,255,255,.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; cursor: pointer; color: #fff;
+}
+
+/* 체리 아이콘 */
+.earn-cherry-wrap {
+  display: flex; justify-content: center; margin-bottom: 8px;
+}
+.earn-cherry {
+  width: 58px; height: 58px; border-radius: 50%; background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; position: relative;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+}
+.earn-cherry-lock {
+  position: absolute; bottom: 1px; right: 1px;
+  width: 18px; height: 18px; border-radius: 50%; background: #333;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: #fff; border: 1.5px solid #fff;
+}
+
+/* 헤드카피 / 서브카피 */
+.earn-head {
+  text-align: center; color: #fff;
+  font-size: 16px; font-weight: 800; line-height: 1.4;
+  margin-bottom: 6px;
+}
+.earn-sub {
+  text-align: center; color: rgba(255,255,255,.75);
+  font-size: 11px; line-height: 1.6; margin-bottom: 14px; padding: 0 8px;
+}
+
+/* 총 금액 */
+.earn-total-label {
+  text-align: center; font-size: 11px; color: rgba(255,255,255,.75); margin-bottom: 4px;
+}
+.earn-total-row {
+  display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 10px;
+}
+.earn-coin { font-size: 22px; }
+.earn-amount {
+  font-size: 30px; font-weight: 900; color: #fff; letter-spacing: -1px;
+}
+
+/* 요약 2칸 */
+.earn-summary {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 0;
+}
+.earn-sum-card {
+  background: rgba(255,255,255,.15); border-radius: 10px; padding: 10px 12px;
+}
+.earn-sum-label {
+  font-size: 10px; color: rgba(255,255,255,.75); margin-bottom: 3px;
+  display: flex; align-items: center; gap: 4px;
+}
+.earn-sum-amount { font-size: 14px; font-weight: 800; color: #fff; }
+
+/* ── 흰색 카드 바디 ── */
+.earn-body {
+  flex: 1; background: #f2f2f0;
+  border-radius: 16px 16px 0 0; margin-top: 12px;
+  overflow: hidden; display: flex; flex-direction: column;
+}
+
+/* 나의 여행 헤더 */
+.earn-section-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px 8px; flex-shrink: 0;
+}
+.earn-section-title { font-size: 14px; font-weight: 800; color: #1a1f2e; }
+.earn-section-right { display: flex; align-items: center; gap: 8px; }
+.earn-count { font-size: 11px; color: #9ca3af; }
+.earn-sort-btn {
+  font-size: 10px; color: #374151; background: #fff;
+  border: 1px solid #e5e7eb; border-radius: 6px;
+  padding: 3px 8px; cursor: pointer;
+}
+
+/* 스크롤 영역 */
+.earn-scroll { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 0 12px 8px; }
+.earn-scroll::-webkit-scrollbar { display: none; }
+
+/* ── 여행 카드 ── */
+.trip-card {
+  background: #fff; border-radius: 12px; margin-bottom: 8px;
+  border: 1px solid #f0f0f0; box-shadow: 0 1px 4px rgba(0,0,0,.04);
+  display: flex; overflow: hidden; min-height: 72px;
+}
+.trip-img {
+  width: 72px; flex-shrink: 0;
+  background: linear-gradient(135deg, #c8d8e4 0%, #b0c4d8 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+}
+.trip-content {
+  flex: 1; padding: 10px 12px;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.trip-top { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+.trip-hotel-name {
+  font-size: 12px; font-weight: 700; color: #111;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1;
+}
+.trip-date { font-size: 10px; color: #9ca3af; margin-bottom: 5px; }
+.trip-bottom { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
+
+/* 여행 상태 배지 */
+.trip-badge {
+  display: inline-flex; align-items: center; padding: 2px 7px;
+  border-radius: 5px; font-size: 10px; font-weight: 700; flex-shrink: 0;
+}
+.b-staying   { background: #cffafe; color: #0891B2; }
+.b-upcoming  { background: #dbeafe; color: #2563EB; }
+.b-completed { background: #f1f5f9; color: #64748B; }
+.b-cancelled { background: #f3f4f6; color: #9CA3AF; }
+
+/* 적립 상태 배지 */
+.earn-badge {
+  display: inline-flex; align-items: center; padding: 2px 7px;
+  border-radius: 5px; font-size: 10px; font-weight: 700; flex-shrink: 0;
+}
+.eb-pending  { background: #fef3c7; color: #D97706; }
+.eb-done     { background: #d1fae5; color: #059669; }
+.eb-refund   { background: #f3f4f6; color: #9CA3AF; }
+
+/* 금액 */
+.trip-amount { font-size: 14px; font-weight: 800; }
+.ta-upcoming  { color: #2563EB; }
+.ta-staying   { color: #0891B2; }
+.ta-done      { color: #059669; }
+.ta-pending   { color: #D97706; }
+.ta-refund    { color: #9CA3AF; text-decoration: line-through; font-size: 12px; }
+.ta-refund-text { color: #9CA3AF; font-weight: 600; font-size: 12px; }
+
+/* 더보기 버튼 */
+.earn-more-btn {
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 10px;
+  padding: 10px; text-align: center; font-size: 12px; font-weight: 700;
+  color: #374151; cursor: pointer; margin: 2px 0 10px;
+}
+
+/* 빈 상태 */
+.earn-empty {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 28px 24px; text-align: center;
+}
+.earn-empty-icon { font-size: 46px; margin-bottom: 12px; opacity: .8; }
+.earn-empty-title { font-size: 14px; font-weight: 800; color: #374151; margin-bottom: 6px; line-height: 1.4; }
+.earn-empty-desc { font-size: 12px; color: #9ca3af; line-height: 1.65; margin-bottom: 18px; }
+.earn-empty-btn {
+  padding: 11px 26px; border-radius: 12px;
+  background: #3d6b50; color: #fff; font-size: 13px; font-weight: 700; border: none; cursor: pointer;
+}
+
+/* 로그인 전 혜택 카드 */
+.earn-benefit-wrap {
+  background: #f2f2f0; border-radius: 16px 16px 0 0; margin-top: 12px;
+  padding: 14px 14px 0; flex: 1; overflow: hidden; display: flex; flex-direction: column;
+}
+.earn-benefit-list {
+  background: #fff; border-radius: 12px; overflow: hidden; margin-bottom: 12px; flex-shrink: 0;
+}
+.earn-benefit-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px; border-bottom: 1px solid #f5f5f5;
+}
+.earn-benefit-item:last-child { border-bottom: none; }
+.earn-benefit-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+}
+.earn-benefit-text { font-size: 13px; font-weight: 700; color: #1a1f2e; line-height: 1.3; }
+.earn-benefit-text em { color: #e53e3e; font-style: normal; }
+
+.earn-start-btn {
+  background: #3b82f6; color: #fff; border: none; border-radius: 12px;
+  padding: 13px; text-align: center; font-size: 14px; font-weight: 800;
+  cursor: pointer; flex-shrink: 0;
+}
+
+/* ── 하단 탭바 ── */
+.earn-tabbar {
+  flex-shrink: 0; height: 56px;
+  background: #fff; border-top: 1px solid #f0f0f0;
+  display: flex; align-items: center;
+}
+.earn-tab {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 2px; font-size: 10px; font-weight: 600; color: #9ca3af;
+  height: 100%; cursor: pointer;
+}
+.earn-tab.active { color: #1a1f2e; }
+.earn-tab-icon {
+  width: 28px; height: 28px; display: flex; align-items: center;
+  justify-content: center; font-size: 18px; border-radius: 50%;
+}
+.earn-tab.active .earn-tab-icon { background: #1a1f2e; }
+.earn-tab.active .earn-tab-icon .ti { filter: grayscale(1) brightness(10); font-size: 13px; }
+.earn-tab-cs .earn-tab-icon { background: transparent; }
+
+/* 논의 항목 테이블 */
+.disc-table-wrap {
+  background: #fffbeb; border: 1.5px solid #f59e0b; border-radius: 8px;
+  padding: 14px 16px; margin-bottom: 28px;
+}
+.disc-table-hdr { font-size: 13px; font-weight: 700; color: #92400e; margin-bottom: 10px; }
+.disc-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.disc-table th {
+  background: #fef3c7; color: #78350f; font-weight: 700;
+  padding: 6px 10px; text-align: left; border: 1px solid #fde68a;
+}
+.disc-table td {
+  padding: 8px 10px; border: 1px solid #fde68a; vertical-align: top;
+  color: #374151; line-height: 1.55;
+}
+</style>
+</head>
+<body>
+
+<!-- ════ Page Nav ════ -->
+<nav class="page-nav">
+  <a href="index.html" class="page-nav-back">← 목록으로</a>
+  <span class="page-nav-title">MY02-D1 — 적립</span>
+  <span class="page-nav-route">my02_cashback_d1.html</span>
+  <div class="page-nav-nav">
+    <a href="my01_mypage.html" class="page-nav-pager">← 이전</a>
+    <a href="my03_account.html" class="page-nav-pager">다음 →</a>
+  </div>
+</nav>
+
+<!-- ════ TOC ════ -->
+<nav class="toc">
+  <div class="toc-inner">
+    <span class="toc-label">MY02-D1</span>
+    <a href="#a" class="toc-link active">A — 로그인 전</a>
+    <span class="toc-sep"></span>
+    <a href="#b" class="toc-link">B — 로그인 후 내역 있음</a>
+    <span class="toc-sep"></span>
+    <a href="#c" class="toc-link">C — 로그인 후 빈 상태</a>
+    <span class="toc-sep"></span>
+    <a href="#disc" class="toc-link">📋 논의 항목</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- ════ 논의 항목 ════ -->
+<div id="disc" class="disc-table-wrap">
+  <div class="disc-table-hdr">⚠️ 논의 항목 — MY02-D1 적립 화면</div>
+  <table class="disc-table">
+    <thead>
+      <tr>
+        <th style="width:28px">#</th>
+        <th style="width:180px">항목</th>
+        <th style="width:200px">선택지</th>
+        <th style="width:130px">현재 적용</th>
+        <th>비고</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>캐시백 미적립 상품 — 적립 상태 배지 처리</td>
+        <td>A. 배지 미노출 (금액 영역 비움)<br>B. "적립 없음" 회색 배지 표시</td>
+        <td>미결</td>
+        <td>공급사에 따라 캐시백을 제공하지 않는 경우 발생 가능. 사용자에게 명확히 안내할지 여부 결정 필요.</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>"사용가능" 금액 표시 여부</td>
+        <td>A. Approved 합산 그대로 표시 (현재)<br>B. 남은 금액 기준 "사용가능"으로 표시</td>
+        <td>A안 적용 중</td>
+        <td>MVP에서는 캐시백 사용 기능 없음 → Phase 2 오픈 후 "사용가능" 전환 검토. 현재는 Approved 합산으로 노출.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ════ A: 로그인 전 ════ -->
+<div id="a" class="sec-title">
+  <span class="sec-badge">MY02-D1-A</span>적립 — 로그인 전
+  <span style="font-size:12px;font-weight:400;color:#888">— 로그인 유도 풀스크린</span>
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — MY02-D1 적립 화면 전체</div>
+  <ul class="sec-policy-list">
+    <li><strong>진입 방식</strong>: 하단 탭바 [적립] 탭 직접 진입 (마이페이지 하위 화면 아님). GNB 없음.</li>
+    <li><strong>탭바 노출 범위</strong>: 메인(M01) + 이 화면(MY02-D1)에만 탭바 표시. 검색결과(S01)·숙소상세(S02)에서는 미노출.</li>
+    <li><strong>데이터 출처</strong>: KAYAK Reporting API v2 Transaction Report (12-1절)</li>
+    <li><strong>여행 상태 산출</strong>: <code>clickStartDate</code> / <code>clickEndDate</code>와 오늘 날짜를 자사 서버에서 비교하여 투숙예정·투숙중·투숙완료 구분. KAYAK이 직접 제공하는 값 아님.</li>
+    <li><strong>적립 상태 매핑</strong>: KAYAK Transaction Report 상태값 → <code>Waiting</code>=적립예정 / <code>Approved</code>=적립완료 / <code>Cancelled</code>=회수 (9-4절)</li>
+    <li><strong>총 금액</strong>: <code>Approved</code> 상태 건의 <code>cashbackAmountLocalised</code> 합산 (10-2절)</li>
+    <li><strong>정렬 그룹 고정</strong>: 두 정렬 모두 투숙중 → 투숙예정 → 투숙완료 → 예약취소 순 상태 그룹 고정 후 그룹 내 날짜 정렬 적용</li>
+    <li><strong>로그인 전 화면</strong>: 문구·이미지 하드코딩. API 호출 없음.</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.37 9-4절·10-2절·12-1절</div>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- 초록 헤더 -->
+        <div class="earn-header">
+          <!-- 상단 바 -->
+          <div class="earn-top-bar">
+            <button class="earn-login-btn">👤 로그인 <span class="wf-cn">1</span></button>
+          </div>
+
+          <!-- 체리 아이콘 -->
+          <div class="earn-cherry-wrap">
+            <div class="earn-cherry">
+              🍒
+              <div class="earn-cherry-lock">🔒<span class="wf-cn">2</span></div>
+            </div>
+          </div>
+
+          <!-- 헤드카피 -->
+          <div class="earn-head">로그인하고 내 캐시백을<br>확인해 보세요 <span class="wf-cn">3</span></div>
+          <div class="earn-sub">예약만 해도 쌓이는 캐시백과 나의 여행 내역을<br>로그인 후 한눈에 볼 수 있어요.</div>
+        </div>
+
+        <!-- 혜택 카드 영역 -->
+        <div class="earn-benefit-wrap">
+          <div class="earn-benefit-list">
+            <div class="earn-benefit-item">
+              <div class="earn-benefit-icon" style="background:#f0fdf4;">🏷️</div>
+              <div class="earn-benefit-text">예약만 해도 캐시백 자동 적립</div>
+            </div>
+            <div class="earn-benefit-item">
+              <div class="earn-benefit-icon" style="background:#fff1f1;">🔥</div>
+              <div class="earn-benefit-text">호텔별 <em>최대 7%</em> 캐시백 혜택</div>
+            </div>
+            <div class="earn-benefit-item">
+              <div class="earn-benefit-icon" style="background:#eff6ff;">📍</div>
+              <div class="earn-benefit-text">나의 여행·적립 내역 통합 관리</div>
+            </div>
+          </div>
+          <span class="wf-cn" style="align-self:flex-end;margin-bottom:4px;">4</span>
+
+          <!-- CTA -->
+          <div class="earn-start-btn">바로 시작하기 <span class="wf-cn" style="background:#fff;color:#3b82f6;">5</span></div>
+        </div>
+
+        <!-- 하단 탭바 -->
+        <div class="earn-tabbar">
+          <div class="earn-tab">
+            <div class="earn-tab-icon">🔍</div>
+            <span>검색</span>
+          </div>
+          <div class="earn-tab active">
+            <div class="earn-tab-icon"><span class="ti">⭐</span></div>
+            <span>적립</span>
+          </div>
+          <div class="earn-tab earn-tab-cs" style="position:relative;">
+            <span class="wf-cn" style="position:absolute;top:2px;right:8px;z-index:5;">6</span>
+            <div class="earn-tab-icon">🦚</div>
+            <span></span>
+          </div>
+        </div>
+
+      </div><!-- /m-screen -->
+    </div>
+  </div>
+
+  <!-- 주석 패널 A -->
+  <div class="ann">
+    <h3>화면 주석 — MY02-D1-A (로그인 전)</h3>
+
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">[로그인] 버튼 (우측 상단)</div>
+        <div class="ann-desc"><ul>
+          <li>탭 시 → 로그인 바텀시트(auth_login.html) 화면이 아래에서 올라온다.</li>
+          <li>로그인 완료 후 → 이 화면이 MY02-D1-B(로그인 후 내역 있음)로 바뀐다.</li>
+          <li>모양: 사람 아이콘 + "로그인" 텍스트, 흰색 알약형 버튼.</li>
+        </ul></div>
+        <div class="ann-rule">정책서 8-1절 (로그인 바텀시트 진입). 로그인 완료 시 현재 화면 유지 — 직전 페이지(적립) 그대로.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">체리 아이콘 + 자물쇠 배지</div>
+        <div class="ann-desc"><ul>
+          <li>서비스 브랜드 캐릭터(체리) 이미지. 로그인 전에는 자물쇠 배지가 함께 붙어있다.</li>
+          <li>로그인 후(B 케이스)에는 자물쇠 배지 없이 체리만 표시.</li>
+          <li>이미지·아이콘은 하드코딩 — 서버에서 불러오지 않는다.</li>
+        </ul></div>
+        <div class="ann-rule">하드코딩 에셋. API 연동 없음.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">헤드카피 + 서브카피</div>
+        <div class="ann-desc"><ul>
+          <li>헤드카피: "로그인하고 내 캐시백을 확인해 보세요"</li>
+          <li>서브카피: "예약만 해도 쌓이는 캐시백과 나의 여행 내역을 로그인 후 한눈에 볼 수 있어요."</li>
+          <li>두 문구 모두 하드코딩 — 수정 시 개발 배포 필요.</li>
+        </ul></div>
+        <div class="ann-rule">하드코딩 문구. API 연동 없음.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">혜택 카드 3종 (하드코딩)</div>
+        <div class="ann-desc"><ul>
+          <li>① 예약만 해도 캐시백 자동 적립</li>
+          <li>② 호텔별 최대 7% 캐시백 혜택 → "7%"는 강조색(빨간색) 표시</li>
+          <li>③ 나의 여행·적립 내역 통합 관리</li>
+          <li>세 항목 모두 하드코딩 — 서버 데이터 아님. 캐시백 최대 요율이 바뀌면 직접 수정 필요.</li>
+        </ul></div>
+        <div class="ann-rule">하드코딩. 탭 시 아무 동작 없음 (인포메이션 전용).</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">5</div>
+      <div class="ann-body">
+        <div class="ann-title">[바로 시작하기] CTA 버튼</div>
+        <div class="ann-desc"><ul>
+          <li>탭 시 → 1번 [로그인] 버튼과 동일하게 로그인 바텀시트가 아래에서 올라온다.</li>
+          <li>파란색 버튼. 화면 하단 고정 위치.</li>
+        </ul></div>
+        <div class="ann-rule">정책서 8-1절. [로그인] 버튼과 동일 동작.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">6</div>
+      <div class="ann-body">
+        <div class="ann-title">하단 탭바</div>
+        <div class="ann-desc"><ul>
+          <li>검색 탭: 탭 시 → 메인 화면(M01)으로 이동.</li>
+          <li>적립 탭: 현재 화면. 선택 상태(진한 원형 배경).</li>
+          <li>CS 버튼(오리 캐릭터): 고객센터/챗봇 진입 — 별도 기획.</li>
+          <li>탭바는 이 화면과 메인(M01)에만 표시. 검색결과(S01)·숙소상세(S02)에서는 숨김.</li>
+        </ul></div>
+        <div class="ann-rule">탭바 노출 범위: M01 + MY02-D1만. S01·S02 미노출.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════ B: 로그인 후 내역 있음 ════ -->
+<div id="b" class="sec-title">
+  <span class="sec-badge">MY02-D1-B</span>적립 — 로그인 후 내역 있음
+  <span style="font-size:12px;font-weight:400;color:#888">— 4가지 여행 상태 샘플 표시</span>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- 초록 헤더 -->
+        <div class="earn-header">
+          <!-- 상단 바 -->
+          <div class="earn-top-bar">
+            <button class="earn-user-btn">👤</button><span class="wf-cn">1</span>
+          </div>
+
+          <!-- 체리 아이콘 (자물쇠 없음) -->
+          <div class="earn-cherry-wrap">
+            <div class="earn-cherry" style="margin-bottom:0;position:relative;">🍒<span class="wf-cn" style="position:absolute;top:-4px;right:-4px;">2</span></div>
+          </div>
+
+          <!-- 총 금액 -->
+          <div class="earn-total-label">지금까지 아낀 금액 <span class="wf-cn" style="vertical-align:middle;">3</span></div>
+          <div class="earn-total-row">
+            <span class="earn-coin">🪙</span>
+            <span class="earn-amount">137,000</span>
+          </div>
+
+          <!-- 요약 2칸 -->
+          <div class="earn-summary">
+            <div class="earn-sum-card">
+              <div class="earn-sum-label">✅ 적립 완료 <span class="wf-cn">4</span></div>
+              <div class="earn-sum-amount">₩18,500</div>
+            </div>
+            <div class="earn-sum-card">
+              <div class="earn-sum-label">🕐 적립 예정 <span class="wf-cn">5</span></div>
+              <div class="earn-sum-amount">₩18,500</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 카드 바디 -->
+        <div class="earn-body">
+          <div class="earn-section-hdr">
+            <span class="earn-section-title">나의 여행 <span class="wf-cn" style="vertical-align:middle;">6</span></span>
+            <div class="earn-section-right">
+              <span class="earn-sort-btn">최신 예약순 ▾ <span class="wf-cn">7</span></span>
+              <span class="earn-count">전체 7건 <span class="wf-cn">8</span></span>
+            </div>
+          </div>
+
+          <div class="earn-scroll">
+
+            <!-- 카드 1: 투숙중 + 적립예정 -->
+            <div class="trip-card">
+              <div class="trip-img" style="position:relative;">🏨<span class="wf-cn" style="position:absolute;top:3px;right:3px;">13</span></div>
+              <div class="trip-content">
+                <div>
+                  <div class="trip-top">
+                    <span class="trip-badge b-staying">투숙중</span><span class="wf-cn">9</span>
+                    <span class="trip-hotel-name">제주도 신라 호텔</span><span class="wf-cn">10</span>
+                  </div>
+                  <div class="trip-date">07.01 ~ 07.03</div><span class="wf-cn">11</span>
+                </div>
+                <div class="trip-bottom">
+                  <span class="earn-badge eb-pending">적립예정</span><span class="wf-cn">12</span>
+                  <span class="trip-amount ta-pending">₩84,000 <span class="wf-cn">14</span></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 카드 2: 투숙예정 + 적립예정 -->
+            <div class="trip-card">
+              <div class="trip-img">🌆</div>
+              <div class="trip-content">
+                <div>
+                  <div class="trip-top">
+                    <span class="trip-badge b-upcoming">투숙예정</span>
+                    <span class="trip-hotel-name">포시즌스 호텔 서울</span>
+                  </div>
+                  <div class="trip-date">07.15 ~ 07.17</div>
+                </div>
+                <div class="trip-bottom">
+                  <span class="earn-badge eb-pending">적립예정</span>
+                  <span class="trip-amount ta-upcoming">₩154,000</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 카드 3: 투숙완료 + 적립완료 -->
+            <div class="trip-card">
+              <div class="trip-img">🌅</div>
+              <div class="trip-content">
+                <div>
+                  <div class="trip-top">
+                    <span class="trip-badge b-completed">투숙완료</span>
+                    <span class="trip-hotel-name">롯데호텔 제주</span>
+                  </div>
+                  <div class="trip-date">06.20 ~ 06.22</div>
+                </div>
+                <div class="trip-bottom">
+                  <span class="earn-badge eb-done">적립완료</span>
+                  <span class="trip-amount ta-done">₩96,000</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 카드 4: 예약취소 + 회수 -->
+            <div class="trip-card">
+              <div class="trip-img" style="background:#e5e7eb;">🚫</div>
+              <div class="trip-content">
+                <div>
+                  <div class="trip-top">
+                    <span class="trip-badge b-cancelled">예약취소</span>
+                    <span class="trip-hotel-name" style="color:#9ca3af;">그랜드 하얏트 도쿄</span>
+                  </div>
+                  <div class="trip-date" style="color:#d1d5db;">06.05 ~ 06.07</div>
+                </div>
+                <div class="trip-bottom">
+                  <span class="trip-amount ta-refund">₩46,000</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 더보기 버튼 -->
+            <div class="earn-more-btn">여행 3개 더보기 ∨ <span class="wf-cn">15</span></div>
+
+          </div><!-- /earn-scroll -->
+        </div><!-- /earn-body -->
+
+        <!-- 하단 탭바 -->
+        <div class="earn-tabbar">
+          <div class="earn-tab">
+            <div class="earn-tab-icon">🔍</div>
+            <span>검색</span>
+          </div>
+          <div class="earn-tab active">
+            <div class="earn-tab-icon"><span class="ti">⭐</span></div>
+            <span>적립</span>
+          </div>
+          <div class="earn-tab earn-tab-cs">
+            <div class="earn-tab-icon">🦚</div>
+            <span></span>
+          </div>
+        </div>
+
+      </div><!-- /m-screen -->
+    </div>
+  </div>
+
+  <!-- 주석 패널 B -->
+  <div class="ann">
+    <h3>화면 주석 — MY02-D1-B (로그인 후 내역 있음)</h3>
+
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">사용자 아이콘 버튼 (우측 상단)</div>
+        <div class="ann-desc"><ul>
+          <li>탭 시 → 마이페이지(MY01) 화면으로 이동. 로그인 상태로 진입.</li>
+          <li>로그인 전 케이스의 [로그인] 버튼 자리를 대체. 원형 반투명 버튼.</li>
+        </ul></div>
+        <div class="ann-rule">정책서 10-1절 (마이페이지 진입). 로그인 상태에서만 표시.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">체리 아이콘 (자물쇠 없음)</div>
+        <div class="ann-desc"><ul>
+          <li>로그인 완료 상태 → 자물쇠 배지 사라지고 체리만 표시.</li>
+          <li>하드코딩 에셋. 서버 연동 없음.</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">지금까지 아낀 금액 ★</div>
+        <div class="ann-desc"><ul>
+          <li>KAYAK Transaction Report에서 <b>Approved(적립완료)</b> 상태인 건들의 캐시백 금액을 모두 더한 값.</li>
+          <li>좌측 코인(🪙) 아이콘 + 금액 숫자(크게). 단위는 선택한 통화 기준.</li>
+          <li>Approved 건이 없으면 0 표시.</li>
+        </ul></div>
+        <div class="ann-front">← KAYAK Transaction Report Approved 건 <code>cashbackAmountLocalised</code> 합산</div>
+        <div class="ann-rule">정책서 10-2절 (지급완료 기준 누적 합산).</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">적립 완료 요약</div>
+        <div class="ann-desc"><ul>
+          <li>Approved 상태 건의 캐시백 금액 합산. 3번 "지금까지 아낀 금액"과 동일 값.</li>
+          <li>✅ 아이콘 + "적립 완료" 라벨 + 금액.</li>
+        </ul></div>
+        <div class="ann-front">← Approved 건 <code>cashbackAmountLocalised</code> 합산</div>
+        <div class="ann-rule">정책서 10-2절. ⚠️ 논의항목 2: Phase 2에서 "사용가능" 금액으로 전환 검토.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">5</div>
+      <div class="ann-body">
+        <div class="ann-title">적립 예정 요약</div>
+        <div class="ann-desc"><ul>
+          <li>Waiting 상태 건의 캐시백 금액 합산 (아직 체크아웃 전이거나 정산 대기 중인 금액).</li>
+          <li>🕐 아이콘 + "적립 예정" 라벨 + 금액.</li>
+          <li>Waiting 건이 없으면 0 표시.</li>
+        </ul></div>
+        <div class="ann-front">← Waiting 건 <code>cashbackAmountLocalised</code> 합산</div>
+        <div class="ann-rule">정책서 9-4절·10-2절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">6</div>
+      <div class="ann-body">
+        <div class="ann-title">나의 여행 섹션</div>
+        <div class="ann-desc"><ul>
+          <li>KAYAK Transaction Report에서 가져온 예약 목록. 예약이 발생했을 때만 카드가 나타난다.</li>
+          <li>예약이 하나도 없으면 이 섹션 대신 빈 상태 화면(C 케이스)이 표시된다.</li>
+        </ul></div>
+        <div class="ann-front">← KAYAK Reporting API Transaction Report 목록</div>
+        <div class="ann-rule">정책서 10-2절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">7</div>
+      <div class="ann-body">
+        <div class="ann-title">정렬 버튼</div>
+        <div class="ann-desc"><ul>
+          <li>기본값: "최신 예약순" (가장 최근에 예약한 건이 위로).</li>
+          <li>탭 시 → 정렬 선택 팝업(바텀시트) 열림: <b>최신 예약순</b> / <b>체크인 임박순</b>.</li>
+          <li>두 정렬 모두 상태 그룹 고정 적용 → 투숙중 → 투숙예정 → 투숙완료 → 예약취소 순.</li>
+          <li>체크인 임박순: 투숙중·투숙예정 그룹 내에서 체크인 날짜가 빠른 것이 위. 투숙완료·취소는 날짜 최신순.</li>
+        </ul></div>
+        <div class="ann-rule">정렬 그룹 우선순위 고정. 그룹 내 세부 정렬만 변경됨.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">8</div>
+      <div class="ann-body">
+        <div class="ann-title">전체 건수</div>
+        <div class="ann-desc"><ul>
+          <li>모든 상태(Waiting·Approved·Cancelled) 예약 건수 합산 표시. 예: "전체 7건".</li>
+        </ul></div>
+        <div class="ann-front">← Transaction Report 전체 건수</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">9</div>
+      <div class="ann-body">
+        <div class="ann-title">여행 상태 배지 (카드 좌측 상단)</div>
+        <div class="ann-desc"><ul>
+          <li>자사 서버에서 오늘 날짜와 체크인·체크아웃 날짜를 비교해 계산한 값. KAYAK이 직접 제공하는 값이 아님.</li>
+          <li><b style="color:#0891B2;">투숙중</b> (청록): 오늘이 체크인 날짜 이상, 체크아웃 날짜 미만인 경우. ← 정렬 1순위</li>
+          <li><b style="color:#2563EB;">투숙예정</b> (파란색): 오늘이 체크인 날짜보다 이전인 경우. ← 정렬 2순위</li>
+          <li><b style="color:#64748B;">투숙완료</b> (회청): 오늘이 체크아웃 날짜 이후인 경우 (체크아웃 당일 +1일부터). ← 정렬 3순위</li>
+          <li><b style="color:#9CA3AF;">예약취소</b> (회색): KAYAK 상태가 Cancelled인 경우. ← 정렬 4순위</li>
+        </ul></div>
+        <div class="ann-front">← 자사 서버 계산: <code>clickStartDate</code> / <code>clickEndDate</code> vs 오늘 날짜. ⚠️ 개발팀 확인 필요 — 서버 or 프론트 계산 여부.</div>
+        <div class="ann-rule">정렬 우선순위: 투숙중(1) → 투숙예정(2) → 투숙완료(3) → 예약취소(4).</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">10</div>
+      <div class="ann-body">
+        <div class="ann-title">호텔명</div>
+        <div class="ann-desc"><ul>
+          <li>KAYAK Transaction Report에서 가져온 호텔 이름. 너무 길면 말줄임(...) 처리.</li>
+          <li>예약취소 건은 글자색을 회색으로 표시.</li>
+        </ul></div>
+        <div class="ann-front">← <code>hotelName</code> (Transaction Report Hotel vertical 필드)</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">11</div>
+      <div class="ann-body">
+        <div class="ann-title">체크인 ~ 체크아웃 날짜</div>
+        <div class="ann-desc"><ul>
+          <li>표시 형식: MM.DD ~ MM.DD. 예: 07.01 ~ 07.03.</li>
+          <li>예약취소 건은 날짜도 회색 처리.</li>
+        </ul></div>
+        <div class="ann-front">← <code>clickStartDate</code> / <code>clickEndDate</code> (Transaction Report)</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">12</div>
+      <div class="ann-body">
+        <div class="ann-title">적립 상태 배지 (카드 우하단 — 금액 왼쪽)</div>
+        <div class="ann-desc"><ul>
+          <li>KAYAK Transaction Report 상태값을 아래처럼 바꿔 표시한다.</li>
+          <li><b style="color:#D97706;">적립예정</b> (주황): Waiting → 아직 체크아웃 전이거나 정산 대기 중.</li>
+          <li><b style="color:#059669;">적립완료</b> (초록): Approved → KAYAK 정산 완료, 금액 확정.</li>
+          <li><b style="color:#9CA3AF;">회수</b> (회색): Cancelled → 취소로 인해 캐시백이 적립되지 않음. 금액에 취소선으로 표시.</li>
+          <li>⚠️ 논의항목 1: 캐시백이 없는 상품(cashbackType=NONE)의 경우 이 배지를 어떻게 표시할지 미결.</li>
+        </ul></div>
+        <div class="ann-front">← Transaction Report 상태: <code>Waiting</code>=적립예정 / <code>Approved</code>=적립완료 / <code>Cancelled</code>=회수</div>
+        <div class="ann-rule">정책서 9-4절. 여행 상태 배지와 분리 표시 (여행 상태: 좌상단 / 적립 상태: 우하단).</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">13</div>
+      <div class="ann-body">
+        <div class="ann-title">호텔 이미지</div>
+        <div class="ann-desc"><ul>
+          <li>카드 좌측 고정 이미지 영역 (72×전체 높이). KAYAK Static Data Feed에서 khotel ID로 조회한 호텔 대표 사진.</li>
+          <li>이미지 로드 실패 또는 khotel ID 매핑이 없을 때: 회색 플레이스홀더 + 호텔 아이콘 표시.</li>
+        </ul></div>
+        <div class="ann-front">← khotel ID → KAYAK Static Data Feed 이미지 URL 조회. ⚠️ 개발팀 확인 필요 — Static Data Feed 이미지 필드 제공 여부 및 연동 방법.</div>
+        <div class="ann-rule">이미지 없을 때 플레이스홀더로 대체. 레이아웃 깨짐 없어야 함.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">14</div>
+      <div class="ann-body">
+        <div class="ann-title">캐시백 금액 (카드 우하단)</div>
+        <div class="ann-desc"><ul>
+          <li>KAYAK Transaction Report에서 가져온 금액. 자사에서 다시 계산하지 않는다.</li>
+          <li>상태별 색상: 적립예정(주황) / 적립완료(초록) / 회수(회색 취소선 또는 "회수" 텍스트).</li>
+          <li>예약취소 건은 금액 자리에 숫자 대신 "회수" 텍스트만 표시.</li>
+        </ul></div>
+        <div class="ann-front">← <code>cashbackAmountLocalised</code> (Transaction Report). null·0이면 미표시.</div>
+        <div class="ann-rule">정책서 10-2절. 통화 단위는 선택 통화 기준 (<code>localisedCurrencyCode</code>).</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">15</div>
+      <div class="ann-body">
+        <div class="ann-title">[여행 N개 더보기 ∨] 버튼</div>
+        <div class="ann-desc"><ul>
+          <li>처음 화면에는 최대 4건만 보인다. 버튼을 탭 하면 4건씩 추가로 불러온다.</li>
+          <li>버튼 문구: "여행 N개 더보기 ∨" → N = 남은 건수. 예: "여행 3개 더보기".</li>
+          <li>모든 건을 다 불러오면 버튼이 사라진다.</li>
+        </ul></div>
+        <div class="ann-rule">기본 4건 표시 → 탭 시 4건씩 추가 로드. 전체 로드 완료 시 버튼 미노출.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════ C: 로그인 후 빈 상태 ════ -->
+<div id="c" class="sec-title">
+  <span class="sec-badge">MY02-D1-C</span>적립 — 로그인 후 빈 상태
+  <span style="font-size:12px;font-weight:400;color:#888">— 예약 내역이 0건인 신규 회원</span>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- 초록 헤더 -->
+        <div class="earn-header">
+          <div class="earn-top-bar">
+            <button class="earn-user-btn">👤</button>
+          </div>
+          <div class="earn-cherry-wrap">
+            <div class="earn-cherry" style="margin-bottom:0;">🍒</div>
+          </div>
+          <div class="earn-total-label">지금까지 아낀 금액</div>
+          <div class="earn-total-row">
+            <span class="earn-coin">🪙</span>
+            <span class="earn-amount">0</span>
+          </div>
+          <div class="earn-summary">
+            <div class="earn-sum-card">
+              <div class="earn-sum-label">✅ 적립 완료</div>
+              <div class="earn-sum-amount">₩0</div>
+            </div>
+            <div class="earn-sum-card">
+              <div class="earn-sum-label">🕐 적립 예정</div>
+              <div class="earn-sum-amount">₩0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 카드 바디 — 빈 상태 -->
+        <div class="earn-body">
+          <div class="earn-section-hdr">
+            <span class="earn-section-title">나의 여행</span>
+            <span class="earn-count">전체 0건</span>
+          </div>
+          <div class="earn-empty">
+            <div class="earn-empty-icon">🧳</div>
+            <div class="earn-empty-title">아직 여행 내역이 없어요 <span class="wf-cn">1</span></div>
+            <div class="earn-empty-desc">
+              예약 한 번이면 캐시백이 자동으로 쌓여요.<br>
+              첫 여행을 떠나고 혜택을 받아보세요!
+            </div>
+            <button class="earn-empty-btn">호텔 검색하기 <span class="wf-cn" style="background:#fff;color:#3d6b50;">2</span></button>
+          </div>
+        </div>
+
+        <!-- 하단 탭바 -->
+        <div class="earn-tabbar">
+          <div class="earn-tab">
+            <div class="earn-tab-icon">🔍</div>
+            <span>검색</span>
+          </div>
+          <div class="earn-tab active">
+            <div class="earn-tab-icon"><span class="ti">⭐</span></div>
+            <span>적립</span>
+          </div>
+          <div class="earn-tab earn-tab-cs">
+            <div class="earn-tab-icon">🦚</div>
+            <span></span>
+          </div>
+        </div>
+
+      </div><!-- /m-screen -->
+    </div>
+  </div>
+
+  <!-- 주석 패널 C -->
+  <div class="ann">
+    <h3>화면 주석 — MY02-D1-C (로그인 후 빈 상태)</h3>
+
+    <div class="ann-item">
+      <div class="cn">진입</div>
+      <div class="ann-body">
+        <div class="ann-title">빈 상태 노출 조건</div>
+        <div class="ann-desc"><ul>
+          <li>로그인은 됐지만 KAYAK Transaction Report에 예약 내역이 단 한 건도 없는 경우 표시.</li>
+          <li>상단 요약 패널(적립 완료·적립 예정)은 ₩0으로 동일하게 표시. 패널 자체는 사라지지 않는다.</li>
+        </ul></div>
+        <div class="ann-rule">정책서 10-2절. Transaction Report 건수 = 0일 때 표시.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">빈 상태 메시지 ★</div>
+        <div class="ann-desc"><ul>
+          <li>🧳 아이콘 + 타이틀 + 설명 문구 구성.</li>
+          <li>타이틀: "아직 여행 내역이 없어요"</li>
+          <li>설명: "예약 한 번이면 캐시백이 자동으로 쌓여요. 첫 여행을 떠나고 혜택을 받아보세요!"</li>
+          <li>예약 행동을 자연스럽게 유도하는 워딩으로 구성. 하드코딩.</li>
+        </ul></div>
+        <div class="ann-rule">하드코딩 문구. API 연동 없음.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">[호텔 검색하기] CTA 버튼</div>
+        <div class="ann-desc"><ul>
+          <li>탭 시 → 메인 화면(M01)으로 이동. 첫 예약을 유도하는 버튼.</li>
+          <li>초록색 버튼 (서비스 브랜드 색상 적용).</li>
+        </ul></div>
+        <div class="ann-rule">탭 시 M01(메인)으로 이동.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /page -->
+<script src="./wf-scripts.js"></script>
+</body>
+</html>

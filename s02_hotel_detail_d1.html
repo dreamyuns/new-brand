@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S02 (디자인확정) — 숙소상세 | allmy meta 화면기획서</title>
+<link rel="stylesheet" href="./wf-styles.css">
+<style>
+.two-col{grid-template-columns:480px 1fr;gap:28px}
+.mobile-wrap{display:flex;justify-content:center;align-items:flex-start;padding:20px 16px;background:#2a2a2a;border-radius:8px;min-height:520px}
+.mobile-device{width:375px;background:#1a1f2e;border-radius:44px;padding:10px;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 20px 50px rgba(0,0,0,.5)}
+.m-notch{height:22px;background:#111;border-radius:11px 11px 0 0;display:flex;align-items:center;justify-content:center}
+.m-notch-pill{width:68px;height:13px;background:#111;border-radius:7px}
+.m-screen{background:#f8f8f6;height:640px;overflow:hidden;border-radius:0 0 6px 6px;font-size:13px;position:relative;display:flex;flex-direction:column}
+/* GNB */
+.s02-gnb{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;position:absolute;top:0;left:0;right:0;z-index:30;background:linear-gradient(to bottom,rgba(0,0,0,.5),transparent)}
+.s02-gnb-back{width:32px;height:32px;background:rgba(255,255,255,.88);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;border:none;color:#333}
+.s02-gnb-right{display:flex;gap:8px;align-items:center}
+.s02-gnb-icon{width:32px;height:32px;background:rgba(255,255,255,.88);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;border:none;color:#333}
+/* 히어로 */
+.s02-hero{background:linear-gradient(135deg,#b8c8e0,#7a96b8);position:relative;display:flex;align-items:center;justify-content:center;font-size:44px;color:rgba(255,255,255,.3);flex-shrink:0}
+.s02-hero-count{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.55);color:#fff;font-size:10px;font-weight:600;padding:3px 9px;border-radius:10px}
+/* 스크롤 */
+.s02-scroll{flex:1;overflow-y:auto;overflow-x:hidden}
+.s02-scroll::-webkit-scrollbar{display:none}
+/* 섹션 공통 */
+.s02-sec{padding:14px 14px 12px;border-bottom:1px solid #f0f0f0;background:#fff}
+.s02-sec-title{font-size:13px;font-weight:800;color:#1a1f2e;margin-bottom:8px}
+/* 숙소요약 */
+.s02-name{font-size:17px;font-weight:800;color:#111;margin-bottom:4px;line-height:1.3}
+.s02-addr{font-size:11px;color:#9ca3af;margin-bottom:6px}
+.s02-score-row{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.s02-score{background:#4f46e5;color:#fff;font-size:13px;font-weight:900;padding:4px 8px;border-radius:7px}
+.s02-score-lbl{font-size:12px;font-weight:700;color:#111}
+.s02-stars{color:#f59e0b;font-size:12px;margin-left:auto}
+.s02-grade{font-size:10px;font-weight:700;color:#9ca3af;padding:2px 6px;background:#f3f4f6;border-radius:5px}
+/* 날짜바 */
+.s02-datebar{background:#f8f8f6;border:1px solid #e5e7eb;border-radius:10px;padding:10px 12px;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between;gap:6px;cursor:pointer}
+.s02-datebar-text{font-size:12px;font-weight:600;color:#333}
+.s02-datebar-sub{font-size:10px;color:#9ca3af}
+.s02-datebar-chevron{font-size:12px;color:#9ca3af}
+/* 공급사 목록 (확정 디자인 row 방식) */
+.s02-prov-list{background:#fff}
+.s02-prov-row{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid #f5f5f3}
+.s02-prov-row-left{flex:1;min-width:0}
+.s02-prov-row-name-line{display:flex;align-items:center;gap:6px;margin-bottom:2px}
+.s02-prov-name-txt{font-size:12px;font-weight:700;color:#111}
+.s02-badge-cheapest{background:#4f46e5;color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;white-space:nowrap}
+.s02-prov-room-txt{font-size:11px;color:#555;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}
+.s02-prov-badges-row{display:flex;gap:4px;flex-wrap:wrap}
+.s02-b{font-size:10px;font-weight:600;padding:2px 6px;border-radius:5px}
+.s02-b-free{background:#d1fae5;color:#065f46}
+.s02-b-meal{background:#dbeafe;color:#1e3a8a}
+.s02-b-later{background:#f3f4f6;color:#374151}
+.s02-prov-row-right{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0}
+.s02-prov-price-txt{font-size:14px;font-weight:900;color:#111;white-space:nowrap}
+.s02-earn-txt{font-size:10px;color:#9ca3af;white-space:nowrap}
+.s02-move-circle{width:34px;height:34px;border-radius:50%;background:#ff6b00;color:#fff;border:none;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:6px}
+.s02-load-more{text-align:center;font-size:12px;font-weight:700;color:#4f46e5;padding:13px 0;cursor:pointer;border-top:1px solid #f0f0f0}
+/* 날짜바 재검색 패널 (S02_D1-A) */
+.s02-datepanel{background:#fff;border-radius:0 0 14px 14px;padding:14px;z-index:25;box-shadow:0 4px 16px rgba(0,0,0,.12)}
+.s02-datepanel-row{display:flex;gap:8px;margin-bottom:10px}
+.s02-datepanel-cell{flex:1;background:#f4f4f2;border-radius:10px;padding:10px 12px;cursor:pointer}
+.s02-datepanel-lbl{font-size:10px;color:#9ca3af;margin-bottom:3px}
+.s02-datepanel-val{font-size:13px;font-weight:700;color:#111}
+.s02-datepanel-pax{background:#f4f4f2;border-radius:10px;padding:10px 12px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.s02-datepanel-search{width:100%;background:#1952c7;color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer}
+/* TTL 토스트 */
+.s02-toast{position:sticky;top:0;z-index:20;background:#1a1f2e;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:9px 14px;font-size:11px;font-weight:600}
+.s02-toast-btn{font-size:11px;font-weight:800;background:#ff6b00;color:#fff;border:none;border-radius:6px;padding:4px 10px;cursor:pointer}
+/* 리뷰 */
+.s02-rev-overall{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.s02-rev-big{font-size:34px;font-weight:900;color:#4f46e5}
+.s02-rev-lbl{font-size:15px;font-weight:700;color:#111}
+.s02-rev-row{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.s02-rev-name{font-size:11px;color:#555;width:44px;flex-shrink:0}
+.s02-rev-bar{flex:1;background:#e5e7eb;border-radius:3px;height:5px}
+.s02-rev-fill{background:#4f46e5;height:5px;border-radius:3px}
+.s02-rev-score{font-size:11px;font-weight:700;color:#333;width:28px;text-align:right}
+.s02-rev-toggle{text-align:center;margin-top:8px;font-size:11px;font-weight:700;color:#4f46e5;cursor:pointer}
+/* 편의시설 */
+.s02-amen-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.s02-amen-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;background:#f8f8f6;border-radius:8px}
+.s02-amen-icon{font-size:20px}
+.s02-amen-name{font-size:10px;color:#555;text-align:center}
+/* 지도 */
+.s02-map{height:130px;background:linear-gradient(135deg,#b8d4a8,#7ab86e);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:8px;position:relative}
+.s02-map-pin{position:absolute;top:50%;left:50%;transform:translate(-50%,-100%);font-size:22px}
+/* 체크인아웃 */
+.s02-ci-wrap{display:flex;gap:10px}
+.s02-ci-box{flex:1;background:#f8f8f6;border-radius:10px;padding:12px;text-align:center}
+.s02-ci-lbl{font-size:11px;color:#9ca3af;margin-bottom:3px}
+.s02-ci-time{font-size:18px;font-weight:900;color:#111}
+.s02-ci-sub{font-size:10px;color:#9ca3af;margin-top:2px}
+/* 바텀시트 */
+.s02-bs{position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:16px 16px 0 0;padding:12px 14px 16px;z-index:50;box-shadow:0 -4px 24px rgba(0,0,0,.18)}
+.s02-bs-handle{width:36px;height:4px;background:#e5e7eb;border-radius:2px;margin:0 auto 10px}
+.s02-bs-title{font-size:14px;font-weight:800;color:#111;margin-bottom:10px}
+.s02-gallery-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;max-height:300px;overflow-y:auto}
+.s02-gallery-img{aspect-ratio:4/3;background:linear-gradient(135deg,#b8c8e0,#7a96b8);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:22px;color:rgba(255,255,255,.4)}
+/* 스켈레톤 */
+@keyframes sk{0%{background-position:-400px 0}100%{background-position:400px 0}}
+.sk{background:linear-gradient(90deg,#e5e7eb 25%,#f3f4f6 50%,#e5e7eb 75%);background-size:800px 100%;animation:sk 1.4s infinite;border-radius:4px}
+/* 칩 */
+.s02-chip{font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;border:1px solid #d1d5db;background:#fff;color:#555;cursor:pointer;white-space:nowrap}
+.s02-chip.on{background:#fff3e8;border-color:#ff6b00;color:#ff6b00}
+/* 기타 */
+.price-blur{filter:blur(4px);user-select:none}
+.s02-datebar-text .s02-date-part{font-size:12px;font-weight:700;color:#ff6b00;cursor:pointer}
+/* 논의요약 */
+.disc-table-wrap{background:#fffbf0;border:1.5px solid #f59e0b;border-radius:10px;padding:20px 24px;margin-bottom:24px}
+.disc-table-wrap h2{font-size:15px;font-weight:700;color:#92400e;margin:0 0 6px}
+.disc-table-wrap p{font-size:12px;color:#92400e;margin:0 0 14px}
+.disc-table{width:100%;border-collapse:collapse;font-size:12px}
+.disc-table th{background:#fef3c7;padding:7px 10px;text-align:left;font-weight:700;color:#78350f;border:1px solid #fde68a;white-space:nowrap}
+.disc-table td{padding:8px 10px;border:1px solid #fde68a;color:#374151;vertical-align:top;line-height:1.7}
+.disc-table tr:nth-child(even) td{background:#fffef8}
+.disc-table td em{color:#d97706;font-style:normal;font-weight:600}
+</style>
+</head>
+<body>
+
+<nav class="page-nav">
+  <a class="page-nav-back" href="index.html">← 목록으로</a>
+  <span class="page-nav-sep">|</span>
+  <span class="page-nav-title">S02 (디자인확정) — 숙소상세</span>
+  <span class="page-nav-route">/ 정책서 v0.37 기준</span>
+  <div class="page-nav-nav">
+    <a class="page-nav-pager" href="s01_search_d1.html">← S01</a>
+    <a class="page-nav-pager" href="out01_redirect.html">OUT01 →</a>
+  </div>
+</nav>
+
+<nav class="toc">
+  <div class="toc-inner">
+    <span class="toc-label">목차</span>
+    <a href="#disc-table" class="toc-link">📋 논의요약</a>
+    <span class="toc-sep"></span>
+    <a href="#s02d1-main" class="toc-link">S02_D1 메인</a>
+    <span class="toc-sep"></span>
+    <a href="#s02d1-a" class="toc-link">D1-A 날짜재검색</a>
+    <span class="toc-sep"></span>
+    <a href="#s02-c" class="toc-link">C 갤러리</a>
+    <span class="toc-sep"></span>
+    <a href="#s02-b4" class="toc-link">B4 숙소설명</a>
+    <span class="toc-sep"></span>
+    <a href="#s02-b5" class="toc-link">B5 리뷰</a>
+    <span class="toc-sep"></span>
+    <a href="#s02-f" class="toc-link">F 리뷰전체</a>
+    <span class="toc-sep"></span>
+    <a href="#s02-b6" class="toc-link">B6 편의시설</a>
+    <span class="toc-sep"></span>
+    <a href="#s02-e" class="toc-link">E 편의시설BS</a>
+    <span class="toc-sep"></span>
+    <a href="#s02-b7" class="toc-link">B7 위치</a>
+    <span class="toc-sep"></span>
+    <a href="#s02-b8" class="toc-link">B8 체크인아웃</a>
+    <span class="toc-sep"></span>
+    <a href="#s02-g" class="toc-link">G TTL만료</a>
+  </div>
+</nav>
+
+<div class="page">
+<!-- ════════════════════════════════════
+  논의 요약 테이블
+════════════════════════════════════ -->
+<div id="disc-table">
+  <div class="disc-table-wrap">
+    <h2>📋 논의 요약 — S02 숙소상세 (디자인확정 기준)</h2>
+    <p>기준 날짜: 2026-07-02 &nbsp;·&nbsp; 기준 정책서: v0.37</p>
+    <table class="disc-table">
+      <colgroup>
+        <col style="width:30px">
+        <col style="width:120px">
+        <col style="width:180px">
+        <col style="width:180px">
+        <col>
+      </colgroup>
+      <thead>
+        <tr><th>#</th><th>항목</th><th>선택지</th><th>현재 적용안</th><th>적용 근거</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>공급사 목록 UI</td>
+          <td>A. 공급사별 카드(테두리 박스)<br>B. 행(row) 나열, 구분선</td>
+          <td>B안 확정 — 테두리 없는 row 나열</td>
+          <td>확정 디자인 기준. 정보 밀도 향상, 스캔 속도 개선. HotelsCombined·Vio 동일 패턴.</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>적립 표시 방식</td>
+          <td>A. "최대 N원 적립" (금액)<br>B. "최대 N% 적립" (비율)</td>
+          <td>B안 적용 중 (비율 표시)<br><em>⚠️ 논의 필요</em></td>
+          <td>아웃링크 후 타 OTA에서 가격 변동 가능 → 금액 표기 시 정보 불일치 리스크로 비율(%) 적용 중. <em>단, HotelsCombined 등 경쟁사 이미지에서는 금액(예: "₩12,000 적립")으로 표시. 사용자에게 더 직관적인 금액 표시 방식 재검토 필요.</em> 대표님 논의 후 확정.</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>[→] 버튼 탭 — 로그인 유도 모달 표시 여부</td>
+          <td>A. 비로그인 시 로그인 유도 모달 표시<br>B. 비로그인 포함 모두 바로 OUT01로 이동</td>
+          <td>A안 적용 중 (기존 정책 유지)<br>⚠️ 논의 필요</td>
+          <td>S01 카드 [이동→] 탭과 동일 분기(로그인 여부 체크 후 모달 or OUT01)를 S02 [→] 버튼에도 동일하게 적용. 픽포인트 귀속을 위해 로그인 유도 필요하나 UX 마찰 고려 필요. 대표님 논의 후 확정.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<hr class="sec-divider">
+<!-- ════════════════════════════════════
+  S02_D1 메인 — 숙소상세 (확정 디자인)
+════════════════════════════════════ -->
+<div id="s02d1-main" class="sec-title">
+  <span class="sec-badge">S02_D1</span>숙소상세 — 메인
+  <span style="font-size:12px;font-weight:400;color:#888">— 확정 디자인 기준</span>
+</div>
+<div class="sec-sub">
+  단일 스크롤 구조. GNB(← + 공유) · 히어로 이미지 · 숙소요약(날짜바 포함) · 공급사 행 나열 · 숙소설명 · 리뷰 · 지도 · 편의시설 · 체크인아웃 순.<br>
+  플로우: 날짜바 탭 → S02_D1-A 재검색 / [→] 버튼 탭 → OUT01 아웃링크 / 이미지 탭 → S02-C 갤러리
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — S02 숙소상세 전체</div>
+  <ul class="sec-policy-list">
+    <li><strong>API</strong>: <code>GET /api/4.0/hotels/{hotelId}</code> (6-1절)</li>
+    <li><strong>공급사 정렬</strong>: <code>totalRate</code> 오름차순 클라이언트 정렬. 최초 20개 노출. 버튼으로 추가 로드 (6-3절)</li>
+    <li><strong>최저가 배지</strong>: 정렬 후 1위 행에만 파란 배지. 필터 적용 시 필터된 목록 기준 재산정 (6-3절)</li>
+    <li><strong>적립 표시</strong>: <code>providers[].cashback.type</code> (PERCENTAGE/FLAT → "최대 N% 적립", NONE → 미표시) (9-7절)</li>
+    <li><strong>아웃링크 진입</strong>: 비로그인 → 로그인 유도 모달 → [건너뛰기] 또는 로그인 후 OUT01. 로그인 → OUT01 새탭 (7-1·7-2절)</li>
+    <li><strong>TTL 만료</strong>: 가격 blur + sticky 토스트 → [새로고침] → 재호출 (6-6절)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.37 6-1·6-3·6-6·7-1·9-7절</div>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- 히어로 이미지 -->
+        <div style="position:relative;flex-shrink:0;">
+          <div class="s02-hero" style="height:180px;font-size:52px;">🏨</div>
+          <span class="wf-cn" style="position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:41;">1</span>
+          <div class="s02-hero-count">1/50 <span class="wf-cn" style="position:static;vertical-align:middle;display:inline;">2</span></div>
+          <!-- GNB 오버레이 -->
+          <div class="s02-gnb">
+            <div style="position:relative;display:inline-block;">
+              <button class="s02-gnb-back">←</button>
+              <span class="wf-cn" style="position:absolute;top:-6px;right:-6px;">3</span>
+            </div>
+            <div class="s02-gnb-right">
+              <div style="position:relative;display:inline-block;">
+                <button class="s02-gnb-icon">⬆</button>
+                <span class="wf-cn" style="position:absolute;top:-6px;right:-6px;">4</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="s02-scroll">
+
+          <!-- 숙소요약 섹션 -->
+          <div class="s02-sec">
+            <div class="s02-name">제주도 신라 호텔 <span class="wf-cn">5</span></div>
+            <div class="s02-addr">서귀포시, 제주특별자치도 <span class="wf-cn">6</span></div>
+            <div class="s02-score-row">
+              <span class="s02-score">8.5</span>
+              <span class="s02-score-lbl">매우 훌륭함</span>
+              <span class="s02-grade">5성급</span>
+              <span class="s02-stars">★★★★★</span>
+              <span class="wf-cn">7</span>
+            </div>
+            <!-- 날짜바 -->
+            <div class="s02-datebar">
+              <div>
+                <div class="s02-datebar-text">6.25(목) — 6.26(금) · 1박 <span class="wf-cn">8</span></div>
+                <div class="s02-datebar-sub">투숙객 2명 · 객실 1개</div>
+              </div>
+              <span class="s02-datebar-chevron">∨ <span class="wf-cn" style="position:static;display:inline;">9</span></span>
+            </div>
+          </div>
+
+          <!-- 공급사 목록 섹션 -->
+          <div class="s02-sec" style="padding:0;">
+            <div style="padding:12px 14px 8px;">
+              <div style="font-size:12px;font-weight:800;color:#1a1f2e;">가격 비교 <span style="font-size:10px;font-weight:400;color:#9ca3af;">세금 포함</span></div>
+            </div>
+
+            <!-- 행 1 (최저가) -->
+            <div class="s02-prov-row">
+              <div class="s02-prov-row-left">
+                <div class="s02-prov-row-name-line">
+                  <span class="s02-prov-name-txt">Booking.com</span><span class="wf-cn">11</span>
+                  <span class="s02-badge-cheapest">최저가</span><span class="wf-cn">12</span>
+                </div>
+                <div class="s02-prov-room-txt">슈페리어 더블룸 - 해블 더...</div><span class="wf-cn">13</span>
+                <div class="s02-prov-badges-row">
+                  <span class="s02-b s02-b-free">✓ 무료취소</span><span class="wf-cn">14</span>
+                  <span class="s02-b s02-b-meal">🍳 조식포함</span>
+                </div>
+              </div>
+              <div class="s02-prov-row-right">
+                <div class="s02-prov-price-txt">₩402,000</div><span class="wf-cn">15</span>
+                <div class="s02-earn-txt">최대 5% 적립</div><span class="wf-cn">16</span>
+              </div>
+              <div style="position:relative;flex-shrink:0;margin-left:6px;">
+                <button class="s02-move-circle" style="margin-left:0;">→</button>
+                <span class="wf-cn" style="position:absolute;top:-6px;right:-6px;">17</span>
+              </div>
+            </div>
+
+            <!-- 행 2 -->
+            <div class="s02-prov-row">
+              <div class="s02-prov-row-left">
+                <div class="s02-prov-row-name-line"><span class="s02-prov-name-txt">Booking.com</span></div>
+                <div class="s02-prov-room-txt">슈페리어 더블룸</div>
+                <div class="s02-prov-badges-row">
+                  <span class="s02-b s02-b-free">✓ 무료취소</span>
+                  <span class="s02-b s02-b-meal">🍳 조식포함</span>
+                </div>
+              </div>
+              <div class="s02-prov-row-right">
+                <div class="s02-prov-price-txt">₩420,000</div>
+                <div class="s02-earn-txt">최대 5% 적립</div>
+              </div>
+              <button class="s02-move-circle">→</button>
+            </div>
+
+            <!-- 행 3 -->
+            <div class="s02-prov-row">
+              <div class="s02-prov-row-left">
+                <div class="s02-prov-row-name-line"><span class="s02-prov-name-txt">Agoda</span></div>
+                <div class="s02-prov-room-txt">슈페리어 더블룸</div>
+                <div class="s02-prov-badges-row">
+                  <span class="s02-b s02-b-meal">🍳 조식포함</span>
+                  <span class="s02-b s02-b-later">💳 나중에결제</span>
+                </div>
+              </div>
+              <div class="s02-prov-row-right">
+                <div class="s02-prov-price-txt">₩435,000</div>
+                <div class="s02-earn-txt">최대 3% 적립</div>
+              </div>
+              <button class="s02-move-circle">→</button>
+            </div>
+
+            <!-- 행 4 -->
+            <div class="s02-prov-row">
+              <div class="s02-prov-row-left">
+                <div class="s02-prov-row-name-line"><span class="s02-prov-name-txt">Hotels.com</span></div>
+                <div class="s02-prov-room-txt">슈페리어 더블룸</div>
+                <div class="s02-prov-badges-row">
+                  <span class="s02-b s02-b-free">✓ 무료취소</span>
+                  <span class="s02-b s02-b-later">💳 나중에결제</span>
+                </div>
+              </div>
+              <div class="s02-prov-row-right">
+                <div class="s02-prov-price-txt">₩448,000</div>
+                <div class="s02-earn-txt">적립 없음</div>
+              </div>
+              <button class="s02-move-circle">→</button>
+            </div>
+
+            <!-- 더보기 -->
+            <div class="s02-load-more">가격 16개 더보기 ∨ <span class="wf-cn">18</span></div>
+          </div>
+
+        </div><!-- /s02-scroll -->
+
+
+      </div>
+    </div>
+  </div><!-- /mobile-wrap -->
+
+  <!-- 주석 패널 -->
+  <div class="ann">
+    <h3>화면 주석 — S02_D1 메인</h3>
+
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">히어로 이미지 — <code>images[0]</code></div>
+        <div class="ann-desc"><ul>
+          <li>전체 너비, 높이 180px 고정.</li>
+          <li>이미지 탭 시 → S02-C 갤러리 바텀시트 진입.</li>
+          <li>출처: <code>images[0].url</code>. 없으면 플레이스홀더.</li>
+        </ul></div>
+        <div class="ann-rule">기준: v0.36 6-2절</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">이미지 카운터 — "1/N"</div>
+        <div class="ann-desc"><ul>
+          <li>이미지 하단 중앙 고정. N = <code>images[].length</code>.</li>
+          <li>탭 시 → S02-C 갤러리 진입 (이미지 탭과 동일 동작).</li>
+        </ul></div>
+        <div class="ann-rule">기준: v0.36 6-2절</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">GNB 좌측 — ← 뒤로가기</div>
+        <div class="ann-desc"><ul>
+          <li>탭 시 → S01 검색결과 목록으로 이동.</li>
+          <li>흰 원형 반투명 버튼. 이미지 위 오버레이 고정.</li>
+        </ul></div>
+        <div class="ann-rule">확정 디자인 기준. 로그인·☰ 제거.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">GNB 우측 — ⬆ 공유</div>
+        <div class="ann-desc"><ul>
+          <li>탭 시 → 네이티브 공유 시트 (navigator.share API).</li>
+          <li>미지원 환경: URL 클립보드 복사.</li>
+        </ul></div>
+        <div class="ann-rule">기준: v0.36 6-1절</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">5</div>
+      <div class="ann-body">
+        <div class="ann-title">호텔명 — <code>name</code></div>
+        <div class="ann-desc"><ul><li>Static Data Feeds의 <code>name</code> 필드. 2줄 말줄임.</li></ul></div>
+        <div class="ann-rule">기준: v0.36 6-4절</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">6</div>
+      <div class="ann-body">
+        <div class="ann-title">주소 — <code>address</code></div>
+        <div class="ann-desc"><ul><li><code>address</code> 필드. 1줄 말줄임.</li></ul></div>
+        <div class="ann-rule">기준: v0.36 6-4절</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">7</div>
+      <div class="ann-body">
+        <div class="ann-title">평점 — <code>reviews.sentiment</code> · 성급 — <code>starRating</code></div>
+        <div class="ann-desc"><ul>
+          <li>파란 배지 숫자: <code>reviews.sentiment</code> 값에서 쉼표(,) 뒤 숫자 추출. 레이블: 쉼표 앞 텍스트 (예: "매우 훌륭함, 8.5" → 숫자 8.5, 레이블 "매우 훌륭함").</li>
+          <li><code>reviews.sentiment</code>가 없으면 → <code>guestRatings.OVERALL</code> 숫자만 표시. 레이블 없음.</li>
+          <li>"5성급" 회색 chip: <code>starRating</code> (정수 1~5) 숫자+"성급" 표시. <code>isSelfRated:true</code>이면 "S" 배지 추가.</li>
+          <li>우측 ★★★★★ 노란 별: <code>starRating</code> 값만큼 ★ 표시 (1~5).</li>
+        </ul></div>
+        <div class="ann-rule">기준: v0.36 6-4·6-7절</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">8</div>
+      <div class="ann-body">
+        <div class="ann-title">날짜바 — 검색 조건 요약</div>
+        <div class="ann-desc"><ul>
+          <li>"체크인 — 체크아웃 · N박" + "투숙객 N명 · 객실 N개" 표시.</li>
+          <li>전체 탭 시 → S02_D1-A 재검색 슬라이드다운 진입.</li>
+        </ul></div>
+        <div class="ann-rule">기준: v0.36 6-5절</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">9</div>
+      <div class="ann-body">
+        <div class="ann-title">∨ 아이콘 — 재검색 진입 표시</div>
+        <div class="ann-desc"><ul>
+          <li>탭 영역 우측 끝 ∨ 아이콘. 날짜바 전체가 탭 영역.</li>
+        </ul></div>
+      </div>
+    </div>
+
+
+    <div class="ann-item">
+      <div class="cn">11</div>
+      <div class="ann-body">
+        <div class="ann-title">공급사명 — <code>providers[].name</code></div>
+        <div class="ann-desc"><ul>
+          <li>매 행마다 공급사명 표시. 동일 공급사 연속 행도 반복 표시.</li>
+          <li>로고 URL(<code>providers[].logo</code>) 있으면 이미지, 없으면 텍스트.</li>
+        </ul></div>
+        <div class="ann-rule">기준: v0.36 6-3절</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">12</div>
+      <div class="ann-body">
+        <div class="ann-title">최저가 배지 — 파란 "최저가" pill</div>
+        <div class="ann-desc"><ul>
+          <li>전체 목록 중 <code>totalRate</code>가 가장 낮은 1행에만 표시.</li>
+          <li>필터 칩 ON 시: 필터된 목록 기준으로 최저가 재산정, 배지 이동.</li>
+          <li>동일 가격 행이 여러 개면 정렬 상 첫 번째 행에 표시.</li>
+        </ul></div>
+        <div class="ann-rule">기준: v0.36 6-3절 확정.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">13</div>
+      <div class="ann-body">
+        <div class="ann-title">객실명 — <code>results[].roomName</code></div>
+        <div class="ann-desc"><ul>
+          <li>1줄 말줄임. 전체 텍스트는 탭 시 툴팁 or 상세에서 확인.</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">14</div>
+      <div class="ann-body">
+        <div class="ann-title">조건 배지 — 무료취소 · 조식포함 · 나중에결제</div>
+        <div class="ann-desc"><ul>
+          <li>✓ 무료취소: <code>hasFreeCancellation:true</code> → 초록 배지.</li>
+          <li>🍳 조식포함: <code>inclusions[]</code>에 0 포함 → 파란 배지.</li>
+          <li>💳 나중에결제: <code>canPayLater:true</code> → 회색 배지.</li>
+          <li>해당 조건 없으면 해당 배지 미표시.</li>
+        </ul></div>
+        <div class="ann-rule">기준: v0.36 6-3절</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">15</div>
+      <div class="ann-body">
+        <div class="ann-title">가격 — <code>results[].totalRate</code></div>
+        <div class="ann-desc"><ul>
+          <li>세금·수수료 포함 최종가. 선택 통화 기준. 천 단위 구분 쉼표.</li>
+        </ul></div>
+        <div class="ann-front">← <code>results[].totalRate</code> (세금포함 최종가)</div>
+        <div class="ann-rule">기준: v0.36 6-3절</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">16</div>
+      <div class="ann-body">
+        <div class="ann-title">적립 표시 — <code>providers[].cashback</code> (cashback 객체)</div>
+        <div class="ann-desc"><ul>
+          <li><code>cashback.type = PERCENTAGE</code> → "최대 N% 적립" (N = <code>cashback.value</code>).</li>
+          <li><code>cashback.type = FLAT</code> → "최대 N원 적립" (N = <code>cashback.value</code>, 선택 통화 기호 적용).</li>
+          <li><code>cashback.type = NONE</code> → 적립 표시 없음 (행에 미표시).</li>
+          <li>PERCENTAGE는 비율로 표시하는 이유: 아웃링크 후 타 OTA 가격 변동 가능 → 금액 표기 시 정보 불일치 리스크.</li>
+        </ul></div>
+        <div class="ann-front">← <code>providers[].cashback.type</code> / <code>providers[].cashback.value</code></div>
+        <div class="ann-rule">기준: v0.36 9-7절 / 2026-07-02 확정.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">17</div>
+      <div class="ann-body">
+        <div class="ann-title">[→] 원형 버튼 — 아웃링크 진입</div>
+        <div class="ann-desc"><ul>
+          <li>탭 시 흐름: 비로그인 → 로그인 유도 모달 → [건너뛰기] or 로그인 → OUT01 새탭.</li>
+          <li>로그인 상태 → 바로 OUT01 새탭 → 2초 후 타 OTA 이동.</li>
+          <li><code>results[].bookUri</code>에 <code>userTrackId</code> 포함하여 CPA 추적.</li>
+        </ul></div>
+        <div class="ann-rule">기준: v0.36 7-1·7-2절</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">18</div>
+      <div class="ann-body">
+        <div class="ann-title">"가격 N개 더보기 ∨" 버튼</div>
+        <div class="ann-desc"><ul>
+          <li>초기 20개 노출. 탭 시 다음 20개 추가 로드.</li>
+          <li>전체 로드 완료 시 버튼 숨김.</li>
+        </ul></div>
+        <div class="ann-rule">기준: v0.36 6-3절 / 2026-07-02 확정.</div>
+      </div>
+    </div>
+
+
+  </div><!-- /ann -->
+</div><!-- /two-col -->
+
+<hr class="sec-divider">
+<!-- ════════════════════════════════════
+  S02_D1-A — 날짜바 재검색 슬라이드다운
+════════════════════════════════════ -->
+<div id="s02d1-a" class="sec-title">
+  <span class="sec-badge">S02_D1-A</span>날짜바 재검색 — 날짜바 탭 시
+</div>
+<div class="sec-sub">
+  날짜바 탭 → GNB 고정 유지, 그 아래 날짜+인원+[검색] 패널 슬라이드다운. 배경 딤 처리. [검색] 탭 → API 재호출 + 슬라이드업 닫힘.
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- 히어로 + GNB (딤 위에 선명) -->
+        <div style="position:relative;flex-shrink:0;">
+          <div class="s02-hero" style="height:180px;font-size:52px;opacity:.55;">🏨</div>
+          <div class="s02-gnb">
+            <button class="s02-gnb-back">←</button>
+            <div class="s02-gnb-right"><button class="s02-gnb-icon">⬆</button></div>
+          </div>
+        </div>
+
+        <!-- 슬라이드다운 패널 -->
+        <div class="s02-datepanel">
+          <div style="font-size:12px;font-weight:700;color:#9ca3af;margin-bottom:10px;">날짜 · 인원 수정 <span class="wf-cn">1</span></div>
+
+          <div class="s02-datepanel-row">
+            <div class="s02-datepanel-cell">
+              <div class="s02-datepanel-lbl">체크인 <span class="wf-cn">2</span></div>
+              <div class="s02-datepanel-val">6.25(목)</div>
+            </div>
+            <div style="display:flex;align-items:center;font-size:18px;color:#d1d5db;padding:0 2px;">→</div>
+            <div class="s02-datepanel-cell">
+              <div class="s02-datepanel-lbl">체크아웃</div>
+              <div class="s02-datepanel-val">6.26(금)</div>
+            </div>
+          </div>
+
+          <div class="s02-datepanel-pax">
+            <div>
+              <div class="s02-datepanel-lbl">투숙객 <span class="wf-cn">3</span></div>
+              <div class="s02-datepanel-val">성인 2명 · 객실 1개</div>
+            </div>
+            <span style="color:#9ca3af;">∨</span>
+          </div>
+
+          <button class="s02-datepanel-search">검색 <span class="wf-cn">4</span></button>
+        </div>
+
+        <!-- 배경 딤 -->
+        <div style="flex:1;background:rgba(0,0,0,0.45);display:flex;align-items:flex-end;">
+          <div style="width:100%;text-align:center;padding:12px;font-size:11px;color:rgba(255,255,255,.6);">화면 탭 → 닫힘 <span class="wf-cn">5</span></div>
+        </div>
+
+      </div>
+    </div>
+  </div><!-- /mobile-wrap -->
+
+  <div class="ann">
+    <h3>화면 주석 — S02_D1-A 날짜바 재검색</h3>
+
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">슬라이드다운 패널 진입</div>
+        <div class="ann-desc"><ul>
+          <li>날짜바 탭 → GNB 고정 유지, 그 아래 패널이 height 0 → auto로 슬라이드다운.</li>
+          <li>패널 아래 영역은 반투명 딤(rgba 0,0,0,0.45). 딤 탭 시 패널 닫힘.</li>
+        </ul></div>
+        <div class="ann-rule">기준: v0.36 6-5절</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">체크인·체크아웃 셀 탭</div>
+        <div class="ann-desc"><ul>
+          <li>탭 시 → M01과 동일한 달력 컴포넌트 오픈 (바텀시트 or 인라인).</li>
+          <li>날짜 선택 완료 시 셀 값 갱신. [검색] 탭 전까지 API 재호출 없음.</li>
+        </ul></div>
+        <div class="ann-rule">기준: v0.36 6-5절</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">투숙객·객실 셀 탭</div>
+        <div class="ann-desc"><ul>
+          <li>탭 시 → M01과 동일한 인원설정 컴포넌트 오픈.</li>
+          <li>인원 확정 시 셀 값 갱신. [검색] 탭 전까지 API 재호출 없음.</li>
+        </ul></div>
+        <div class="ann-rule">기준: v0.36 6-5절</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">[검색] 버튼</div>
+        <div class="ann-desc"><ul>
+          <li>탭 시 → <code>GET /hotel</code> 재호출 (새 날짜·인원 기준).</li>
+          <li>재호출 완료 → 공급사 목록 갱신 + 패널 슬라이드업 닫힘.</li>
+          <li>재호출 중: 공급사 목록 영역 스켈레톤 표시.</li>
+        </ul></div>
+        <div class="ann-rule">기준: v0.36 6-5절</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">5</div>
+      <div class="ann-body">
+        <div class="ann-title">딤 탭 — 닫힘</div>
+        <div class="ann-desc"><ul>
+          <li>딤 영역 탭 시 패널 슬라이드업으로 닫힘. 변경사항 적용하지 않음.</li>
+        </ul></div>
+      </div>
+    </div>
+
+  </div><!-- /ann -->
+</div><!-- /two-col -->
+
+<hr class="sec-divider">
+
+<div class="sec" id="s02-c">
+  <div class="sec-title">S02-C <span class="sec-badge">인터랙션</span> 갤러리 바텀시트</div>
+  <div class="sec-sub">이미지 탭 또는 [사진 모두 보기] 탭 시 오픈. <code>images[].tag</code>별 카테고리 탭 + 균등 2열 그리드.</div>
+  <div class="two-col">
+    <div class="mobile-wrap">
+      <div class="mobile-device">
+        <div class="m-notch"><div class="m-notch-pill"></div></div>
+        <div class="m-screen">
+          <div style="position:relative;flex-shrink:0;"><div class="s02-hero" style="height:120px;font-size:30px;opacity:.4;">🏨</div><div class="s02-gnb"><button class="s02-gnb-back">←</button><div class="s02-gnb-right"><button class="s02-gnb-icon">⬆</button></div></div></div>
+          <div style="position:relative;flex:1;">
+            <div class="s02-bs" style="height:435px;">
+              <div class="s02-bs-handle"></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                <div class="s02-bs-title">사진 전체 (24)<span class="wf-cn">1</span></div>
+                <button style="font-size:18px;background:none;border:none;cursor:pointer;color:#555;">✕</button>
+              </div>
+              <div style="display:flex;gap:5px;margin-bottom:10px;overflow-x:auto;">
+                <span class="s02-chip on" style="font-size:10px;padding:3px 8px;">전체</span>
+                <span class="s02-chip" style="font-size:10px;padding:3px 8px;">외관<span class="wf-cn">2</span></span>
+                <span class="s02-chip" style="font-size:10px;padding:3px 8px;">객실</span>
+                <span class="s02-chip" style="font-size:10px;padding:3px 8px;">수영장</span>
+                <span class="s02-chip" style="font-size:10px;padding:3px 8px;">기타</span>
+              </div>
+              <div class="s02-gallery-grid">
+                <div class="s02-gallery-img">🏨</div><div class="s02-gallery-img">🛏</div>
+                <div class="s02-gallery-img">🌊</div><div class="s02-gallery-img">🍽</div>
+                <div class="s02-gallery-img">🛁</div><div class="s02-gallery-img">🏋️</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ann">
+      <h3>S02-C — 갤러리 바텀시트</h3>
+      <div class="ann-item">
+        <div class="cn">1</div>
+        <div class="ann-body">
+          <div class="ann-title">전체 이미지 — <code>images[]</code></div>
+          <div class="ann-desc"><ul>
+            <li>Static Data Feeds + 단일 검색 병합</li>
+            <li>균등 2열 그리드. aspect-ratio 4:3 고정</li>
+            <li>풀스크린 미사용 — 바텀시트 내 표시 유지</li>
+          </ul></div>
+          <div class="ann-rule">기준: v0.36 6-2절</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="cn">2</div>
+        <div class="ann-body">
+          <div class="ann-title">카테고리 탭 — <code>images[].tag</code></div>
+          <div class="ann-desc"><ul>
+            <li><code>tag</code> 값으로 카테고리 탭 자동 생성. null → "기타"</li>
+            <li>"전체" 탭 기본. 탭 선택 시 해당 tag만 필터</li>
+          </ul></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+<div class="sec" id="s02-b4">
+  <div class="sec-title">S02-B4 <span class="sec-badge">섹션 상세</span> 숙소설명</div>
+  <div class="sec-sub"><code>description</code> 텍스트 표시. 없으면 섹션 미노출.</div>
+  <div class="two-col">
+    <div class="mobile-wrap">
+      <div class="mobile-device">
+        <div class="m-notch"><div class="m-notch-pill"></div></div>
+        <div class="m-screen" style="background:#fff;">
+          <div style="position:relative;flex-shrink:0;"><div class="s02-hero" style="height:80px;font-size:24px;">🏨</div><div class="s02-gnb" style="padding:6px 12px;"><button class="s02-gnb-back" style="width:26px;height:26px;font-size:12px;">←</button><div class="s02-gnb-right"><button class="s02-gnb-icon" style="width:26px;height:26px;">⬆</button><button class="s02-gnb-icon" style="width:26px;height:26px;">☰</button></div></div></div>
+          <div class="s02-scroll">
+            <div class="s02-sec">
+              <div class="s02-sec-title">숙소 소개<span class="wf-cn">1</span></div>
+              <div style="font-size:12px;color:#555;line-height:1.7;">신라호텔 서울은 서울 도심 중심부에 위치한 5성급 럭셔리 호텔입니다. 총 464개의 객실과 스위트를 갖추고 있으며, 세계적 수준의 레스토랑과 스파, 야외 수영장을 보유하고 있습니다.</div>
+              <div style="font-size:12px;color:#ff6b00;font-weight:600;margin-top:6px;cursor:pointer;">...더 보기<span class="wf-cn">2</span></div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="ann">
+      <h3>S02-B4 — 숙소설명 API 필드</h3>
+      <div class="ann-item">
+        <div class="cn">1</div>
+        <div class="ann-body">
+          <div class="ann-title">숙소설명 — <code>description</code></div>
+          <div class="ann-desc"><ul>
+            <li>Hotelfeed 또는 단일 검색 응답. null → 섹션 전체 미노출</li>
+          </ul></div>
+          <div class="ann-rule">기준: v0.36 6-2절</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="cn">2</div>
+        <div class="ann-body">
+          <div class="ann-title">[...더 보기] 펼침</div>
+          <div class="ann-desc"><ul>
+            <li>기본 3줄. 초과 시 "...더 보기" 표시. 3줄 이하 미표시</li>
+            <li>탭 → 전체 텍스트. [접기] → 3줄 복귀</li>
+          </ul></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ═══════════════ S02-B5 — 리뷰 ═══════════════ -->
+<div class="sec" id="s02-b5">
+  <div class="sec-title">S02-B5 <span class="sec-badge">섹션 상세</span> 리뷰</div>
+  <div class="sec-sub"><code>reviews.guestRatings</code> 7개 카테고리. 상위 4개 기본, [전체 보기] 토글.</div>
+  <div class="two-col">
+    <div class="mobile-wrap">
+      <div class="mobile-device">
+        <div class="m-notch"><div class="m-notch-pill"></div></div>
+        <div class="m-screen" style="background:#fff;">
+          <div style="position:relative;flex-shrink:0;"><div class="s02-hero" style="height:70px;font-size:20px;">🏨</div><div class="s02-gnb" style="padding:5px 12px;"><button class="s02-gnb-back" style="width:24px;height:24px;font-size:11px;">←</button><div class="s02-gnb-right"><button class="s02-gnb-icon" style="width:24px;height:24px;">⬆</button></div></div></div>
+          <div class="s02-scroll">
+            <div class="s02-sec">
+              <div class="s02-sec-title">게스트 평가<span class="wf-cn">1</span></div>
+              <div class="s02-rev-overall"><div class="s02-rev-big">8.9<span class="wf-cn">2</span></div><div><div class="s02-rev-lbl">완벽</div><div style="font-size:10px;color:#9ca3af;">KAYAK 평가</div></div></div>
+              <div class="s02-rev-row"><span class="s02-rev-name">직원<span class="wf-cn">3</span></span><div class="s02-rev-bar"><div class="s02-rev-fill" style="width:93%;"></div></div><span class="s02-rev-score">9.3</span></div>
+              <div class="s02-rev-row"><span class="s02-rev-name">위치</span><div class="s02-rev-bar"><div class="s02-rev-fill" style="width:91%;"></div></div><span class="s02-rev-score">9.1</span></div>
+              <div class="s02-rev-row"><span class="s02-rev-name">편안함</span><div class="s02-rev-bar"><div class="s02-rev-fill" style="width:90%;"></div></div><span class="s02-rev-score">9.0</span></div>
+              <div class="s02-rev-row"><span class="s02-rev-name">청결</span><div class="s02-rev-bar"><div class="s02-rev-fill" style="width:89%;"></div></div><span class="s02-rev-score">8.9</span></div>
+              <div class="s02-rev-toggle">전체 보기 ▾<span class="wf-cn">4</span></div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="ann">
+      <h3>S02-B5 — 리뷰 API 필드</h3>
+      <div class="ann-item">
+        <div class="cn">1</div>
+        <div class="ann-body">
+          <div class="ann-title">리뷰 섹션 전제</div>
+          <div class="ann-desc"><ul>
+            <li>단일 검색 전용. 개별 리뷰 텍스트·리뷰어 정보 없음 → 점수만 표시</li>
+            <li><code>guestRatings</code> 없으면 섹션 전체 미노출</li>
+          </ul></div>
+          <div class="ann-rule">기준: v0.36 6-8절</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="cn">2</div>
+        <div class="ann-body">
+          <div class="ann-title">종합 평점 — <code>reviews.sentiment</code> 우선, <code>guestRatings.OVERALL</code> fallback</div>
+          <div class="ann-desc"><ul>
+            <li>큰 숫자: <code>reviews.sentiment</code> 쉼표(,) 뒤 숫자 추출 (예: "훌륭함, 8.6" → 8.6)</li>
+            <li>레이블: 쉼표(,) 앞 텍스트 (예: "훌륭함" / "Fabulous") — 언어 설정 따라 자동 현지화</li>
+            <li>sentiment null이면 → <code>guestRatings.OVERALL</code> 숫자만 표시. 레이블 없음</li>
+          </ul></div>
+          <div class="ann-rule">기준: v0.36 6-7절</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="cn">3</div>
+        <div class="ann-body">
+          <div class="ann-title">카테고리별 점수 (7개)</div>
+          <div class="ann-desc"><ul>
+            <li>LOCATION(위치) / STAFF(직원) / SERVICES(서비스) / CLEAN(청결) / VALUE(가성비) / FACILITIES(편의시설) / COMFORT(편안함)</li>
+            <li><strong>점수 높은 순 정렬</strong>. 상위 4개 기본 표시</li>
+          </ul></div>
+          <div class="ann-rule">기준: v0.36 6-8절</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="cn">4</div>
+        <div class="ann-body">
+          <div class="ann-title">[전체 보기 ▾] 토글</div>
+          <div class="ann-desc"><ul>
+            <li>탭 → 나머지 3개 인라인 펼침 (S02-F)</li>
+            <li>[닫기 ▲] → 4개 복귀</li>
+          </ul></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ═══════════════ S02-F — 리뷰 전체 ═══════════════ -->
+<div class="sec" id="s02-f">
+  <div class="sec-title">S02-F <span class="sec-badge">인터랙션</span> 리뷰 카테고리 전체 보기</div>
+  <div class="sec-sub">[전체 보기 ▾] 탭 → 7개 전체. [닫기 ▲] → 상위 4개 복귀.</div>
+  <div class="two-col">
+    <div class="mobile-wrap">
+      <div class="mobile-device">
+        <div class="m-notch"><div class="m-notch-pill"></div></div>
+        <div class="m-screen" style="background:#fff;">
+          <div style="position:relative;flex-shrink:0;"><div class="s02-hero" style="height:70px;font-size:20px;opacity:.6;">🏨</div><div class="s02-gnb" style="padding:5px 12px;"><button class="s02-gnb-back" style="width:24px;height:24px;font-size:11px;">←</button><div class="s02-gnb-right"><button class="s02-gnb-icon" style="width:24px;height:24px;">⬆</button></div></div></div>
+          <div class="s02-scroll">
+            <div class="s02-sec">
+              <div class="s02-sec-title">게스트 평가</div>
+              <div class="s02-rev-overall" style="margin-bottom:8px;"><div class="s02-rev-big" style="font-size:26px;">8.9</div><div><div class="s02-rev-lbl" style="font-size:13px;">완벽</div></div></div>
+              <div class="s02-rev-row"><span class="s02-rev-name">직원</span><div class="s02-rev-bar"><div class="s02-rev-fill" style="width:93%;"></div></div><span class="s02-rev-score">9.3</span></div>
+              <div class="s02-rev-row"><span class="s02-rev-name">위치</span><div class="s02-rev-bar"><div class="s02-rev-fill" style="width:91%;"></div></div><span class="s02-rev-score">9.1</span></div>
+              <div class="s02-rev-row"><span class="s02-rev-name">편안함</span><div class="s02-rev-bar"><div class="s02-rev-fill" style="width:90%;"></div></div><span class="s02-rev-score">9.0</span></div>
+              <div class="s02-rev-row"><span class="s02-rev-name">청결</span><div class="s02-rev-bar"><div class="s02-rev-fill" style="width:89%;"></div></div><span class="s02-rev-score">8.9</span></div>
+              <div class="s02-rev-row"><span class="s02-rev-name">서비스<span class="wf-cn">1</span></span><div class="s02-rev-bar"><div class="s02-rev-fill" style="width:88%;"></div></div><span class="s02-rev-score">8.8</span></div>
+              <div class="s02-rev-row"><span class="s02-rev-name">가성비</span><div class="s02-rev-bar"><div class="s02-rev-fill" style="width:82%;"></div></div><span class="s02-rev-score">8.2</span></div>
+              <div class="s02-rev-row"><span class="s02-rev-name">편의시설</span><div class="s02-rev-bar"><div class="s02-rev-fill" style="width:80%;"></div></div><span class="s02-rev-score">8.0</span></div>
+              <div class="s02-rev-toggle" style="color:#9ca3af;">닫기 ▲<span class="wf-cn">2</span></div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="ann">
+      <h3>S02-F — 리뷰 전체 보기</h3>
+      <div class="ann-item">
+        <div class="cn">1</div>
+        <div class="ann-body">
+          <div class="ann-title">7개 카테고리 전체 (점수 높은 순)</div>
+          <div class="ann-desc"><ul>
+            <li>기본 4개에 추가 3개: SERVICES(서비스) / VALUE(가성비) / FACILITIES(편의시설)</li>
+            <li>7개 전체 점수 높은 순 정렬 유지</li>
+          </ul></div>
+          <div class="ann-rule">기준: v0.36 6-8절</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="cn">2</div>
+        <div class="ann-body">
+          <div class="ann-title">[닫기 ▲] → 4개 복귀</div>
+          <div class="ann-desc"><ul>
+            <li>탭 → 하위 3개 숨김. 버튼: 닫기 ▲ / 전체 보기 ▾ 토글</li>
+          </ul></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ═══════════════ S02-B6 — 편의시설 ═══════════════ -->
+<div class="sec" id="s02-b6">
+  <div class="sec-title">S02-B6 <span class="sec-badge">섹션 상세</span> 편의시설</div>
+  <div class="sec-sub"><code>facilities[].tag</code> 기반 대표 6개 아이콘. [전체 보기] → S02-E 바텀시트. 없으면 섹션 미노출.</div>
+  <div class="two-col">
+    <div class="mobile-wrap">
+      <div class="mobile-device">
+        <div class="m-notch"><div class="m-notch-pill"></div></div>
+        <div class="m-screen" style="background:#fff;">
+          <div style="position:relative;flex-shrink:0;"><div class="s02-hero" style="height:70px;font-size:20px;">🏨</div><div class="s02-gnb" style="padding:5px 12px;"><button class="s02-gnb-back" style="width:24px;height:24px;font-size:11px;">←</button><div class="s02-gnb-right"><button class="s02-gnb-icon" style="width:24px;height:24px;">⬆</button></div></div></div>
+          <div class="s02-scroll">
+            <div class="s02-sec">
+              <div class="s02-sec-title">편의시설<span class="wf-cn">1</span></div>
+              <div class="s02-amen-grid">
+                <div class="s02-amen-item"><div class="s02-amen-icon">🅿️</div><div class="s02-amen-name">주차·교통<span class="wf-cn">2</span></div></div>
+                <div class="s02-amen-item"><div class="s02-amen-icon">♿</div><div class="s02-amen-name">장애인접근</div></div>
+                <div class="s02-amen-item"><div class="s02-amen-icon">🏋️</div><div class="s02-amen-name">피트니스</div></div>
+                <div class="s02-amen-item"><div class="s02-amen-icon">🛁</div><div class="s02-amen-name">욕실</div></div>
+                <div class="s02-amen-item"><div class="s02-amen-icon">🌊</div><div class="s02-amen-name">수영장·스파</div></div>
+                <div class="s02-amen-item"><div class="s02-amen-icon">🍽</div><div class="s02-amen-name">식사</div></div>
+              </div>
+              <button class="wf-btn wf-btn-outline" style="width:100%;text-align:center;">전체 편의시설 보기<span class="wf-cn">3</span></button>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="ann">
+      <h3>S02-B6 — 편의시설 API 필드</h3>
+      <div class="ann-item">
+        <div class="cn">1</div>
+        <div class="ann-body">
+          <div class="ann-title">편의시설 데이터 2종</div>
+          <div class="ann-desc"><ul>
+            <li>대표 6개: Hotelfeed <code>facilities[].tag</code> (17개 코드 중 상위 6개)</li>
+            <li>전체 목록(바텀시트): 단일 검색 <code>featureSummary[].name + .description</code></li>
+            <li>둘 다 없으면 섹션 미노출</li>
+          </ul></div>
+          <div class="ann-rule">기준: v0.36 6-2절</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="cn">2</div>
+        <div class="ann-body">
+          <div class="ann-title"><code>facilities[].tag</code> 17개 코드</div>
+          <div class="ann-desc"><ul>
+            <li>poolspa(🌊) / parking_transport(🅿️) / access_suit(♿) / bathroom(🛁) / bedroom(🛏) / fitness(🏋️) / laundry(👕) / dining(🍽) / outdoor(🌿) / general / health_safety / service_convenience / family_friendly / media_entertain / work_space / things_to_do / basics</li>
+          </ul></div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="cn">3</div>
+        <div class="ann-body">
+          <div class="ann-title">[전체 편의시설 보기] → S02-E</div>
+          <div class="ann-desc"><ul><li>탭 → S02-E 바텀시트 오픈. <code>featureSummary[]</code> 카테고리별 표시</li></ul></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ═══════════════ S02-E — 편의시설 전체 바텀시트 ═══════════════ -->
+<div class="sec" id="s02-e">
+  <div class="sec-title">S02-E <span class="sec-badge">인터랙션</span> 편의시설 전체 목록 바텀시트</div>
+  <div class="sec-sub"><code>featureSummary[]</code> 카테고리별 표시. 아이콘 없음.</div>
+  <div class="two-col">
+    <div class="mobile-wrap">
+      <div class="mobile-device">
+        <div class="m-notch"><div class="m-notch-pill"></div></div>
+        <div class="m-screen">
+          <div style="position:relative;flex-shrink:0;"><div class="s02-hero" style="height:80px;font-size:22px;opacity:.5;">🏨</div><div class="s02-gnb"><button class="s02-gnb-back">←</button><div class="s02-gnb-right"><button class="s02-gnb-icon">⬆</button></div></div></div>
+          <div style="position:relative;flex:1;">
+            <div class="s02-bs" style="height:472px;">
+              <div class="s02-bs-handle"></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><div class="s02-bs-title">편의시설 전체</div><button style="font-size:18px;background:none;border:none;cursor:pointer;color:#555;">✕</button></div>
+              <div style="overflow-y:auto;max-height:390px;">
+                <div style="margin-bottom:14px;"><div style="font-size:12px;font-weight:800;color:#1a1f2e;margin-bottom:5px;">서비스<span class="wf-cn">1</span></div><div style="font-size:12px;color:#555;line-height:1.6;background:#f8f8f6;border-radius:6px;padding:7px;">컨퍼런스룸, 비즈니스 센터, 매일 하우스키핑, 팩스/복사, 현장 환전, 회의/연회 시설, 스파<span class="wf-cn">2</span></div></div>
+                <div style="margin-bottom:14px;"><div style="font-size:12px;font-weight:800;color:#1a1f2e;margin-bottom:5px;">일반</div><div style="font-size:12px;color:#555;line-height:1.6;background:#f8f8f6;border-radius:6px;padding:7px;">전기주전자, 테라스/파티오, 장애인 편의시설, 가족용 객실, 타월, 안전 금고, 소화기, 세탁 시설, 엘리베이터, 평면 TV, 샴푸, 난방 시설, 샤워, 에어컨, 냉장고, 화장실, 금연, 욕조, 레스토랑, 바/라운지, 주차, 헤어드라이어, 생수...</div></div>
+                <div style="margin-bottom:14px;"><div style="font-size:12px;font-weight:800;color:#1a1f2e;margin-bottom:5px;">활동</div><div style="font-size:12px;color:#555;line-height:1.6;background:#f8f8f6;border-radius:6px;padding:7px;">피트니스 센터, 스트리밍 서비스</div></div>
+                <div style="margin-bottom:14px;"><div style="font-size:12px;font-weight:800;color:#1a1f2e;margin-bottom:5px;">인터넷</div><div style="font-size:12px;color:#555;line-height:1.6;background:#f8f8f6;border-radius:6px;padding:7px;">무료 와이파이, 전 구역 와이파이 사용 가능, 인터넷</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ann">
+      <h3>S02-E — 편의시설 바텀시트</h3>
+      <div class="ann-item">
+        <div class="cn">1</div>
+        <div class="ann-body">
+          <div class="ann-title">카테고리명 — <code>featureSummary[].name</code></div>
+          <div class="ann-desc"><ul>
+            <li>단일 검색 <code>featureSummary[]</code> 배열. API 응답 순서 그대로</li>
+            <li><code>languageCode</code>에 따라 이미 현지화된 텍스트로 내려옴 (예: <code>ko_KR</code> → "서비스", "수영장·스파"). 클라이언트 번역 불필요</li>
+            <li>Static Feed <code>facilities[].featureIds[]</code>는 숫자 ID여서 /constants-mapping 추가 호출 필요 → MVP 미사용</li>
+          </ul></div>
+          <div class="ann-rule">기준: v0.36 6-2절</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="cn">2</div>
+        <div class="ann-body">
+          <div class="ann-title">목록 — <code>featureSummary[].description</code></div>
+          <div class="ann-desc"><ul>
+            <li>(string) API 원문 그대로. 별도 파싱 없음. 아이콘 없음</li>
+          </ul></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ═══════════════ S02-B7 — 위치·지도 ═══════════════ -->
+<div class="sec" id="s02-b7">
+  <div class="sec-title">S02-B7 <span class="sec-badge">섹션 상세</span> 위치·지도</div>
+  <div class="sec-sub">Google Maps + 주소. <code>latitude</code>/<code>longitude</code> 기반. 없으면 섹션 미노출.</div>
+  <div class="two-col">
+    <div class="mobile-wrap">
+      <div class="mobile-device">
+        <div class="m-notch"><div class="m-notch-pill"></div></div>
+        <div class="m-screen" style="background:#fff;">
+          <div style="position:relative;flex-shrink:0;"><div class="s02-hero" style="height:70px;font-size:20px;">🏨</div><div class="s02-gnb" style="padding:5px 12px;"><button class="s02-gnb-back" style="width:24px;height:24px;font-size:11px;">←</button><div class="s02-gnb-right"><button class="s02-gnb-icon" style="width:24px;height:24px;">⬆</button></div></div></div>
+          <div class="s02-scroll">
+            <div class="s02-sec">
+              <div class="s02-sec-title">위치<span class="wf-cn">1</span></div>
+              <div class="s02-map">🗺️<div class="s02-map-pin">📍</div></div>
+              <div style="font-size:12px;color:#555;display:flex;gap:5px;align-items:flex-start;"><span>📍</span><span>서울특별시 중구 장충동2가 249-1<span class="wf-cn">2</span></span></div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="ann">
+      <h3>S02-B7 — 위치 API 필드</h3>
+      <div class="ann-item">
+        <div class="cn">1</div>
+        <div class="ann-body">
+          <div class="ann-title">지도 — <code>latitude</code> / <code>longitude</code></div>
+          <div class="ann-desc"><ul>
+            <li>(float) Google Maps SDK로 렌더링. 호텔 핀 표시</li>
+            <li>둘 중 하나라도 없으면 섹션 미노출</li>
+          </ul></div>
+          <div class="ann-rule">기준: v0.36 6-2절</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="cn">2</div>
+        <div class="ann-body">
+          <div class="ann-title">주소 텍스트 + 지도 탭 동작</div>
+          <div class="ann-desc"><ul>
+            <li>지도 아래 <code>address</code> 텍스트 표시</li>
+            <li>지도 탭 → 구글 지도 앱·브라우저 외부 이동</li>
+          </ul></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ═══════════════ S02-B8 — 체크인·아웃 ═══════════════ -->
+<div class="sec" id="s02-b8">
+  <div class="sec-title">S02-B8 <span class="sec-badge">섹션 상세</span> 체크인·체크아웃</div>
+  <div class="sec-sub"><code>policies[]</code>에서 <code>code="checkin"</code>/<code>"checkout"</code> 항목 <code>description</code>. 단일 스크롤 마지막 섹션.</div>
+  <div class="two-col">
+    <div class="mobile-wrap">
+      <div class="mobile-device">
+        <div class="m-notch"><div class="m-notch-pill"></div></div>
+        <div class="m-screen" style="background:#fff;">
+          <div style="position:relative;flex-shrink:0;"><div class="s02-hero" style="height:70px;font-size:20px;">🏨</div><div class="s02-gnb" style="padding:5px 12px;"><button class="s02-gnb-back" style="width:24px;height:24px;font-size:11px;">←</button><div class="s02-gnb-right"><button class="s02-gnb-icon" style="width:24px;height:24px;">⬆</button></div></div></div>
+          <div class="s02-scroll">
+            <div class="s02-sec">
+              <div class="s02-sec-title">체크인 · 체크아웃<span class="wf-cn">1</span></div>
+              <div class="s02-ci-wrap">
+                <div class="s02-ci-box"><div class="s02-ci-lbl">체크인<span class="wf-cn">2</span></div><div class="s02-ci-time">15:00</div><div class="s02-ci-sub">이후</div></div>
+                <div class="s02-ci-box"><div class="s02-ci-lbl">체크아웃<span class="wf-cn">3</span></div><div class="s02-ci-time">11:00</div><div class="s02-ci-sub">이전</div></div>
+              </div>
+            </div>
+            <div style="height:32px;"></div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    <div class="ann">
+      <h3>S02-B8 — 체크인·아웃 API 필드</h3>
+      <div class="ann-item">
+        <div class="cn">1</div>
+        <div class="ann-body">
+          <div class="ann-title">데이터 소스 — <code>policies[]</code></div>
+          <div class="ann-desc"><ul>
+            <li>각 항목: <code>code</code> + <code>description</code></li>
+            <li>checkin·checkout 모두 없으면 섹션 미노출</li>
+          </ul></div>
+          <div class="ann-rule">기준: v0.36 6-2절</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="cn">2</div>
+        <div class="ann-body">
+          <div class="ann-title">체크인 — <code>code="checkin"</code></div>
+          <div class="ann-desc"><ul><li><code>description</code> 원문 그대로. 예: "15:00 이후", "From 15:00"</li></ul></div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="cn">3</div>
+        <div class="ann-body">
+          <div class="ann-title">체크아웃 — <code>code="checkout"</code></div>
+          <div class="ann-desc"><ul><li><code>description</code> 원문 그대로. 예: "11:00 이전", "Until 11:00"</li></ul></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ═══════════════ S02-G — TTL 만료 ═══════════════ -->
+<div class="sec" id="s02-g">
+  <div class="sec-title">S02-G <span class="sec-badge">상태</span> 가격 정보 만료 (TTL 만료)</div>
+  <div class="sec-sub">페이지를 오래 열어둬 가격 만료. 스크롤 영역 최상단 sticky 토스트. 기존 가격 blur. [새로고침] → 재호출.</div>
+  <div class="two-col">
+    <div class="mobile-wrap">
+      <div class="mobile-device">
+        <div class="m-notch"><div class="m-notch-pill"></div></div>
+        <div class="m-screen">
+          <div style="position:relative;flex-shrink:0;"><div class="s02-hero" style="height:150px;opacity:.7;">🏨</div><div class="s02-gnb"><button class="s02-gnb-back">←</button><div class="s02-gnb-right"><button class="s02-gnb-icon">⬆</button></div></div></div>
+          <div class="s02-scroll">
+            <div class="s02-toast">
+              <span>⏱ 가격 정보가 만료되었습니다<span class="wf-cn">1</span></span>
+              <button class="s02-toast-btn">새로고침<span class="wf-cn">2</span></button>
+            </div>
+            <div class="s02-sec"><div class="s02-name">신라 호텔 서울</div><div style="display:flex;gap:6px;align-items:center;"><span class="s02-stars">★★★★★</span><span class="s02-score">8.9</span></div></div>
+            <div class="s02-sec">
+              <div class="s02-sec-title" style="color:#9ca3af;">가격 비교 <span style="font-size:10px;">(만료됨)<span class="wf-cn">3</span></span></div>
+              <div class="s02-prov-row" style="opacity:.4;">
+                <div class="s02-prov-row-left">
+                  <div class="s02-prov-row-name-line"><span class="s02-prov-name-txt">Booking.com</span></div>
+                  <div class="s02-prov-room-txt">슈페리어 더블룸</div>
+                </div>
+                <div class="s02-prov-row-right">
+                  <div class="s02-prov-price-txt price-blur">₩189,000</div>
+                  <div class="s02-earn-txt">가격 만료</div>
+                </div>
+                <button class="s02-move-circle" style="opacity:.4;cursor:not-allowed;">→</button>
+              </div>
+              <div class="s02-prov-row" style="opacity:.4;">
+                <div class="s02-prov-row-left">
+                  <div class="s02-prov-row-name-line"><span class="s02-prov-name-txt">Agoda</span></div>
+                  <div class="s02-prov-room-txt">디럭스 킹룸</div>
+                </div>
+                <div class="s02-prov-row-right">
+                  <div class="s02-prov-price-txt price-blur">₩205,000</div>
+                  <div class="s02-earn-txt">가격 만료</div>
+                </div>
+                <button class="s02-move-circle" style="opacity:.4;cursor:not-allowed;">→</button>
+              </div>
+            </div>
+          </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ann">
+      <h3>S02-G — TTL 만료 처리</h3>
+      <div class="ann-item">
+        <div class="cn">1</div>
+        <div class="ann-body">
+          <div class="ann-title">TTL 만료 토스트 — <code>position:sticky; top:0</code></div>
+          <div class="ann-desc"><ul>
+            <li><code>.s02-scroll</code> 안에서 <code>sticky; top:0</code> → 공급사 목록 위에 항상 달라붙음</li>
+            <li>배경: #1a1f2e (다크 네이비). 텍스트: 흰색</li>
+          </ul></div>
+          <div class="ann-rule">기준: v0.36 6-6절</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="cn">2</div>
+        <div class="ann-body">
+          <div class="ann-title">[새로고침]</div>
+          <div class="ann-desc"><ul>
+            <li>탭 → <code>GET /hotel</code> 재호출</li>
+            <li>재호출 중: 토스트 유지 + 공급사 목록 스켈레톤(S02-A)</li>
+            <li>완료: 새 가격 표시 + 토스트 사라짐</li>
+          </ul></div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <div class="cn">3</div>
+        <div class="ann-body">
+          <div class="ann-title">만료 가격 표시</div>
+          <div class="ann-desc"><ul>
+            <li>공급사 행 opacity 낮춤 + 가격 blur(<code>filter:blur(4px)</code>)</li>
+            <li>[이동→] 비활성. 하단 스티키 바 [가격 보기] 비활성</li>
+            <li>숙소요약·리뷰·편의시설·위치 섹션 정상 표시 유지</li>
+          </ul></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /.page -->
+</body>
+</html>

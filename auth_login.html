@@ -86,6 +86,7 @@
   font-size: 13px; color: #111; background: #fff; margin-bottom: 10px; display: flex; align-items: center;
 }
 .auth-field.focused { border-color: #4f46e5; }
+.auth-field.error { border-color: #ef4444; background: #fef2f2; }
 .auth-field-placeholder { color: #9ca3af; font-size: 12px; }
 
 /* ── CTA 버튼 ── */
@@ -162,6 +163,8 @@
     <a class="toc-link" href="#auth-a">A. 이메일 입력</a>
     <span class="toc-sep"></span>
     <a class="toc-link" href="#auth-b">B. 입력 완료</a>
+    <span class="toc-sep"></span>
+    <a class="toc-link" href="#auth-b-wd">B-WD. 탈퇴 제한 에러</a>
     <span class="toc-sep"></span>
     <a class="toc-link" href="#auth-c">C. 발송 중</a>
     <span class="toc-sep"></span>
@@ -446,6 +449,106 @@
         <div class="ann-rule">정책서 8-2절.</div>
         <div class="ann-case">활성 조건: @ 포함 유효한 이메일 형식 (실시간 클라이언트 검증)</div>
         <div class="ann-case">탭 시: 인증코드 발송 API 호출 → AUTH-C 발송 중 상태 전환</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ══════════════════ AUTH-B-WD: 탈퇴 제한 에러 ══════════════════ -->
+<div id="auth-b-wd" class="sec-title">
+  AUTH-B-WD <span class="sec-badge">바텀시트 · 탈퇴 제한 에러</span>
+  <span style="font-size:12px;font-weight:400;color:#888;margin-left:6px">탈퇴 후 7일 이내 재가입 시도 시</span>
+</div>
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+        <div class="auth-gnb">
+          <span class="auth-gnb-logo">allmy meta</span>
+          <div class="auth-gnb-right">
+            <span class="auth-gnb-login">로그인</span>
+            <span class="auth-gnb-menu">☰</span>
+          </div>
+        </div>
+        <div class="auth-bg">
+          <div class="auth-bg-content">
+            <div class="auth-bg-searchbar">🔍 서울 · 7/22 – 7/23 · 성인 2명</div>
+            <div class="auth-bg-card">
+              <div class="auth-bg-img"></div>
+              <div class="auth-bg-info"><div class="auth-bg-name">서울 가든 호텔 ★★★★</div><div class="auth-bg-sub">8.5 아주 훌륭함</div><div class="auth-bg-price">₩122,972</div></div>
+            </div>
+            <div class="auth-bg-card">
+              <div class="auth-bg-img" style="background:#d4c8e0"></div>
+              <div class="auth-bg-info"><div class="auth-bg-name">명동 센터마크 호텔 ★★★</div><div class="auth-bg-sub">7.9 좋음</div><div class="auth-bg-price">₩89,000</div></div>
+            </div>
+          </div>
+          <div class="auth-bg-dim"></div>
+        </div>
+        <div class="auth-sheet">
+          <div class="auth-sheet-handle-row">
+            <div class="auth-sheet-handle"></div>
+            <div class="auth-sheet-close">✕</div>
+          </div>
+          <div class="auth-sheet-head">
+            <div class="auth-sheet-title">로그인 또는 회원가입</div>
+            <div class="auth-sheet-sub">로그인하고 캐시백 혜택을 받아보세요</div>
+          </div>
+          <div class="auth-sheet-body">
+            <div class="auth-field-label">이메일</div>
+            <div class="auth-field error" style="color:#111">sungkyoon@allmytour.com<span class="wf-cn">1</span></div>
+            <div class="auth-code-error" style="margin-top:4px;margin-bottom:8px;">회원탈퇴 후 7일간 재가입이 제한됩니다. 07월 08일 이후 다시 시도해주세요.<span class="wf-cn">2</span></div>
+            <button class="auth-cta disabled">인증코드 받기<span class="wf-cn">3</span></button>
+            <div class="auth-divider">
+              <div class="auth-divider-line"></div><span class="auth-divider-text">또는</span><div class="auth-divider-line"></div>
+            </div>
+            <div class="auth-sns-row">
+              <div class="auth-sns-btn">🍎 Apple <span class="auth-phase2">Phase2</span></div>
+              <div class="auth-sns-btn">G Google <span class="auth-phase2">Phase2</span></div>
+            </div>
+            <div class="auth-terms">계속하면 <a href="#">이용약관</a> 및 <a href="#">개인정보처리방침</a>에 동의합니다</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ann">
+    <h3>AUTH-B-WD 주석</h3>
+    <div class="ann-item">
+      <span class="cn">1</span>
+      <div class="ann-body">
+        <div class="ann-title">이메일 필드 — 에러 스타일</div>
+        <div class="ann-desc"><ul>
+          <li>[인증코드 받기] 탭 → 서버가 탈퇴 이력 조회 → 7일 이내이면 인증코드 미발송 + 에러 응답 반환.</li>
+          <li>입력 필드에 붉은 테두리(error 스타일) 적용. 입력된 이메일은 그대로 유지.</li>
+          <li>이메일 수정 시 에러 상태 초기화 → 유효한 형식이면 AUTH-B(정상) 상태로 복귀.</li>
+        </ul></div>
+        <div class="ann-rule">정책서 8-11절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <span class="cn">2</span>
+      <div class="ann-body">
+        <div class="ann-title">인라인 에러 메시지</div>
+        <div class="ann-desc"><ul>
+          <li>문구: "회원탈퇴 후 7일간 재가입이 제한됩니다. OO월 OO일 이후 다시 시도해주세요."</li>
+          <li>OO월 OO일 = <code>withdrawal_date + 7일</code>을 한국어 날짜 형식(MM월 DD일)으로 서버가 반환.</li>
+          <li>이메일 입력 필드 바로 아래에 인라인 표시. 별도 모달·토스트 없음.</li>
+        </ul></div>
+        <div class="ann-rule">정책서 8-11절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <span class="cn">3</span>
+      <div class="ann-body">
+        <div class="ann-title">[인증코드 받기] — 비활성</div>
+        <div class="ann-desc"><ul>
+          <li>에러 상태에서 버튼 비활성(disabled). 회색 스타일로 탭 불가.</li>
+          <li>이메일 수정 → 에러 클리어 → 유효한 형식 입력 시 버튼 다시 활성 전환.</li>
+        </ul></div>
+        <div class="ann-rule">정책서 8-11절.</div>
       </div>
     </div>
   </div>
