@@ -151,6 +151,39 @@
   border: none; cursor: pointer; text-decoration: underline;
 }
 
+/* ── 아바타 이니셜 섹션 ── */
+.ac-avatar-section {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 16px 16px 12px; background: #fff; border-bottom: 1px solid #f5f5f5;
+}
+.ac-avatar-wrap {
+  position: relative; display: inline-block; margin-bottom: 8px;
+}
+.ac-avatar-circle {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(79,70,229,.25);
+}
+.ac-avatar-initial {
+  font-size: 26px; font-weight: 900; color: #fff; line-height: 1;
+}
+.ac-avatar-edit-badge {
+  position: absolute; right: -2px; bottom: -2px;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: #374151; border: 2px solid #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: #fff; cursor: pointer; line-height: 1;
+}
+.ac-avatar-change-btn {
+  font-size: 12px; color: #4f46e5; font-weight: 600;
+  cursor: pointer; text-decoration: underline;
+  background: none; border: none; padding: 0; display: block; text-align: center;
+}
+.ac-avatar-label {
+  font-size: 11px; color: #9ca3af; text-align: center; line-height: 1.5;
+}
+
 /* ── 바텀시트 오버레이 공통 ── */
 .sheet-overlay {
   position: absolute; inset: 0; background: rgba(0,0,0,.48); z-index: 10;
@@ -242,9 +275,9 @@
     <li><strong>입력 필드</strong>: 이름(영문, 선택) / 성(영문, 선택) / 국적(바텀시트) / 전화번호(국가코드+번호) (10-3절)</li>
     <li><strong>마케팅 수신 동의</strong>: 회원가입 시 선택값과 자동 동기화. [마케팅 약관 전문 보기] → 바텀시트 팝업 (10-3절)</li>
     <li><strong>[저장]</strong>: 필드별 유효성 검사. 오류 시 해당 필드 에러 메시지 (10-3절)</li>
-    <li><strong>아바타 이미지</strong>: 미표시 (v0.20)</li>
+    <li><strong>아바타 이미지</strong>: 서비스 공통 이미지 사용. 사용자 업로드·변경 기능 없음 (20260703 대표님 확정). (10-3절)</li>
   </ul>
-  <div class="sec-policy-rule">기준: v0.29 10-3절</div>
+  <div class="sec-policy-rule">기준: v0.38 10-3절</div>
 </div>
 
 <div class="two-col">
@@ -269,7 +302,7 @@
 
             <!-- 이름 -->
             <div class="ac-field">
-              <div class="ac-field-label">이름 <span class="ac-field-label-opt">선택</span> <span class="wf-cn">3</span></div>
+              <div class="ac-field-label">이름 <span class="ac-field-label-opt">선택</span> <span class="wf-cn">2</span></div>
               <div class="ac-input-wrap">
                 <input class="ac-input valid" type="text" value="Sungkyoon" placeholder="예) Sungkyoon">
                 <span class="ac-input-check">✓</span>
@@ -278,7 +311,7 @@
 
             <!-- 성 -->
             <div class="ac-field">
-              <div class="ac-field-label">성 <span class="ac-field-label-opt">선택</span> <span class="wf-cn">4</span></div>
+              <div class="ac-field-label">성 <span class="ac-field-label-opt">선택</span> <span class="wf-cn">3</span></div>
               <div class="ac-input-wrap">
                 <input class="ac-input valid" type="text" value="Yoon" placeholder="예) Yoon">
                 <span class="ac-input-check">✓</span>
@@ -287,7 +320,7 @@
 
             <!-- 이메일 (읽기전용) -->
             <div class="ac-field">
-              <div class="ac-field-label">이메일 <span class="wf-cn">5</span></div>
+              <div class="ac-field-label">이메일 <span class="wf-cn">4</span></div>
               <div class="ac-input-wrap">
                 <input class="ac-input readonly" type="text" value="dreamyuns@allmytour.com" readonly>
                 <span class="ac-input-badge ac-input-badge-verified">✓ 인증완료</span>
@@ -296,7 +329,7 @@
 
             <!-- 국적 -->
             <div class="ac-field">
-              <div class="ac-field-label">국적 <span class="ac-field-label-opt">선택</span> <span class="wf-cn">6</span></div>
+              <div class="ac-field-label">국적 <span class="ac-field-label-opt">선택</span> <span class="wf-cn">5</span></div>
               <button class="ac-select-trigger">
                 <span>🇰🇷 대한민국</span>
                 <span class="ac-select-arrow">›</span>
@@ -305,9 +338,9 @@
 
             <!-- 전화번호 -->
             <div class="ac-field">
-              <div class="ac-field-label">전화번호 <span class="ac-field-label-opt">선택</span> <span class="wf-cn">7</span></div>
+              <div class="ac-field-label">전화번호 <span class="ac-field-label-opt">선택</span> <span class="wf-cn">6</span></div>
               <div class="ac-phone-wrap">
-                <button class="ac-phone-code">🇰🇷 +82 <span class="wf-cn">8</span></button>
+                <button class="ac-phone-code">🇰🇷 +82 <span class="wf-cn">7</span></button>
                 <div class="ac-input-wrap ac-phone-num">
                   <input class="ac-input" type="tel" value="01012345678" placeholder="예) 01012345678">
                 </div>
@@ -319,12 +352,12 @@
           <div class="ac-marketing-section">
             <div class="ac-marketing-row">
               <div>
-                <div class="ac-marketing-label">마케팅 수신 동의 <span class="wf-cn">9</span></div>
+                <div class="ac-marketing-label">마케팅 수신 동의 <span class="wf-cn">8</span></div>
                 <div class="ac-marketing-sub">이메일·SMS 마케팅 정보 수신</div>
               </div>
               <button class="ac-toggle on"><div class="ac-toggle-thumb"></div></button>
             </div>
-            <span class="ac-terms-link">마케팅 약관 전문 보기 <span class="wf-cn">10</span></span>
+            <span class="ac-terms-link">마케팅 약관 전문 보기 <span class="wf-cn">9</span></span>
           </div>
 
           <div style="height: 8px;"></div>
@@ -333,8 +366,8 @@
 
         <!-- 하단 저장 버튼 (sticky) -->
         <div class="ac-save-bar">
-          <button class="ac-save-btn">저장 <span class="wf-cn">11</span></button>
-          <button class="ac-withdraw-btn" onclick="location.href='my05_withdrawal.html'">회원탈퇴<span class="wf-cn">12</span></button>
+          <button class="ac-save-btn">저장 <span class="wf-cn">10</span></button>
+          <button class="ac-withdraw-btn" onclick="location.href='my05_withdrawal.html'">회원탈퇴<span class="wf-cn">11</span></button>
         </div>
 
       </div><!-- /m-screen -->
@@ -371,7 +404,7 @@
       </div>
     </div>
     <div class="ann-item">
-      <div class="cn">3</div>
+      <div class="cn">2</div>
       <div class="ann-body">
         <div class="ann-title">이름 필드 (First Name, 영문, 선택)</div>
         <div class="ann-desc">
@@ -385,7 +418,7 @@
       </div>
     </div>
     <div class="ann-item">
-      <div class="cn">4</div>
+      <div class="cn">3</div>
       <div class="ann-body">
         <div class="ann-title">성 필드 (Last Name, 영문, 선택)</div>
         <div class="ann-desc">
@@ -399,7 +432,7 @@
       </div>
     </div>
     <div class="ann-item">
-      <div class="cn">5</div>
+      <div class="cn">4</div>
       <div class="ann-body">
         <div class="ann-title">이메일 필드 (읽기전용) ★</div>
         <div class="ann-desc">
@@ -412,7 +445,7 @@
       </div>
     </div>
     <div class="ann-item">
-      <div class="cn">6</div>
+      <div class="cn">5</div>
       <div class="ann-body">
         <div class="ann-title">국적 필드 (바텀시트 선택, 선택)</div>
         <div class="ann-desc">
@@ -427,7 +460,7 @@
       </div>
     </div>
     <div class="ann-item">
-      <div class="cn">7</div>
+      <div class="cn">6</div>
       <div class="ann-body">
         <div class="ann-title">전화번호 필드 (선택)</div>
         <div class="ann-desc">
@@ -441,7 +474,7 @@
       </div>
     </div>
     <div class="ann-item">
-      <div class="cn">8</div>
+      <div class="cn">7</div>
       <div class="ann-body">
         <div class="ann-title">국가코드 선택 버튼</div>
         <div class="ann-desc">
@@ -455,7 +488,7 @@
       </div>
     </div>
     <div class="ann-item">
-      <div class="cn">9</div>
+      <div class="cn">8</div>
       <div class="ann-body">
         <div class="ann-title">마케팅 수신 동의 토글 ★</div>
         <div class="ann-desc">
@@ -469,7 +502,7 @@
       </div>
     </div>
     <div class="ann-item">
-      <div class="cn">10</div>
+      <div class="cn">9</div>
       <div class="ann-body">
         <div class="ann-title">[마케팅 약관 전문 보기] 링크</div>
         <div class="ann-desc">
@@ -482,7 +515,7 @@
       </div>
     </div>
     <div class="ann-item">
-      <div class="cn">11</div>
+      <div class="cn">10</div>
       <div class="ann-body">
         <div class="ann-title">[저장] 버튼 (하단 sticky) ★</div>
         <div class="ann-desc">
@@ -496,7 +529,7 @@
       </div>
     </div>
     <div class="ann-item">
-      <div class="cn">12</div>
+      <div class="cn">11</div>
       <div class="ann-body">
         <div class="ann-title">[회원탈퇴] 버튼 (저장 버튼 하단)</div>
         <div class="ann-desc">
@@ -535,6 +568,11 @@
         </div>
         <div style="flex:1;overflow:hidden;position:relative;">
           <div style="padding:12px 16px;opacity:.25;">
+            <!-- 아바타 플레이스홀더 -->
+            <div style="display:flex;flex-direction:column;align-items:center;padding:8px 0 10px;">
+              <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#4f46e5,#7c3aed);margin-bottom:6px;"></div>
+              <div style="width:120px;height:10px;background:#e5e7eb;border-radius:4px;"></div>
+            </div>
             <div style="height:44px;background:#e5e7eb;border-radius:8px;margin-bottom:8px;"></div>
             <div style="height:44px;background:#e5e7eb;border-radius:8px;margin-bottom:8px;"></div>
             <div style="height:44px;background:#f0f0f0;border-radius:8px;margin-bottom:8px;"></div>

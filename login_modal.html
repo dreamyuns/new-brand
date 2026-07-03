@@ -77,7 +77,7 @@
 .lm-hotel-thumb { width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(135deg,#667eea,#764ba2); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; }
 .lm-hotel-info { flex: 1; min-width: 0; }
 .lm-hotel-name { font-size: 12px; font-weight: 700; color: #111; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.lm-hotel-meta { font-size: 10px; color: #9ca3af; margin-top: 2px; }
+.lm-hotel-meta { font-size: 10px; color: #9ca3af; margin-top: 2px; line-height: 1.5; }
 .lm-hotel-price { font-size: 13px; font-weight: 800; color: #111; flex-shrink: 0; }
 
 /* 버튼 그룹 */
@@ -100,7 +100,7 @@
   <a class="page-nav-back" href="index.html">← 목록으로</a>
   <span class="page-nav-sep">|</span>
   <span class="page-nav-title">LOGIN_MODAL — 로그인 유도 모달</span>
-  <span class="page-nav-route">/ 비로그인 [이동→] 탭 시 표시</span>
+  <span class="page-nav-route">/ 비로그인 [이동→] 탭 시 표시 · 정책서 v0.38</span>
   <div class="page-nav-nav">
     <a class="page-nav-pager" href="s01_search.html">← 이전 (S01)</a>
     <span class="page-nav-pager-disabled">다음 →</span>
@@ -119,12 +119,12 @@
   <div class="sec-policy-hdr">⚙ 공통 정책 — MODAL 로그인 유도 모달 전체</div>
   <ul class="sec-policy-list">
     <li><strong>노출 조건</strong>: 비로그인 사용자가 S02 가격비교 탭에서 [이동→] 탭 시 (7-1절)</li>
-    <li><strong>캐시백 N%</strong>: 해당 공급사 <code>providers[].cashback.value</code> 실시간 표시 (7-1·9-7절)</li>
+    <li><strong>캐시백 예상금액 표시 (v0.38)</strong>: 판매가 × 캐시백율 = 원화 계산값 표시. PERCENTAGE → "최대 NN원 캐시백" + "판매가의 N% · 투숙완료 후 지급". FLAT → "최대 NN원 캐시백" + "투숙완료 후 지급" (7-1절·9-7절)</li>
     <li><strong>버튼 구성</strong>: [회원가입/로그인] + [건너뛰기] 2개. [건너뛰기] 항상 노출 (강제 차단 금지) (7-1·7-3절)</li>
-    <li><strong>[건너뛰기] 탭</strong>: OUT01로 이동. <code>userTrackId</code> 포함, CPA 추적 가능. 캐시백 귀속 불가 (7-2절)</li>
-    <li><strong>[회원가입/로그인] 탭</strong>: 로그인 바텀시트 팝업 (AUTH 화면) (8-1절)</li>
+    <li><strong>[건너뛰기] 탭</strong>: OUT01-A2(비로그인)로 이동. <code>userTrackId</code> 포함, CPA 추적 가능. 캐시백 귀속 불가 (7-2절)</li>
+    <li><strong>[회원가입/로그인] 탭</strong>: 로그인 바텀시트 팝업 (AUTH 화면) → 로그인 성공 시 OUT01-A(로그인)로 진입 (8-1절)</li>
   </ul>
-  <div class="sec-policy-rule">기준: v0.29 7-1절~7-3절·9-7절</div>
+  <div class="sec-policy-rule">기준: v0.38 7-1절~7-3절·9-7절</div>
 </div>
 
 <div class="two-col">
@@ -172,8 +172,8 @@
               <div class="lm-cashback-box">
                 <div class="lm-cb-icon">💸 <span class="wf-cn">2</span></div>
                 <div class="lm-cb-title">로그인하고 캐시백 받으세요!</div>
-                <div class="lm-cb-amount">최대 5.5% 적립 <span class="wf-cn">3</span></div>
-                <div class="lm-cb-sub">예약 완료 후 월 정산 지급</div>
+                <div class="lm-cb-amount">최대 21,340원 캐시백 <span class="wf-cn">3</span></div>
+                <div class="lm-cb-sub">판매가의 5.5% · 투숙완료 후 지급</div>
               </div>
 
               <!-- 호텔 정보 요약 -->
@@ -181,7 +181,7 @@
                 <div class="lm-hotel-thumb">🏨</div>
                 <div class="lm-hotel-info">
                   <div class="lm-hotel-name">포시즌스 호텔 서울 <span class="wf-cn">4</span></div>
-                  <div class="lm-hotel-meta">Booking.com · 6/18~6/19 · 1박</div>
+                  <div class="lm-hotel-meta">Booking.com · 6/18~6/19 · 1박 · 성인 2명 · 1객실</div>
                 </div>
                 <div class="lm-hotel-price">₩388,000</div>
               </div>
@@ -250,19 +250,22 @@
     <div class="ann-item">
       <div class="cn">3</div>
       <div class="ann-body">
-        <div class="ann-title">캐시백 N% 실시간 표시</div>
+        <div class="ann-title">캐시백 예상금액 — 원화 계산값 표시</div>
         <div class="ann-desc">
           <ul>
-            <li>해당 공급사의 <code>providers[selectedProviderIndex].cashback.value</code>를 기반으로 강조 박스 내 캐시백 문구를 동적 표시.</li>
-            <li>비회원과 로그인 회원 모두 동일하게 표시 (로그인 유도 목적이므로 비회원 상태에서 표시).</li>
+            <li>판매가 × 캐시백율 = 원화 예상금액을 계산하여 표시.</li>
+            <li><strong>PERCENTAGE 타입 계산식:</strong> <code>results[].totalRate × cashback.value(%) = 예상 원화 금액</code>. 소수점 이하 버림.</li>
+            <li>타이틀: "최대 NN원 캐시백" / 서브텍스트: "판매가의 N% · 투숙완료 후 지급".</li>
+            <li><strong>FLAT 타입:</strong> <code>cashback.value</code> 원화 금액 그대로 표시. 서브텍스트: "투숙완료 후 지급".</li>
+            <li>비회원 상태에서도 로그인 유도 목적으로 계산값 표시 (실제 귀속은 로그인 후).</li>
           </ul>
         </div>
-        <div class="ann-front">← providers[selectedProviderIndex].cashback.type / .value</div>
-        <div class="ann-rule">정책서 9-7절.</div>
+        <div class="ann-front">← providers[selectedProviderIndex].cashback.type / .value × results[selectedIndex].totalRate</div>
+        <div class="ann-rule">정책서 v0.38 9-7절. ⚠️ 정책서 7-1절 원화 계산 표시 방식 업데이트 필요 — 대화창 1 플래그.</div>
         <div class="ann-case">
-          ◼ cashback.type = PERCENTAGE: "최대 N% 적립" (N = cashback.value)<br>
-          ◼ cashback.type = FLAT: "최대 ₩N 적립" (N = cashback.value, 원 단위 표기)<br>
-          ◼ cashback.type = NONE: MODAL-B로 분기 (이 강조 박스 없음)
+          ◼ PERCENTAGE 5.5% + 판매가 ₩388,000 → "최대 21,340원 캐시백" / 서브: "판매가의 5.5% · 투숙완료 후 지급"<br>
+          ◼ FLAT ₩10,000 → "최대 10,000원 캐시백" / 서브: "투숙완료 후 지급"<br>
+          ◼ NONE → MODAL-B로 분기 (캐시백 강조 박스 없음)
         </div>
       </div>
     </div>
@@ -273,11 +276,11 @@
         <div class="ann-desc">
           <ul>
             <li>사용자가 탭한 호텔의 컨텍스트를 유지하여 "어떤 호텔·공급사에 대한 캐시백인지" 즉시 인지하도록 표시.</li>
-            <li>항목: 대표 이미지 썸네일 + 호텔명 + 공급사명 + 체크인·아웃 날짜 + 가격.</li>
+            <li>항목: 대표 이미지 썸네일 + 호텔명 + 공급사명 · 투숙날짜(체크인~체크아웃) · 박수 · 총인원 · 총객실수 + 가격.</li>
             <li>S01/S02에서 이미 로드된 데이터 재사용 (API 재호출 없음).</li>
           </ul>
         </div>
-        <div class="ann-front">← S01/S02 카드 데이터 재활용 (hotelName, providerName, checkIn, checkOut, totalRate)</div>
+        <div class="ann-front">← S01/S02 카드 데이터 재활용 (hotelName, providerName, checkIn, checkOut, nights, guestCount, roomCount, totalRate)</div>
         <div class="ann-rule">정책서 7-1절.</div>
       </div>
     </div>
@@ -301,7 +304,7 @@
         <div class="ann-title">[이 혜택 없이 계속하기 →] 건너뛰기</div>
         <div class="ann-desc">
           <ul>
-            <li>로그인 없이 비회원 상태로 OUT01-A로 직접 이동.</li>
+            <li>로그인 없이 비회원 상태로 OUT01-A2(비로그인 케이스)로 직접 이동.</li>
             <li><code>userTrackId</code>는 생성되어 <code>bookUri</code>에 포함되므로 CPA 추적은 정상 작동.</li>
             <li>단, 회원 계정 연결 없이 진행하므로 어썸캐시 귀속 불가.</li>
             <li>CPA 수익(자사 60% : KAYAK 40%)은 발생.</li>
@@ -374,7 +377,7 @@
                 <div class="lm-hotel-thumb" style="background:linear-gradient(135deg,#4facfe,#00f2fe);">🛎️</div>
                 <div class="lm-hotel-info">
                   <div class="lm-hotel-name">노보텔 앰배서더 동대문</div>
-                  <div class="lm-hotel-meta">Expedia · 6/18~6/19 · 1박</div>
+                  <div class="lm-hotel-meta">Expedia · 6/18~6/19 · 1박 · 성인 2명 · 1객실</div>
                 </div>
                 <div class="lm-hotel-price">₩128,000</div>
               </div>

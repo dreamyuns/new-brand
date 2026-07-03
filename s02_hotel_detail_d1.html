@@ -190,8 +190,8 @@
           <td>2</td>
           <td>적립 표시 방식</td>
           <td>A. "최대 N원 적립" (금액)<br>B. "최대 N% 적립" (비율)</td>
-          <td>B안 적용 중 (비율 표시)<br><em>⚠️ 논의 필요</em></td>
-          <td>아웃링크 후 타 OTA에서 가격 변동 가능 → 금액 표기 시 정보 불일치 리스크로 비율(%) 적용 중. <em>단, HotelsCombined 등 경쟁사 이미지에서는 금액(예: "₩12,000 적립")으로 표시. 사용자에게 더 직관적인 금액 표시 방식 재검토 필요.</em> 대표님 논의 후 확정.</td>
+          <td>A안 확정 — 원화 계산값 표시 (v0.38)</td>
+          <td>판매가 × 캐시백율(%) = 원화 예상금액으로 표시. 예: "최대 20,100원 캐시백". 직관적인 금액 표시가 사용자 이해도 및 전환율에 유리. HotelsCombined·Vio 동일 패턴. v0.38 확정.</td>
         </tr>
         <tr>
           <td>3</td>
@@ -224,7 +224,7 @@
     <li><strong>API</strong>: <code>GET /api/4.0/hotels/{hotelId}</code> (6-1절)</li>
     <li><strong>공급사 정렬</strong>: <code>totalRate</code> 오름차순 클라이언트 정렬. 최초 20개 노출. 버튼으로 추가 로드 (6-3절)</li>
     <li><strong>최저가 배지</strong>: 정렬 후 1위 행에만 파란 배지. 필터 적용 시 필터된 목록 기준 재산정 (6-3절)</li>
-    <li><strong>적립 표시</strong>: <code>providers[].cashback.type</code> (PERCENTAGE/FLAT → "최대 N% 적립", NONE → 미표시) (9-7절)</li>
+    <li><strong>캐시백 예상금액 표시 (v0.38)</strong>: 판매가 × 캐시백율 = 원화 계산값 표시. PERCENTAGE → "최대 NN원 캐시백" + 서브 "판매가의 N% · 투숙완료 후 지급". FLAT → "최대 NN원 캐시백". NONE → 미표시 (9-7절)</li>
     <li><strong>아웃링크 진입</strong>: 비로그인 → 로그인 유도 모달 → [건너뛰기] 또는 로그인 후 OUT01. 로그인 → OUT01 새탭 (7-1·7-2절)</li>
     <li><strong>TTL 만료</strong>: 가격 blur + sticky 토스트 → [새로고침] → 재호출 (6-6절)</li>
   </ul>
@@ -301,7 +301,7 @@
               </div>
               <div class="s02-prov-row-right">
                 <div class="s02-prov-price-txt">₩402,000</div><span class="wf-cn">15</span>
-                <div class="s02-earn-txt">최대 5% 적립</div><span class="wf-cn">16</span>
+                <div class="s02-earn-txt">최대 20,100원 캐시백</div><span class="wf-cn">16</span>
               </div>
               <div style="position:relative;flex-shrink:0;margin-left:6px;">
                 <button class="s02-move-circle" style="margin-left:0;">→</button>
@@ -321,7 +321,7 @@
               </div>
               <div class="s02-prov-row-right">
                 <div class="s02-prov-price-txt">₩420,000</div>
-                <div class="s02-earn-txt">최대 5% 적립</div>
+                <div class="s02-earn-txt">최대 21,000원 캐시백</div>
               </div>
               <button class="s02-move-circle">→</button>
             </div>
@@ -338,7 +338,7 @@
               </div>
               <div class="s02-prov-row-right">
                 <div class="s02-prov-price-txt">₩435,000</div>
-                <div class="s02-earn-txt">최대 3% 적립</div>
+                <div class="s02-earn-txt">최대 13,050원 캐시백</div>
               </div>
               <button class="s02-move-circle">→</button>
             </div>
@@ -355,7 +355,7 @@
               </div>
               <div class="s02-prov-row-right">
                 <div class="s02-prov-price-txt">₩448,000</div>
-                <div class="s02-earn-txt">적립 없음</div>
+                <div class="s02-earn-txt" style="visibility:hidden;">—</div>
               </div>
               <button class="s02-move-circle">→</button>
             </div>
@@ -543,15 +543,15 @@
     <div class="ann-item">
       <div class="cn">16</div>
       <div class="ann-body">
-        <div class="ann-title">적립 표시 — <code>providers[].cashback</code> (cashback 객체)</div>
+        <div class="ann-title">캐시백 예상금액 표시 — <code>providers[].cashback</code> (v0.38 확정)</div>
         <div class="ann-desc"><ul>
-          <li><code>cashback.type = PERCENTAGE</code> → "최대 N% 적립" (N = <code>cashback.value</code>).</li>
-          <li><code>cashback.type = FLAT</code> → "최대 N원 적립" (N = <code>cashback.value</code>, 선택 통화 기호 적용).</li>
-          <li><code>cashback.type = NONE</code> → 적립 표시 없음 (행에 미표시).</li>
-          <li>PERCENTAGE는 비율로 표시하는 이유: 아웃링크 후 타 OTA 가격 변동 가능 → 금액 표기 시 정보 불일치 리스크.</li>
+          <li><code>cashback.type = PERCENTAGE</code> → 원화 계산값 표시. 계산식: <code>totalRate × cashback.value ÷ 100</code> = 예상 원화금액 (소수점 이하 버림). 예: "최대 20,100원 캐시백".</li>
+          <li><code>cashback.type = FLAT</code> → <code>cashback.value</code> 금액 그대로 표시 (선택 통화 기호 적용). 예: "최대 15,000원 캐시백".</li>
+          <li><code>cashback.type = NONE</code> → 캐시백 표시 없음 (행에 미표시).</li>
+          <li>서브 텍스트: "판매가의 N% · 투숙완료 후 지급" (PERCENTAGE 타입 한정).</li>
         </ul></div>
-        <div class="ann-front">← <code>providers[].cashback.type</code> / <code>providers[].cashback.value</code></div>
-        <div class="ann-rule">기준: v0.36 9-7절 / 2026-07-02 확정.</div>
+        <div class="ann-front">← <code>providers[].cashback.type</code> / <code>providers[].cashback.value</code> / <code>providers[].totalRate</code></div>
+        <div class="ann-rule">기준: v0.38 9-7절 / 2026-07-03 확정.</div>
       </div>
     </div>
 
@@ -715,7 +715,7 @@
 
 <div class="sec" id="s02-c">
   <div class="sec-title">S02-C <span class="sec-badge">인터랙션</span> 갤러리 바텀시트</div>
-  <div class="sec-sub">이미지 탭 또는 [사진 모두 보기] 탭 시 오픈. <code>images[].tag</code>별 카테고리 탭 + 균등 2열 그리드.</div>
+  <div class="sec-sub">이미지 탭 또는 [사진 모두 보기] 탭 시 오픈. 카테고리 탭 UI는 기획서에 표시하되 — ⚠️ 탭 분류 가능 여부는 개발 확인 필요 (CN 2번 참조).</div>
   <div class="two-col">
     <div class="mobile-wrap">
       <div class="mobile-device">
@@ -763,11 +763,15 @@
       <div class="ann-item">
         <div class="cn">2</div>
         <div class="ann-body">
-          <div class="ann-title">카테고리 탭 — <code>images[].tag</code></div>
+          <div class="ann-title">카테고리 탭 — ⚠️ 개발 확인 필요</div>
           <div class="ann-desc"><ul>
-            <li><code>tag</code> 값으로 카테고리 탭 자동 생성. null → "기타"</li>
-            <li>"전체" 탭 기본. 탭 선택 시 해당 tag만 필터</li>
+            <li><strong>단일호텔 API (<code>GET /hotel</code>) <code>images[]</code> 실제 구조:</strong> <code>large</code>(460px URL) / <code>small</code>(230px URL) / <code>sprites[]</code> 만 포함. <strong>카테고리 tag 필드 없음.</strong> → 탭 분류 데이터를 단일호텔 API에서 바로 가져올 수 없음.</li>
+            <li><strong>탭 분류가 필요한 경우:</strong> Static Data Feeds API (Hotel Feed)의 <code>images[].tag</code> (숫자 ID)를 별도로 가져와야 함. khotel ID 기준으로 매칭. 별도 피드 연동 공수 발생.</li>
+            <li><strong>카테고리 이름 매핑:</strong> Constants API <code>imageTag[]</code> 배열에서 tag ID → 이름 변환 가능 (예: <code>{"id": 1, "name": "관광 명소"}</code>). Constants는 이미 캐싱하므로 추가 호출 불필요.</li>
+            <li><strong><code>images[]</code> 빈 배열 케이스 존재:</strong> 실제 Hotel Feed 응답 중 <code>"images": []</code>인 호텔 확인됨 → 이미지 없을 때 플레이스홀더 처리 필요.</li>
+            <li><strong>MVP 권장:</strong> 탭 분류 없이 전체 이미지 나열 + [사진 더보기] 방식으로 단순화 가능. Static Data Feeds 연동 여부는 개발팀과 공수 협의 후 결정.</li>
           </ul></div>
+          <div class="ann-rule">API 출처: 단일호텔RS_test_20260609.txt (images 구조) / hotelfeedRS_test_20260610.txt (images[].tag) / constantsRS_test_20260610.txt (imageTag 매핑).</div>
         </div>
       </div>
     </div>

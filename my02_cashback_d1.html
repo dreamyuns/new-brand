@@ -245,6 +245,77 @@
 .earn-tab.active .earn-tab-icon .ti { filter: grayscale(1) brightness(10); font-size: 13px; }
 .earn-tab-cs .earn-tab-icon { background: transparent; }
 
+/* ── 설정 버튼 ── */
+.earn-settings-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255,255,255,.2); border: 1.5px solid rgba(255,255,255,.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; cursor: pointer; color: #fff;
+}
+
+/* ── 예약상세 중앙 모달 ── */
+.detail-modal-overlay {
+  position: absolute; inset: 0; background: rgba(0,0,0,.5); z-index: 20;
+  display: flex; align-items: center; justify-content: center; padding: 14px;
+}
+.detail-modal {
+  background: #fff; border-radius: 16px; width: 100%; max-height: 92%;
+  overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,.25);
+}
+.detail-modal::-webkit-scrollbar { display: none; }
+.detail-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 14px 11px; border-bottom: 1px solid #f0f0f0;
+}
+.detail-modal-title { font-size: 13px; font-weight: 800; color: #111; }
+.detail-modal-close {
+  width: 24px; height: 24px; border-radius: 50%; background: #f0f0f0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: #374151; border: none; cursor: pointer;
+}
+.detail-status-row {
+  display: grid; grid-template-columns: 1fr 1px 1fr; align-items: center;
+  padding: 11px 14px;
+}
+.detail-status-col { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.detail-status-label { font-size: 10px; color: #9ca3af; font-weight: 600; letter-spacing:.3px; }
+.detail-status-divider { background: #f0f0f0; align-self: stretch; }
+.detail-status-badge {
+  display: inline-flex; align-items: center; padding: 4px 10px;
+  border-radius: 6px; font-size: 11px; font-weight: 700;
+}
+.dsb-booking { background: #dbeafe; color: #2563EB; }
+.dsb-pending  { background: #fef3c7; color: #D97706; }
+.dsb-done     { background: #d1fae5; color: #059669; }
+.dsb-refund   { background: #f3f4f6; color: #9CA3AF; }
+.detail-divider { height: 1px; background: #f0f0f0; margin: 0 14px; }
+.detail-hotel-section { padding: 11px 14px; }
+.detail-hotel-name { font-size: 13px; font-weight: 800; color: #111; margin-bottom: 2px; }
+.detail-hotel-loc  { font-size: 11px; color: #9ca3af; }
+.detail-date-section {
+  padding: 10px 14px; display: grid; grid-template-columns: 1fr auto 1fr; gap: 6px; align-items: center;
+}
+.detail-date-col { display: flex; flex-direction: column; gap: 2px; }
+.detail-date-label { font-size: 10px; color: #9ca3af; font-weight: 600; }
+.detail-date-val   { font-size: 12px; font-weight: 700; color: #111; }
+.detail-date-nights { font-size: 11px; color: #9ca3af; text-align: center; }
+.detail-info-section { padding: 10px 14px; }
+.detail-info-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 5px 0; border-bottom: 1px solid #f8f8f6;
+}
+.detail-info-row:last-child { border-bottom: none; }
+.detail-info-label { font-size: 10px; color: #9ca3af; }
+.detail-info-val   { font-size: 11px; font-weight: 700; color: #111; }
+.detail-info-flag  { font-size: 9px; color: #ef4444; font-weight: 600; margin-left: 3px; }
+.detail-amount-section { padding: 10px 14px 14px; background: #f8f8f6; border-radius: 0 0 16px 16px; }
+.detail-amount-row {
+  display: flex; align-items: center; justify-content: space-between; padding: 4px 0;
+}
+.detail-amount-label { font-size: 10px; color: #9ca3af; }
+.detail-amount-val   { font-size: 12px; font-weight: 800; color: #111; }
+.detail-amount-val.earn { color: #059669; }
+
 /* 논의 항목 테이블 */
 .disc-table-wrap {
   background: #fffbeb; border: 1.5px solid #f59e0b; border-radius: 8px;
@@ -282,6 +353,8 @@
     <a href="#a" class="toc-link active">A — 로그인 전</a>
     <span class="toc-sep"></span>
     <a href="#b" class="toc-link">B — 로그인 후 내역 있음</a>
+    <span class="toc-sep"></span>
+    <a href="#b1" class="toc-link">B1 — 예약상세 모달</a>
     <span class="toc-sep"></span>
     <a href="#c" class="toc-link">C — 로그인 후 빈 상태</a>
     <span class="toc-sep"></span>
@@ -353,20 +426,21 @@
         <!-- 초록 헤더 -->
         <div class="earn-header">
           <!-- 상단 바 -->
-          <div class="earn-top-bar">
+          <div class="earn-top-bar" style="gap:6px; justify-content:space-between;">
             <button class="earn-login-btn">👤 로그인 <span class="wf-cn">1</span></button>
+            <button class="earn-settings-btn">⚙️ <span class="wf-cn">2</span></button>
           </div>
 
           <!-- 체리 아이콘 -->
           <div class="earn-cherry-wrap">
             <div class="earn-cherry">
               🍒
-              <div class="earn-cherry-lock">🔒<span class="wf-cn">2</span></div>
+              <div class="earn-cherry-lock">🔒<span class="wf-cn">3</span></div>
             </div>
           </div>
 
           <!-- 헤드카피 -->
-          <div class="earn-head">로그인하고 내 캐시백을<br>확인해 보세요 <span class="wf-cn">3</span></div>
+          <div class="earn-head">로그인하고 내 캐시백을<br>확인해 보세요 <span class="wf-cn">4</span></div>
           <div class="earn-sub">예약만 해도 쌓이는 캐시백과 나의 여행 내역을<br>로그인 후 한눈에 볼 수 있어요.</div>
         </div>
 
@@ -386,10 +460,10 @@
               <div class="earn-benefit-text">나의 여행·적립 내역 통합 관리</div>
             </div>
           </div>
-          <span class="wf-cn" style="align-self:flex-end;margin-bottom:4px;">4</span>
+          <span class="wf-cn" style="align-self:flex-end;margin-bottom:4px;">5</span>
 
           <!-- CTA -->
-          <div class="earn-start-btn">바로 시작하기 <span class="wf-cn" style="background:#fff;color:#3b82f6;">5</span></div>
+          <div class="earn-start-btn">바로 시작하기 <span class="wf-cn" style="background:#fff;color:#3b82f6;">6</span></div>
         </div>
 
         <!-- 하단 탭바 -->
@@ -403,7 +477,7 @@
             <span>적립</span>
           </div>
           <div class="earn-tab earn-tab-cs" style="position:relative;">
-            <span class="wf-cn" style="position:absolute;top:2px;right:8px;z-index:5;">6</span>
+            <span class="wf-cn" style="position:absolute;top:2px;right:8px;z-index:5;">7</span>
             <div class="earn-tab-icon">🦚</div>
             <span></span>
           </div>
@@ -433,6 +507,19 @@
     <div class="ann-item">
       <div class="cn">2</div>
       <div class="ann-body">
+        <div class="ann-title">⚙️ 설정 버튼 (우측 상단, 비로그인 전용)</div>
+        <div class="ann-desc"><ul>
+          <li>비로그인 상태에서만 표시. [로그인] 버튼 옆에 나란히 배치.</li>
+          <li>탭 시 → 마이페이지(MY01-A 비로그인) 화면으로 이동 — 국가·언어, 통화, 약관 설정 접근 가능.</li>
+          <li>원형 반투명 버튼. 로그인 후에는 사라짐 (B 케이스의 👤 버튼으로 대체).</li>
+        </ul></div>
+        <div class="ann-rule">로그인 없이도 국가·언어·통화 설정에 접근할 수 있는 진입점. 정책서 10-1절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
         <div class="ann-title">체리 아이콘 + 자물쇠 배지</div>
         <div class="ann-desc"><ul>
           <li>서비스 브랜드 캐릭터(체리) 이미지. 로그인 전에는 자물쇠 배지가 함께 붙어있다.</li>
@@ -444,7 +531,7 @@
     </div>
 
     <div class="ann-item">
-      <div class="cn">3</div>
+      <div class="cn">4</div>
       <div class="ann-body">
         <div class="ann-title">헤드카피 + 서브카피</div>
         <div class="ann-desc"><ul>
@@ -457,7 +544,7 @@
     </div>
 
     <div class="ann-item">
-      <div class="cn">4</div>
+      <div class="cn">5</div>
       <div class="ann-body">
         <div class="ann-title">혜택 카드 3종 (하드코딩)</div>
         <div class="ann-desc"><ul>
@@ -471,7 +558,7 @@
     </div>
 
     <div class="ann-item">
-      <div class="cn">5</div>
+      <div class="cn">6</div>
       <div class="ann-body">
         <div class="ann-title">[바로 시작하기] CTA 버튼</div>
         <div class="ann-desc"><ul>
@@ -483,7 +570,7 @@
     </div>
 
     <div class="ann-item">
-      <div class="cn">6</div>
+      <div class="cn">7</div>
       <div class="ann-body">
         <div class="ann-title">하단 탭바</div>
         <div class="ann-desc"><ul>
@@ -516,7 +603,7 @@
         <!-- 초록 헤더 -->
         <div class="earn-header">
           <!-- 상단 바 -->
-          <div class="earn-top-bar">
+          <div class="earn-top-bar" style="justify-content:flex-start;">
             <button class="earn-user-btn">👤</button><span class="wf-cn">1</span>
           </div>
 
@@ -661,10 +748,11 @@
     <div class="ann-item">
       <div class="cn">1</div>
       <div class="ann-body">
-        <div class="ann-title">사용자 아이콘 버튼 (우측 상단)</div>
+        <div class="ann-title">👤 사용자 아이콘 버튼 (좌측 상단 왼쪽 끝)</div>
         <div class="ann-desc"><ul>
-          <li>탭 시 → 마이페이지(MY01) 화면으로 이동. 로그인 상태로 진입.</li>
-          <li>로그인 전 케이스의 [로그인] 버튼 자리를 대체. 원형 반투명 버튼.</li>
+          <li>탭 시 → 마이페이지(MY01-B 로그인) 화면으로 이동.</li>
+          <li>로그인 전 케이스의 [로그인] + [⚙️] 버튼 자리를 대체. 원형 반투명 버튼.</li>
+          <li>위치: A 케이스 [로그인] 버튼과 동일하게 좌측 상단 왼쪽 끝에 배치.</li>
         </ul></div>
         <div class="ann-rule">정책서 10-1절 (마이페이지 진입). 로그인 상태에서만 표시.</div>
       </div>
@@ -853,6 +941,334 @@
           <li>모든 건을 다 불러오면 버튼이 사라진다.</li>
         </ul></div>
         <div class="ann-rule">기본 4건 표시 → 탭 시 4건씩 추가 로드. 전체 로드 완료 시 버튼 미노출.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ════ B1: 예약상세 모달 ════ -->
+<div id="b1" class="sec-title">
+  <span class="sec-badge">MY02-D1-B1</span>적립 — 예약상세 모달
+  <span style="font-size:12px;font-weight:400;color:#888">— 여행 카드 탭 시 중앙 팝업 (B 화면 위에 표시)</span>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- 초록 헤더 (B와 동일) -->
+        <div class="earn-header">
+          <div class="earn-top-bar">
+            <button class="earn-user-btn">👤</button>
+          </div>
+          <div class="earn-cherry-wrap">
+            <div class="earn-cherry" style="margin-bottom:0;position:relative;">🍒</div>
+          </div>
+          <div class="earn-total-label">지금까지 아낀 금액</div>
+          <div class="earn-total-row">
+            <span class="earn-coin">🪙</span>
+            <span class="earn-amount">137,000</span>
+          </div>
+          <div class="earn-summary">
+            <div class="earn-sum-card">
+              <div class="earn-sum-label">✅ 적립 완료</div>
+              <div class="earn-sum-amount">₩18,500</div>
+            </div>
+            <div class="earn-sum-card">
+              <div class="earn-sum-label">🕐 적립 예정</div>
+              <div class="earn-sum-amount">₩18,500</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 카드 바디 (B와 동일, 흐릿하게 보임) -->
+        <div class="earn-body" style="opacity:.35;pointer-events:none;">
+          <div class="earn-section-hdr">
+            <span class="earn-section-title">나의 여행</span>
+            <div class="earn-section-right">
+              <span class="earn-sort-btn">최신 예약순 ▾</span>
+              <span class="earn-count">전체 7건</span>
+            </div>
+          </div>
+          <div class="earn-scroll">
+            <div class="trip-card">
+              <div class="trip-img">🏨</div>
+              <div class="trip-content">
+                <div>
+                  <div class="trip-top">
+                    <span class="trip-badge b-staying">투숙중</span>
+                    <span class="trip-hotel-name">제주도 신라 호텔</span>
+                  </div>
+                  <div class="trip-date">07.01 ~ 07.03</div>
+                </div>
+                <div class="trip-bottom">
+                  <span class="earn-badge eb-pending">적립예정</span>
+                  <span class="trip-amount ta-pending">₩84,000</span>
+                </div>
+              </div>
+            </div>
+            <div class="trip-card">
+              <div class="trip-img">🌆</div>
+              <div class="trip-content">
+                <div>
+                  <div class="trip-top">
+                    <span class="trip-badge b-upcoming">투숙예정</span>
+                    <span class="trip-hotel-name">포시즌스 호텔 서울</span>
+                  </div>
+                  <div class="trip-date">07.15 ~ 07.17</div>
+                </div>
+                <div class="trip-bottom">
+                  <span class="earn-badge eb-pending">적립예정</span>
+                  <span class="trip-amount ta-upcoming">₩154,000</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 하단 탭바 (흐릿하게) -->
+        <div class="earn-tabbar" style="opacity:.35;">
+          <div class="earn-tab"><div class="earn-tab-icon">🔍</div><span>검색</span></div>
+          <div class="earn-tab active"><div class="earn-tab-icon"><span class="ti">⭐</span></div><span>적립</span></div>
+          <div class="earn-tab earn-tab-cs"><div class="earn-tab-icon">🦚</div><span></span></div>
+        </div>
+
+        <!-- ── 예약상세 모달 ── -->
+        <div class="detail-modal-overlay">
+          <div class="detail-modal">
+
+            <div class="detail-modal-header">
+              <span class="detail-modal-title">예약 상세 <span class="wf-cn">M1</span></span>
+              <button class="detail-modal-close">✕</button>
+            </div>
+
+            <div class="detail-status-row">
+              <div class="detail-status-col">
+                <span class="detail-status-label">예약 상태 <span class="wf-cn">M2</span></span>
+                <span class="detail-status-badge dsb-booking">예약 확정</span>
+              </div>
+              <div class="detail-status-divider"></div>
+              <div class="detail-status-col">
+                <span class="detail-status-label">적립 상태 <span class="wf-cn">M3</span></span>
+                <span class="detail-status-badge dsb-pending">💸 적립예정</span>
+              </div>
+            </div>
+            <div class="detail-divider"></div>
+
+            <div class="detail-hotel-section">
+              <div class="detail-hotel-name">제주도 신라 호텔 <span class="wf-cn">M4</span></div>
+              <div class="detail-hotel-loc">제주 · 대한민국</div>
+            </div>
+            <div class="detail-divider"></div>
+
+            <div class="detail-date-section">
+              <div class="detail-date-col">
+                <span class="detail-date-label">체크인 <span class="wf-cn">M5</span></span>
+                <span class="detail-date-val">07.01</span>
+              </div>
+              <div class="detail-date-nights">→&nbsp;2박</div>
+              <div class="detail-date-col" style="align-items:flex-end;">
+                <span class="detail-date-label">체크아웃</span>
+                <span class="detail-date-val">07.03</span>
+              </div>
+            </div>
+            <div class="detail-divider"></div>
+
+            <div class="detail-info-section">
+              <div class="detail-info-row">
+                <span class="detail-info-label">OTA 공급사 <span class="wf-cn">M6</span></span>
+                <span class="detail-info-val">Booking.com <span class="detail-info-flag">⚠️</span></span>
+              </div>
+              <div class="detail-info-row">
+                <span class="detail-info-label">예약 ID <span class="wf-cn">M7</span></span>
+                <span class="detail-info-val" style="font-size:10px;">BK-20260701-XXXX</span>
+              </div>
+              <div class="detail-info-row">
+                <span class="detail-info-label">예약일 <span class="wf-cn">M8</span></span>
+                <span class="detail-info-val">2026.06.20</span>
+              </div>
+            </div>
+            <div class="detail-divider"></div>
+
+            <div class="detail-amount-section">
+              <div class="detail-amount-row">
+                <span class="detail-amount-label">상품가 <span class="wf-cn">M9</span></span>
+                <span class="detail-amount-val">₩ 420,000</span>
+              </div>
+              <div class="detail-amount-row">
+                <span class="detail-amount-label">적립금액 <span class="wf-cn">M10</span></span>
+                <span class="detail-amount-val earn">₩ 42,000</span>
+              </div>
+              <div class="detail-amount-row">
+                <span class="detail-amount-label">정산 예정월 <span class="wf-cn">M11</span></span>
+                <span class="detail-amount-val">2026.09</span>
+              </div>
+            </div>
+
+          </div><!-- /detail-modal -->
+        </div><!-- /detail-modal-overlay -->
+
+      </div><!-- /m-screen -->
+    </div>
+  </div>
+
+  <!-- 주석 패널 D1 -->
+  <div class="ann">
+    <h3>화면 주석 — MY02-D1-B1 (예약상세 모달)</h3>
+
+    <div class="ann-item" style="background:#f0f7ff;border-left:3px solid #2563EB;">
+      <div class="cn" style="background:#2563EB;">진입</div>
+      <div class="ann-body">
+        <div class="ann-title">모달 진입 조건 및 닫기</div>
+        <div class="ann-desc"><ul>
+          <li>B 화면에서 여행 카드(trip-card) 어디든 탭 → 해당 예약의 상세 모달이 화면 중앙에 나타난다.</li>
+          <li>배경 어두운 영역(딤)을 탭하거나 [✕] 버튼을 탭 → 모달이 닫히고 B 화면 목록으로 돌아온다.</li>
+          <li>데이터 출처: KAYAK Reporting API v2 — Hotel vertical (<code>/api/transactions/hotels</code>)</li>
+        </ul></div>
+        <div class="ann-rule">정책서 10-2절. Reporting API Hotel vertical 필드 사용.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">M1</div>
+      <div class="ann-body">
+        <div class="ann-title">모달 헤더 — "예약 상세" + [✕] 닫기</div>
+        <div class="ann-desc"><ul>
+          <li>모달 상단에 "예약 상세" 제목이 표시된다.</li>
+          <li>[✕] 버튼을 탭하면 모달이 닫힌다.</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">M2</div>
+      <div class="ann-body">
+        <div class="ann-title">예약 상태 배지 (모달 최상단 좌측)</div>
+        <div class="ann-desc"><ul>
+          <li><b style="color:#2563EB;">예약 확정</b>: <code>transactionType = 10 (Booking)</code> — 예약이 완료된 건.</li>
+          <li><b style="color:#9ca3af;">클릭됨</b>: <code>transactionType = 1 (Lead)</code> — 링크는 눌렀지만 예약 미확정.</li>
+          <li>두 상태의 배지 색상을 다르게 표시해 사용자가 한눈에 구분 가능하게 함.</li>
+        </ul></div>
+        <div class="ann-front">← <code>transactionType</code> (1=Lead / 10=Booking)</div>
+        <div class="ann-rule">정책서 10-2절. Reporting API <code>transactionType</code> 필드.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">M3</div>
+      <div class="ann-body">
+        <div class="ann-title">적립 상태 배지 (모달 최상단 우측)</div>
+        <div class="ann-desc"><ul>
+          <li><b style="color:#D97706;">💸 적립예정</b>: <code>transactionStatus = Active</code> 상태인 경우.</li>
+          <li><b style="color:#059669;">💸 지급완료</b>: <code>paymentMonth</code> 값이 있는 경우 (개발팀 판단 기준 확인 필요).</li>
+          <li><b style="color:#9ca3af;">취소·만료</b>: <code>transactionStatus = Cancelled</code> 상태인 경우.</li>
+        </ul></div>
+        <div class="ann-front">← <code>transactionStatus</code> + <code>paymentMonth</code></div>
+        <div class="ann-rule">정책서 9-4절. ⚠️ 지급완료 판단 기준 개발팀 확인 필요.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">M4</div>
+      <div class="ann-body">
+        <div class="ann-title">호텔명 + 위치</div>
+        <div class="ann-desc"><ul>
+          <li>호텔명: <code>hotelName</code> (Hotel vertical 전용 필드)</li>
+          <li>위치: <code>hotelCity</code> + <code>hotelCountry</code> — "도시 · 국가" 형식 표시.</li>
+        </ul></div>
+        <div class="ann-front">← <code>hotelName</code> / <code>hotelCity</code> / <code>hotelCountry</code></div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">M5</div>
+      <div class="ann-body">
+        <div class="ann-title">체크인·체크아웃 + 박수</div>
+        <div class="ann-desc"><ul>
+          <li>체크인: <code>clickStartDate</code> (Lead 기준) 또는 <code>bookingStartDate</code> (Booking 기준).</li>
+          <li>체크아웃: <code>clickEndDate</code> / <code>bookingEndDate</code>.</li>
+          <li>박수: 두 날짜 차이를 자사에서 계산하여 표시. 예: 07.01 → 07.03 = 2박.</li>
+        </ul></div>
+        <div class="ann-front">← <code>clickStartDate</code>·<code>clickEndDate</code> (Lead) / <code>bookingStartDate</code>·<code>bookingEndDate</code> (Booking)</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">M6</div>
+      <div class="ann-body">
+        <div class="ann-title">OTA 공급사명 ⚠️ 개발팀 확인사항</div>
+        <div class="ann-desc"><ul>
+          <li>Booking.com·Agoda·Expedia 등 실제 예약이 이루어진 OTA 이름을 표시한다.</li>
+          <li>Reporting API는 이 값을 직접 주지 않는다. <code>siteBrandCode</code>는 "kayak"·"HotelsCombined" 등 플랫폼명이므로 공급사명이 아님.</li>
+          <li>권장 방식: 아웃링크 클릭 시점(OUT01)에 자사 DB에 <code>providerName</code>을 저장 → Reporting API <code>clickId</code>로 연결해서 불러오는 방식.</li>
+        </ul></div>
+        <div class="ann-front">← ⚠️ 개발팀 확인 필요: 아웃링크 클릭 시점에 <code>providerName</code>을 자사 DB에 저장하는 방식 검토 요망.</div>
+        <div class="ann-rule">Reporting API에 없는 필드. 별도 저장 로직 필요.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">M7</div>
+      <div class="ann-body">
+        <div class="ann-title">예약 ID</div>
+        <div class="ann-desc"><ul>
+          <li><code>bookingId</code> — Booking 타입(<code>transactionType=10</code>)인 건에만 값이 있다. Lead 건은 이 항목을 표시하지 않는다.</li>
+        </ul></div>
+        <div class="ann-front">← <code>bookingId</code> (Booking 타입만)</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">M8</div>
+      <div class="ann-body">
+        <div class="ann-title">예약일</div>
+        <div class="ann-desc"><ul>
+          <li>Reporting API <code>date</code> 필드 — 클릭 또는 예약이 발생한 날짜.</li>
+        </ul></div>
+        <div class="ann-front">← <code>date</code> (Transaction 발생일)</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">M9</div>
+      <div class="ann-body">
+        <div class="ann-title">상품가</div>
+        <div class="ann-desc"><ul>
+          <li><code>localisedBookingValue</code> + <code>localisedCurrencyCode</code> — 사용자가 선택한 통화 기준의 상품 금액.</li>
+        </ul></div>
+        <div class="ann-front">← <code>localisedBookingValue</code> / <code>localisedCurrencyCode</code></div>
+        <div class="ann-rule">라벨명 "상품가" 확정 (20260703 대표님 확정).</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">M10</div>
+      <div class="ann-body">
+        <div class="ann-title">적립금액</div>
+        <div class="ann-desc"><ul>
+          <li><code>cashbackAmountLocalised</code> — 원화 환산 적립 금액. ₩ 단위로 표시. 적립률(%) 표시 없음.</li>
+          <li>표시 형식: "₩ N,NNN" (통화 기호 + 금액만. 퍼센트 표기 삭제.)</li>
+          <li>자사에서 다시 계산하지 않고 KAYAK이 주는 값 그대로 표시한다.</li>
+        </ul></div>
+        <div class="ann-front">← <code>cashbackAmountLocalised</code></div>
+        <div class="ann-rule">라벨명 "적립금액", ₩ 표시, 적립률 삭제 확정 (20260703 대표님 확정). 정책서 9-1절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">M11</div>
+      <div class="ann-body">
+        <div class="ann-title">정산 예정월</div>
+        <div class="ann-desc"><ul>
+          <li><code>paymentMonth</code> — KAYAK이 정산을 완료할 예정인 월. 예: "2026.09".</li>
+          <li>값이 아직 없는 경우(체크아웃 전 초기 상태): "정산 예정 중"으로 표시.</li>
+        </ul></div>
+        <div class="ann-front">← <code>paymentMonth</code></div>
       </div>
     </div>
 
