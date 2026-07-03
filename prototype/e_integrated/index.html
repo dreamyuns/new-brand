@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PickoQ META — E안 통합 프로토타입</title>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+<div class="stage">
+
+  <!-- ═══════ 좌측 데모 컨트롤 패널 ═══════ -->
+  <aside class="demo-panel">
+    <div class="demo-title">🧪 데모 시나리오</div>
+    <div class="demo-sub">E안 통합 프로토타입 · 기능 검증용</div>
+
+    <div class="demo-group">
+      <div class="demo-group-label">시나리오</div>
+      <button class="demo-btn" onclick="go('main')">🏠 메인으로</button>
+      <button class="demo-btn" onclick="demoToggleLogin()">🔑 로그인 상태 전환(데모)</button>
+      <button class="demo-btn" onclick="demoLoadSamples()">🧳 나의 여행 샘플 5건 로드</button>
+      <button class="demo-btn" onclick="demoSeedCashback()">🪙 캐시백 1건 생성(데모)</button>
+    </div>
+
+    <div class="demo-group">
+      <div class="demo-group-label">회원가입·탈퇴 시나리오</div>
+      <button class="demo-btn" onclick="demoToggleNew()">🆕 다음 로그인 = 신규/기존 전환</button>
+      <button class="demo-btn" onclick="demoWithdraw()">🚪 회원탈퇴 시뮬레이트(7일 제한)</button>
+      <button class="demo-btn" onclick="clearWithdrawal()">♻ 탈퇴 재가입 제한 해제</button>
+    </div>
+
+    <div class="demo-group">
+      <div class="demo-group-label">🎛 카드 상태 시뮬레이터 <span class="demo-hint">(적립 탭)</span></div>
+      <div class="sim-panel" id="simPanel"></div>
+      <div class="demo-tip">여행상태 버튼을 누르면 투숙중→예정→완료→취소 순환하고, 적립상태·배지가 자동 반영됩니다.</div>
+    </div>
+
+  </aside>
+
+  <!-- ═══════ 모바일 프레임 ═══════ -->
+  <div class="phone">
+    <div class="statusbar">
+      <span class="sb-time">9:41</span>
+      <span class="sb-icons">••• 📶 🔋</span>
+    </div>
+
+    <div class="screens">
+
+      <!-- ───────── 메인 ───────── -->
+      <section class="screen active" id="scr-main">
+        <div class="main-scroll">
+
+          <!-- 섹션 1·2 — 블루 히어로 (GNB + AI 검색) -->
+          <div class="main-hero">
+            <div class="gnb" id="gnb"><!-- JS 렌더 --></div>
+            <div class="welcome" id="welcome" style="display:none">
+              <div class="welcome-tit">반가워요! 👋</div>
+              <div class="welcome-sub">오늘도 최저가 호텔을 찾아드릴게요</div>
+            </div>
+            <div class="ai-bar">
+              <span class="ai-ic">🔍</span>
+              <input id="mainQ" class="ai-input" placeholder="AI로 검색하세요!" maxlength="300"
+                     onkeydown="if(event.key==='Enter')submitAISearch()">
+              <span class="ai-mic" onclick="toast('음성 검색은 준비 중이에요 (Phase 2)')">🎙</span>
+            </div>
+            <div class="ai-hint">✦ 예) "부산 해운대 오션뷰 4성급 2명"</div>
+            <div class="ai-chips" id="mainChips"></div>
+          </div>
+
+          <!-- 섹션 3 — 검색폼 패널 (그레이) -->
+          <div class="search-panel">
+            <div class="search-card">
+              <div class="f-row" onclick="openAC()">
+                <span class="f-ic">📍</span>
+                <div class="f-info"><div class="f-label lbl-dest">목적지</div><div class="f-val ph" id="fDest">도시 또는 호텔명</div></div>
+              </div>
+              <div class="f-row" onclick="openCal()">
+                <span class="f-ic">📅</span>
+                <div class="f-info"><div class="f-label lbl-date">날짜</div><div class="f-val" id="fDate">7월 9일 – 7월 10일</div></div>
+              </div>
+              <div class="f-row" onclick="openGuest()">
+                <span class="f-ic">👤</span>
+                <div class="f-info"><div class="f-label lbl-guest">인원</div><div class="f-val" id="fGuest">성인 2명 · 객실 1개</div></div>
+              </div>
+            </div>
+            <button class="btn-search" onclick="submitFormSearch()">검색하기</button>
+            <div class="main-body" id="mainBody"><!-- 로그인 후 최근검색 (JS) --></div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ───────── 결과페이지 (E안 2분할) ───────── -->
+      <section class="screen" id="scr-results">
+        <div class="res-topbar">
+          <button class="rt-back" onclick="go('main')">←</button>
+          <div class="res-aibar" onclick="document.getElementById('reInput').focus()">
+            <span class="rb-ic">🔍</span>
+            <input id="reInput" placeholder="AI로 다시 검색하세요!" onkeydown="if(event.key==='Enter'){doReSearch()}">
+            <span class="rb-mic" onclick="event.stopPropagation();toast('음성 검색은 준비 중이에요')">🎙</span>
+          </div>
+          <button class="res-filterbtn" id="resFilterBtn" onclick="openFilterSheet()">⚙</button>
+        </div>
+        <div class="res-cond" id="resCond"><!-- 축약 바 ↔ 검색폼 (JS) --></div>
+        <div class="res-filterbar">
+          <span class="chip chip-ai" id="resAiChip" onclick="openAiFilterSheet()">✦ AI 필터</span>
+          <div class="res-filters" id="resFilters"><!-- 정렬·필터 칩 (JS · 가로 스크롤) --></div>
+        </div>
+        <div class="scroll res-scroll">
+          <div id="aiRec"></div>
+          <div id="aiBanner"></div>
+          <div id="resList"></div>
+        </div>
+      </section>
+
+      <!-- ───────── 숙소상세 (가격비교) ───────── -->
+      <section class="screen" id="scr-detail">
+        <div class="scroll d-scroll">
+          <div class="d-img">
+            <div class="d-gallery" id="dGallery" onscroll="onGalleryScroll()"></div>
+            <button class="d-back" onclick="go('results')">←</button>
+            <button class="d-share" onclick="toast('공유 (준비 중)')">⤴</button>
+            <span class="d-count" id="dCount">1 / 6</span>
+          </div>
+          <div class="d-head">
+            <div class="d-name" id="dName">호텔명</div>
+            <div class="d-loc" id="dLoc">위치</div>
+            <div class="d-rate" id="dRate">★ 0.0</div>
+          </div>
+          <div class="d-datewrap">
+            <div class="d-datebar" id="dDate" onclick="toggleDPanel()"></div>
+            <div class="d-datepanel" id="dPanel">
+              <div class="dp-tit">날짜 · 인원 수정</div>
+              <div class="dp-row" onclick="openCal()">
+                <div><div class="dp-lbl">체크인 – 체크아웃</div><div class="dp-val" id="dpDate">—</div></div>
+                <span class="dp-ch">📅</span>
+              </div>
+              <div class="dp-row" onclick="openGuest()">
+                <div><div class="dp-lbl">투숙객 · 객실</div><div class="dp-val" id="dpGuest">—</div></div>
+                <span class="dp-ch">👤</span>
+              </div>
+              <button class="dp-search" onclick="applyDPanel()">이 조건으로 다시 검색</button>
+            </div>
+          </div>
+          <div class="d-sec-tit">가격 비교 <span class="d-sub2">· 타 OTA</span></div>
+          <div id="dOta"></div>
+
+          <div class="d-block">
+            <h4>숙소 설명</h4>
+            <p id="dDesc" class="d-desc clamp">—</p>
+            <button class="d-textmore" onclick="toggleDesc(this)">더보기 ＋</button>
+          </div>
+
+          <div class="d-block">
+            <h4>리뷰 <span class="d-score">8.5</span> <span class="d-score-lb">매우 좋음</span></h4>
+            <div class="d-bars" id="dBars"></div>
+            <button class="d-textmore" id="dBarsMore" onclick="toggleBars()">전체 보기 ▽</button>
+          </div>
+
+          <div class="d-block">
+            <h4>위치</h4>
+            <div class="d-map">🗺️ 지도</div>
+            <p id="dAddr" class="d-addr">—</p>
+          </div>
+
+          <div class="d-block">
+            <h4>편의시설</h4>
+            <div class="d-amen">
+              <div><span>🅿️</span>주차·교통</div><div><span>♿</span>장애인접근</div><div><span>🏋️</span>피트니스</div>
+              <div><span>🛁</span>욕실</div><div><span>🌊</span>수영장·스파</div><div><span>🍽</span>식사</div>
+            </div>
+            <button class="d-amen-all" onclick="openAmenitySheet()">전체 편의시설 보기</button>
+          </div>
+
+          <div class="d-block">
+            <h4>이용 안내</h4>
+            <div class="d-inout"><div><small>체크인</small><b>15:00</b></div><div class="d-dash">–</div><div><small>체크아웃</small><b>12:00</b></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────── 아웃링크 (타 OTA 이동 + 로그인 유도) ───────── -->
+      <section class="screen" id="scr-outlink">
+        <div class="ol-body" id="olBody"></div>
+      </section>
+
+      <!-- ───────── 적립 탭 (4단계 예정) ───────── -->
+      <section class="screen" id="scr-earn">
+        <div class="ph-placeholder">⭐ 적립 탭<br><small>4단계</small><br><button class="ph-back" onclick="go('main')">← 메인</button></div>
+      </section>
+
+      <!-- ───────── 마이페이지 (4단계 예정) ───────── -->
+      <section class="screen" id="scr-mypage">
+        <div class="ph-placeholder">👤 마이페이지<br><small>4단계</small><br><button class="ph-back" onclick="go('main')">← 메인</button></div>
+      </section>
+
+    </div><!-- /screens -->
+
+    <!-- 하단 탭바 (메인·적립에서만 노출) -->
+    <nav class="tabbar" id="tabbar">
+      <div class="tab active" data-tab="main" onclick="tabGo('main')"><div class="tab-ic">🔍</div><span>검색</span></div>
+      <div class="tab" data-tab="earn" onclick="tabGo('earn')"><div class="tab-ic">⭐</div><span>적립</span></div>
+      <div class="tab tab-cs" onclick="openCS()"><div class="tab-ic">🦚<span class="cs-badge">?</span></div><span></span></div>
+    </nav>
+
+    <!-- 로딩 오버레이 (2단계) -->
+    <div class="loading" id="loading">
+      <div class="load-spin"></div>
+      <div class="load-txt" id="loadTxt">찾는 중…</div>
+    </div>
+
+    <!-- ═══ 목적지 자동완성 오버레이 (m01_main M01-B) ═══ -->
+    <div class="ovl" id="ovl-ac">
+      <div class="ovl-head">
+        <button class="ico-btn" onclick="closeOvl()">←</button>
+        <div class="ac-inp-wrap">
+          <span class="ac-ic">🔍</span>
+          <input id="acInput" class="ac-inp" placeholder="도시, 호텔명 검색" oninput="renderAC(this.value)" autocomplete="off">
+          <button class="ac-x" onclick="acClear()">✕</button>
+        </div>
+      </div>
+      <div class="ovl-body" id="acBody"></div>
+    </div>
+
+    <!-- ═══ 날짜 캘린더 오버레이 (M01-C) ═══ -->
+    <div class="ovl" id="ovl-cal">
+      <div class="ovl-head"><button class="ico-btn" onclick="closeOvl()">←</button><div class="ovl-title">날짜 선택</div></div>
+      <div class="ovl-body" id="calBody"></div>
+      <div class="ovl-foot"><div class="cal-sum" id="calSum">체크인 – 체크아웃 날짜를 선택하세요</div><button class="ovl-cta" id="calCta" onclick="applyDates()">적용</button></div>
+    </div>
+
+    <!-- ═══ 인원·객실 오버레이 (M01-D) ═══ -->
+    <div class="ovl" id="ovl-guest">
+      <div class="ovl-head"><button class="ico-btn" onclick="closeOvl()">←</button><div class="ovl-title">인원 · 객실</div></div>
+      <div class="ovl-body" id="guestBody"></div>
+      <div class="ovl-foot"><button class="ovl-cta" onclick="applyGuest()">적용</button></div>
+    </div>
+
+    <!-- ═══ 사진 전체 갤러리 오버레이 ═══ -->
+    <div class="ovl" id="ovl-gallery">
+      <div class="ovl-head"><button class="ico-btn" onclick="closeOvl()">←</button><div class="ovl-title">사진 모두 보기</div></div>
+      <div class="ovl-body" id="galleryBody"></div>
+    </div>
+
+    <!-- ═══ 전체 편의시설 바텀시트 ═══ -->
+    <div class="sheet-dim" id="sheet-amenity" onclick="if(event.target===this)closeAmenitySheet()">
+      <div class="sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-tit">전체 편의시설</div>
+        <div id="amenityBody" class="am-body"></div>
+        <button class="sheet-cta" onclick="closeAmenitySheet()">닫기</button>
+      </div>
+    </div>
+
+    <!-- ═══ 로그인 유도 바텀시트 (비로그인 아웃링크 시) ═══ -->
+    <div class="sheet-dim" id="modal-outlogin" onclick="if(event.target===this)closeOutModal()">
+      <div class="sheet" id="outModalBody"><!-- MODAL-A/B (JS) --></div>
+    </div>
+
+    <!-- ═══ 로그인 바텀시트 (mock) ═══ -->
+    <div class="sheet-dim" id="sheet-login" onclick="if(event.target===this)closeLoginSheet()">
+      <div class="sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-tit" id="loginSheetTit">로그인 / 회원가입</div>
+        <div id="loginStep"></div>
+      </div>
+    </div>
+
+    <!-- ═══ 고객지원 FAQ 채팅 바텀시트 (🦚) ═══ -->
+    <div class="sheet-dim" id="sheet-cs" onclick="if(event.target===this)closeCS()">
+      <div class="sheet cs-sheet">
+        <div class="cs-hd">
+          <div class="cs-hd-l"><span class="cs-hd-av">🦚</span><div><div class="cs-hd-tit">고객지원</div><div class="cs-hd-sub">AI 도우미 · 보통 1분 내 응답</div></div></div>
+          <button class="cs-hd-x" onclick="closeCS()">✕</button>
+        </div>
+        <div class="cs-body" id="csBody"></div>
+        <div class="cs-input">
+          <input id="csInput" placeholder="메시지를 입력하세요" onkeydown="if(event.key==='Enter')csSend()">
+          <button onclick="csSend()">전송</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ 국가·언어 / 통화 선택 바텀시트 (MY01-C·D) ═══ -->
+    <div class="sheet-dim" id="sheet-list" onclick="if(event.target===this)closeListSheet()">
+      <div class="sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-tit" id="listTit">선택</div>
+        <div class="list-body" id="listBody"></div>
+      </div>
+    </div>
+
+    <!-- ═══ 예약 상세 모달 (B1 · 적립 여행 카드 탭) ═══ -->
+    <div class="pmodal" id="modal-trip" onclick="if(event.target===this)closeTripDetail()">
+      <div class="td-card">
+        <div class="td-hd">예약 상세<button class="td-x" onclick="closeTripDetail()">✕</button></div>
+        <div id="tripBody"></div>
+      </div>
+    </div>
+
+    <!-- 토스트 -->
+    <div class="toast" id="toast"></div>
+  </div><!-- /phone -->
+
+  <!-- ═══════ 우측 패널 (초기화 · 현재 상태 · 기준 문서) ═══════ -->
+  <aside class="demo-panel demo-panel-right">
+    <div class="demo-title">📊 상태 · 문서</div>
+    <div class="demo-sub">현재 상태 확인 · 초기화 · 기준 문서</div>
+
+    <div class="demo-group">
+      <div class="demo-group-label">초기화</div>
+      <button class="demo-btn demo-btn-reset" onclick="resetAll()">🔄 처음부터</button>
+    </div>
+
+    <div class="demo-group">
+      <div class="demo-group-label">현재 상태</div>
+      <div class="demo-state" id="demoState">—</div>
+    </div>
+
+    <div class="demo-group">
+      <div class="demo-group-label">기준 문서</div>
+      <button class="demo-btn" onclick="openRefDocs()">📄 참고 문서 보기</button>
+    </div>
+  </aside>
+
+  <!-- ═══════ 참고 문서 팝업 ═══════ -->
+  <div class="ref-modal" id="modal-ref" onclick="if(event.target===this)closeRefDocs()">
+    <div class="ref-card">
+      <div class="ref-hd">📄 이 프로토타입 기준 문서</div>
+      <div class="ref-body" id="refBody"></div>
+      <div class="ref-foot">ⓘ 정책 변경·기능 업데이트 시 이 문서 버전을 갱신하세요. <br>(데이터: <code>app.js</code> · <code>REF_DOCS</code>)</div>
+      <button class="ref-close" onclick="closeRefDocs()">닫기</button>
+    </div>
+  </div>
+</div><!-- /stage -->
+
+<script src="./data.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
