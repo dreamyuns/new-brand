@@ -394,7 +394,7 @@
                 <div class="var-guide-title">사용 가능한 변수</div>
                 <div><span class="var-chip">{{user_name}}</span> <span style="font-size:11px;color:#6b7280">회원 이름</span></div>
                 <div style="margin-top:6px"><span class="var-chip">{{hotel_name}}</span> <span style="font-size:11px;color:#6b7280">예약 호텔명</span></div>
-                <div style="margin-top:6px"><span class="var-chip">{{cashback_amount}}</span> <span style="font-size:11px;color:#6b7280">적립 예정 금액 (통화 포함)</span></div>
+                <div style="margin-top:6px"><span class="var-chip">{{cashback_amount}}</span> <span style="font-size:11px;color:#6b7280">적립 예정 금액 (KRW)</span></div>
                 <div style="margin-top:6px"><span class="var-chip">{{checkout_date}}</span> <span style="font-size:11px;color:#6b7280">체크아웃 예정일 (YYYY-MM-DD)</span></div>
                 <div style="margin-top:8px;font-size:11px;color:#9ca3af">변수를 복사해 본문에 붙여넣으면 발송 시 실제 값으로 자동 교체됩니다.</div>
               </div>
@@ -422,7 +422,7 @@
 
 ■ 예약 호텔: 파리 힐튼 오페라
 ■ 체크아웃 예정일: 2026-08-15
-■ 적립 예정 금액: USD 12
+■ 적립 예정 금액: ₩12,000
 
 체크아웃 후 예약이 확인되면 지급완료 안내를 드립니다.
 
@@ -439,7 +439,7 @@
                 <div class="ann-title">캐시백 적립예정 안내 특이사항</div>
                 <div class="ann-desc"><ul>
                   <li>아웃링크 예약완료 후 KAYAK에서 Waiting 상태가 확인되면 자동 발송</li>
-                  <li><code>{{cashback_amount}}</code>는 KAYAK API의 캐시백 금액 원본 (통화 그대로)</li>
+                  <li><code>{{cashback_amount}}</code>는 KRW 원화 기준 캐시백 금액</li>
                   <li>편집 폼 구조·저장·테스트 발송 동작은 케이스 A 주석과 동일</li>
                 </ul></div>
                 <div class="ann-rule">어드민 v0.3 9-1절 — 발송 트리거: Waiting 전환 시</div>
@@ -486,7 +486,7 @@
               <div class="var-guide">
                 <div class="var-guide-title">사용 가능한 변수</div>
                 <div><span class="var-chip">{{user_name}}</span> <span style="font-size:11px;color:#6b7280">회원 이름</span></div>
-                <div style="margin-top:6px"><span class="var-chip">{{cashback_amount}}</span> <span style="font-size:11px;color:#6b7280">캐시백 금액 (통화 포함)</span></div>
+                <div style="margin-top:6px"><span class="var-chip">{{cashback_amount}}</span> <span style="font-size:11px;color:#6b7280">캐시백 금액 (KRW)</span></div>
                 <div style="margin-top:6px"><span class="var-chip">{{hotel_name}}</span> <span style="font-size:11px;color:#6b7280">예약 호텔명</span></div>
                 <div style="margin-top:6px"><span class="var-chip">{{payment_month}}</span> <span style="font-size:11px;color:#6b7280">지급 확정월 (YYYY-MM, EST 기준)</span></div>
                 <div style="margin-top:6px"><span class="var-chip">{{service_name}}</span> <span style="font-size:11px;color:#6b7280">서비스 브랜드명</span></div>
@@ -512,9 +512,9 @@
               </div>
               <div class="email-preview-body">안녕하세요, 홍길동님!
 
-싱가포르 마리나베이샌즈 숙박에 대한 캐시백 SGD 12이(가) 지급 완료되었습니다.
+싱가포르 마리나베이샌즈 숙박에 대한 캐시백 ₩12,000이(가) 지급 완료되었습니다.
 
-■ 지급 금액: SGD 12
+■ 지급 금액: ₩12,000
 ■ 예약 호텔: 마리나베이샌즈
 ■ 지급 확정월: 2026-08
 

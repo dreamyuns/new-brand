@@ -76,7 +76,7 @@
           <li><strong>Cancelled(취소·만료) 주의:</strong> <code>TransactionStatus = Cancelled</code>. PERCENTAGE 타입이어도 금액 0인 케이스 실데이터에서 확인됨 (6-2절)</li>
           <li><strong>NONE/0원 건 미표시:</strong> <code>cashbackType = NONE</code> 또는 캐시백 금액 0원인 건은 캐시백 내역에 표시하지 않음. 예약내역(ADM-BOOK01)에서만 조회 가능 (6-2절)</li>
           <li><strong>지급월 기준:</strong> EST(미국 동부 시간) 기준. 표시 시 한국 시간과 최대 13~14시간 차이 존재 (6-2절)</li>
-          <li><strong>금액 통화:</strong> KAYAK API 응답 통화 그대로 표시. 자사 환산 없음 (9-1절)</li>
+          <li><strong>금액 통화:</strong> KRW 원화 기준 단일 통화. KAYAK 정산 통화 KRW 통일 (6-4절)</li>
         </ul>
         <div class="sec-policy-rule">기준: 어드민 v0.3 6조</div>
       </div>
@@ -172,8 +172,8 @@
               <td>2026-08-10</td>
               <td>2026-08-14</td>
               <td>Agoda</td>
-              <td>¥56,000</td>
-              <td style="font-weight:600;color:#f59e0b">¥2,800 (5%)</td>
+              <td>₩560,000</td>
+              <td style="font-weight:600;color:#f59e0b">₩28,000 (5%)</td>
               <td><span class="wf-badge badge-active" style="font-size:9px">PERCENTAGE</span></td>
               <td><span class="wf-badge badge-waiting">적립예정</span></td>
               <td>—</td>
@@ -188,8 +188,8 @@
               <td>2026-05-10</td>
               <td>2026-05-13</td>
               <td>Hotels.com</td>
-              <td>SGD 1,200</td>
-              <td style="font-weight:600;color:#f59e0b">SGD 12 (flat)</td>
+              <td>₩1,320,000</td>
+              <td style="font-weight:600;color:#f59e0b">₩13,200 (flat)</td>
               <td><span class="wf-badge badge-inactive" style="font-size:9px">FLAT</span></td>
               <td><span class="wf-badge badge-cancelled">취소·만료</span></td>
               <td>—</td>
@@ -278,13 +278,13 @@
           <div class="ann-title">요약 통계 계산식</div>
           <div class="ann-desc">
             <ul>
-              <li><strong>누적 캐시백(Approved) ₩12,400,000:</strong> Approved 건 캐시백 금액 전체 합산. 현재 KRW 기준 (다중 통화 혼재 시 통화별 분리 표시 필요 — 개발팀 협의)</li>
+              <li><strong>누적 캐시백(Approved) ₩12,400,000:</strong> Approved 건 캐시백 금액 전체 합산. KRW 원화 기준 단일 통화</li>
               <li><strong>적립예정(Waiting) ₩2,100,000:</strong> Waiting 건 캐시백 금액 합산 (체크아웃 전 미확인)</li>
               <li><strong>취소·만료(Cancelled) ₩340,000:</strong> Cancelled 건 합산. 환불 없음, 자사 수익으로 귀속</li>
               <li><strong>귀속 회원 수 872:</strong> 캐시백 1건 이상 귀속된 로그인 회원 수. 비로그인 미귀속 건은 제외</li>
             </ul>
           </div>
-          <div class="ann-rule">통화 혼재 시 집계 기준 미결 — 개발팀 협의 필요 / 정책서 v0.30 9절</div>
+          <div class="ann-rule">어드민 v0.3 6-4절 — KRW 원화 기준 단일 통화 정책 확정</div>
         </div>
       </div>
     </div><!-- /ann -->

@@ -72,7 +72,7 @@
         <ul class="sec-policy-list">
           <li><strong>데이터 소스:</strong> KAYAK Reporting API <code>providers</code> 기준 OTA별 집계 (6조)</li>
           <li><strong>집계 기준:</strong> Approved(지급완료) 건 기준. Waiting·Cancelled 별도 표시 (정책서 v0.30 9-4절)</li>
-          <li><strong>통화:</strong> KAYAK API 응답 통화 원본 표시. 환산 없음 (정책서 v0.30 11-2절)</li>
+          <li><strong>통화:</strong> KRW 원화 기준 단일 통화. KAYAK 정산 통화 KRW 통일 (6-4절)</li>
           <li><strong>MVP 조회전용:</strong> 캐시백율 수동 조정 기능 없음 (Phase 2 후 논의)</li>
         </ul>
         <div class="sec-policy-rule">기준: 어드민 v0.1 6조 / 정책서 v0.30 9절</div>
@@ -181,8 +181,8 @@
               <td style="text-align:center"><span class="wf-badge badge-waiting">18</span></td>
               <td style="text-align:center"><span class="wf-badge badge-approved">40</span></td>
               <td style="text-align:center"><span class="wf-badge badge-cancelled">3</span></td>
-              <td style="font-weight:600;color:#f59e0b">SGD 240 + ₩120K</td>
-              <td style="font-size:12px">SGD 240<br><span style="color:#9ca3af">₩120K</span></td>
+              <td style="font-weight:600;color:#f59e0b">₩240,000</td>
+              <td style="font-size:12px">₩240,000</td>
               <td><span class="wf-badge badge-inactive" style="font-size:9px">FLAT</span></td>
             </tr>
             <tr>
@@ -233,12 +233,12 @@
           <div class="ann-title">공급사별 집계 테이블</div>
           <div class="ann-desc">
             <ul>
-              <li>캐시백 합계: 통화별 원본 표시. 여러 통화 혼재 가능</li>
+              <li>캐시백 합계: KRW 원화 기준 단일 통화</li>
               <li>평균 캐시백율: PERCENTAGE 타입만 계산. FLAT/NONE은 "—"</li>
               <li>NONE 타입 OTA: 캐시백 없음이나 예약 건수는 집계</li>
             </ul>
           </div>
-          <div class="ann-rule">정책서 v0.30 9-7절 캐시백 타입 / 11-2절 통화 정책</div>
+          <div class="ann-rule">어드민 v0.3 6-4절 — KRW 원화 기준 단일 통화 정책 확정</div>
         </div>
       </div>
       <div class="ann-item">
@@ -247,7 +247,7 @@
           <div class="ann-title">적립률/금액 컬럼 — 타입별 표시 분기</div>
           <div class="ann-desc"><ul>
             <li><strong>PERCENTAGE 타입:</strong> 적립률(%) 표시 — 예: 3.2%</li>
-            <li><strong>FLAT 타입:</strong> 적립 금액 표시 — 통화별로 줄바꿈하여 표시 (예: SGD 240 / ₩120K)</li>
+            <li><strong>FLAT 타입:</strong> 원화 금액 표시 (예: ₩240,000)</li>
             <li><strong>NONE 타입:</strong> "—" 표시 — 캐시백 없음</li>
             <li>한 행에서 타입이 PERCENTAGE이면 % 값만, FLAT이면 금액만 표시. 두 값을 같이 보여주지 않음</li>
           </ul></div>
@@ -261,14 +261,14 @@
           <div class="ann-title">요약 통계 계산식</div>
           <div class="ann-desc">
             <ul>
-              <li><strong>총 캐시백(Approved):</strong> 해당 월 Approved 건 캐시백 금액 합산. 통화 혼재 시 통화별 분리 표시 권장 (KRW 환산 기준 미결)</li>
+              <li><strong>총 캐시백(Approved):</strong> 해당 월 Approved 건 캐시백 금액 합산. KRW 원화 기준 단일 통화</li>
               <li><strong>총 예약 건수:</strong> 해당 월 Booking 트랜잭션 전체 — Waiting + Approved + Cancelled 합산</li>
               <li><strong>참여 OTA 수:</strong> 해당 월 예약 1건 이상 발생한 OTA 수 (KAYAK Reporting API <code>providers</code> 기준)</li>
               <li><strong>적립예정(Waiting):</strong> 해당 월 발생 건 중 체크아웃 전 미확인 캐시백 금액 합산</li>
               <li><strong>평균 캐시백율:</strong> PERCENTAGE 타입 OTA의 (캐시백합계 ÷ 예약금액합계) × 100. FLAT·NONE 타입 제외</li>
             </ul>
           </div>
-          <div class="ann-rule">통화 혼재 시 KRW 환산 기준 미결 — 개발팀 협의 필요</div>
+          <div class="ann-rule">어드민 v0.3 6-4절</div>
         </div>
       </div>
       <hr class="divider">

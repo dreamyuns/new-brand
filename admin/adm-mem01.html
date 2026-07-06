@@ -72,7 +72,7 @@
         <li><strong>검색 범위:</strong> 이메일·회원ID 대상. 이름은 목록 미제공 — 이름 확인은 상세(MEM02)에서 (4-1절)</li>
         <li><strong>정렬 기본값:</strong> 가입일 내림차순 (최신순)</li>
         <li><strong>페이지네이션:</strong> 1페이지 50건 표시 (개발팀 협의 필요)</li>
-        <li><strong>누적 캐시백(KRW) 컬럼:</strong> 회원별 Approved 캐시백 총합을 KRW로 환산해 표시. 환율 기준은 어드민 내부 설정값 사용 (미결 — 8조 미결 9). Waiting·Cancelled 미포함. NONE 타입 제외. 0원은 "—" 표시 (6-4절)</li>
+        <li><strong>누적 캐시백(KRW) 컬럼:</strong> 회원별 Approved 캐시백 총합. KRW 원화 기준 단일 통화. Waiting·Cancelled 미포함. NONE 타입 제외. 0원은 "—" 표시 (6-4절)</li>
         <li><strong>Excel 다운로드:</strong> 전체 데이터 다운로드 (검색 조건 무관). 시트 분리 — 시트1: 활성회원 / 시트2: 탈퇴회원. 개인정보 포함으로 다운로드 로그 기록 권장 (8조 미결)</li>
       </ul>
       <div class="sec-policy-rule">기준: 어드민 v0.3 4-1절</div>
@@ -262,11 +262,10 @@
               <div class="ann-desc"><ul>
                 <li>해당 회원의 <strong>Approved(지급완료)</strong> 캐시백만 합산 — Waiting·Cancelled 제외</li>
                 <li>KAYAK API의 NONE 타입 건은 합산에서 제외</li>
-                <li>SGD·USD 등 외화는 어드민 내부 저장 환율로 KRW 환산 후 합산 표시</li>
-                <li>환율 기준 시점은 어드민 설정값 사용 (실시간 환율 적용 여부는 개발팀 협의 필요)</li>
+                <li>KRW 원화 기준 단일 통화 — 환산 없이 직접 합산</li>
                 <li>캐시백 0원 / 적립 이력 없음 → "—" 표시</li>
               </ul></div>
-              <div class="ann-rule">어드민 v0.3 6-4절 · 8조 미결 9 (환율 기준 미확정)</div>
+              <div class="ann-rule">어드민 v0.3 6-4절</div>
             </div>
           </div>
 
