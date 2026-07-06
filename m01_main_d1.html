@@ -160,6 +160,8 @@
     <span class="toc-sep"></span>
     <a href="#m01d1-c" class="toc-link">C 고객지원 채팅</a>
     <span class="toc-sep"></span>
+    <a href="#m01d1-d" class="toc-link">D 자동완성 드롭다운</a>
+    <span class="toc-sep"></span>
     <a href="#m01d1-note" class="toc-link">참조 섹션</a>
   </div>
 </nav>
@@ -813,20 +815,210 @@
 
 
 <!-- ════════════════════════════════════════════════
+  M01_D1-D  자동완성 드롭다운 — 최근검색 + 인기도시
+════════════════════════════════════════════════ -->
+<hr class="sec-divider">
+<div id="m01d1-d" class="sec-title">
+  <span class="sec-badge">M01_D1-D</span>자동완성 드롭다운 — 최근검색 + 인기도시
+  <span style="font-size:12px;font-weight:400;color:#888">— 목적지 필드 탭 후 빈 입력 상태</span>
+</div>
+<div class="sec-sub">
+  검색폼 목적지 필드 탭 시 전체화면 오버레이 진입. 입력값 없을 때: 최근검색(최대 3개) + 인기도시(10개 고정) 표시.
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — 자동완성 드롭다운 (빈 입력 상태)</div>
+  <ul class="sec-policy-list">
+    <li><strong>진입:</strong> 검색폼 목적지 필드 탭 → 전체화면 오버레이로 화면에 나타남 (4-1절)</li>
+    <li><strong>최근검색 화면 노출 수:</strong> 최대 3개. 로컬 스토리지 저장은 최대 10개이지만 화면에는 최근 3개만 보여줌 (4-8절)</li>
+    <li><strong>인기도시:</strong> 최근검색 하단에 항상 고정 노출. 10개 목록을 코드에 직접 넣어둔 정적 방식 (하드코딩). 서버에서 동적으로 바꾸지 않음 (4-11절)</li>
+    <li><strong>탭 동작 (최근검색·인기도시 공통):</strong> 항목 탭 시 목적지 필드에 자동 입력됨 → 오버레이 닫힘 → 사용자가 [검색] 버튼을 직접 탭할 때 검색결과(S01)로 이동 (4-8절·4-11절)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: v0.40 4-8절·4-11절</div>
+</div>
+
+<div class="two-col" style="align-items:start">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen" style="background:#fff;">
+
+        <!-- 헤더 -->
+        <div style="display:flex;align-items:center;padding:14px 16px 10px;border-bottom:1px solid #f3f4f6;flex-shrink:0;">
+          <div style="font-size:20px;color:#374151;cursor:pointer;margin-right:14px;line-height:1;">✕</div>
+          <div style="font-size:15px;font-weight:700;color:#111;">목적지</div>
+        </div>
+
+        <!-- 검색 입력 -->
+        <div style="padding:12px 16px;flex-shrink:0;">
+          <div style="display:flex;align-items:center;gap:8px;background:#f3f4f6;border-radius:10px;padding:9px 12px;">
+            <span style="font-size:14px;color:#9ca3af;">🔍</span>
+            <span style="font-size:13px;color:#9ca3af;">도시 또는 호텔명</span>
+          </div>
+        </div>
+
+        <!-- 드롭다운 내용 (스크롤) -->
+        <div style="flex:1;overflow-y:auto;">
+
+          <!-- 최근 검색 섹션 -->
+          <div style="padding:0 16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0 6px;">
+              <span style="font-size:13px;font-weight:700;color:#111;">최근 검색 <span class="wf-cn">1</span></span>
+              <span style="font-size:11px;color:#4f46e5;font-weight:600;cursor:pointer;">전체 삭제 <span class="wf-cn">2</span></span>
+            </div>
+            <!-- 최근검색 행 1 -->
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f3f4f6;">
+              <div style="width:34px;height:34px;background:#f3f4f6;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">🕐</div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:600;color:#111;">후쿠오카, 일본</div>
+                <div style="font-size:11px;color:#9ca3af;margin-top:2px;">6.12(금) - 6.13(토) · 투숙객 2명 객실 1개</div>
+              </div>
+              <span style="font-size:13px;color:#9ca3af;cursor:pointer;padding:4px;">✕</span>
+            </div>
+            <!-- 최근검색 행 2 -->
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f3f4f6;">
+              <div style="width:34px;height:34px;background:#f3f4f6;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">🕐</div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:600;color:#111;">샤를드골 국제공항</div>
+                <div style="font-size:11px;color:#9ca3af;margin-top:2px;">6.12(금) - 6.13(토) · 투숙객 2명 객실 1개</div>
+              </div>
+              <span style="font-size:13px;color:#9ca3af;cursor:pointer;padding:4px;">✕</span>
+            </div>
+            <!-- 최근검색 행 3 -->
+            <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #f3f4f6;">
+              <div style="width:34px;height:34px;background:#f3f4f6;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">🕐</div>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:13px;font-weight:600;color:#111;">에펠탑, 파리, 프랑스</div>
+                <div style="font-size:11px;color:#9ca3af;margin-top:2px;">6.12(금) - 6.13(토) · 투숙객 2명 객실 1개</div>
+              </div>
+              <span style="font-size:13px;color:#9ca3af;cursor:pointer;padding:4px;">✕</span>
+            </div>
+          </div>
+
+          <!-- 인기도시 섹션 -->
+          <div style="padding:0 16px;margin-top:4px;">
+            <div style="padding:10px 0 6px;">
+              <span style="font-size:13px;font-weight:700;color:#111;">인기도시 <span class="wf-cn">3</span></span>
+            </div>
+            <!-- 1: 제주 -->
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f3f4f6;">
+              <div style="width:34px;height:34px;background:#eff6ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">📍</div>
+              <div><div style="font-size:13px;font-weight:600;color:#111;">제주</div><div style="font-size:11px;color:#9ca3af;margin-top:1px;">제주특별자치도, 대한민국</div></div>
+            </div>
+            <!-- 2: 부산 -->
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f3f4f6;">
+              <div style="width:34px;height:34px;background:#eff6ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">📍</div>
+              <div><div style="font-size:13px;font-weight:600;color:#111;">부산</div><div style="font-size:11px;color:#9ca3af;margin-top:1px;">부산광역시, 대한민국</div></div>
+            </div>
+            <!-- 3: 서울 -->
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f3f4f6;">
+              <div style="width:34px;height:34px;background:#eff6ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">📍</div>
+              <div><div style="font-size:13px;font-weight:600;color:#111;">서울</div><div style="font-size:11px;color:#9ca3af;margin-top:1px;">서울특별시, 대한민국</div></div>
+            </div>
+            <!-- 4: 오사카 -->
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f3f4f6;">
+              <div style="width:34px;height:34px;background:#eff6ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">📍</div>
+              <div><div style="font-size:13px;font-weight:600;color:#111;">오사카</div><div style="font-size:11px;color:#9ca3af;margin-top:1px;">일본</div></div>
+            </div>
+            <!-- 5: 도쿄 -->
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f3f4f6;">
+              <div style="width:34px;height:34px;background:#eff6ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">📍</div>
+              <div><div style="font-size:13px;font-weight:600;color:#111;">도쿄</div><div style="font-size:11px;color:#9ca3af;margin-top:1px;">일본</div></div>
+            </div>
+            <!-- 6: 방콕 -->
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f3f4f6;">
+              <div style="width:34px;height:34px;background:#eff6ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">📍</div>
+              <div><div style="font-size:13px;font-weight:600;color:#111;">방콕</div><div style="font-size:11px;color:#9ca3af;margin-top:1px;">태국</div></div>
+            </div>
+            <!-- 7: 싱가포르 -->
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f3f4f6;">
+              <div style="width:34px;height:34px;background:#eff6ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">📍</div>
+              <div><div style="font-size:13px;font-weight:600;color:#111;">싱가포르</div><div style="font-size:11px;color:#9ca3af;margin-top:1px;">싱가포르</div></div>
+            </div>
+            <!-- 8: 다낭 -->
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f3f4f6;">
+              <div style="width:34px;height:34px;background:#eff6ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">📍</div>
+              <div><div style="font-size:13px;font-weight:600;color:#111;">다낭</div><div style="font-size:11px;color:#9ca3af;margin-top:1px;">베트남</div></div>
+            </div>
+            <!-- 9: 파리 -->
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f3f4f6;">
+              <div style="width:34px;height:34px;background:#eff6ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">📍</div>
+              <div><div style="font-size:13px;font-weight:600;color:#111;">파리</div><div style="font-size:11px;color:#9ca3af;margin-top:1px;">프랑스</div></div>
+            </div>
+            <!-- 10: 뉴욕 -->
+            <div style="display:flex;align-items:center;gap:10px;padding:9px 0;">
+              <div style="width:34px;height:34px;background:#eff6ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">📍</div>
+              <div><div style="font-size:13px;font-weight:600;color:#111;">뉴욕</div><div style="font-size:11px;color:#9ca3af;margin-top:1px;">미국</div></div>
+            </div>
+          </div>
+
+        </div><!-- /스크롤 -->
+      </div><!-- /m-screen -->
+    </div>
+  </div><!-- /mobile-wrap -->
+
+  <!-- 주석 -->
+  <div class="ann">
+    <h3>화면 주석 — M01_D1-D</h3>
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">최근 검색 섹션 — 화면 최대 3개 노출</div>
+        <div class="ann-desc"><ul>
+          <li>로컬 스토리지에 저장된 최근 검색 기록을 드롭다운 상단에 표시.</li>
+          <li>저장은 최대 10개까지 유지되지만, 화면에는 가장 최근 3개만 보여줌.</li>
+          <li>각 항목: 도시·호텔명 + 날짜 + 인원·객실 수 표시.</li>
+          <li>항목 탭 시 해당 검색 조건(목적지·날짜·인원)이 검색폼에 자동으로 채워짐 → 사용자가 [검색] 버튼을 직접 탭할 때 검색결과(S01)로 이동.</li>
+          <li>최근 검색이 0건이면 이 섹션 전체(헤더 포함) 화면에 나타나지 않음.</li>
+        </ul></div>
+        <div class="ann-rule">v0.40 4-8절 — 저장 10개·화면 노출 3개 확정</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">전체 삭제 / 개별 삭제(✕)</div>
+        <div class="ann-desc"><ul>
+          <li>각 항목 오른쪽 ✕ 탭 → 해당 항목만 삭제, 목록 즉시 갱신.</li>
+          <li>"전체 삭제" 탭 → 저장된 최근 검색 전체 삭제 → 섹션 사라짐.</li>
+          <li>삭제 확인 창 없음 (바로 삭제됨).</li>
+        </ul></div>
+        <div class="ann-rule">v0.40 4-8절</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">인기도시 섹션 — 10개 고정 목록</div>
+        <div class="ann-desc"><ul>
+          <li>최근 검색 섹션 바로 아래에 항상 표시 (최근 검색이 없어도 표시됨).</li>
+          <li>10개 고정 목록 (순서 고정): 제주 · 부산 · 서울 · 오사카 · 도쿄 · 방콕 · 싱가포르 · 다낭 · 파리 · 뉴욕.</li>
+          <li>목록은 코드에 직접 넣어둔 정적 값 (서버에서 바꾸지 않음 — 하드코딩).</li>
+          <li>항목 탭 시 해당 도시명이 목적지 필드에 자동으로 채워짐 → 사용자가 [검색] 버튼을 직접 탭할 때 검색결과(S01)로 이동.</li>
+          <li>AI 챗봇 검색의 인기도시 배지 10개와 동일한 목록 공유.</li>
+        </ul></div>
+        <div class="ann-rule">v0.40 4-11절 — 인기도시 정책 신설</div>
+      </div>
+    </div>
+  </div>
+</div><!-- /two-col M01_D1-D -->
+
+<hr class="sec-divider">
+
+<!-- ════════════════════════════════════════════════
   참조 섹션 안내
 ════════════════════════════════════════════════ -->
 <div id="m01d1-note" class="sec-title">
-  <span class="sec-badge" style="background:#9ca3af;">참조</span>자동완성 · 캘린더 · 인원설정
+  <span class="sec-badge" style="background:#9ca3af;">참조</span>캘린더 · 인원설정
   <span style="font-size:12px;font-weight:400;color:#888">— 기존 파일과 동일</span>
 </div>
 <div class="sec-sub">
-  아래 3개 섹션은 디자인 확정 기준에서 변경사항이 없습니다. 상세 주석은 기존 화면기획서를 참조하세요.
+  날짜 선택·인원설정은 디자인 확정 기준에서 변경사항이 없습니다. 자동완성 드롭다운(최근검색·인기도시)은 위 D1-D에서 확인하세요.
 </div>
 
 <div class="ref-box">
   <h3>🔗 참조 섹션</h3>
   <p>
-    <b>자동완성 (목적지 입력)</b> → <a href="m01_main.html#m01-b">m01_main.html M01-B</a><br>
     <b>날짜 선택 캘린더</b> → <a href="m01_main.html#m01-c">m01_main.html M01-C</a><br>
     <b>인원 · 객실 설정</b> → <a href="m01_main.html#m01-d">m01_main.html M01-D</a>
   </p>

@@ -708,8 +708,8 @@
       <div class="ann-body">
         <div class="ann-title">최근 검색 섹션 — 자동완성 드롭다운 하단 고정</div>
         <div class="ann-desc"><ul><li>자동완성 결과 영역 하단에 항상 노출.</li><li>입력값이 없을 때(포커스 직후 빈 상태)에도 표시.</li><li>자동완성 결과 6개가 모두 표시될 때도 그 아래 표시.</li><li>최근 검색 목록 영역은 독립 스크롤 (최대 높이 설정 후 내부 <code>overflow-y: auto</code>).</li><li>각 항목 탭 시 해당 조건(목적지명 + <code>entityKey</code> + 체크인·체크아웃 날짜 + <code>rooms</code> 파라미터)을 검색폼에 그대로 복원 → 자동 검색 없이 M01-A로 복귀, 사용자가 [검색] 버튼 직접 탭해야 S01 이동.</li></ul></div>
-        <div class="ann-front">← 로컬 스토리지 key 예: <code>recentSearches</code>, JSON 배열, 최대 10개</div>
-        <div class="ann-rule">정책서 4-8절. 최대 10개, 최근 검색 순(최신이 최상단). 로컬 스토리지 저장으로 서버 동기화 없음(MVP). 기기 변경 시 초기화.</div>
+        <div class="ann-front">← 로컬 스토리지 key 예: <code>recentSearches</code>, JSON 배열, 최대 10개 저장</div>
+        <div class="ann-rule">v0.40 4-8절 — 저장 최대 10개 · 화면 노출 최대 3개 (최신 3개만 표시). 로컬 스토리지 저장으로 서버 동기화 없음(MVP). 기기 변경 시 초기화.</div>
         <div class="ann-case">최근 검색 0건 시 섹션 헤더("최근 검색")와 목록 영역 모두 미표시.</div>
       </div>
     </div>
