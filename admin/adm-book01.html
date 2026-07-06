@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADM-BOOK01 — 예약내역 전체 목록</title>
+<link rel="stylesheet" href="wf-admin-styles.css">
+</head>
+<body>
+<nav class="page-nav">
+  <a class="page-nav-back" href="admin-index.html">← 목차</a>
+  <span class="page-nav-title">ADM-BOOK01</span>
+  <span class="page-nav-route">예약내역 · 전체 목록</span>
+  <div class="page-nav-nav">
+    <a class="page-nav-pager" href="adm-mem02.html">← MEM02</a>
+    <a class="page-nav-pager" href="adm-cb01.html">다음: CB01 →</a>
+  </div>
+</nav>
+
+<div class="adm-shell">
+  <!-- 사이드바 -->
+  <aside class="adm-sidebar">
+    <div class="adm-sidebar-logo">
+      <div class="adm-sidebar-logo-name">allmytour admin</div>
+      <div class="adm-sidebar-logo-sub">관리자 전용 시스템</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">Overview</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📊</span>대시보드</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">회원관리</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">👥</span>회원 목록</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">예약내역</div>
+      <div class="adm-nav-item active"><span class="adm-nav-icon">📋</span>예약내역 전체</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">캐시백관리</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">💰</span>캐시백 내역</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📈</span>공급사별 현황</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">설정</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">⚙️</span>관리자 설정</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">이메일 템플릿</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">✉️</span>이메일 템플릿 관리</div>
+    </div>
+    <div class="adm-sidebar-footer">
+      <div class="adm-sidebar-user"><strong>마스터 관리자</strong>admin@allmytour.com</div>
+      <div class="adm-sidebar-logout">로그아웃</div>
+    </div>
+  </aside>
+
+  <!-- 메인 -->
+  <main class="adm-main">
+
+    <div class="adm-page-hdr">
+      <div class="adm-page-title">예약내역 전체 목록</div>
+      <div class="adm-page-sub">KAYAK Reporting API Booking 기준 · 예약완료(Booking) 건만 표시 · 조회전용</div>
+    </div>
+
+    <div class="two-col" style="align-items:start">
+    <div>
+
+      <!-- 공통정책 블록 -->
+      <div class="sec-policy">
+        <div class="sec-policy-hdr">⚙ 공통 정책 — 예약내역</div>
+        <ul class="sec-policy-list">
+          <li><strong>데이터 소스:</strong> KAYAK Reporting API <code>TransactionType=Booking</code> 건만 표시. 캐시백 트랜잭션 제외 (5조)</li>
+          <li><strong>회원 식별:</strong> 딥링크 <code>p=</code> 파라미터(회원ID) → Reporting API <code>labels</code> 필드 매핑으로 회원별 귀속 (정책서 v0.30 9절)</li>
+          <li><strong>표시 기준:</strong> 예약완료 건만. 클릭(조회) 건 제외 (5조)</li>
+          <li><strong>MVP 조회전용:</strong> 상태 변경·환불 처리 기능 없음. Phase 2에서 공급사별 수동/자동 상태변경 추가 (5조)</li>
+          <li><strong>Excel 다운로드:</strong> 개발 공수 확인 후 결정. 미확정 시 Phase 2 이동 (8조 미결 3)</li>
+        </ul>
+        <div class="sec-policy-rule">기준: 어드민 v0.3 5조</div>
+      </div>
+
+      <!-- 필터 바 -->
+      <div class="filter-bar">
+        <span class="filter-label">검색</span>
+        <input class="wf-input" style="width:180px" placeholder="예약ID·이메일·호텔명"><span class="wf-cn">1</span>
+        <span class="filter-sep"></span>
+        <span class="filter-label">상태</span>
+        <select class="wf-select"><option>전체</option><option>Waiting</option><option>Approved</option><option>Cancelled</option></select><span class="wf-cn">2</span>
+        <span class="filter-label">공급사(OTA)</span>
+        <select class="wf-select"><option>전체</option><option>Agoda</option><option>Booking.com</option><option>Hotels.com</option></select><span class="wf-cn">3</span>
+        <span class="filter-label">체크인</span>
+        <input class="wf-input" style="width:100px" placeholder="2026-01-01">
+        <span>~</span>
+        <input class="wf-input" style="width:100px" placeholder="2026-12-31">
+        <div class="filter-actions">
+          <button class="wf-btn wf-btn-primary wf-btn-sm">검색</button>
+          <button class="wf-btn wf-btn-ghost wf-btn-sm">초기화</button>
+          <button class="wf-btn wf-btn-download wf-btn-sm"><span class="wf-cn">4</span> Excel 다운로드</button>
+        </div>
+      </div>
+
+      <!-- 요약 카드 -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:13px;font-weight:700;color:#374151">요약 통계</span><span class="wf-cn">6</span></div>
+      <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px">
+        <div class="stat-card blue">
+          <div class="stat-card-label">전체 예약</div>
+          <div class="stat-card-value">1,203</div>
+          <div class="stat-card-sub">누적</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-card-label">적립예정</div>
+          <div class="stat-card-value">287</div>
+          <div class="stat-card-sub">Waiting</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-card-label">지급완료</div>
+          <div class="stat-card-value">891</div>
+          <div class="stat-card-sub">Approved</div>
+        </div>
+        <div class="stat-card gray">
+          <div class="stat-card-label">취소·만료</div>
+          <div class="stat-card-value">25</div>
+          <div class="stat-card-sub">Cancelled</div>
+        </div>
+      </div>
+
+      <!-- 테이블 -->
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <thead>
+            <tr>
+              <th>예약 ID</th>
+              <th>회원</th>
+              <th>호텔명</th>
+              <th>도시</th>
+              <th>공급사(OTA)</th>
+              <th>체크인</th>
+              <th>체크아웃</th>
+              <th>예약금액(상품가) <span class="wf-cn">7</span></th>
+              <th>캐시백</th>
+              <th>상태</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-family:monospace;font-size:11px">RES-20001</td>
+              <td>
+                <div style="font-size:12px;font-weight:600">Gildong Hong</div>
+                <div style="font-size:10px;color:#9ca3af">hong@example.com</div>
+              </td>
+              <td>Grand Hyatt Seoul</td>
+              <td>서울</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:5px">
+                  <div style="width:20px;height:14px;background:#003580;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:7px;color:#fff;font-weight:700">Bk</div>
+                  Booking.com
+                </div>
+              </td>
+              <td>2026-07-01</td>
+              <td>2026-07-03</td>
+              <td style="font-weight:600">₩320,000</td>
+              <td style="color:#f59e0b;font-weight:600">₩9,600</td>
+              <td><span class="wf-badge badge-approved">지급완료</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:11px">RES-19998</td>
+              <td>
+                <div style="font-size:12px;font-weight:600">Jane Kim</div>
+                <div style="font-size:10px;color:#9ca3af">jkim@example.com</div>
+              </td>
+              <td>Shinjuku Prince Hotel</td>
+              <td>도쿄</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:5px">
+                  <div style="width:20px;height:14px;background:#e03c31;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:7px;color:#fff;font-weight:700">Ag</div>
+                  Agoda
+                </div>
+              </td>
+              <td>2026-08-10</td>
+              <td>2026-08-14</td>
+              <td style="font-weight:600">¥56,000</td>
+              <td style="color:#f59e0b;font-weight:600">¥2,800</td>
+              <td><span class="wf-badge badge-waiting">적립예정</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:11px">RES-19990</td>
+              <td>
+                <div style="font-size:12px;font-weight:600">Alpha Tester</div>
+                <div style="font-size:10px;color:#9ca3af">alpha@allmytour.com</div>
+              </td>
+              <td>Marina Bay Sands</td>
+              <td>싱가포르</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:5px">
+                  <div style="width:20px;height:14px;background:#0078d4;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:7px;color:#fff;font-weight:700">Ht</div>
+                  Hotels.com
+                </div>
+              </td>
+              <td>2026-06-01</td>
+              <td>2026-06-04</td>
+              <td style="font-weight:600">SGD 780</td>
+              <td style="color:#dc2626;font-size:11px">—</td>
+              <td><span class="wf-badge badge-cancelled">취소</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:monospace;font-size:11px">RES-19985</td>
+              <td>
+                <div style="font-size:12px;font-weight:600">(비로그인)</div>
+                <div style="font-size:10px;color:#9ca3af">미귀속</div>
+              </td>
+              <td>The Westin Bangkok</td>
+              <td>방콕</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:5px">
+                  <div style="width:20px;height:14px;background:#e03c31;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:7px;color:#fff;font-weight:700">Ag</div>
+                  Agoda
+                </div>
+              </td>
+              <td>2026-07-20</td>
+              <td>2026-07-23</td>
+              <td style="font-weight:600">THB 12,000</td>
+              <td style="color:#9ca3af;font-size:11px">미귀속 <span class="wf-cn">5</span></td>
+              <td><span class="wf-badge badge-approved">지급완료</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="adm-pagination">
+          <div class="adm-pagination-info">총 1,203건 · 1–50 표시 중</div>
+          <div class="adm-pagination-btns">
+            <span class="adm-pagination-btn">«</span>
+            <span class="adm-pagination-btn active">1</span>
+            <span class="adm-pagination-btn">2</span>
+            <span class="adm-pagination-btn">3</span>
+            <span class="adm-pagination-btn">»</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /첫 번째 컬럼 -->
+
+    <!-- 주석 -->
+    <div class="ann">
+      <h3>주석 — ADM-BOOK01</h3>
+      <div class="ann-item">
+        <span class="cn">1</span>
+        <div class="ann-body">
+          <div class="ann-title">통합 검색</div>
+          <div class="ann-desc">
+            <ul>
+              <li>예약ID(RES-XXXXX)·회원 이메일·호텔명으로 검색</li>
+              <li>KAYAK Reporting API 응답 내 필터 또는 자사 캐싱 DB 검색</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <span class="cn">2</span>
+        <div class="ann-body">
+          <div class="ann-title">상태 필터</div>
+          <div class="ann-desc">
+            <ul>
+              <li>Waiting = 적립예정 (체크아웃 전)</li>
+              <li>Approved = 지급완료 (KAYAK 확인)</li>
+              <li>Cancelled = 취소·만료</li>
+            </ul>
+          </div>
+          <div class="ann-rule">정책서 v0.30 9-4절 — 캐시백 상태값</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <span class="cn">3</span>
+        <div class="ann-body">
+          <div class="ann-title">공급사(OTA) 필터</div>
+          <div class="ann-desc">
+            <ul>
+              <li>KAYAK Reporting API <code>providers</code> 기준 OTA명 목록</li>
+              <li>동적 목록 (고정 값 없음)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <span class="cn">4</span>
+        <div class="ann-body">
+          <div class="ann-title">Excel 다운로드</div>
+          <div class="ann-desc">
+            <ul>
+              <li>현재 필터 조건 그대로 전체 다운로드</li>
+              <li>컬럼: 예약ID·회원·호텔·도시·OTA·체크인/아웃·예약금액·캐시백·상태</li>
+            </ul>
+          </div>
+          <div class="ann-rule">개발 공수 확인 후 결정 (8조 미결 3)</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <span class="cn">5</span>
+        <div class="ann-body">
+          <div class="ann-title">비로그인 미귀속 건</div>
+          <div class="ann-desc">
+            <ul>
+              <li>딥링크 <code>p=</code> 파라미터 없이 발생한 예약 (비로그인 아웃링크)</li>
+              <li>캐시백 수익은 자사에 귀속되나 회원 귀속 불가</li>
+              <li>회원 컬럼에 "미귀속" 표시</li>
+            </ul>
+          </div>
+          <div class="ann-rule">정책서 v0.30 9절 — 비로그인 캐시백 귀속 불가</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <span class="cn">6</span>
+        <div class="ann-body">
+          <div class="ann-title">요약 통계 계산식</div>
+          <div class="ann-desc">
+            <ul>
+              <li><strong>전체 예약(1,203):</strong> KAYAK Reporting API <code>TransactionType=Booking</code> 전체 건수 합산</li>
+              <li><strong>적립예정(287):</strong> <code>status=Waiting</code> — 체크아웃 전 미확인 상태</li>
+              <li><strong>지급완료(891):</strong> <code>status=Approved</code> — KAYAK 검증 완료 건</li>
+              <li><strong>취소·만료(25):</strong> <code>status=Cancelled</code> — 취소 또는 만료 건</li>
+              <li>검증: 1,203 = 287 + 891 + 25 ✓</li>
+            </ul>
+          </div>
+          <div class="ann-rule">KAYAK Reporting API transactionStatus 필드 / 정책서 v0.30 9-4절</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <span class="cn">7</span>
+        <div class="ann-body">
+          <div class="ann-title">예약금액(상품가) 컬럼</div>
+          <div class="ann-desc">
+            <ul>
+              <li>KAYAK Reporting API <code>transactionAmount</code> 값 — 실제 고객이 OTA에 결제한 상품 금액</li>
+              <li>세금·수수료 포함 여부는 OTA마다 다름 — "상품가" 표기로 통일</li>
+              <li>다중 통화 혼재 가능 (₩·¥·THB·SGD 등 그대로 표시)</li>
+            </ul>
+          </div>
+          <div class="ann-rule">어드민 v0.3 5-2절 — 예약금액(상품가) 라벨 확정</div>
+        </div>
+      </div>
+    </div><!-- /ann -->
+
+    </div><!-- /two-col -->
+
+  </main>
+</div>
+
+</body>
+</html>

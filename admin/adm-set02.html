@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADM-SET02 — 관리자 계정 상세·수정</title>
+<link rel="stylesheet" href="wf-admin-styles.css">
+</head>
+<body>
+<nav class="page-nav">
+  <a class="page-nav-back" href="admin-index.html">← 목차</a>
+  <span class="page-nav-title">ADM-SET02</span>
+  <span class="page-nav-route">관리자 설정 · 계정 상세·수정</span>
+  <div class="page-nav-nav">
+    <a class="page-nav-pager" href="adm-set01.html">← SET01</a>
+    <a class="page-nav-pager" href="adm-dashboard.html">다음: DASH →</a>
+  </div>
+</nav>
+
+<div class="adm-shell">
+  <aside class="adm-sidebar">
+    <div class="adm-sidebar-logo">
+      <div class="adm-sidebar-logo-name">allmytour admin</div>
+      <div class="adm-sidebar-logo-sub">관리자 전용 시스템</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">Overview</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📊</span>대시보드</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">회원관리</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">👥</span>회원 목록</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">예약내역</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📋</span>예약내역 전체</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">캐시백관리</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">💰</span>캐시백 내역</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📈</span>공급사별 현황</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">설정</div>
+      <div class="adm-nav-item active"><span class="adm-nav-icon">⚙️</span>관리자 설정</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">이메일 템플릿</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">✉️</span>이메일 템플릿 관리</div>
+    </div>
+    <div class="adm-sidebar-footer">
+      <div class="adm-sidebar-user"><strong>마스터 관리자</strong>admin@allmytour.com</div>
+      <div class="adm-sidebar-logout">로그아웃</div>
+    </div>
+  </aside>
+
+  <main class="adm-main">
+
+    <div class="adm-page-hdr">
+      <div class="adm-page-title">계정 상세 — 마스터 관리자</div>
+      <div class="adm-page-sub">계정 상태 조회 및 비밀번호 변경</div>
+      <div class="adm-page-actions">
+        <a href="adm-set01.html" class="wf-btn wf-btn-ghost">← 목록으로</a>
+      </div>
+    </div>
+
+    <!-- 공통정책 블록 -->
+    <div class="sec-policy">
+      <div class="sec-policy-hdr">⚙ 공통 정책 — 관리자 계정 상세·수정</div>
+      <ul class="sec-policy-list">
+        <li><strong>MVP 범위:</strong> 마스터 단일 계정 비밀번호 변경만 제공 (7-2절)</li>
+        <li><strong>아이디 변경:</strong> 불가. 초기 발급 후 고정 (7-2절)</li>
+        <li><strong>비밀번호 초기화:</strong> 임시 비밀번호 발급 기능 포함 (7-2절)</li>
+        <li><strong>보안 정책:</strong> 세션 만료 시간·2FA·IP 제한 — 미결 (8조 미결 1)</li>
+      </ul>
+      <div class="sec-policy-rule">기준: 어드민 v0.2 7-2절</div>
+    </div>
+
+    <div class="two-col" style="align-items:start">
+      <div>
+
+        <!-- 계정 상태 통계 -->
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <span style="font-size:14px;font-weight:700;color:#374151">계정 상태</span>
+          <span class="wf-cn">4</span>
+        </div>
+        <div class="stat-grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:20px">
+          <div class="stat-card blue">
+            <div class="stat-card-label">마지막 로그인</div>
+            <div class="stat-card-value" style="font-size:16px">06-22 09:15</div>
+            <div class="stat-card-sub">2026-06-22</div>
+          </div>
+          <div class="stat-card gray">
+            <div class="stat-card-label">비밀번호 최종 변경</div>
+            <div class="stat-card-value" style="font-size:16px;color:#9ca3af">초기값</div>
+            <div class="stat-card-sub">2026-01-01 (미변경)</div>
+          </div>
+          <div class="stat-card amber">
+            <div class="stat-card-label">현재 세션</div>
+            <div class="stat-card-value" style="font-size:16px;color:#f59e0b">활성</div>
+            <div class="stat-card-sub">09:15 시작 · 만료 미설정</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-card-label">총 로그인 횟수</div>
+            <div class="stat-card-value">142</div>
+            <div class="stat-card-sub">누적 (자사 DB 기준)</div>
+          </div>
+        </div>
+        <hr class="divider" style="margin-bottom:20px">
+
+        <!-- 현재 계정 정보 -->
+        <div class="sec-title">현재 계정 정보</div>
+        <div class="adm-form" style="margin-bottom:24px">
+          <div class="adm-form-row">
+            <div class="adm-form-label">아이디</div>
+            <div class="adm-form-readonly" style="display:flex;align-items:center;gap:8px">
+              admin01
+              <span class="wf-badge badge-active">마스터</span>
+              <span class="wf-cn">1</span>
+            </div>
+          </div>
+          <div class="adm-form-row">
+            <div class="adm-form-label">이메일</div>
+            <div class="adm-form-readonly">admin@allmytour.com</div>
+          </div>
+          <div class="adm-form-row">
+            <div class="adm-form-label">계정 생성일</div>
+            <div class="adm-form-readonly">2026-01-01</div>
+          </div>
+          <div class="adm-form-row">
+            <div class="adm-form-label">권한 <span class="wf-cn">5</span></div>
+            <div>
+              <select class="wf-select" style="width:220px">
+                <option value="master" selected>마스터</option>
+                <option value="sub" disabled>서브 (Phase 2 — 사용 불가)</option>
+              </select>
+              <div class="wf-hint">서브 권한은 Phase 2에서 활성화 예정</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 비밀번호 변경 -->
+        <div class="sec-title">비밀번호 변경 <span class="wf-cn">2</span></div>
+        <div class="adm-form" style="margin-bottom:24px">
+          <div class="adm-form-row" style="margin-bottom:14px">
+            <div class="adm-form-label required">현재 비밀번호</div>
+            <input class="wf-input" type="password" placeholder="현재 비밀번호 입력">
+          </div>
+          <div class="adm-form-row" style="margin-bottom:14px">
+            <div class="adm-form-label required">새 비밀번호</div>
+            <div>
+              <input class="wf-input" type="password" placeholder="새 비밀번호 입력">
+              <div class="wf-hint">영문+숫자+특수문자 조합, 8자 이상</div>
+            </div>
+          </div>
+          <div class="adm-form-row" style="margin-bottom:14px">
+            <div class="adm-form-label required">새 비밀번호 확인</div>
+            <input class="wf-input" type="password" placeholder="새 비밀번호 다시 입력">
+          </div>
+          <div style="text-align:right;margin-top:8px">
+            <button class="wf-btn wf-btn-primary">비밀번호 변경 <span class="wf-cn">3</span></button>
+          </div>
+        </div>
+
+        <!-- 서브계정 (Phase 2) -->
+        <div class="sec-title" style="color:#9ca3af;border-bottom-color:#e5e7eb">
+          서브계정 관리
+          <span class="wf-badge" style="background:#fef3c7;color:#92400e">Phase 2</span>
+        </div>
+        <div class="adm-form" style="opacity:.5;pointer-events:none">
+          <div style="text-align:center;padding:32px;color:#9ca3af">
+            <div style="font-size:24px;margin-bottom:10px">🔒</div>
+            <div style="font-size:13px;font-weight:600;color:#6b7280">Phase 2 기능</div>
+            <div style="font-size:12px;margin-top:4px">서브계정 생성·권한 분리는 Phase 2에서 설계 예정.<br>현재 마스터 단일 계정만 운영.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 주석 -->
+      <div class="ann">
+        <h3>주석 — ADM-SET02</h3>
+
+        <div class="ann-item">
+          <span class="cn">4</span>
+          <div class="ann-body">
+            <div class="ann-title">계정 상태 카드 — 데이터 소스</div>
+            <div class="ann-desc"><ul>
+              <li><strong>마지막 로그인:</strong> 자사 DB 로그인 이력 테이블 최신 기록</li>
+              <li><strong>비밀번호 최종 변경:</strong> 자사 DB 비밀번호 변경 이력. 초기값(최초 발급) 표시</li>
+              <li><strong>현재 세션:</strong> 활성 세션 여부. 세션 만료 시간은 미확정 (8조 미결 1)</li>
+              <li><strong>총 로그인 횟수:</strong> 자사 DB 로그인 이력 누적 카운트</li>
+            </ul></div>
+            <div class="ann-rule">세션 만료 시간 미확정 — 보안 정책 확정 필요 (8조 미결 1)</div>
+          </div>
+        </div>
+
+        <div class="ann-item">
+          <span class="cn">5</span>
+          <div class="ann-body">
+            <div class="ann-title">권한 셀렉트 박스</div>
+            <div class="ann-desc"><ul>
+              <li><strong>마스터:</strong> 전체 어드민 기능 접근 가능. MVP 유일 권한</li>
+              <li><strong>서브 (disabled):</strong> Phase 2 활성화 예정. 현재 선택 불가 상태로 렌더링</li>
+              <li>MVP에서는 마스터 고정이므로 실제 변경 불가 — 저장 시 마스터로만 처리</li>
+            </ul></div>
+            <div class="ann-rule">어드민 v0.2 7-2절 — 서브 권한 Phase 2 예정</div>
+          </div>
+        </div>
+
+        <div class="ann-item">
+          <span class="cn">1</span>
+          <div class="ann-body">
+            <div class="ann-title">아이디 (읽기전용)</div>
+            <div class="ann-desc"><ul>
+              <li>초기 발급 후 변경 불가</li>
+              <li>"마스터" 배지로 권한 구분</li>
+            </ul></div>
+            <div class="ann-rule">어드민 v0.2 7-2절 — 마스터 단일 권한</div>
+          </div>
+        </div>
+
+        <div class="ann-item">
+          <span class="cn">2</span>
+          <div class="ann-body">
+            <div class="ann-title">비밀번호 변경 폼</div>
+            <div class="ann-desc"><ul>
+              <li>현재 비밀번호 검증 후 변경 허용</li>
+              <li>새 비밀번호 규칙: 영문+숫자+특수문자 8자 이상</li>
+              <li>새 비밀번호 ≠ 현재 비밀번호 (동일 불가)</li>
+            </ul></div>
+            <div class="ann-rule">비밀번호 복잡도 기준 — 보안 정책 확정 후 반영 (8조 미결 1)</div>
+          </div>
+        </div>
+
+        <div class="ann-item">
+          <span class="cn">3</span>
+          <div class="ann-body">
+            <div class="ann-title">[비밀번호 변경] 버튼</div>
+            <div class="ann-desc"><ul>
+              <li>전체 3필드 입력 + 유효성 통과 시 활성</li>
+              <li>성공 시: 토스트 "비밀번호가 변경되었습니다" + 로그아웃 후 재로그인 유도</li>
+              <li>현재 비밀번호 오류: "현재 비밀번호가 올바르지 않습니다" 에러</li>
+              <li>새 비밀번호 불일치: "비밀번호가 일치하지 않습니다" 에러</li>
+            </ul></div>
+            <div class="ann-front">프론트: 변경 성공 후 자동 로그아웃 처리 — 보안 정책 확정 후 결정</div>
+          </div>
+        </div>
+
+        <hr class="divider">
+        <div class="text-muted">
+          <strong style="color:#374151;display:block;margin-bottom:4px">미결 사항</strong>
+          · 비밀번호 찾기/초기화 프로세스 미설계<br>
+          · 세션 만료 시간 미확정<br>
+          · 2FA(2단계 인증) Phase 2 논의<br>
+          · IP 접근 제한 Phase 2 논의<br>
+          · 서브계정 권한 설계 Phase 2
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+</body>
+</html>

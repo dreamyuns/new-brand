@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADM-CB01 — 캐시백 내역</title>
+<link rel="stylesheet" href="wf-admin-styles.css">
+</head>
+<body>
+<nav class="page-nav">
+  <a class="page-nav-back" href="admin-index.html">← 목차</a>
+  <span class="page-nav-title">ADM-CB01</span>
+  <span class="page-nav-route">캐시백관리 · 캐시백 내역</span>
+  <div class="page-nav-nav">
+    <a class="page-nav-pager" href="adm-book01.html">← BOOK01</a>
+    <a class="page-nav-pager" href="adm-cb02.html">다음: CB02 →</a>
+  </div>
+</nav>
+
+<div class="adm-shell">
+  <!-- 사이드바 -->
+  <aside class="adm-sidebar">
+    <div class="adm-sidebar-logo">
+      <div class="adm-sidebar-logo-name">allmytour admin</div>
+      <div class="adm-sidebar-logo-sub">관리자 전용 시스템</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">Overview</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📊</span>대시보드</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">회원관리</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">👥</span>회원 목록</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">예약내역</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📋</span>예약내역 전체</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">캐시백관리</div>
+      <div class="adm-nav-item active"><span class="adm-nav-icon">💰</span>캐시백 내역</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📈</span>공급사별 현황</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">설정</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">⚙️</span>관리자 설정</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">이메일 템플릿</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">✉️</span>이메일 템플릿 관리</div>
+    </div>
+    <div class="adm-sidebar-footer">
+      <div class="adm-sidebar-user"><strong>마스터 관리자</strong>admin@allmytour.com</div>
+      <div class="adm-sidebar-logout">로그아웃</div>
+    </div>
+  </aside>
+
+  <!-- 메인 -->
+  <main class="adm-main">
+
+    <div class="adm-page-hdr">
+      <div class="adm-page-title">캐시백 내역</div>
+      <div class="adm-page-sub">회원별 캐시백 적립 현황 · KAYAK Reporting API 기반 · MVP 조회전용</div>
+    </div>
+
+    <div class="two-col" style="align-items:start">
+    <div>
+
+      <!-- 공통정책 블록 -->
+      <div class="sec-policy">
+        <div class="sec-policy-hdr">⚙ 공통 정책 — 캐시백 내역</div>
+        <ul class="sec-policy-list">
+          <li><strong>데이터 소스:</strong> KAYAK Reporting API <code>labels</code> 파라미터로 회원 귀속 캐시백 조회 (6조)</li>
+          <li><strong>MVP 조회전용:</strong> 지급·삭제·회수 기능 없음. Phase 2에서 추가 (6조)</li>
+          <li><strong>Approved(지급완료) 판단:</strong> <code>TransactionStatus = Active</code> AND <code>PaymentMonth 값 존재</code>. 2026-06-23 KAYAK 공식 확인 (6-2절)</li>
+          <li><strong>Cancelled(취소·만료) 주의:</strong> <code>TransactionStatus = Cancelled</code>. PERCENTAGE 타입이어도 금액 0인 케이스 실데이터에서 확인됨 (6-2절)</li>
+          <li><strong>NONE/0원 건 미표시:</strong> <code>cashbackType = NONE</code> 또는 캐시백 금액 0원인 건은 캐시백 내역에 표시하지 않음. 예약내역(ADM-BOOK01)에서만 조회 가능 (6-2절)</li>
+          <li><strong>지급월 기준:</strong> EST(미국 동부 시간) 기준. 표시 시 한국 시간과 최대 13~14시간 차이 존재 (6-2절)</li>
+          <li><strong>금액 통화:</strong> KAYAK API 응답 통화 그대로 표시. 자사 환산 없음 (9-1절)</li>
+        </ul>
+        <div class="sec-policy-rule">기준: 어드민 v0.3 6조</div>
+      </div>
+
+      <!-- 요약 카드 -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:13px;font-weight:700;color:#374151">요약 통계</span><span class="wf-cn">5</span></div>
+      <div class="stat-grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:16px">
+        <div class="stat-card amber">
+          <div class="stat-card-label">누적 캐시백 (Approved)</div>
+          <div class="stat-card-value">₩12,400,000</div>
+          <div class="stat-card-sub">지급완료 기준</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-card-label">적립예정 (Waiting)</div>
+          <div class="stat-card-value">₩2,100,000</div>
+          <div class="stat-card-sub">체크아웃 전</div>
+        </div>
+        <div class="stat-card gray">
+          <div class="stat-card-label">취소·만료 (Cancelled)</div>
+          <div class="stat-card-value">₩340,000</div>
+          <div class="stat-card-sub">반환 불가</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-card-label">귀속 회원 수</div>
+          <div class="stat-card-value">872</div>
+          <div class="stat-card-sub">캐시백 발생 회원</div>
+        </div>
+      </div>
+
+      <!-- 필터 바 -->
+      <div class="filter-bar">
+        <span class="filter-label">검색</span>
+        <input class="wf-input" style="width:160px" placeholder="이메일·예약ID 검색"><span class="wf-cn">1</span>
+        <span class="filter-sep"></span>
+        <span class="filter-label">상태</span>
+        <select class="wf-select">
+          <option>전체</option>
+          <option>적립예정 (Waiting)</option>
+          <option>지급완료 (Approved)</option>
+          <option>취소·만료 (Cancelled)</option>
+        </select><span class="wf-cn">2</span>
+        <span class="filter-label">지급월</span>
+        <input class="wf-input" style="width:100px" placeholder="2026-06"><span class="wf-cn">3</span>
+        <div class="filter-actions">
+          <button class="wf-btn wf-btn-primary wf-btn-sm">검색</button>
+          <button class="wf-btn wf-btn-ghost wf-btn-sm">초기화</button>
+          <button class="wf-btn wf-btn-download wf-btn-sm">Excel 다운로드</button>
+        </div>
+      </div>
+
+      <!-- 테이블 -->
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <thead>
+            <tr>
+              <th>회원</th>
+              <th>예약 ID</th>
+              <th>호텔명</th>
+              <th>체크인</th>
+              <th>체크아웃</th>
+              <th>공급사(OTA)</th>
+              <th>예약금액</th>
+              <th>캐시백 금액</th>
+              <th>캐시백 타입 <span class="wf-cn">4</span></th>
+              <th>상태</th>
+              <th>지급일</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div style="font-size:12px;font-weight:600">Gildong Hong</div>
+                <div style="font-size:10px;color:#9ca3af">U-10042</div>
+              </td>
+              <td style="font-family:monospace;font-size:11px">RES-20001</td>
+              <td>Grand Hyatt Seoul</td>
+              <td>2026-07-01</td>
+              <td>2026-07-03</td>
+              <td>Booking.com</td>
+              <td>₩320,000</td>
+              <td style="font-weight:600;color:#f59e0b">₩9,600 (3%)</td>
+              <td><span class="wf-badge badge-active" style="font-size:9px">PERCENTAGE</span></td>
+              <td><span class="wf-badge badge-approved">지급완료</span></td>
+              <td>2026-08-01</td>
+            </tr>
+            <tr>
+              <td>
+                <div style="font-size:12px;font-weight:600">Minji Lee</div>
+                <div style="font-size:10px;color:#9ca3af">U-10040</div>
+              </td>
+              <td style="font-family:monospace;font-size:11px">RES-19997</td>
+              <td>Shinjuku Prince Hotel</td>
+              <td>2026-08-10</td>
+              <td>2026-08-14</td>
+              <td>Agoda</td>
+              <td>¥56,000</td>
+              <td style="font-weight:600;color:#f59e0b">¥2,800 (5%)</td>
+              <td><span class="wf-badge badge-active" style="font-size:9px">PERCENTAGE</span></td>
+              <td><span class="wf-badge badge-waiting">적립예정</span></td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>
+                <div style="font-size:12px;font-weight:600">Alpha Tester</div>
+                <div style="font-size:10px;color:#9ca3af">U-10001</div>
+              </td>
+              <td style="font-family:monospace;font-size:11px">RES-19880</td>
+              <td>Marina Bay Sands</td>
+              <td>2026-05-10</td>
+              <td>2026-05-13</td>
+              <td>Hotels.com</td>
+              <td>SGD 1,200</td>
+              <td style="font-weight:600;color:#f59e0b">SGD 12 (flat)</td>
+              <td><span class="wf-badge badge-inactive" style="font-size:9px">FLAT</span></td>
+              <td><span class="wf-badge badge-cancelled">취소·만료</span></td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="adm-pagination">
+          <div class="adm-pagination-info">총 1,157건 · 1–50 표시 중</div>
+          <div class="adm-pagination-btns">
+            <span class="adm-pagination-btn">«</span>
+            <span class="adm-pagination-btn active">1</span>
+            <span class="adm-pagination-btn">2</span>
+            <span class="adm-pagination-btn">»</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 2 안내 -->
+      <div style="margin-top:16px;background:#fef3c7;border:1px solid #fde68a;border-left:3px solid #f59e0b;border-radius:6px;padding:12px 16px;font-size:12px;color:#92400e">
+        <strong>Phase 2 예정 기능:</strong> 캐시백 수동 지급 / 삭제 / 회수 기능은 Phase 2에서 추가. MVP에서는 조회만 가능.
+      </div>
+
+    </div><!-- /첫 번째 컬럼 -->
+
+    <!-- 주석 -->
+    <div class="ann">
+      <h3>주석 — ADM-CB01</h3>
+      <div class="ann-item">
+        <span class="cn">1</span>
+        <div class="ann-body">
+          <div class="ann-title">검색 필드</div>
+          <div class="ann-desc">
+            <ul>
+              <li>회원 이메일 또는 예약ID 검색</li>
+              <li>회원 상세(ADM-MEM02) 캐시백 탭과 동일 데이터, 필터만 다름</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <span class="cn">2</span>
+        <div class="ann-body">
+          <div class="ann-title">상태 필터</div>
+          <div class="ann-desc">
+            <ul>
+              <li>KAYAK Reporting API <code>transactionStatus</code> 기반 3개 값</li>
+              <li><strong>Waiting(적립예정):</strong> 체크아웃 전 미확인 상태</li>
+              <li><strong>Approved(지급완료):</strong> <code>TransactionStatus = Active</code> + <code>PaymentMonth 값 존재</code> 조건 모두 충족 시. 2026-06-23 KAYAK 공식 확인 완료</li>
+              <li><strong>Cancelled(취소·만료):</strong> <code>TransactionStatus = Cancelled</code>. PERCENTAGE 타입이어도 금액 0원인 실데이터 케이스 있음 — 주의</li>
+              <li>NONE/0원 건은 이 화면에 미표시 (예약내역 ADM-BOOK01에서 조회)</li>
+            </ul>
+          </div>
+          <div class="ann-rule">어드민 v0.3 6-2절 — Approved 판단 기준 확정</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <span class="cn">3</span>
+        <div class="ann-body">
+          <div class="ann-title">지급월 필터</div>
+          <div class="ann-desc">
+            <ul>
+              <li>YYYY-MM 형식 입력</li>
+              <li>Approved 건의 지급 확정월 기준</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <span class="cn">4</span>
+        <div class="ann-body">
+          <div class="ann-title">캐시백 타입 배지</div>
+          <div class="ann-desc">
+            <ul>
+              <li><code>PERCENTAGE</code>: 예약금액 대비 % 지급</li>
+              <li><code>FLAT</code>: 고정 금액 지급</li>
+              <li><code>NONE</code>: 캐시백 없음 — <strong>이 화면에 표시하지 않음</strong> (예약내역에서만 조회 가능)</li>
+              <li>주의: PERCENTAGE 타입이어도 <code>Cancelled</code> 상태일 때 캐시백 금액 0원인 실데이터 케이스 확인됨 (2026-07-06 실데이터). 타입만으로 금액 유추 불가</li>
+            </ul>
+          </div>
+          <div class="ann-rule">어드민 v0.3 6-2절 / 6-4절 — NONE 미표시 + 실데이터 주의사항</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <span class="cn">5</span>
+        <div class="ann-body">
+          <div class="ann-title">요약 통계 계산식</div>
+          <div class="ann-desc">
+            <ul>
+              <li><strong>누적 캐시백(Approved) ₩12,400,000:</strong> Approved 건 캐시백 금액 전체 합산. 현재 KRW 기준 (다중 통화 혼재 시 통화별 분리 표시 필요 — 개발팀 협의)</li>
+              <li><strong>적립예정(Waiting) ₩2,100,000:</strong> Waiting 건 캐시백 금액 합산 (체크아웃 전 미확인)</li>
+              <li><strong>취소·만료(Cancelled) ₩340,000:</strong> Cancelled 건 합산. 환불 없음, 자사 수익으로 귀속</li>
+              <li><strong>귀속 회원 수 872:</strong> 캐시백 1건 이상 귀속된 로그인 회원 수. 비로그인 미귀속 건은 제외</li>
+            </ul>
+          </div>
+          <div class="ann-rule">통화 혼재 시 집계 기준 미결 — 개발팀 협의 필요 / 정책서 v0.30 9절</div>
+        </div>
+      </div>
+    </div><!-- /ann -->
+
+    </div><!-- /two-col -->
+
+  </main>
+</div>
+
+</body>
+</html>

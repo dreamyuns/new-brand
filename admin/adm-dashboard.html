@@ -1,0 +1,261 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADM-DASH — 대시보드</title>
+<link rel="stylesheet" href="wf-admin-styles.css">
+</head>
+<body>
+<nav class="page-nav">
+  <a class="page-nav-back" href="admin-index.html">← 목차</a>
+  <span class="page-nav-title">ADM-DASH</span>
+  <span class="page-nav-route">대시보드 (우선순위 낮음 · 참고용)</span>
+  <div class="page-nav-nav">
+    <a class="page-nav-pager" href="adm-login.html">← LOGIN</a>
+    <a class="page-nav-pager" href="adm-mem01.html">다음: MEM01 →</a>
+  </div>
+</nav>
+
+<div class="adm-shell">
+  <!-- 사이드바 -->
+  <aside class="adm-sidebar">
+    <div class="adm-sidebar-logo">
+      <div class="adm-sidebar-logo-name">allmytour admin</div>
+      <div class="adm-sidebar-logo-sub">관리자 전용 시스템</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">Overview</div>
+      <div class="adm-nav-item active"><span class="adm-nav-icon">📊</span>대시보드</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">회원관리</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">👥</span>회원 목록</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">예약내역</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📋</span>예약내역 전체</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">캐시백관리</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">💰</span>캐시백 내역</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📈</span>공급사별 현황</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">설정</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">⚙️</span>관리자 설정</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">이메일 템플릿</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">✉️</span>이메일 템플릿 관리</div>
+    </div>
+    <div class="adm-sidebar-footer">
+      <div class="adm-sidebar-user"><strong>마스터 관리자</strong>admin@allmytour.com</div>
+      <div class="adm-sidebar-logout">로그아웃</div>
+    </div>
+  </aside>
+
+  <!-- 메인 -->
+  <main class="adm-main">
+
+    <div class="adm-page-hdr">
+      <div class="adm-page-title">대시보드</div>
+      <div class="adm-page-sub">주요 운영 지표 한눈에 보기 · 2026-06-22 기준<br>
+        <span style="color:#f59e0b;font-size:12px;font-weight:600">⚠️ 우선순위 낮음 — 핵심 화면(회원관리·예약·캐시백) 완성 후 구현</span>
+      </div>
+    </div>
+
+    <div class="two-col" style="align-items:start">
+    <div>
+
+      <!-- 핵심 지표 -->
+      <div class="sec-title">핵심 지표 <span class="wf-cn">1</span></div>
+
+      <div class="stat-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:28px">
+        <div class="stat-card blue">
+          <div class="stat-card-label">전체 회원</div>
+          <div class="stat-card-value">1,284</div>
+          <div class="stat-card-sub">+23 오늘</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-card-label">어썸멤버</div>
+          <div class="stat-card-value">412</div>
+          <div class="stat-card-sub">32.1% 전환율</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-card-label">이번 달 예약</div>
+          <div class="stat-card-value">312</div>
+          <div class="stat-card-sub">누적 1,203건</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-card-label">이번 달 캐시백</div>
+          <div class="stat-card-value">₩1.2M</div>
+          <div class="stat-card-sub">Approved 기준</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-card-label">적립예정</div>
+          <div class="stat-card-value">₩340K</div>
+          <div class="stat-card-sub">Waiting</div>
+        </div>
+      </div>
+
+      <!-- 최근 예약·회원 2컬럼 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px">
+
+        <!-- 최근 예약 -->
+        <div>
+          <div class="sec-title">최근 예약 <span class="sec-badge" style="font-size:10px">최신 5건</span> <span class="wf-cn">2</span></div>
+          <div class="adm-table-wrap">
+            <table class="adm-table">
+              <thead>
+                <tr>
+                  <th>예약ID</th>
+                  <th>회원</th>
+                  <th>OTA</th>
+                  <th>상태</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="font-family:monospace;font-size:11px">RES-20001</td>
+                  <td>Gildong Hong</td>
+                  <td>Booking.com</td>
+                  <td><span class="wf-badge badge-approved">지급완료</span></td>
+                </tr>
+                <tr>
+                  <td style="font-family:monospace;font-size:11px">RES-20000</td>
+                  <td>Minji Lee</td>
+                  <td>Agoda</td>
+                  <td><span class="wf-badge badge-waiting">적립예정</span></td>
+                </tr>
+                <tr>
+                  <td style="font-family:monospace;font-size:11px">RES-19999</td>
+                  <td>Jane Kim</td>
+                  <td>Hotels.com</td>
+                  <td><span class="wf-badge badge-approved">지급완료</span></td>
+                </tr>
+                <tr>
+                  <td style="font-family:monospace;font-size:11px">RES-19998</td>
+                  <td>(비로그인)</td>
+                  <td>Agoda</td>
+                  <td><span class="wf-badge badge-approved">지급완료</span></td>
+                </tr>
+                <tr>
+                  <td style="font-family:monospace;font-size:11px">RES-19997</td>
+                  <td>Alpha Tester</td>
+                  <td>Expedia</td>
+                  <td><span class="wf-badge badge-cancelled">취소</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="text-align:right;margin-top:8px">
+            <a href="adm-book01.html" class="wf-btn wf-btn-outline wf-btn-sm">전체 예약 보기 →</a>
+          </div>
+        </div>
+
+        <!-- 최근 가입 회원 -->
+        <div>
+          <div class="sec-title">최근 가입 회원 <span class="sec-badge" style="font-size:10px">최신 5명</span> <span class="wf-cn">3</span></div>
+          <div class="adm-table-wrap">
+            <table class="adm-table">
+              <thead>
+                <tr>
+                  <th>회원</th>
+                  <th>이메일</th>
+                  <th>멤버십</th>
+                  <th>가입일</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Gildong Hong</td>
+                  <td style="font-size:11px">hong@example.com</td>
+                  <td><span class="wf-badge badge-active">어썸</span></td>
+                  <td style="font-size:11px">06-22</td>
+                </tr>
+                <tr>
+                  <td>Jane Kim</td>
+                  <td style="font-size:11px">jkim@example.com</td>
+                  <td><span class="wf-badge badge-inactive">일반</span></td>
+                  <td style="font-size:11px">06-21</td>
+                </tr>
+                <tr>
+                  <td>Minji Lee</td>
+                  <td style="font-size:11px">mlee@example.com</td>
+                  <td><span class="wf-badge badge-active">어썸</span></td>
+                  <td style="font-size:11px">06-20</td>
+                </tr>
+                <tr>
+                  <td>—</td>
+                  <td style="font-size:11px">user49@example.com</td>
+                  <td><span class="wf-badge badge-inactive">일반</span></td>
+                  <td style="font-size:11px">06-19</td>
+                </tr>
+                <tr>
+                  <td>Tom Park</td>
+                  <td style="font-size:11px">tpark@example.com</td>
+                  <td><span class="wf-badge badge-active">어썸</span></td>
+                  <td style="font-size:11px">06-18</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="text-align:right;margin-top:8px">
+            <a href="adm-mem01.html" class="wf-btn wf-btn-outline wf-btn-sm">전체 회원 보기 →</a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /첫 번째 컬럼 -->
+
+    <!-- 주석 -->
+    <div class="ann">
+      <h3>주석 — ADM-DASH (참고용)</h3>
+      <div class="ann-item">
+        <span class="cn">1</span>
+        <div class="ann-body">
+          <div class="ann-title">핵심 지표 카드</div>
+          <div class="ann-desc">
+            <ul>
+              <li>자사 DB + KAYAK Reporting API 합산 집계</li>
+              <li>갱신 주기: 실시간 or 1시간 캐싱 — 개발팀 협의 필요</li>
+              <li>"오늘" 기준: 오전 0시 ~ 현재 시각</li>
+            </ul>
+          </div>
+          <div class="ann-rule">우선순위 낮음 — 핵심 화면 완성 후 구현 (어드민 v0.1 3조)</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <span class="cn">2</span>
+        <div class="ann-body">
+          <div class="ann-title">최근 예약 5건</div>
+          <div class="ann-desc">
+            <ul>
+              <li>ADM-BOOK01 데이터 기반, 최신 5건만 요약 표시</li>
+              <li>[전체 예약 보기] → ADM-BOOK01 이동</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <span class="cn">3</span>
+        <div class="ann-body">
+          <div class="ann-title">최근 가입 회원 5명</div>
+          <div class="ann-desc">
+            <ul>
+              <li>ADM-MEM01 데이터 기반, 최신 5명만 요약 표시</li>
+              <li>[전체 회원 보기] → ADM-MEM01 이동</li>
+              <li>이름 미입력 회원: "—" 표시</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div><!-- /ann -->
+
+    </div><!-- /two-col -->
+
+  </main>
+</div>
+</body>
+</html>

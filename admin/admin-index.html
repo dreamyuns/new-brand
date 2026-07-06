@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>어드민 화면기획서 — 목차</title>
+<link rel="stylesheet" href="wf-admin-styles.css">
+<style>
+  /* ===== 전체 레이아웃 ===== */
+  body{background:#1a1f2e;min-height:100vh;color:#e2e8f0}
+
+  .idx-body{display:flex;gap:0;max-width:1240px;margin:0 auto;padding:60px 32px 80px;align-items:flex-start}
+
+  /* ===== 좌측 sticky 목차 ===== */
+  .idx-toc{width:200px;flex-shrink:0;position:sticky;top:52px;max-height:calc(100vh - 64px);overflow-y:auto;padding-right:8px;margin-right:40px}
+  .idx-toc-title{font-size:11px;font-weight:800;letter-spacing:.12em;color:#64748b;text-transform:uppercase;padding:0 8px;margin-bottom:14px}
+  .idx-toc-group{margin-bottom:8px}
+  .idx-toc-group-label{font-size:11px;font-weight:700;color:#4b5563;padding:3px 8px;text-transform:uppercase;letter-spacing:.08em}
+  .idx-toc-link{display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:5px;text-decoration:none;font-size:14px;color:#94a3b8;transition:background .12s,color .12s;line-height:1.3}
+  .idx-toc-link:hover{background:rgba(255,255,255,.06);color:#e2e8f0}
+  .idx-toc-link.active{background:rgba(79,124,255,.15);color:#93c5fd}
+  .idx-toc-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+  /* ===== 본문 ===== */
+  .idx-content{flex:1;min-width:0}
+
+  /* ===== 커버 ===== */
+  .idx-cover{background:linear-gradient(135deg,#1e2a4a 0%,#0f1729 100%);border:1px solid rgba(79,124,255,.25);border-radius:14px;padding:40px 44px;margin-bottom:32px;position:relative;overflow:hidden}
+  .idx-cover::before{content:"";position:absolute;right:-40px;top:-40px;width:220px;height:220px;border-radius:50%;background:rgba(79,124,255,.1)}
+  .idx-cover-label{font-size:12px;font-weight:700;letter-spacing:.15em;color:#60a5fa;text-transform:uppercase;margin-bottom:10px}
+  .idx-cover-title{font-size:28px;font-weight:800;color:#fff;line-height:1.25;margin-bottom:8px}
+  .idx-cover-sub{font-size:15px;color:rgba(255,255,255,.45);line-height:1.7}
+  .idx-cover-meta{margin-top:24px;display:flex;gap:28px;flex-wrap:wrap}
+  .idx-cover-meta-item{font-size:14px;color:rgba(255,255,255,.35)}
+  .idx-cover-meta-item strong{color:rgba(255,255,255,.65);display:block;font-size:14px;margin-bottom:2px}
+
+  /* ===== 공통정책 블록 ===== */
+  .idx-policy-block{background:rgba(22,163,74,.08);border:1px solid rgba(22,163,74,.2);border-left:3px solid #16a34a;border-radius:8px;padding:16px 20px;margin-bottom:32px}
+  .idx-policy-block h3{font-size:14px;font-weight:700;color:#4ade80;margin-bottom:10px}
+  .idx-policy-block ul{list-style:none;padding:0;margin:0}
+  .idx-policy-block li{font-size:14px;color:#cbd5e1;padding-left:12px;position:relative;margin-bottom:5px;line-height:1.65}
+  .idx-policy-block li::before{content:"·";position:absolute;left:0;color:#4ade80;font-weight:700}
+  .idx-policy-block li code{font-family:monospace;font-size:13px;background:rgba(22,163,74,.2);color:#4ade80;padding:1px 4px;border-radius:3px}
+  .idx-policy-rule{margin-top:8px;font-size:13px;color:#4ade80;padding-top:6px;border-top:1px solid rgba(22,163,74,.2)}
+
+  /* ===== 섹션 ===== */
+  .idx-section{margin-bottom:40px;scroll-margin-top:60px}
+  .idx-section-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06)}
+  .idx-section-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .idx-section-label{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94a3b8}
+  .idx-section-count{font-size:12px;color:#64748b;background:rgba(255,255,255,.06);padding:1px 7px;border-radius:99px}
+
+  /* ===== 카드 그리드 ===== */
+  .screen-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+  .screen-card{background:#1e2535;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:16px 18px;display:block;text-decoration:none;color:inherit;transition:border-color .15s,background .15s,transform .12s;position:relative;overflow:hidden}
+  .screen-card:hover{background:#243048;border-color:rgba(255,255,255,.18);transform:translateY(-1px)}
+  .sc-num{font-size:12px;font-weight:700;letter-spacing:.06em;color:#64748b;margin-bottom:5px;display:flex;align-items:center;gap:6px}
+  .sc-date{font-size:11px;color:#6b84a8;font-weight:400;background:#243048;border:1px solid rgba(255,255,255,.1);padding:1px 7px;border-radius:3px}
+  .sc-name{font-size:15px;font-weight:700;color:#e2e8f0;margin-bottom:5px;line-height:1.3}
+  .sc-route{font-size:12px;color:#475569;font-family:monospace;margin-bottom:8px}
+  .sc-desc{font-size:13px;color:#94a3b8;line-height:1.6}
+  .sc-cases{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+  .sc-case-chip{font-size:11px;font-weight:700;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:#64748b}
+  .sc-priority{position:absolute;top:14px;right:14px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px}
+  .sc-arrow{position:absolute;bottom:14px;right:16px;font-size:14px;color:#2d3748;transition:color .15s}
+  .screen-card:hover .sc-arrow{color:#64748b}
+
+  /* 카드 테마 색상 */
+  .card-login{border-top:2px solid #4f7cff}
+  .card-login .sc-num{color:#818cf8}
+  .card-dash{border-top:2px solid #6b7280}
+  .card-dash .sc-num{color:#9ca3af}
+  .card-mem{border-top:2px solid #10b981}
+  .card-mem .sc-num{color:#34d399}
+  .card-book{border-top:2px solid #3b82f6}
+  .card-book .sc-num{color:#60a5fa}
+  .card-cb{border-top:2px solid #f59e0b}
+  .card-cb .sc-num{color:#fbbf24}
+  .card-set{border-top:2px solid #8b5cf6}
+  .card-set .sc-num{color:#a78bfa}
+  .card-policy{border-top:2px solid #6366f1}
+  .card-policy .sc-num{color:#a5b4fc}
+  .card-email{border-top:2px solid #0891b2}
+  .card-email .sc-num{color:#22d3ee}
+
+  /* priority 칩 */
+  .chip-p0{background:#ef4444;color:#fff}
+  .chip-p1{background:#3b82f6;color:#fff}
+  .chip-low{background:rgba(255,255,255,.08);color:#94a3b8}
+  .chip-p2{background:#f59e0b;color:#fff}
+  .chip-ref{background:#6366f1;color:#fff}
+
+  /* 미결 박스 */
+  .idx-note{font-size:14px;color:#94a3b8;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:14px 18px;margin-top:8px;line-height:1.8}
+  .idx-note strong{color:#e2e8f0;display:block;margin-bottom:4px}
+</style>
+</head>
+<body>
+
+<nav class="page-nav">
+  <span class="page-nav-title">어드민 화면기획서</span>
+  <span class="page-nav-route">Admin Wireframe Index</span>
+  <div class="page-nav-nav">
+    <a class="page-nav-pager" href="adm-login.html">첫 화면: ADM-LOGIN →</a>
+  </div>
+</nav>
+
+<div class="idx-body">
+
+  <!-- ===== 좌측 sticky 목차 ===== -->
+  <nav class="idx-toc">
+    <div class="idx-toc-title">목차</div>
+
+    <div class="idx-toc-group">
+      <div class="idx-toc-group-label">정책서</div>
+      <a class="idx-toc-link" href="#card-policy">
+        <span class="idx-toc-dot" style="background:#6366f1"></span>어드민 정책서
+      </a>
+    </div>
+
+    <div class="idx-toc-group">
+      <div class="idx-toc-group-label">인증</div>
+      <a class="idx-toc-link" href="#card-login">
+        <span class="idx-toc-dot" style="background:#4f7cff"></span>로그인
+      </a>
+    </div>
+
+    <div class="idx-toc-group">
+      <div class="idx-toc-group-label">대시보드</div>
+      <a class="idx-toc-link" href="#card-dash">
+        <span class="idx-toc-dot" style="background:#6b7280"></span>대시보드
+      </a>
+    </div>
+
+    <div class="idx-toc-group">
+      <div class="idx-toc-group-label">회원관리</div>
+      <a class="idx-toc-link" href="#card-mem01">
+        <span class="idx-toc-dot" style="background:#10b981"></span>회원 목록
+      </a>
+      <a class="idx-toc-link" href="#card-mem02" style="padding-left:22px">
+        <span class="idx-toc-dot" style="background:#10b981;opacity:.6"></span>회원 상세·수정
+      </a>
+    </div>
+
+    <div class="idx-toc-group">
+      <div class="idx-toc-group-label">예약내역</div>
+      <a class="idx-toc-link" href="#card-book01">
+        <span class="idx-toc-dot" style="background:#3b82f6"></span>예약내역 전체 목록
+      </a>
+    </div>
+
+    <div class="idx-toc-group">
+      <div class="idx-toc-group-label">캐시백관리</div>
+      <a class="idx-toc-link" href="#card-cb01">
+        <span class="idx-toc-dot" style="background:#f59e0b"></span>캐시백 내역
+      </a>
+      <a class="idx-toc-link" href="#card-cb02" style="padding-left:22px">
+        <span class="idx-toc-dot" style="background:#f59e0b;opacity:.6"></span>공급사별 캐시백 현황
+      </a>
+    </div>
+
+    <div class="idx-toc-group">
+      <div class="idx-toc-group-label">관리자 설정</div>
+      <a class="idx-toc-link" href="#card-set01">
+        <span class="idx-toc-dot" style="background:#8b5cf6"></span>관리자 계정 설정
+      </a>
+    </div>
+
+    <div class="idx-toc-group">
+      <div class="idx-toc-group-label">이메일 템플릿</div>
+      <a class="idx-toc-link" href="#card-email01">
+        <span class="idx-toc-dot" style="background:#0891b2"></span>템플릿 목록
+      </a>
+      <a class="idx-toc-link" href="#card-email02" style="padding-left:22px">
+        <span class="idx-toc-dot" style="background:#0891b2;opacity:.6"></span>템플릿 편집
+      </a>
+    </div>
+  </nav>
+
+  <!-- ===== 본문 ===== -->
+  <main class="idx-content">
+
+    <!-- 커버 -->
+    <div class="idx-cover">
+      <div class="idx-cover-label">Admin Wireframe · PC 전용 기획서</div>
+      <div class="idx-cover-title">올마이투어 신규서비스<br>어드민 화면기획서</div>
+      <div class="idx-cover-sub">KAYAK 메타서치 MVP 어드민 관리 화면<br>정책서 어드민 v0.3 기준 · 8개 기능 영역 · 총 11개 화면</div>
+      <div class="idx-cover-meta">
+        <div class="idx-cover-meta-item"><strong>기준 정책서</strong>어드민 v0.3 + Phase1 v0.39</div>
+        <div class="idx-cover-meta-item"><strong>화면 기준</strong>PC 1280px 이상</div>
+        <div class="idx-cover-meta-item"><strong>최종수정</strong>2026-07-06</div>
+        <div class="idx-cover-meta-item"><strong>작성자</strong>윤성균 PO</div>
+      </div>
+    </div>
+
+    <!-- 공통정책 블록 -->
+    <div class="idx-policy-block">
+      <h3>⚙ 어드민 공통 정책 — 전체 화면 적용</h3>
+      <ul>
+        <li><strong>접근 제어:</strong> 로그인(아이디+비밀번호) 세션이 없으면 모든 화면은 <code>ADM-LOGIN</code>으로 리다이렉트 (1조)</li>
+        <li><strong>권한 구조:</strong> MVP에서는 마스터 단일 권한. 서브계정·권한 분리는 Phase 2 (2조)</li>
+        <li><strong>데이터 소스:</strong> 회원·예약·캐시백 데이터는 자사 DB + KAYAK Reporting API 연동 (5조·6조)</li>
+        <li><strong>PC 전용:</strong> 모바일 반응형 미포함. 1280px 이상 권장 해상도 (1조)</li>
+        <li><strong>세션 관리:</strong> 세션 만료 시 로그인 페이지로 이동 + 경고 알림 — 상세 정책 추후 확정 (8조 미결 2)</li>
+      </ul>
+      <div class="idx-policy-rule">기준: 어드민 v0.3 전체 / Phase1 v0.39</div>
+    </div>
+
+    <!-- ===== 정책서 (최상단) ===== -->
+    <div class="idx-section" id="sec-policy">
+      <div class="idx-section-hdr">
+        <span class="idx-section-dot" style="background:#6366f1"></span>
+        <span class="idx-section-label">정책서</span>
+        <span class="idx-section-count">1개</span>
+      </div>
+      <div class="screen-grid">
+        <a id="card-policy" class="screen-card card-policy" href="adm-policy.html">
+          <div class="sc-num">ADM-POLICY <span class="sc-date">최종수정 07.06</span></div>
+          <div class="sc-name">어드민 정책서</div>
+          <div class="sc-route">adm-policy.html</div>
+          <div class="sc-desc">어드민 서비스 전체 정책 기준 문서. 접근제어·권한·세션·API 연동 정책</div>
+          <div class="sc-cases">
+            <span class="sc-case-chip">접근 제어</span>
+            <span class="sc-case-chip">권한 정책</span>
+            <span class="sc-case-chip">API 연동</span>
+          </div>
+          <span class="sc-priority chip-ref">정책서</span>
+          <div class="sc-arrow">→</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ===== 인증 ===== -->
+    <div class="idx-section" id="sec-login">
+      <div class="idx-section-hdr">
+        <span class="idx-section-dot" style="background:#4f7cff"></span>
+        <span class="idx-section-label">인증</span>
+        <span class="idx-section-count">1개</span>
+      </div>
+      <div class="screen-grid">
+        <a id="card-login" class="screen-card card-login" href="adm-login.html">
+          <div class="sc-num">ADM-LOGIN <span class="sc-date">최종수정 06.22</span></div>
+          <div class="sc-name">로그인</div>
+          <div class="sc-route">adm-login.html</div>
+          <div class="sc-desc">아이디 + 비밀번호 로그인. 로그인 오류 처리, 세션 만료 안내</div>
+          <div class="sc-cases">
+            <span class="sc-case-chip">케이스 A — 기본 입력</span>
+            <span class="sc-case-chip">케이스 B — 로그인 오류</span>
+            <span class="sc-case-chip">케이스 C — 세션 만료</span>
+          </div>
+          <span class="sc-priority chip-p0">P0 필수</span>
+          <div class="sc-arrow">→</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ===== 대시보드 ===== -->
+    <div class="idx-section" id="sec-dash">
+      <div class="idx-section-hdr">
+        <span class="idx-section-dot" style="background:#6b7280"></span>
+        <span class="idx-section-label">대시보드</span>
+        <span class="idx-section-count">1개</span>
+      </div>
+      <div class="screen-grid">
+        <a id="card-dash" class="screen-card card-dash" href="adm-dashboard.html">
+          <div class="sc-num">ADM-DASH <span class="sc-date">최종수정 06.22</span></div>
+          <div class="sc-name">대시보드</div>
+          <div class="sc-route">adm-dashboard.html</div>
+          <div class="sc-desc">주요 수치 요약 카드. 신규회원·예약·캐시백 현황 한눈에 확인</div>
+          <div class="sc-cases">
+            <span class="sc-case-chip">통계 카드</span>
+            <span class="sc-case-chip">최근 예약</span>
+          </div>
+          <span class="sc-priority chip-low">우선순위 낮음</span>
+          <div class="sc-arrow">→</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ===== 회원관리 ===== -->
+    <div class="idx-section" id="sec-mem">
+      <div class="idx-section-hdr">
+        <span class="idx-section-dot" style="background:#10b981"></span>
+        <span class="idx-section-label">회원관리</span>
+        <span class="idx-section-count">2개</span>
+      </div>
+      <div class="screen-grid">
+        <a id="card-mem01" class="screen-card card-mem" href="adm-mem01.html">
+          <div class="sc-num">ADM-MEM01 <span class="sc-date">최종수정 07.06</span></div>
+          <div class="sc-name">회원 목록</div>
+          <div class="sc-route">adm-mem01.html</div>
+          <div class="sc-desc">전체 회원 목록. 이메일·ID 검색·필터. 누적 캐시백(KRW) 컬럼. 탈퇴회원만 보기 버튼</div>
+          <div class="sc-cases">
+            <span class="sc-case-chip">목록·검색</span>
+            <span class="sc-case-chip">누적 캐시백(KRW)</span>
+            <span class="sc-case-chip">탈퇴회원 조회</span>
+          </div>
+          <span class="sc-priority chip-p1">P1 핵심</span>
+          <div class="sc-arrow">→</div>
+        </a>
+        <a id="card-mem02" class="screen-card card-mem" href="adm-mem02.html">
+          <div class="sc-num">ADM-MEM02 <span class="sc-date">최종수정 07.06</span></div>
+          <div class="sc-name">회원 상세·수정</div>
+          <div class="sc-route">adm-mem02.html</div>
+          <div class="sc-desc">회원정보 조회·수정, 예약·캐시백 탭. 탈퇴 회원 CS 조회 케이스 D 포함</div>
+          <div class="sc-cases">
+            <span class="sc-case-chip">회원정보</span>
+            <span class="sc-case-chip">예약내역 탭</span>
+            <span class="sc-case-chip">캐시백 탭</span>
+            <span class="sc-case-chip">탈퇴회원 D</span>
+          </div>
+          <span class="sc-priority chip-p1">P1 핵심</span>
+          <div class="sc-arrow">→</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ===== 예약내역 ===== -->
+    <div class="idx-section" id="sec-book">
+      <div class="idx-section-hdr">
+        <span class="idx-section-dot" style="background:#3b82f6"></span>
+        <span class="idx-section-label">예약내역</span>
+        <span class="idx-section-count">1개</span>
+      </div>
+      <div class="screen-grid">
+        <a id="card-book01" class="screen-card card-book" href="adm-book01.html">
+          <div class="sc-num">ADM-BOOK01 <span class="sc-date">최종수정 07.06</span></div>
+          <div class="sc-name">예약내역 전체 목록</div>
+          <div class="sc-route">adm-book01.html</div>
+          <div class="sc-desc">KAYAK Reporting API 기준 전체 예약 목록. 예약금액(상품가) 라벨 표기. 검색·필터·Excel 다운로드</div>
+          <div class="sc-cases">
+            <span class="sc-case-chip">전체 목록</span>
+            <span class="sc-case-chip">기간 필터</span>
+            <span class="sc-case-chip">Excel 다운로드</span>
+          </div>
+          <span class="sc-priority chip-p1">P1 핵심</span>
+          <div class="sc-arrow">→</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ===== 캐시백관리 ===== -->
+    <div class="idx-section" id="sec-cb">
+      <div class="idx-section-hdr">
+        <span class="idx-section-dot" style="background:#f59e0b"></span>
+        <span class="idx-section-label">캐시백관리</span>
+        <span class="idx-section-count">2개</span>
+      </div>
+      <div class="screen-grid">
+        <a id="card-cb01" class="screen-card card-cb" href="adm-cb01.html">
+          <div class="sc-num">ADM-CB01 <span class="sc-date">최종수정 07.06</span></div>
+          <div class="sc-name">캐시백 내역</div>
+          <div class="sc-route">adm-cb01.html</div>
+          <div class="sc-desc">회원별 캐시백 내역 조회. NONE·0원 건 미표시. Approved 판단 기준 반영. EST 기준 지급월</div>
+          <div class="sc-cases">
+            <span class="sc-case-chip">내역 목록</span>
+            <span class="sc-case-chip">상태 필터</span>
+          </div>
+          <span class="sc-priority chip-p1">P1</span>
+          <div class="sc-arrow">→</div>
+        </a>
+        <a id="card-cb02" class="screen-card card-cb" href="adm-cb02.html">
+          <div class="sc-num">ADM-CB02 <span class="sc-date">최종수정 07.06</span></div>
+          <div class="sc-name">공급사별 캐시백 현황</div>
+          <div class="sc-route">adm-cb02.html</div>
+          <div class="sc-desc">공급사(OTA)별 캐시백 집계 현황. 월별 통계</div>
+          <div class="sc-cases">
+            <span class="sc-case-chip">공급사별 집계</span>
+            <span class="sc-case-chip">월별 통계</span>
+          </div>
+          <span class="sc-priority chip-p1">P1</span>
+          <div class="sc-arrow">→</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ===== 관리자 설정 ===== -->
+    <div class="idx-section" id="sec-set">
+      <div class="idx-section-hdr">
+        <span class="idx-section-dot" style="background:#8b5cf6"></span>
+        <span class="idx-section-label">관리자 설정</span>
+        <span class="idx-section-count">1개</span>
+      </div>
+      <div class="screen-grid">
+        <a id="card-set01" class="screen-card card-set" href="adm-set01.html">
+          <div class="sc-num">ADM-SET01 <span class="sc-date">최종수정 06.22</span></div>
+          <div class="sc-name">관리자 계정 설정</div>
+          <div class="sc-route">adm-set01.html</div>
+          <div class="sc-desc">마스터 계정 비밀번호 변경. 서브계정 관리는 Phase 2</div>
+          <div class="sc-cases">
+            <span class="sc-case-chip">계정정보</span>
+            <span class="sc-case-chip">비밀번호 변경</span>
+          </div>
+          <span class="sc-priority chip-p2">서브계정 Phase2</span>
+          <div class="sc-arrow">→</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ===== 이메일 템플릿 ===== -->
+    <div class="idx-section" id="sec-email">
+      <div class="idx-section-hdr">
+        <span class="idx-section-dot" style="background:#0891b2"></span>
+        <span class="idx-section-label">이메일 템플릿</span>
+        <span class="idx-section-count">2개</span>
+      </div>
+      <div class="screen-grid">
+        <a id="card-email01" class="screen-card card-email" href="adm-email01.html">
+          <div class="sc-num">ADM-EMAIL01 <span class="sc-date">최종수정 07.06</span></div>
+          <div class="sc-name">이메일 템플릿 목록</div>
+          <div class="sc-route">adm-email01.html</div>
+          <div class="sc-desc">서비스 발송 이메일 템플릿 5종 목록. 발송 트리거 확인. Phase 2 예약 알림 포함</div>
+          <div class="sc-cases">
+            <span class="sc-case-chip">MVP 5종</span>
+            <span class="sc-case-chip">Phase2 1종</span>
+          </div>
+          <span class="sc-priority chip-p1">P1</span>
+          <div class="sc-arrow">→</div>
+        </a>
+        <a id="card-email02" class="screen-card card-email" href="adm-email02.html">
+          <div class="sc-num">ADM-EMAIL02 <span class="sc-date">최종수정 07.06</span></div>
+          <div class="sc-name">이메일 템플릿 편집</div>
+          <div class="sc-route">adm-email02.html</div>
+          <div class="sc-desc">발신자명·제목·본문 편집 + 미리보기 반응형(A안). 6종 케이스별 샘플 포함</div>
+          <div class="sc-cases">
+            <span class="sc-case-chip">케이스 A — 인증코드</span>
+            <span class="sc-case-chip">케이스 B — 환영</span>
+            <span class="sc-case-chip">케이스 C — 적립예정</span>
+            <span class="sc-case-chip">케이스 D — 지급완료</span>
+            <span class="sc-case-chip">케이스 E — 취소만료</span>
+            <span class="sc-case-chip">케이스 F — Phase2</span>
+          </div>
+          <span class="sc-priority chip-p1">P1</span>
+          <div class="sc-arrow">→</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- 미결 안내 -->
+    <div class="idx-note">
+      <strong>⚠ 주요 미결 사항 (어드민 v0.3 8조)</strong>
+      1. 세션 만료 시간·2FA·IP 제한 보안 정책 미확정 &nbsp;|&nbsp;
+      2. 예약내역 Excel 다운로드 개발 공수 확인 필요 &nbsp;|&nbsp;
+      3. 예약 상태 수동 변경 기능 Phase 2 범위 &nbsp;|&nbsp;
+      4. 캐시백 지급·회수·삭제 기능 Phase 2 &nbsp;|&nbsp;
+      5. 서브계정 권한 설계 Phase 2 &nbsp;|&nbsp;
+      6. 강제탈퇴 기능 추후 진행 &nbsp;|&nbsp;
+      7. 취소·만료 실데이터 금액 0원 케이스 표시 기준 확인 필요 (8조 #7) &nbsp;|&nbsp;
+      8. 예약 상태 라벨 형식 통일 필요 (BookingStatus 다양성 — 8조 #8)
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // 스크롤 spy — 목차 active (카드 기준)
+  const tocLinks = document.querySelectorAll('.idx-toc-link');
+  const cards = Array.from(document.querySelectorAll('.screen-card[id]'));
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    cards.forEach(c => {
+      if (window.scrollY + 120 >= c.offsetTop) cur = c.id;
+    });
+    tocLinks.forEach(a => {
+      const href = a.getAttribute('href').replace('#','');
+      a.classList.toggle('active', href === cur);
+    });
+  }, {passive:true});
+</script>
+
+</body>
+</html>

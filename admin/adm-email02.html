@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADM-EMAIL02 — 이메일 템플릿 편집</title>
+<link rel="stylesheet" href="wf-admin-styles.css">
+<style>
+.email-edit-wrap { display:flex; gap:24px; align-items:flex-start; }
+.email-edit-pane { flex:1; min-width:0; }
+.email-preview-col { display:flex; flex-direction:column; gap:20px; width:340px; flex-shrink:0; }
+.email-preview-pane { position:sticky; top:60px; }
+@media (max-width:900px) {
+  .email-edit-wrap { flex-direction:column; }
+  .email-preview-col { width:100%; }
+  .email-preview-pane { position:static; }
+}
+.var-guide { background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:14px 16px; margin-top:16px; }
+.var-guide-title { font-size:11px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:.08em; margin-bottom:10px; }
+.var-chip { display:inline-block; background:#eff6ff; border:1px solid #bfdbfe; border-radius:4px; padding:3px 8px; font-size:11px; font-family:monospace; color:#1d4ed8; margin:3px 3px 3px 0; cursor:default; }
+.email-preview-card { background:#fff; border:1px solid #e2e8f0; border-radius:10px; overflow:hidden; font-size:13px; box-shadow:0 4px 16px rgba(0,0,0,.06); }
+.email-preview-header { background:#1a1f2e; padding:16px 20px; color:#fff; }
+.email-preview-from { color:rgba(255,255,255,.5); margin-bottom:4px; font-size:11px; }
+.email-preview-subject { font-weight:700; font-size:14px; }
+.email-preview-body { padding:20px; line-height:1.75; color:#374151; white-space:pre-wrap; min-height:140px; background:#fafafa; font-size:13px; }
+.email-preview-footer { padding:12px 20px; background:#f1f5f9; font-size:11px; color:#9ca3af; border-top:1px solid #e2e8f0; }
+.test-send-wrap { margin-top:20px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:14px 16px; }
+.test-send-title { font-size:12px; font-weight:700; color:#166534; margin-bottom:10px; }
+</style>
+</head>
+<body>
+<nav class="page-nav">
+  <a class="page-nav-back" href="admin-index.html">← 목차</a>
+  <span class="page-nav-title">ADM-EMAIL02</span>
+  <span class="page-nav-route">이메일 템플릿 · 편집 (A안 — 자체 반응형) · 케이스 A~F</span>
+  <div class="page-nav-nav">
+    <a class="page-nav-pager" href="adm-email01.html">← EMAIL01</a>
+    <span class="page-nav-pager-disabled">다음: —</span>
+  </div>
+</nav>
+
+<div class="adm-shell">
+  <!-- 사이드바 -->
+  <aside class="adm-sidebar">
+    <div class="adm-sidebar-logo">
+      <div class="adm-sidebar-logo-name">allmytour admin</div>
+      <div class="adm-sidebar-logo-sub">관리자 전용 시스템</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">Overview</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📊</span>대시보드</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">회원관리</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">👥</span>회원 목록</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">예약내역</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📋</span>예약내역 전체</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">캐시백관리</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">💰</span>캐시백 내역</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📈</span>공급사별 현황</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">설정</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">⚙️</span>관리자 설정</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">이메일 템플릿</div>
+      <div class="adm-nav-item active"><span class="adm-nav-icon">✉️</span>이메일 템플릿 관리</div>
+    </div>
+    <div class="adm-sidebar-footer">
+      <div class="adm-sidebar-user"><strong>마스터 관리자</strong>admin@allmytour.com</div>
+      <div class="adm-sidebar-logout">로그아웃</div>
+    </div>
+  </aside>
+
+  <!-- 메인 -->
+  <main class="adm-main">
+
+    <div class="adm-page-hdr">
+      <div class="adm-page-title">이메일 템플릿 편집</div>
+      <div class="adm-page-sub">6종 템플릿 케이스 · 발신자명·제목·본문 편집 + 미리보기</div>
+      <div class="adm-page-actions">
+        <a href="adm-email01.html" class="wf-btn wf-btn-ghost">← 목록으로</a>
+      </div>
+    </div>
+
+    <!-- 공통정책 블록 -->
+    <div class="sec-policy">
+      <div class="sec-policy-hdr">⚙ 공통 정책 — 이메일 템플릿 편집</div>
+      <ul class="sec-policy-list">
+        <li><strong>편집 화면 방식:</strong> A안 확정 — 편집 화면 자체 반응형. 모바일에서도 어드민 접속 시 편집 가능 (9-2절)</li>
+        <li><strong>편집 가능 항목:</strong> 발신자명 / 이메일 제목 / 본문 텍스트. HTML 편집기는 Phase 2 검토 예정 (9-2절)</li>
+        <li><strong>변수 삽입:</strong> <code>{{변수명}}</code> 형식으로 동적 데이터 삽입. 편집 화면에서 사용 가능한 변수 목록 제공 (9-3절)</li>
+        <li><strong>저장 즉시 반영:</strong> [저장] 클릭 후 다음 발송부터 수정 내용 적용. 되돌리기 기능 없음 (9-2절)</li>
+        <li><strong>테스트 발송:</strong> 실제 발송 전 담당자 이메일로 테스트 가능. 변수는 샘플 데이터로 채워짐 (9-2절)</li>
+      </ul>
+      <div class="sec-policy-rule">기준: 어드민 v0.3 9절</div>
+    </div>
+
+    <!-- 케이스 탭 -->
+    <div class="case-tab-bar">
+      <button class="case-tab-btn active" onclick="goCase('case-a')">케이스 A — 이메일 인증코드</button>
+      <button class="case-tab-btn" onclick="goCase('case-b')">케이스 B — 환영 이메일</button>
+      <button class="case-tab-btn" onclick="goCase('case-c')">케이스 C — 캐시백 적립예정</button>
+      <button class="case-tab-btn" onclick="goCase('case-d')">케이스 D — 캐시백 지급완료</button>
+      <button class="case-tab-btn" onclick="goCase('case-e')">케이스 E — 캐시백 취소·만료</button>
+      <button class="case-tab-btn" onclick="goCase('case-f')" style="color:#9ca3af">케이스 F — 예약상태알림 (Phase 2)</button>
+    </div>
+
+    <!-- ===== 케이스 A: 이메일 인증코드 ===== -->
+    <div id="case-a">
+      <div class="adm-page-hdr" style="margin-top:0;padding-top:0;border-top:none">
+        <div class="adm-page-title" style="font-size:15px;color:#374151">템플릿 #1 — 이메일 인증코드</div>
+        <div class="adm-page-actions"><button class="wf-btn wf-btn-primary">저장 <span class="wf-cn">5</span></button></div>
+      </div>
+      <div class="email-edit-wrap">
+        <div class="email-edit-pane">
+          <div class="adm-form">
+            <div class="adm-form-section">
+              <div class="adm-form-section-title">발신 정보</div>
+              <div class="adm-form-row">
+                <div class="adm-form-label">발신자명 <span class="wf-cn">1</span></div>
+                <input class="wf-input" style="max-width:280px" value="올마이투어">
+              </div>
+              <div class="adm-form-row">
+                <div class="adm-form-label">이메일 제목 <span class="wf-cn">2</span></div>
+                <input class="wf-input" style="max-width:480px" value="[올마이투어] 이메일 인증코드를 알려드립니다">
+              </div>
+            </div>
+            <div class="adm-form-section">
+              <div class="adm-form-section-title">본문 <span class="wf-cn">3</span></div>
+              <textarea class="wf-input" rows="10" style="width:100%;resize:vertical;font-family:inherit;line-height:1.75">안녕하세요!
+
+요청하신 이메일 인증코드를 알려드립니다.
+
+■ 인증코드: {{auth_code}}
+■ 유효시간: {{expire_min}}분 이내 입력
+
+코드 입력 화면에서 위 번호를 입력해주세요.
+유효시간이 지난 경우, 재전송 버튼으로 새 코드를 받으실 수 있습니다.
+
+본인이 요청하지 않은 경우 이 메일을 무시하세요.
+
+올마이투어 드림</textarea>
+              <div class="var-guide">
+                <div class="var-guide-title">사용 가능한 변수 <span class="wf-cn">4</span></div>
+                <div><span class="var-chip">{{auth_code}}</span> <span style="font-size:11px;color:#6b7280">6자리 인증코드 숫자</span></div>
+                <div style="margin-top:6px"><span class="var-chip">{{expire_min}}</span> <span style="font-size:11px;color:#6b7280">유효시간 (분 단위 — 기본 5)</span></div>
+                <div style="margin-top:8px;font-size:11px;color:#9ca3af">변수를 복사해 본문에 붙여넣으면 발송 시 실제 값으로 자동 교체됩니다.</div>
+              </div>
+            </div>
+          </div>
+          <div class="test-send-wrap">
+            <div class="test-send-title">테스트 발송 <span class="wf-cn">6</span></div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input class="wf-input" style="max-width:260px" placeholder="테스트 수신 이메일 주소 입력">
+              <button class="wf-btn wf-btn-ghost wf-btn-sm" style="border-color:#22c55e;color:#166534">테스트 발송</button>
+            </div>
+            <div style="margin-top:8px;font-size:11px;color:#4b7c5c">저장하지 않아도 현재 입력된 내용으로 테스트 발송됩니다. 변수는 샘플 데이터로 채워집니다.</div>
+          </div>
+        </div><!-- /email-edit-pane -->
+
+        <div class="email-preview-col">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:8px">미리보기 (샘플 데이터)</div>
+            <div class="email-preview-card">
+              <div class="email-preview-header">
+                <div class="email-preview-from">발신: 올마이투어 &lt;noreply@{브랜드도메인}&gt;</div>
+                <div class="email-preview-subject">[올마이투어] 이메일 인증코드를 알려드립니다</div>
+              </div>
+              <div class="email-preview-body">안녕하세요!
+
+요청하신 이메일 인증코드를 알려드립니다.
+
+■ 인증코드: 483921
+■ 유효시간: 5분 이내 입력
+
+코드 입력 화면에서 위 번호를 입력해주세요.
+유효시간이 지난 경우, 재전송 버튼으로 새 코드를 받으실 수 있습니다.
+
+본인이 요청하지 않은 경우 이 메일을 무시하세요.
+
+올마이투어 드림</div>
+              <div class="email-preview-footer">이 이메일은 발송 전용입니다. 문의는 support@{브랜드도메인}으로 연락해주세요.</div>
+            </div>
+            <div style="margin-top:8px;font-size:11px;color:#9ca3af">※ 미리보기는 샘플 데이터 기준입니다.</div>
+          </div>
+
+          <div class="ann" style="position:static;width:auto">
+            <h3>주석 — ADM-EMAIL02</h3>
+            <div class="ann-item">
+              <span class="cn">1</span>
+              <div class="ann-body">
+                <div class="ann-title">발신자명</div>
+                <div class="ann-desc"><ul>
+                  <li>이메일 받은 편지함에서 보이는 보낸 사람 이름 (예: "올마이투어")</li>
+                  <li>발신 이메일 주소는 개발팀 별도 설정 — 어드민에서 변경 불가</li>
+                </ul></div>
+                <div class="ann-rule">어드민 v0.3 9-2절</div>
+              </div>
+            </div>
+            <div class="ann-item">
+              <span class="cn">2</span>
+              <div class="ann-body">
+                <div class="ann-title">이메일 제목</div>
+                <div class="ann-desc"><ul>
+                  <li>받은 편지함에서 첫 번째로 보이는 한 줄 제목</li>
+                  <li>변수 사용 가능 — 발송 시 실제 값으로 바뀜</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ann-item">
+              <span class="cn">3</span>
+              <div class="ann-body">
+                <div class="ann-title">본문 텍스트 편집</div>
+                <div class="ann-desc"><ul>
+                  <li>여러 줄 입력 가능. 줄바꿈·공백 그대로 이메일에 반영됨</li>
+                  <li>HTML 태그 편집은 Phase 2 검토 예정</li>
+                </ul></div>
+                <div class="ann-rule">어드민 v0.3 9-2절</div>
+              </div>
+            </div>
+            <div class="ann-item">
+              <span class="cn">4</span>
+              <div class="ann-body">
+                <div class="ann-title">변수 가이드 (읽기전용 참고)</div>
+                <div class="ann-desc"><ul>
+                  <li><code>{{변수명}}</code> 형식을 본문에 쓰면 발송 시 실제 값으로 자동 교체됨</li>
+                  <li>이 목록은 현재 템플릿에서 사용 가능한 변수만 표시 (템플릿마다 다름)</li>
+                </ul></div>
+                <div class="ann-rule">어드민 v0.3 9-3절</div>
+              </div>
+            </div>
+            <div class="ann-item">
+              <span class="cn">5</span>
+              <div class="ann-body">
+                <div class="ann-title">[저장] 버튼</div>
+                <div class="ann-desc"><ul>
+                  <li>클릭 즉시 DB에 저장 — 다음 발송부터 수정 내용 적용</li>
+                  <li>저장 성공 시 "저장되었습니다" 알림 표시</li>
+                  <li>필수 항목(발신자명·제목·본문) 미입력 시 오류 메시지</li>
+                </ul></div>
+              </div>
+            </div>
+            <div class="ann-item">
+              <span class="cn">6</span>
+              <div class="ann-body">
+                <div class="ann-title">테스트 발송</div>
+                <div class="ann-desc"><ul>
+                  <li>이메일 주소 입력 → [테스트 발송] → 입력 내용 그대로 발송</li>
+                  <li>변수는 샘플 데이터로 채워져 발송됨 (실제 회원 데이터 아님)</li>
+                  <li>저장 전에도 테스트 발송 가능</li>
+                </ul></div>
+                <div class="ann-rule">어드민 v0.3 9-2절</div>
+              </div>
+            </div>
+            <hr class="divider">
+            <div class="text-muted">
+              <strong style="color:#374151;display:block;margin-bottom:4px">A안 반응형 확정</strong>
+              화면 너비가 줄어들면 편집 폼 + 미리보기가 세로로 쌓임.<br>모바일에서도 어드민 편집 가능.
+            </div>
+          </div>
+        </div><!-- /email-preview-col -->
+      </div><!-- /email-edit-wrap -->
+    </div><!-- /case-a -->
+
+    <!-- ===== 케이스 B: 환영 이메일 ===== -->
+    <div id="case-b" style="display:none">
+      <div class="adm-page-hdr" style="margin-top:0;padding-top:0;border-top:none">
+        <div class="adm-page-title" style="font-size:15px;color:#374151">템플릿 #2 — 환영 이메일</div>
+        <div class="adm-page-actions"><button class="wf-btn wf-btn-primary">저장</button></div>
+      </div>
+      <div class="email-edit-wrap">
+        <div class="email-edit-pane">
+          <div class="adm-form">
+            <div class="adm-form-section">
+              <div class="adm-form-section-title">발신 정보</div>
+              <div class="adm-form-row">
+                <div class="adm-form-label">발신자명</div>
+                <input class="wf-input" style="max-width:280px" value="올마이투어">
+              </div>
+              <div class="adm-form-row">
+                <div class="adm-form-label">이메일 제목</div>
+                <input class="wf-input" style="max-width:480px" value="{{service_name}}에 오신 것을 환영합니다!">
+              </div>
+            </div>
+            <div class="adm-form-section">
+              <div class="adm-form-section-title">본문</div>
+              <textarea class="wf-input" rows="10" style="width:100%;resize:vertical;font-family:inherit;line-height:1.75">{{user_name}}님, 안녕하세요!
+
+{{service_name}} 가입을 진심으로 환영합니다.
+
+전 세계 수백만 개 호텔의 최저가를 한눈에 비교하고,
+예약할 때마다 캐시백을 받아보세요.
+
+앞으로 즐거운 여행이 함께하길 바랍니다.
+
+{{service_name}} 드림</textarea>
+              <div class="var-guide">
+                <div class="var-guide-title">사용 가능한 변수</div>
+                <div><span class="var-chip">{{user_name}}</span> <span style="font-size:11px;color:#6b7280">회원 이름 (미입력 시 "회원"으로 대체)</span></div>
+                <div style="margin-top:6px"><span class="var-chip">{{service_name}}</span> <span style="font-size:11px;color:#6b7280">서비스 브랜드명</span></div>
+                <div style="margin-top:8px;font-size:11px;color:#9ca3af">변수를 복사해 본문에 붙여넣으면 발송 시 실제 값으로 자동 교체됩니다.</div>
+              </div>
+            </div>
+          </div>
+          <div class="test-send-wrap">
+            <div class="test-send-title">테스트 발송</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input class="wf-input" style="max-width:260px" placeholder="테스트 수신 이메일 주소 입력">
+              <button class="wf-btn wf-btn-ghost wf-btn-sm" style="border-color:#22c55e;color:#166534">테스트 발송</button>
+            </div>
+          </div>
+        </div>
+        <div class="email-preview-col">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:8px">미리보기 (샘플 데이터)</div>
+            <div class="email-preview-card">
+              <div class="email-preview-header">
+                <div class="email-preview-from">발신: 올마이투어 &lt;noreply@{브랜드도메인}&gt;</div>
+                <div class="email-preview-subject">올마이투어에 오신 것을 환영합니다!</div>
+              </div>
+              <div class="email-preview-body">홍길동님, 안녕하세요!
+
+올마이투어 가입을 진심으로 환영합니다.
+
+전 세계 수백만 개 호텔의 최저가를 한눈에 비교하고,
+예약할 때마다 캐시백을 받아보세요.
+
+앞으로 즐거운 여행이 함께하길 바랍니다.
+
+올마이투어 드림</div>
+              <div class="email-preview-footer">이 이메일은 발송 전용입니다.</div>
+            </div>
+            <div style="margin-top:8px;font-size:11px;color:#9ca3af">※ 미리보기는 샘플 데이터 기준입니다.</div>
+          </div>
+          <div class="ann" style="position:static;width:auto">
+            <h3>주석 — 케이스 B</h3>
+            <div class="ann-item">
+              <span class="cn">B</span>
+              <div class="ann-body">
+                <div class="ann-title">환영 이메일 특이사항</div>
+                <div class="ann-desc"><ul>
+                  <li><code>{{user_name}}</code>은 이름 미입력 회원에게는 "회원"으로 대체 발송</li>
+                  <li>회원가입 완료 시 1회만 발송 (재발송 불가)</li>
+                  <li>편집 폼 구조·저장·테스트 발송 동작은 케이스 A 주석과 동일</li>
+                </ul></div>
+                <div class="ann-rule">어드민 v0.3 9-1절 — 발송 트리거: 신규 회원가입 완료</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /case-b -->
+
+    <!-- ===== 케이스 C: 캐시백 적립예정 안내 ===== -->
+    <div id="case-c" style="display:none">
+      <div class="adm-page-hdr" style="margin-top:0;padding-top:0;border-top:none">
+        <div class="adm-page-title" style="font-size:15px;color:#374151">템플릿 #3 — 캐시백 적립예정 안내</div>
+        <div class="adm-page-actions"><button class="wf-btn wf-btn-primary">저장</button></div>
+      </div>
+      <div class="email-edit-wrap">
+        <div class="email-edit-pane">
+          <div class="adm-form">
+            <div class="adm-form-section">
+              <div class="adm-form-section-title">발신 정보</div>
+              <div class="adm-form-row">
+                <div class="adm-form-label">발신자명</div>
+                <input class="wf-input" style="max-width:280px" value="올마이투어">
+              </div>
+              <div class="adm-form-row">
+                <div class="adm-form-label">이메일 제목</div>
+                <input class="wf-input" style="max-width:480px" value="{{hotel_name}} 예약 캐시백이 적립 예정입니다">
+              </div>
+            </div>
+            <div class="adm-form-section">
+              <div class="adm-form-section-title">본문</div>
+              <textarea class="wf-input" rows="10" style="width:100%;resize:vertical;font-family:inherit;line-height:1.75">안녕하세요, {{user_name}}님!
+
+{{hotel_name}} 예약에 대한 캐시백이 적립 예정으로 등록되었습니다.
+
+■ 예약 호텔: {{hotel_name}}
+■ 체크아웃 예정일: {{checkout_date}}
+■ 적립 예정 금액: {{cashback_amount}}
+
+체크아웃 후 예약이 확인되면 지급완료 안내를 드립니다.
+
+올마이투어 드림</textarea>
+              <div class="var-guide">
+                <div class="var-guide-title">사용 가능한 변수</div>
+                <div><span class="var-chip">{{user_name}}</span> <span style="font-size:11px;color:#6b7280">회원 이름</span></div>
+                <div style="margin-top:6px"><span class="var-chip">{{hotel_name}}</span> <span style="font-size:11px;color:#6b7280">예약 호텔명</span></div>
+                <div style="margin-top:6px"><span class="var-chip">{{cashback_amount}}</span> <span style="font-size:11px;color:#6b7280">적립 예정 금액 (통화 포함)</span></div>
+                <div style="margin-top:6px"><span class="var-chip">{{checkout_date}}</span> <span style="font-size:11px;color:#6b7280">체크아웃 예정일 (YYYY-MM-DD)</span></div>
+                <div style="margin-top:8px;font-size:11px;color:#9ca3af">변수를 복사해 본문에 붙여넣으면 발송 시 실제 값으로 자동 교체됩니다.</div>
+              </div>
+            </div>
+          </div>
+          <div class="test-send-wrap">
+            <div class="test-send-title">테스트 발송</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input class="wf-input" style="max-width:260px" placeholder="테스트 수신 이메일 주소 입력">
+              <button class="wf-btn wf-btn-ghost wf-btn-sm" style="border-color:#22c55e;color:#166534">테스트 발송</button>
+            </div>
+          </div>
+        </div>
+        <div class="email-preview-col">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:8px">미리보기 (샘플 데이터)</div>
+            <div class="email-preview-card">
+              <div class="email-preview-header">
+                <div class="email-preview-from">발신: 올마이투어 &lt;noreply@{브랜드도메인}&gt;</div>
+                <div class="email-preview-subject">파리 힐튼 오페라 예약 캐시백이 적립 예정입니다</div>
+              </div>
+              <div class="email-preview-body">안녕하세요, 홍길동님!
+
+파리 힐튼 오페라 예약에 대한 캐시백이 적립 예정으로 등록되었습니다.
+
+■ 예약 호텔: 파리 힐튼 오페라
+■ 체크아웃 예정일: 2026-08-15
+■ 적립 예정 금액: USD 12
+
+체크아웃 후 예약이 확인되면 지급완료 안내를 드립니다.
+
+올마이투어 드림</div>
+              <div class="email-preview-footer">이 이메일은 발송 전용입니다.</div>
+            </div>
+            <div style="margin-top:8px;font-size:11px;color:#9ca3af">※ 미리보기는 샘플 데이터 기준입니다.</div>
+          </div>
+          <div class="ann" style="position:static;width:auto">
+            <h3>주석 — 케이스 C</h3>
+            <div class="ann-item">
+              <span class="cn">C</span>
+              <div class="ann-body">
+                <div class="ann-title">캐시백 적립예정 안내 특이사항</div>
+                <div class="ann-desc"><ul>
+                  <li>아웃링크 예약완료 후 KAYAK에서 Waiting 상태가 확인되면 자동 발송</li>
+                  <li><code>{{cashback_amount}}</code>는 KAYAK API의 캐시백 금액 원본 (통화 그대로)</li>
+                  <li>편집 폼 구조·저장·테스트 발송 동작은 케이스 A 주석과 동일</li>
+                </ul></div>
+                <div class="ann-rule">어드민 v0.3 9-1절 — 발송 트리거: Waiting 전환 시</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /case-c -->
+
+    <!-- ===== 케이스 D: 캐시백 지급완료 안내 ===== -->
+    <div id="case-d" style="display:none">
+      <div class="adm-page-hdr" style="margin-top:0;padding-top:0;border-top:none">
+        <div class="adm-page-title" style="font-size:15px;color:#374151">템플릿 #4 — 캐시백 지급완료 안내</div>
+        <div class="adm-page-actions"><button class="wf-btn wf-btn-primary">저장</button></div>
+      </div>
+      <div class="email-edit-wrap">
+        <div class="email-edit-pane">
+          <div class="adm-form">
+            <div class="adm-form-section">
+              <div class="adm-form-section-title">발신 정보</div>
+              <div class="adm-form-row">
+                <div class="adm-form-label">발신자명</div>
+                <input class="wf-input" style="max-width:280px" value="올마이투어">
+              </div>
+              <div class="adm-form-row">
+                <div class="adm-form-label">이메일 제목</div>
+                <input class="wf-input" style="max-width:480px" value="{{hotel_name}} 캐시백이 지급되었습니다 💸">
+              </div>
+            </div>
+            <div class="adm-form-section">
+              <div class="adm-form-section-title">본문</div>
+              <textarea class="wf-input" rows="12" style="width:100%;resize:vertical;font-family:inherit;line-height:1.75">안녕하세요, {{user_name}}님!
+
+{{hotel_name}} 숙박에 대한 캐시백 {{cashback_amount}}이(가) 지급 완료되었습니다.
+
+■ 지급 금액: {{cashback_amount}}
+■ 예약 호텔: {{hotel_name}}
+■ 지급 확정월: {{payment_month}}
+
+앞으로도 {{service_name}}을(를) 이용해주셔서 감사합니다.
+
+{{service_name}} 드림</textarea>
+              <div class="var-guide">
+                <div class="var-guide-title">사용 가능한 변수</div>
+                <div><span class="var-chip">{{user_name}}</span> <span style="font-size:11px;color:#6b7280">회원 이름</span></div>
+                <div style="margin-top:6px"><span class="var-chip">{{cashback_amount}}</span> <span style="font-size:11px;color:#6b7280">캐시백 금액 (통화 포함)</span></div>
+                <div style="margin-top:6px"><span class="var-chip">{{hotel_name}}</span> <span style="font-size:11px;color:#6b7280">예약 호텔명</span></div>
+                <div style="margin-top:6px"><span class="var-chip">{{payment_month}}</span> <span style="font-size:11px;color:#6b7280">지급 확정월 (YYYY-MM, EST 기준)</span></div>
+                <div style="margin-top:6px"><span class="var-chip">{{service_name}}</span> <span style="font-size:11px;color:#6b7280">서비스 브랜드명</span></div>
+                <div style="margin-top:8px;font-size:11px;color:#9ca3af">변수를 복사해 본문에 붙여넣으면 발송 시 실제 값으로 자동 교체됩니다.</div>
+              </div>
+            </div>
+          </div>
+          <div class="test-send-wrap">
+            <div class="test-send-title">테스트 발송</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input class="wf-input" style="max-width:260px" placeholder="테스트 수신 이메일 주소 입력">
+              <button class="wf-btn wf-btn-ghost wf-btn-sm" style="border-color:#22c55e;color:#166534">테스트 발송</button>
+            </div>
+          </div>
+        </div>
+        <div class="email-preview-col">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:8px">미리보기 (샘플 데이터)</div>
+            <div class="email-preview-card">
+              <div class="email-preview-header">
+                <div class="email-preview-from">발신: 올마이투어 &lt;noreply@{브랜드도메인}&gt;</div>
+                <div class="email-preview-subject">싱가포르 마리나베이샌즈 캐시백이 지급되었습니다 💸</div>
+              </div>
+              <div class="email-preview-body">안녕하세요, 홍길동님!
+
+싱가포르 마리나베이샌즈 숙박에 대한 캐시백 SGD 12이(가) 지급 완료되었습니다.
+
+■ 지급 금액: SGD 12
+■ 예약 호텔: 마리나베이샌즈
+■ 지급 확정월: 2026-08
+
+앞으로도 올마이투어을(를) 이용해주셔서 감사합니다.
+
+올마이투어 드림</div>
+              <div class="email-preview-footer">이 이메일은 발송 전용입니다.</div>
+            </div>
+            <div style="margin-top:8px;font-size:11px;color:#9ca3af">※ 미리보기는 샘플 데이터 기준입니다.</div>
+          </div>
+          <div class="ann" style="position:static;width:auto">
+            <h3>주석 — 케이스 D</h3>
+            <div class="ann-item">
+              <span class="cn">D</span>
+              <div class="ann-body">
+                <div class="ann-title">캐시백 지급완료 안내 특이사항</div>
+                <div class="ann-desc"><ul>
+                  <li>KAYAK Approved 확정(TransactionStatus=Active + PaymentMonth 존재) 시 자동 발송</li>
+                  <li><code>{{payment_month}}</code>는 KAYAK EST(미국 동부 시간) 기준 지급월</li>
+                  <li>편집 폼 구조·저장·테스트 발송 동작은 케이스 A 주석과 동일</li>
+                </ul></div>
+                <div class="ann-rule">어드민 v0.3 9-1절 · 6-2절 — Approved 판단 기준</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /case-d -->
+
+    <!-- ===== 케이스 E: 캐시백 취소·만료 안내 ===== -->
+    <div id="case-e" style="display:none">
+      <div class="adm-page-hdr" style="margin-top:0;padding-top:0;border-top:none">
+        <div class="adm-page-title" style="font-size:15px;color:#374151">템플릿 #5 — 캐시백 취소·만료 안내</div>
+        <div class="adm-page-actions"><button class="wf-btn wf-btn-primary">저장</button></div>
+      </div>
+      <div class="email-edit-wrap">
+        <div class="email-edit-pane">
+          <div class="adm-form">
+            <div class="adm-form-section">
+              <div class="adm-form-section-title">발신 정보</div>
+              <div class="adm-form-row">
+                <div class="adm-form-label">발신자명</div>
+                <input class="wf-input" style="max-width:280px" value="올마이투어">
+              </div>
+              <div class="adm-form-row">
+                <div class="adm-form-label">이메일 제목</div>
+                <input class="wf-input" style="max-width:480px" value="{{hotel_name}} 캐시백이 취소·만료되었습니다">
+              </div>
+            </div>
+            <div class="adm-form-section">
+              <div class="adm-form-section-title">본문</div>
+              <textarea class="wf-input" rows="10" style="width:100%;resize:vertical;font-family:inherit;line-height:1.75">안녕하세요, {{user_name}}님.
+
+아쉽게도 아래 예약의 캐시백이 취소 또는 만료 처리되었습니다.
+
+■ 예약 호텔: {{hotel_name}}
+■ 예약 번호: {{booking_id}}
+
+예약 취소 또는 예약 확인 불가 등의 이유로 캐시백이 지급되지 않습니다.
+문의사항이 있으시면 고객센터로 연락해주세요.
+
+올마이투어 드림</textarea>
+              <div class="var-guide">
+                <div class="var-guide-title">사용 가능한 변수</div>
+                <div><span class="var-chip">{{user_name}}</span> <span style="font-size:11px;color:#6b7280">회원 이름</span></div>
+                <div style="margin-top:6px"><span class="var-chip">{{hotel_name}}</span> <span style="font-size:11px;color:#6b7280">예약 호텔명</span></div>
+                <div style="margin-top:6px"><span class="var-chip">{{booking_id}}</span> <span style="font-size:11px;color:#6b7280">KAYAK 예약 번호</span></div>
+                <div style="margin-top:8px;font-size:11px;color:#9ca3af">변수를 복사해 본문에 붙여넣으면 발송 시 실제 값으로 자동 교체됩니다.</div>
+              </div>
+            </div>
+          </div>
+          <div class="test-send-wrap">
+            <div class="test-send-title">테스트 발송</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input class="wf-input" style="max-width:260px" placeholder="테스트 수신 이메일 주소 입력">
+              <button class="wf-btn wf-btn-ghost wf-btn-sm" style="border-color:#22c55e;color:#166534">테스트 발송</button>
+            </div>
+          </div>
+        </div>
+        <div class="email-preview-col">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:8px">미리보기 (샘플 데이터)</div>
+            <div class="email-preview-card">
+              <div class="email-preview-header">
+                <div class="email-preview-from">발신: 올마이투어 &lt;noreply@{브랜드도메인}&gt;</div>
+                <div class="email-preview-subject">방콕 그랜드 하얏트 캐시백이 취소·만료되었습니다</div>
+              </div>
+              <div class="email-preview-body">안녕하세요, 홍길동님.
+
+아쉽게도 아래 예약의 캐시백이 취소 또는 만료 처리되었습니다.
+
+■ 예약 호텔: 방콕 그랜드 하얏트
+■ 예약 번호: BKK-19928
+
+예약 취소 또는 예약 확인 불가 등의 이유로 캐시백이 지급되지 않습니다.
+문의사항이 있으시면 고객센터로 연락해주세요.
+
+올마이투어 드림</div>
+              <div class="email-preview-footer">이 이메일은 발송 전용입니다.</div>
+            </div>
+            <div style="margin-top:8px;font-size:11px;color:#9ca3af">※ 미리보기는 샘플 데이터 기준입니다.</div>
+          </div>
+          <div class="ann" style="position:static;width:auto">
+            <h3>주석 — 케이스 E</h3>
+            <div class="ann-item">
+              <span class="cn">E</span>
+              <div class="ann-body">
+                <div class="ann-title">캐시백 취소·만료 안내 특이사항</div>
+                <div class="ann-desc"><ul>
+                  <li>KAYAK Cancelled 상태 전환 시 자동 발송</li>
+                  <li>PERCENTAGE 타입이어도 금액 0원인 경우 취소·만료로 처리됨 (실데이터 주의)</li>
+                  <li>편집 폼 구조·저장·테스트 발송 동작은 케이스 A 주석과 동일</li>
+                </ul></div>
+                <div class="ann-rule">어드민 v0.3 9-1절 · 6-2절 — Cancelled 정의</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /case-e -->
+
+    <!-- ===== 케이스 F: 예약 상태 알림 (Phase 2) ===== -->
+    <div id="case-f" style="display:none">
+      <div style="background:#fef3c7;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:8px;padding:24px 28px;margin-top:8px;max-width:640px">
+        <div style="font-size:16px;font-weight:700;color:#92400e;margin-bottom:8px">Phase 2 — 예약 상태 알림</div>
+        <div style="font-size:14px;color:#78350f;line-height:1.75">
+          자사 직접 예약 연동이 완료된 후 활성화되는 템플릿입니다.<br>
+          MVP에서는 편집이 불가하며, 자사 예약 엔진 연동(Phase 2) 완료 후 설계 예정입니다.
+        </div>
+        <div style="margin-top:16px;font-size:13px;color:#b45309">
+          <strong>예상 발송 시점 (Phase 2 이후):</strong><br>
+          · 예약 확정 시 자동 발송<br>
+          · 예약 취소 시 자동 발송<br>
+          · 사용 변수: {{user_name}}, {{hotel_name}}, {{checkin_date}}, {{checkout_date}}, {{booking_status}} 등 (미확정)
+        </div>
+      </div>
+    </div><!-- /case-f -->
+
+  </main>
+</div>
+
+<script>
+  const caseIds = ['case-a','case-b','case-c','case-d','case-e','case-f'];
+  function goCase(id) {
+    caseIds.forEach(i => {
+      document.getElementById(i).style.display = i === id ? 'block' : 'none';
+    });
+    document.querySelectorAll('.case-tab-btn').forEach((btn, idx) => {
+      btn.classList.toggle('active', caseIds[idx] === id);
+    });
+    document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'});
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADM-SET01 — 관리자 계정 목록</title>
+<link rel="stylesheet" href="wf-admin-styles.css">
+</head>
+<body>
+<nav class="page-nav">
+  <a class="page-nav-back" href="admin-index.html">← 목차</a>
+  <span class="page-nav-title">ADM-SET01</span>
+  <span class="page-nav-route">관리자 설정 · 계정 목록</span>
+  <div class="page-nav-nav">
+    <a class="page-nav-pager" href="adm-cb02.html">← CB02</a>
+    <a class="page-nav-pager" href="adm-set02.html">다음: SET02 →</a>
+  </div>
+</nav>
+
+<div class="adm-shell">
+  <aside class="adm-sidebar">
+    <div class="adm-sidebar-logo">
+      <div class="adm-sidebar-logo-name">allmytour admin</div>
+      <div class="adm-sidebar-logo-sub">관리자 전용 시스템</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">Overview</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📊</span>대시보드</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">회원관리</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">👥</span>회원 목록</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">예약내역</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📋</span>예약내역 전체</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">캐시백관리</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">💰</span>캐시백 내역</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📈</span>공급사별 현황</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">설정</div>
+      <div class="adm-nav-item active"><span class="adm-nav-icon">⚙️</span>관리자 설정</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">이메일 템플릿</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">✉️</span>이메일 템플릿 관리</div>
+    </div>
+    <div class="adm-sidebar-footer">
+      <div class="adm-sidebar-user"><strong>마스터 관리자</strong>admin@allmytour.com</div>
+      <div class="adm-sidebar-logout">로그아웃</div>
+    </div>
+  </aside>
+
+  <main class="adm-main">
+
+    <div class="adm-page-hdr">
+      <div class="adm-page-title">관리자 계정 목록</div>
+      <div class="adm-page-sub">어드민 접근 계정 관리 · MVP = 마스터 단일 계정</div>
+    </div>
+
+    <!-- 공통정책 블록 -->
+    <div class="sec-policy">
+      <div class="sec-policy-hdr">⚙ 공통 정책 — 관리자 설정</div>
+      <ul class="sec-policy-list">
+        <li><strong>MVP 범위:</strong> 마스터 단일 계정만 운영. 서브계정은 Phase 2 (7-1절)</li>
+        <li><strong>[+ 계정 추가] 버튼:</strong> MVP에서 생략. Phase 2 추가 시 목록 화면에 배치 예정 (7-3절)</li>
+        <li><strong>계정 비활성화:</strong> 삭제 대신 비활성 처리. 비활성 계정은 로그인 차단 (7-2절)</li>
+      </ul>
+      <div class="sec-policy-rule">기준: 어드민 v0.2 7조</div>
+    </div>
+
+    <div class="two-col" style="align-items:start">
+    <div>
+
+      <!-- 계정 목록 테이블 -->
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <thead>
+            <tr>
+              <th>계정 ID <span class="wf-cn">1</span></th>
+              <th>이름</th>
+              <th>이메일</th>
+              <th>권한 <span class="wf-cn">2</span></th>
+              <th>마지막 로그인</th>
+              <th>상태 <span class="wf-cn">3</span></th>
+              <th>관리</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-family:monospace;font-size:11px">ADM-001</td>
+              <td>마스터 관리자</td>
+              <td>admin@allmytour.com</td>
+              <td><span class="wf-badge badge-active">마스터</span></td>
+              <td>2026-06-22 09:15</td>
+              <td><span class="wf-badge badge-approved">활성</span></td>
+              <td><a href="adm-set02.html" class="wf-btn wf-btn-outline wf-btn-sm"><span class="wf-cn">4</span> 상세</a></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="adm-pagination">
+          <div class="adm-pagination-info">총 1개 계정 (MVP: 마스터 단일)</div>
+        </div>
+      </div>
+
+      <!-- Phase 2 안내 -->
+      <div style="margin-top:16px;background:#eff6ff;border:1px solid #bfdbfe;border-left:3px solid #3b82f6;border-radius:6px;padding:12px 16px;font-size:12px;color:#1d4ed8">
+        <strong>Phase 2 예정:</strong> 서브 관리자 계정 추가 및 기능별 권한 설정. 권한 체계는 운영팀·개발팀 협의 후 별도 정의 예정.
+      </div>
+
+    </div><!-- /첫 번째 컬럼 -->
+
+    <!-- 주석 -->
+    <div class="ann">
+      <h3>주석 — ADM-SET01</h3>
+
+      <div class="ann-item">
+        <span class="cn">1</span>
+        <div class="ann-body">
+          <div class="ann-title">계정 ID</div>
+          <div class="ann-desc"><ul>
+            <li>시스템 발급 고유 ID (ADM-XXX 형식)</li>
+            <li>초기 발급 후 변경 불가</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.2 7-2절</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">2</span>
+        <div class="ann-body">
+          <div class="ann-title">권한 컬럼</div>
+          <div class="ann-desc"><ul>
+            <li>MVP: 마스터 1종만 존재</li>
+            <li>Phase 2: 서브 관리자 권한 추가 예정</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.2 7-3절 Phase 2 예정</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">3</span>
+        <div class="ann-body">
+          <div class="ann-title">상태 컬럼</div>
+          <div class="ann-desc"><ul>
+            <li>활성: 로그인 가능 상태</li>
+            <li>비활성: 로그인 차단 (삭제 대신 비활성 처리)</li>
+            <li>비활성 전환은 SET02 상세 화면에서 처리</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.2 7-2절 — 비활성 처리 정책</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">4</span>
+        <div class="ann-body">
+          <div class="ann-title">[상세] 버튼</div>
+          <div class="ann-desc"><ul>
+            <li>클릭 시 ADM-SET02 계정 상세·수정 화면으로 이동</li>
+            <li>URL: <code>/admin/settings/:accountId</code></li>
+          </ul></div>
+        </div>
+      </div>
+
+      <hr class="divider">
+      <div class="text-muted">
+        <strong style="color:#374151;display:block;margin-bottom:4px">MVP 단일 계정 운영</strong>
+        마스터 계정 1개만 운영. Phase 2에서 서브계정 추가 시 테이블 행 추가 방식으로 확장 (화면 구조 변경 없음).
+      </div>
+    </div><!-- /ann -->
+
+    </div><!-- /two-col -->
+
+  </main>
+</div>
+</body>
+</html>

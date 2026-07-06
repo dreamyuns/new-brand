@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADM-LOGIN — 어드민 로그인</title>
+<link rel="stylesheet" href="wf-admin-styles.css">
+<style>
+  body{background:#f0f2f5;min-height:100vh}
+  .login-page{min-height:calc(100vh - 44px);margin-top:44px;display:flex;align-items:center;justify-content:center;padding:40px 24px}
+  .login-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:40px 44px;width:100%;max-width:420px;box-shadow:0 4px 24px rgba(0,0,0,.08)}
+  .login-logo{text-align:center;margin-bottom:28px}
+  .login-logo-name{font-size:18px;font-weight:800;color:#1a1f2e}
+  .login-logo-sub{font-size:11px;color:#9ca3af;margin-top:3px}
+  .login-field{margin-bottom:14px}
+  .login-field label{display:block;font-size:12px;font-weight:700;color:#374151;margin-bottom:5px}
+  .login-field input{width:100%;border:1px solid #d1d5db;border-radius:6px;padding:10px 12px;font-size:13px;color:#1a1f2e;background:#fff}
+  .login-field input:focus{outline:none;border-color:#4f7cff;box-shadow:0 0 0 3px rgba(79,124,255,.12)}
+  .login-btn{width:100%;background:#1a1f2e;color:#fff;border:none;border-radius:6px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px}
+  .login-error{background:#fee2e2;border:1px solid #fca5a5;border-radius:6px;padding:10px 14px;font-size:12px;color:#991b1b;margin-top:12px;display:none}
+  .login-error.show{display:block}
+  .login-footer{text-align:center;margin-top:24px;font-size:11px;color:#9ca3af}
+
+  .case-tab{display:flex;gap:6px;margin-bottom:20px;border-bottom:2px solid #e5e7eb;padding-bottom:0}
+  .case-tab-btn{padding:7px 14px;font-size:12px;font-weight:700;color:#9ca3af;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;background:none;border-top:none;border-left:none;border-right:none}
+  .case-tab-btn.active{color:#4f7cff;border-bottom-color:#4f7cff}
+</style>
+</head>
+<body>
+<nav class="page-nav">
+  <a class="page-nav-back" href="admin-index.html">← 목차</a>
+  <span class="page-nav-title">ADM-LOGIN</span>
+  <span class="page-nav-route">어드민 로그인</span>
+  <div class="page-nav-nav">
+    <span class="page-nav-pager-disabled">← 이전</span>
+    <a class="page-nav-pager" href="adm-dashboard.html">다음: DASH →</a>
+  </div>
+</nav>
+
+<div style="max-width:1100px;margin:72px auto 60px;padding:0 32px">
+
+  <div class="adm-page-hdr">
+    <div class="adm-page-title">ADM-LOGIN — 어드민 로그인</div>
+    <div class="adm-page-sub">어드민 관리자 로그인 화면 · 아이디+비밀번호 인증 · PC 전용<br>정책서 어드민 v0.1 2조 기준</div>
+  </div>
+
+  <!-- 케이스 탭 -->
+  <div class="case-tab">
+    <button class="case-tab-btn active" onclick="goCase('case-a')">케이스 A — 기본 입력</button>
+    <button class="case-tab-btn" onclick="goCase('case-b')">케이스 B — 로그인 오류</button>
+    <button class="case-tab-btn" onclick="goCase('case-c')">케이스 C — 세션 만료</button>
+  </div>
+
+  <div class="two-col" style="align-items:start">
+
+    <!-- 와이어프레임 -->
+    <div>
+
+      <!-- Case A -->
+      <div class="sec-title" id="case-a">케이스 A — 기본 입력 화면</div>
+      <div class="login-page" style="margin:0;min-height:auto;padding:0 0 24px">
+        <div class="login-card">
+          <div class="login-logo">
+            <div class="login-logo-name">allmytour admin</div>
+            <div class="login-logo-sub">관리자 전용 시스템</div>
+          </div>
+          <div class="login-field">
+            <label>아이디 <span class="wf-cn">1</span></label>
+            <input type="text" placeholder="관리자 아이디 입력">
+          </div>
+          <div class="login-field">
+            <label>비밀번호 <span class="wf-cn">2</span></label>
+            <input type="password" placeholder="비밀번호 입력">
+          </div>
+          <button class="login-btn">로그인 <span class="wf-cn">3</span></button>
+          <div class="login-footer">문의: 기술연구소 관리자에게 연락해 주세요</div>
+        </div>
+      </div>
+
+      <hr class="sec-divider">
+
+      <!-- Case B -->
+      <div class="sec-title" id="case-b">케이스 B — 로그인 오류</div>
+      <div class="login-page" style="margin:0;min-height:auto;padding:0 0 24px">
+        <div class="login-card">
+          <div class="login-logo">
+            <div class="login-logo-name">allmytour admin</div>
+            <div class="login-logo-sub">관리자 전용 시스템</div>
+          </div>
+          <div class="login-field">
+            <label>아이디</label>
+            <input type="text" value="admin01" style="border-color:#e53e3e">
+          </div>
+          <div class="login-field">
+            <label>비밀번호</label>
+            <input type="password" value="wrongpass" style="border-color:#e53e3e">
+          </div>
+          <button class="login-btn" style="background:#888">로그인</button>
+          <div class="login-error show"><span class="wf-cn">4</span> 아이디 또는 비밀번호가 올바르지 않습니다. 다시 확인해 주세요.</div>
+          <div class="login-footer">문의: 기술연구소 관리자에게 연락해 주세요</div>
+        </div>
+      </div>
+
+      <hr class="sec-divider">
+
+      <!-- Case C -->
+      <div class="sec-title" id="case-c">케이스 C — 세션 만료 리다이렉트</div>
+      <div class="login-page" style="margin:0;min-height:auto;padding:0 0 24px">
+        <div class="login-card">
+          <div class="login-logo">
+            <div class="login-logo-name">allmytour admin</div>
+            <div class="login-logo-sub">관리자 전용 시스템</div>
+          </div>
+          <div class="login-field">
+            <label>아이디</label>
+            <input type="text" placeholder="관리자 아이디 입력">
+          </div>
+          <div class="login-field">
+            <label>비밀번호</label>
+            <input type="password" placeholder="비밀번호 입력">
+          </div>
+          <button class="login-btn">로그인</button>
+          <div class="login-error show" style="background:#fefce8;border-color:#fde68a;color:#92400e"><span class="wf-cn">5</span> 세션이 만료되었습니다. 다시 로그인해 주세요.</div>
+          <div class="login-footer">문의: 기술연구소 관리자에게 연락해 주세요</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 주석 -->
+    <div class="ann">
+      <h3>주석 — ADM-LOGIN</h3>
+
+      <div class="ann-item">
+        <span class="cn">1</span>
+        <div class="ann-body">
+          <div class="ann-title">아이디 입력 필드</div>
+          <div class="ann-desc">
+            <ul>
+              <li>텍스트 입력 필드. placeholder: "관리자 아이디 입력"</li>
+              <li>Enter 키 입력 시 비밀번호 필드로 포커스 이동</li>
+            </ul>
+          </div>
+          <div class="ann-rule">정책서 어드민 v0.1 2조 — 아이디+비밀번호 인증</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">2</span>
+        <div class="ann-body">
+          <div class="ann-title">비밀번호 입력 필드</div>
+          <div class="ann-desc">
+            <ul>
+              <li>type="password" (마스킹 처리)</li>
+              <li>Enter 키 입력 시 [로그인] 버튼 동작 트리거</li>
+              <li>눈 아이콘으로 표시/숨김 토글 — 추후 논의</li>
+            </ul>
+          </div>
+          <div class="ann-rule">정책서 어드민 v0.1 2조</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">3</span>
+        <div class="ann-body">
+          <div class="ann-title">[로그인] 버튼</div>
+          <div class="ann-desc">
+            <ul>
+              <li>아이디·비밀번호 모두 입력 시 활성. 미입력 시 비활성(회색)</li>
+              <li>성공 시 → 대시보드(ADM-DASH)로 이동</li>
+              <li>실패 시 → 케이스 B 오류 메시지 표시</li>
+            </ul>
+          </div>
+          <div class="ann-front">프론트: 인증 실패 횟수 카운트 — 5회 초과 시 잠금 여부 추후 확정 (8조 미결 2)</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">4</span>
+        <div class="ann-body">
+          <div class="ann-title">로그인 오류 메시지 (케이스 B)</div>
+          <div class="ann-desc">
+            <ul>
+              <li>문구: "아이디 또는 비밀번호가 올바르지 않습니다. 다시 확인해 주세요."</li>
+              <li>아이디·비밀번호 필드 테두리 빨간색 강조</li>
+              <li>오류 시 비밀번호 필드 초기화</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">5</span>
+        <div class="ann-body">
+          <div class="ann-title">세션 만료 안내 (케이스 C)</div>
+          <div class="ann-desc">
+            <ul>
+              <li>문구: "세션이 만료되었습니다. 다시 로그인해 주세요."</li>
+              <li>노란색 경고 배경으로 오류와 구분</li>
+              <li>세션 없이 어드민 URL 직접 접근 시 이 케이스로 리다이렉트</li>
+            </ul>
+          </div>
+          <div class="ann-rule">세션 만료 시간 — 어드민 v0.1 8조 미결 2 (추후 확정)</div>
+        </div>
+      </div>
+
+      <hr class="divider">
+      <div class="text-muted">
+        <strong style="color:#374151;display:block;margin-bottom:4px">미결 사항</strong>
+        · 비밀번호 찾기/초기화 프로세스 미설계 (8조 미결)<br>
+        · 로그인 실패 횟수 제한·잠금 정책 미확정<br>
+        · 세션 만료 시간 미확정<br>
+        · 2FA·IP 접근 제한 Phase 2 논의 예정
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function goCase(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - 60;
+    window.scrollTo({top, behavior:'smooth'});
+    // 탭 active 상태 동기화
+    document.querySelectorAll('.case-tab-btn').forEach(btn => btn.classList.remove('active'));
+    const idx = {a:0,b:1,c:2}[id.replace('case-','')];
+    document.querySelectorAll('.case-tab-btn')[idx].classList.add('active');
+  }
+</script>
+</body>
+</html>

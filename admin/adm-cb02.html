@@ -1,0 +1,288 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADM-CB02 — 공급사별 캐시백 현황</title>
+<link rel="stylesheet" href="wf-admin-styles.css">
+</head>
+<body>
+<nav class="page-nav">
+  <a class="page-nav-back" href="admin-index.html">← 목차</a>
+  <span class="page-nav-title">ADM-CB02</span>
+  <span class="page-nav-route">캐시백관리 · 공급사별 현황</span>
+  <div class="page-nav-nav">
+    <a class="page-nav-pager" href="adm-cb01.html">← CB01</a>
+    <a class="page-nav-pager" href="adm-set01.html">다음: SET01 →</a>
+  </div>
+</nav>
+
+<div class="adm-shell">
+  <!-- 사이드바 -->
+  <aside class="adm-sidebar">
+    <div class="adm-sidebar-logo">
+      <div class="adm-sidebar-logo-name">allmytour admin</div>
+      <div class="adm-sidebar-logo-sub">관리자 전용 시스템</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">Overview</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📊</span>대시보드</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">회원관리</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">👥</span>회원 목록</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">예약내역</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📋</span>예약내역 전체</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">캐시백관리</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">💰</span>캐시백 내역</div>
+      <div class="adm-nav-item active"><span class="adm-nav-icon">📈</span>공급사별 현황</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">설정</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">⚙️</span>관리자 설정</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">이메일 템플릿</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">✉️</span>이메일 템플릿 관리</div>
+    </div>
+    <div class="adm-sidebar-footer">
+      <div class="adm-sidebar-user"><strong>마스터 관리자</strong>admin@allmytour.com</div>
+      <div class="adm-sidebar-logout">로그아웃</div>
+    </div>
+  </aside>
+
+  <!-- 메인 -->
+  <main class="adm-main">
+
+    <div class="adm-page-hdr">
+      <div class="adm-page-title">공급사별 캐시백 현황</div>
+      <div class="adm-page-sub">OTA 공급사별 캐시백 발생·집계 현황 · 월별 기준</div>
+    </div>
+
+    <div class="two-col" style="align-items:start">
+    <div>
+
+      <!-- 공통정책 블록 -->
+      <div class="sec-policy">
+        <div class="sec-policy-hdr">⚙ 공통 정책 — 공급사별 캐시백 현황</div>
+        <ul class="sec-policy-list">
+          <li><strong>데이터 소스:</strong> KAYAK Reporting API <code>providers</code> 기준 OTA별 집계 (6조)</li>
+          <li><strong>집계 기준:</strong> Approved(지급완료) 건 기준. Waiting·Cancelled 별도 표시 (정책서 v0.30 9-4절)</li>
+          <li><strong>통화:</strong> KAYAK API 응답 통화 원본 표시. 환산 없음 (정책서 v0.30 11-2절)</li>
+          <li><strong>MVP 조회전용:</strong> 캐시백율 수동 조정 기능 없음 (Phase 2 후 논의)</li>
+        </ul>
+        <div class="sec-policy-rule">기준: 어드민 v0.1 6조 / 정책서 v0.30 9절</div>
+      </div>
+
+      <!-- 월 선택 필터 -->
+      <div class="filter-bar" style="margin-bottom:20px">
+        <span class="filter-label">기준 월</span>
+        <select class="wf-select">
+          <option>2026-06 (이번 달)</option>
+          <option>2026-05</option>
+          <option>2026-04</option>
+          <option>2026-03</option>
+        </select><span class="wf-cn">1</span>
+        <div class="filter-actions">
+          <button class="wf-btn wf-btn-primary wf-btn-sm">조회</button>
+          <button class="wf-btn wf-btn-download wf-btn-sm">Excel 다운로드</button>
+        </div>
+      </div>
+
+      <!-- 요약 카드 (해당 월 기준) -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:12px;font-weight:700;color:#374151">2026-06 기준 요약 통계</span><span class="wf-cn">3</span></div>
+      <div class="stat-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:24px">
+        <div class="stat-card amber">
+          <div class="stat-card-label">총 캐시백 (Approved)</div>
+          <div class="stat-card-value">₩1,200,000</div>
+          <div class="stat-card-sub">지급완료 합계</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-card-label">총 예약 건수</div>
+          <div class="stat-card-value">312</div>
+          <div class="stat-card-sub">Booking 기준</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-card-label">참여 OTA 수</div>
+          <div class="stat-card-value">7</div>
+          <div class="stat-card-sub">이번 달 발생</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-card-label">적립예정 (Waiting)</div>
+          <div class="stat-card-value">₩340,000</div>
+          <div class="stat-card-sub">미확정</div>
+        </div>
+        <div class="stat-card gray">
+          <div class="stat-card-label">평균 캐시백율</div>
+          <div class="stat-card-value">3.8%</div>
+          <div class="stat-card-sub">Approved 기준</div>
+        </div>
+      </div>
+
+      <!-- 공급사별 테이블 -->
+      <div class="sec-title">공급사별 상세 <span class="wf-cn">2</span></div>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <thead>
+            <tr>
+              <th>공급사 (OTA)</th>
+              <th>예약 건수</th>
+              <th>Waiting</th>
+              <th>Approved</th>
+              <th>Cancelled</th>
+              <th>캐시백 합계</th>
+              <th>적립률/금액 <span class="wf-cn">4</span></th>
+              <th>타입</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="width:24px;height:16px;background:#003580;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:8px;color:#fff;font-weight:700">Bk</div>
+                  <strong>Booking.com</strong>
+                </div>
+              </td>
+              <td style="text-align:center">112</td>
+              <td style="text-align:center"><span class="wf-badge badge-waiting">42</span></td>
+              <td style="text-align:center"><span class="wf-badge badge-approved">68</span></td>
+              <td style="text-align:center"><span class="wf-badge badge-cancelled">2</span></td>
+              <td style="font-weight:600;color:#f59e0b">₩480,000</td>
+              <td>3.2%</td>
+              <td><span class="wf-badge badge-active" style="font-size:9px">PERCENTAGE</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="width:24px;height:16px;background:#e03c31;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:8px;color:#fff;font-weight:700">Ag</div>
+                  <strong>Agoda</strong>
+                </div>
+              </td>
+              <td style="text-align:center">89</td>
+              <td style="text-align:center"><span class="wf-badge badge-waiting">31</span></td>
+              <td style="text-align:center"><span class="wf-badge badge-approved">55</span></td>
+              <td style="text-align:center"><span class="wf-badge badge-cancelled">3</span></td>
+              <td style="font-weight:600;color:#f59e0b">₩390,000</td>
+              <td>4.8%</td>
+              <td><span class="wf-badge badge-active" style="font-size:9px">PERCENTAGE</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="width:24px;height:16px;background:#0078d4;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:8px;color:#fff;font-weight:700">Ht</div>
+                  <strong>Hotels.com</strong>
+                </div>
+              </td>
+              <td style="text-align:center">61</td>
+              <td style="text-align:center"><span class="wf-badge badge-waiting">18</span></td>
+              <td style="text-align:center"><span class="wf-badge badge-approved">40</span></td>
+              <td style="text-align:center"><span class="wf-badge badge-cancelled">3</span></td>
+              <td style="font-weight:600;color:#f59e0b">SGD 240 + ₩120K</td>
+              <td style="font-size:12px">SGD 240<br><span style="color:#9ca3af">₩120K</span></td>
+              <td><span class="wf-badge badge-inactive" style="font-size:9px">FLAT</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div style="width:24px;height:16px;background:#f60;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:8px;color:#fff;font-weight:700">Ex</div>
+                  <strong>Expedia</strong>
+                </div>
+              </td>
+              <td style="text-align:center">38</td>
+              <td style="text-align:center"><span class="wf-badge badge-waiting">14</span></td>
+              <td style="text-align:center"><span class="wf-badge badge-approved">24</span></td>
+              <td style="text-align:center"><span class="wf-badge badge-cancelled">0</span></td>
+              <td style="color:#9ca3af;font-size:11px">—</td>
+              <td>—</td>
+              <td><span class="wf-badge badge-inactive" style="font-size:9px">NONE</span></td>
+            </tr>
+            <tr>
+              <td colspan="8" style="text-align:center;color:#9ca3af;font-size:11px;padding:14px">
+                … 기타 3개 OTA (Kayak.com, Trip.com, Priceline) 표시
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div><!-- /첫 번째 컬럼 -->
+
+    <!-- 주석 -->
+    <div class="ann">
+      <h3>주석 — ADM-CB02</h3>
+      <div class="ann-item">
+        <span class="cn">1</span>
+        <div class="ann-body">
+          <div class="ann-title">기준 월 선택</div>
+          <div class="ann-desc">
+            <ul>
+              <li>YYYY-MM 형식 드롭다운. 최근 12개월 제공</li>
+              <li>기본값: 이번 달 (오늘 기준 현재 월)</li>
+              <li>Approved 기준 집계 → 체크아웃 후 KAYAK 확인 완료 건</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <span class="cn">2</span>
+        <div class="ann-body">
+          <div class="ann-title">공급사별 집계 테이블</div>
+          <div class="ann-desc">
+            <ul>
+              <li>캐시백 합계: 통화별 원본 표시. 여러 통화 혼재 가능</li>
+              <li>평균 캐시백율: PERCENTAGE 타입만 계산. FLAT/NONE은 "—"</li>
+              <li>NONE 타입 OTA: 캐시백 없음이나 예약 건수는 집계</li>
+            </ul>
+          </div>
+          <div class="ann-rule">정책서 v0.30 9-7절 캐시백 타입 / 11-2절 통화 정책</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <span class="cn">4</span>
+        <div class="ann-body">
+          <div class="ann-title">적립률/금액 컬럼 — 타입별 표시 분기</div>
+          <div class="ann-desc"><ul>
+            <li><strong>PERCENTAGE 타입:</strong> 적립률(%) 표시 — 예: 3.2%</li>
+            <li><strong>FLAT 타입:</strong> 적립 금액 표시 — 통화별로 줄바꿈하여 표시 (예: SGD 240 / ₩120K)</li>
+            <li><strong>NONE 타입:</strong> "—" 표시 — 캐시백 없음</li>
+            <li>한 행에서 타입이 PERCENTAGE이면 % 값만, FLAT이면 금액만 표시. 두 값을 같이 보여주지 않음</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.3 6-4절 — KAYAK 캐시백 타입 구분</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">3</span>
+        <div class="ann-body">
+          <div class="ann-title">요약 통계 계산식</div>
+          <div class="ann-desc">
+            <ul>
+              <li><strong>총 캐시백(Approved):</strong> 해당 월 Approved 건 캐시백 금액 합산. 통화 혼재 시 통화별 분리 표시 권장 (KRW 환산 기준 미결)</li>
+              <li><strong>총 예약 건수:</strong> 해당 월 Booking 트랜잭션 전체 — Waiting + Approved + Cancelled 합산</li>
+              <li><strong>참여 OTA 수:</strong> 해당 월 예약 1건 이상 발생한 OTA 수 (KAYAK Reporting API <code>providers</code> 기준)</li>
+              <li><strong>적립예정(Waiting):</strong> 해당 월 발생 건 중 체크아웃 전 미확인 캐시백 금액 합산</li>
+              <li><strong>평균 캐시백율:</strong> PERCENTAGE 타입 OTA의 (캐시백합계 ÷ 예약금액합계) × 100. FLAT·NONE 타입 제외</li>
+            </ul>
+          </div>
+          <div class="ann-rule">통화 혼재 시 KRW 환산 기준 미결 — 개발팀 협의 필요</div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="text-muted">
+        <strong style="color:#374151;display:block;margin-bottom:4px">캐시백율 조정</strong>
+        공급사별 캐시백율 조정은 KAYAK 담당자 양식 제출 방식.<br>
+        어드민에서 직접 변경 불가. Phase 2에서 조정 이력 조회 기능 논의 예정.
+      </div>
+    </div><!-- /ann -->
+
+    </div><!-- /two-col -->
+
+  </main>
+</div>
+
+</body>
+</html>

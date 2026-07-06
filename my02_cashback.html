@@ -178,8 +178,8 @@
     <li><strong>상단 고정</strong>: 총 적립금액 (지급완료 기준 누적 합계) (10-2절)</li>
     <li><strong>정렬</strong>: 지급완료일 최신순 (10-2절)</li>
     <li><strong>상태 배지</strong>: <code>Waiting</code>=적립예정 / <code>Approved</code>=지급완료 / <code>Cancelled</code>=취소·만료 (9-4·10-2절)</li>
-    <li><strong>예약금액</strong>: <code>localisedBookingValue</code> 직접 사용. null·0·cashbackType=NONE 공급사 예약 건은 미표시 (10-2절)</li>
-    <li><strong>적립금액</strong>: <code>cashbackAmountLocalised</code> 직접 사용. null·0·cashbackType=NONE 공급사 예약 건은 미표시 (10-2절)</li>
+    <li><strong>예약금액</strong>: <code>localisedBookingValue</code> 직접 사용. null·0·cashbackType=NONE 공급사 예약 건은 미표시 (10-2절). 단, Cancelled 건은 금액 0이어도 취소선 표시 우선 (TransactionStatus 기준 우선 처리)</li>
+    <li><strong>적립금액</strong>: <code>cashbackAmountLocalised</code> 직접 사용. null·0·cashbackType=NONE 공급사 예약 건은 미표시 (10-2절). 단, Cancelled 건은 금액 0이어도 취소선 표시 우선 (TransactionStatus 기준 우선 처리)</li>
     <li><strong>캐시백 귀속</strong>: Label 필드 연계(회원ID ↔ <code>userTrackId</code> 연결). ⚠️ KAYAK 답변 대기 (9-5절)</li>
     <li><strong>포인트 사용 기능</strong>: MVP 제외 (안내 UI만) (10-2절)</li>
   </ul>
@@ -423,8 +423,8 @@
             <li><b>취소·만료</b> 건: 금액에 취소선(line-through) + 회색 처리.</li>
           </ul>
         </div>
-        <div class="ann-front">← KAYAK Transaction Report 캐시백 금액 필드 직접 사용. ⚠️ 정확한 필드명 KAYAK 확인 필요 (cashbackValue 추정)</div>
-        <div class="ann-rule">취소 건은 금액에 취소선 표시 + 회색 처리. 정책서 9-3절.</div>
+        <div class="ann-front">← KAYAK Transaction Report <code>cashbackAmountLocalised</code> 필드 직접 사용. 실 데이터(2026-07-06) 확인: Cancelled 건에서 금액 0으로 내려오는 경우 있음 — 취소선 표시 우선 처리.</div>
+        <div class="ann-rule">TransactionStatus=Cancelled 기준으로 금액 0이어도 취소선 표시 우선. cashbackType=NONE 미표시 정책과 별개. 정책서 9-4절·10-2절.</div>
       </div>
     </div>
     <div class="ann-item">
@@ -461,6 +461,7 @@
           <ul>
             <li>예약 취소, 미투숙, 또는 만료로 캐시백이 지급되지 않은 건. 회색 배지.</li>
             <li>카드 detail 영역에 예약일과 취소일 표시. 예약금액·캐시백 금액은 회색 취소선 처리.</li>
+            <li>⚠️ 실 데이터 확인(2026-07-06): Cancelled 건에서 캐시백 금액이 0원으로 내려오는 경우 있음. 금액이 0원이어도 취소선 표시를 먼저 적용함 — cashbackType=NONE 미표시 정책과 다른 처리. 예약이 취소됐는지 아닌지를 먼저 보고, 취소됐다면 금액과 관계없이 취소선으로 표시.</li>
           </ul>
         </div>
         <div class="ann-front">← KAYAK Transaction Report 상태값 = Cancelled</div>
@@ -494,8 +495,8 @@
           체크인/체크아웃 메타칩 → <code>clickStartDate</code> / <code>clickEndDate</code><br>
           예약 OTA명 메타칩 → <code>siteBrandCode</code> (예: Agoda, Booking.com)<br>
           예약일 → <code>bookingDate</code><br>
-          예약 금액 → <code>localisedBookingValue</code> (로컬 통화 환산값. null·0·cashbackType=NONE 공급사 예약 건 미표시)<br>
-          적립 캐시백 금액 → <code>cashbackAmountLocalised</code> (null·0·cashbackType=NONE 공급사 예약 건 미표시)<br>
+          예약 금액 → <code>localisedBookingValue</code> (로컬 통화 환산값. null·0·cashbackType=NONE 공급사 예약 건 미표시. Cancelled 건은 0이어도 취소선 표시 우선)<br>
+          적립 캐시백 금액 → <code>cashbackAmountLocalised</code> (null·0·cashbackType=NONE 공급사 예약 건 미표시. Cancelled 건은 0이어도 취소선 표시 우선)<br>
           지급 월 → <code>paymentMonth</code> (Approved 전환 월)<br>
           예약 ID → <code>bookingId</code><br>
           상태값 → Transaction Report 상태 (Waiting / Approved / Cancelled)

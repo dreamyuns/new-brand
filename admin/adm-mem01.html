@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADM-MEM01 — 회원 목록</title>
+<link rel="stylesheet" href="wf-admin-styles.css">
+</head>
+<body>
+<nav class="page-nav">
+  <a class="page-nav-back" href="admin-index.html">← 목차</a>
+  <span class="page-nav-title">ADM-MEM01</span>
+  <span class="page-nav-route">회원관리 · 회원 목록</span>
+  <div class="page-nav-nav">
+    <a class="page-nav-pager" href="adm-dashboard.html">← DASH</a>
+    <a class="page-nav-pager" href="adm-mem02.html">다음: MEM02 →</a>
+  </div>
+</nav>
+
+<div class="adm-shell">
+  <!-- 사이드바 -->
+  <aside class="adm-sidebar">
+    <div class="adm-sidebar-logo">
+      <div class="adm-sidebar-logo-name">allmytour admin</div>
+      <div class="adm-sidebar-logo-sub">관리자 전용 시스템</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">Overview</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📊</span>대시보드</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">회원관리</div>
+      <div class="adm-nav-item active"><span class="adm-nav-icon">👥</span>회원 목록</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">예약내역</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📋</span>예약내역 전체</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">캐시백관리</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">💰</span>캐시백 내역</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📈</span>공급사별 현황</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">설정</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">⚙️</span>관리자 설정</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">이메일 템플릿</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">✉️</span>이메일 템플릿 관리</div>
+    </div>
+    <div class="adm-sidebar-footer">
+      <div class="adm-sidebar-user"><strong>마스터 관리자</strong>admin@allmytour.com</div>
+      <div class="adm-sidebar-logout">로그아웃</div>
+    </div>
+  </aside>
+
+  <!-- 메인 -->
+  <main class="adm-main">
+
+    <div class="adm-page-hdr">
+      <div class="adm-page-title">회원 목록</div>
+      <div class="adm-page-sub">가입 회원 전체 목록 · 검색·필터·상세 진입</div>
+    </div>
+
+    <!-- 공통정책 블록 -->
+    <div class="sec-policy">
+      <div class="sec-policy-hdr">⚙ 공통 정책 — 회원 목록</div>
+      <ul class="sec-policy-list">
+        <li><strong>데이터 소스:</strong> 자사 DB 회원 테이블. 기본값: 활성 회원만 표시 (4-1절)</li>
+        <li><strong>탈퇴 회원 조회:</strong> [탈퇴회원만 보기] 버튼 클릭 시 탈퇴 회원 단독 조회 — CS 대응 목적 (4-1절)</li>
+        <li><strong>검색 범위:</strong> 이메일·회원ID 대상. 이름은 목록 미제공 — 이름 확인은 상세(MEM02)에서 (4-1절)</li>
+        <li><strong>정렬 기본값:</strong> 가입일 내림차순 (최신순)</li>
+        <li><strong>페이지네이션:</strong> 1페이지 50건 표시 (개발팀 협의 필요)</li>
+        <li><strong>누적 캐시백(KRW) 컬럼:</strong> 회원별 Approved 캐시백 총합을 KRW로 환산해 표시. 환율 기준은 어드민 내부 설정값 사용 (미결 — 8조 미결 9). Waiting·Cancelled 미포함. NONE 타입 제외. 0원은 "—" 표시 (6-4절)</li>
+        <li><strong>Excel 다운로드:</strong> 전체 데이터 다운로드 (검색 조건 무관). 시트 분리 — 시트1: 활성회원 / 시트2: 탈퇴회원. 개인정보 포함으로 다운로드 로그 기록 권장 (8조 미결)</li>
+      </ul>
+      <div class="sec-policy-rule">기준: 어드민 v0.3 4-1절</div>
+    </div>
+
+    <!-- 케이스 탭 -->
+    <div class="case-tab-bar">
+      <button class="case-tab-btn active" onclick="goCase('case-a')">케이스 A — 활성 회원 목록 (기본)</button>
+      <button class="case-tab-btn" onclick="goCase('case-b')">케이스 B — 탈퇴회원만 보기 클릭 후</button>
+    </div>
+
+    <!-- ===== 케이스 A: 활성 회원 목록 ===== -->
+    <div id="case-a">
+      <div class="two-col-wide">
+        <div>
+
+          <!-- 필터 바 -->
+          <div class="filter-bar">
+            <span class="filter-label">검색</span>
+            <input class="wf-input" style="width:220px" placeholder="이메일·회원ID 검색"><span class="wf-cn">1</span>
+            <span class="filter-sep"></span>
+            <button class="wf-btn wf-btn-ghost wf-btn-sm" style="border:1px solid #d1d5db;color:#374151">탈퇴회원만 보기</button><span class="wf-cn">2</span>
+            <span class="filter-label">가입기간</span>
+            <input class="wf-input" style="width:100px" placeholder="2026-01-01">
+            <span>~</span>
+            <input class="wf-input" style="width:100px" placeholder="2026-12-31"><span class="wf-cn">3</span>
+            <div class="filter-actions">
+              <button class="wf-btn wf-btn-primary wf-btn-sm">검색</button>
+              <button class="wf-btn wf-btn-ghost wf-btn-sm">초기화</button>
+              <button class="wf-btn wf-btn-download wf-btn-sm"><span class="wf-cn">4</span> Excel 다운로드</button>
+            </div>
+          </div>
+
+          <!-- 테이블 -->
+          <div class="adm-table-wrap">
+            <table class="adm-table">
+              <thead>
+                <tr>
+                  <th>회원ID</th>
+                  <th>이메일</th>
+                  <th>상태</th>
+                  <th>가입일</th>
+                  <th>예약 수 <span class="wf-cn">5</span></th>
+                  <th>누적 캐시백(KRW) <span class="wf-cn">7</span></th>
+                  <th>관리 <span class="wf-cn">6</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="font-family:monospace;font-size:11px">U-10042</td>
+                  <td>hong@example.com</td>
+                  <td><span class="wf-badge badge-active">활성</span></td>
+                  <td>2026-03-12</td>
+                  <td style="text-align:center">3</td>
+                  <td style="text-align:right;font-size:12px;font-weight:600">₩38,000</td>
+                  <td><a href="adm-mem02.html" class="wf-btn wf-btn-outline wf-btn-sm">상세</a></td>
+                </tr>
+                <tr>
+                  <td style="font-family:monospace;font-size:11px">U-10041</td>
+                  <td>jkim@example.com</td>
+                  <td><span class="wf-badge badge-active">활성</span></td>
+                  <td>2026-03-08</td>
+                  <td style="text-align:center">1</td>
+                  <td style="text-align:right;font-size:12px;font-weight:600">₩12,400</td>
+                  <td><a href="adm-mem02.html" class="wf-btn wf-btn-outline wf-btn-sm">상세</a></td>
+                </tr>
+                <tr>
+                  <td style="font-family:monospace;font-size:11px">U-10040</td>
+                  <td>mlee@example.com</td>
+                  <td><span class="wf-badge badge-active">활성</span></td>
+                  <td>2026-02-25</td>
+                  <td style="text-align:center">7</td>
+                  <td style="text-align:right;font-size:12px;font-weight:600">₩97,500</td>
+                  <td><a href="adm-mem02.html" class="wf-btn wf-btn-outline wf-btn-sm">상세</a></td>
+                </tr>
+                <tr>
+                  <td style="font-family:monospace;font-size:11px">U-10039</td>
+                  <td>user39@example.com</td>
+                  <td><span class="wf-badge badge-active">활성</span></td>
+                  <td>2026-02-10</td>
+                  <td style="text-align:center">0</td>
+                  <td style="text-align:right;font-size:12px;color:#9ca3af">—</td>
+                  <td><a href="adm-mem02.html" class="wf-btn wf-btn-outline wf-btn-sm">상세</a></td>
+                </tr>
+                <tr>
+                  <td style="font-family:monospace;font-size:11px">U-10001</td>
+                  <td>alpha@allmytour.com</td>
+                  <td><span class="wf-badge badge-active">활성</span></td>
+                  <td>2026-01-01</td>
+                  <td style="text-align:center">12</td>
+                  <td style="text-align:right;font-size:12px;font-weight:600">₩184,200</td>
+                  <td><a href="adm-mem02.html" class="wf-btn wf-btn-outline wf-btn-sm">상세</a></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="adm-pagination">
+              <div class="adm-pagination-info">총 1,284명 · 1–50 표시 중</div>
+              <div class="adm-pagination-btns">
+                <span class="adm-pagination-btn">«</span>
+                <span class="adm-pagination-btn active">1</span>
+                <span class="adm-pagination-btn">2</span>
+                <span class="adm-pagination-btn">3</span>
+                <span class="adm-pagination-btn">»</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 주석 -->
+        <div class="ann">
+          <h3>주석 — ADM-MEM01</h3>
+
+          <div class="ann-item">
+            <span class="cn">1</span>
+            <div class="ann-body">
+              <div class="ann-title">통합 검색 필드</div>
+              <div class="ann-desc"><ul>
+                <li>이메일·회원ID 대상 검색</li>
+                <li>이름(영문)은 회원이 선택 입력하는 항목이라 목록에서 검색 불가 — 이름 확인은 MEM02 상세에서</li>
+                <li>입력 후 Enter 또는 [검색] 버튼 클릭</li>
+                <li>검색어 2자 이상 입력 시 검색 활성 권장</li>
+              </ul></div>
+              <div class="ann-rule">어드민 v0.3 4-1절</div>
+            </div>
+          </div>
+
+          <div class="ann-item">
+            <span class="cn">2</span>
+            <div class="ann-body">
+              <div class="ann-title">[탈퇴회원만 보기] 버튼</div>
+              <div class="ann-desc"><ul>
+                <li>기본 상태: 활성 회원만 표시 (버튼 비활성 스타일)</li>
+                <li>버튼 클릭 시: 버튼이 빨간색 강조 스타일로 바뀌며, 목록이 탈퇴 회원 전용으로 새로 불러와짐</li>
+                <li>탈퇴 회원 조회는 CS 대응 목적 — 예약내역·캐시백 탭 조회 가능</li>
+                <li>버튼을 다시 클릭하면 활성 회원 목록으로 돌아옴</li>
+              </ul></div>
+              <div class="ann-rule">어드민 v0.3 4-1절 · 4-3절 — 탈퇴 회원 CS 조회 정책</div>
+            </div>
+          </div>
+
+          <div class="ann-item">
+            <span class="cn">3</span>
+            <div class="ann-body">
+              <div class="ann-title">가입기간 필터</div>
+              <div class="ann-desc"><ul>
+                <li>날짜 직접 입력 또는 캘린더로 선택</li>
+                <li>시작일만 입력 시 해당일 이후 전체 조회</li>
+                <li>탈퇴회원 모드에서는 가입기간 대신 탈퇴기간 필터로 변경됨</li>
+              </ul></div>
+            </div>
+          </div>
+
+          <div class="ann-item">
+            <span class="cn">4</span>
+            <div class="ann-body">
+              <div class="ann-title">Excel 다운로드</div>
+              <div class="ann-desc"><ul>
+                <li><strong>검색 조건과 관계없이 전체 회원 데이터를 다운로드</strong></li>
+                <li>파일 내 시트 2개로 분리됨:<ul>
+                  <li>시트1 "활성회원" — 회원ID·이메일·상태·가입일·예약수</li>
+                  <li>시트2 "탈퇴회원" — 회원ID·이메일·탈퇴일·가입일·예약수</li>
+                </ul></li>
+                <li>개인정보 포함 — 다운로드 로그 기록 권장</li>
+              </ul></div>
+              <div class="ann-rule">시트 분리 방식 개발팀 협의 필요 (8조 미결 3)</div>
+            </div>
+          </div>
+
+          <div class="ann-item">
+            <span class="cn">5</span>
+            <div class="ann-body">
+              <div class="ann-title">예약 수 컬럼</div>
+              <div class="ann-desc"><ul>
+                <li><strong>Approved(지급완료) 기준 집계</strong> — Waiting·Cancelled 미포함</li>
+                <li>KAYAK Reporting API 해당 회원 labels 기준 조회</li>
+                <li>비로그인 미귀속 건 제외 (회원ID 매핑된 건만 집계)</li>
+              </ul></div>
+              <div class="ann-rule">어드민 v0.3 4-1절</div>
+            </div>
+          </div>
+
+          <div class="ann-item">
+            <span class="cn">7</span>
+            <div class="ann-body">
+              <div class="ann-title">누적 캐시백(KRW) 컬럼</div>
+              <div class="ann-desc"><ul>
+                <li>해당 회원의 <strong>Approved(지급완료)</strong> 캐시백만 합산 — Waiting·Cancelled 제외</li>
+                <li>KAYAK API의 NONE 타입 건은 합산에서 제외</li>
+                <li>SGD·USD 등 외화는 어드민 내부 저장 환율로 KRW 환산 후 합산 표시</li>
+                <li>환율 기준 시점은 어드민 설정값 사용 (실시간 환율 적용 여부는 개발팀 협의 필요)</li>
+                <li>캐시백 0원 / 적립 이력 없음 → "—" 표시</li>
+              </ul></div>
+              <div class="ann-rule">어드민 v0.3 6-4절 · 8조 미결 9 (환율 기준 미확정)</div>
+            </div>
+          </div>
+
+          <div class="ann-item">
+            <span class="cn">6</span>
+            <div class="ann-body">
+              <div class="ann-title">[상세] 버튼</div>
+              <div class="ann-desc"><ul>
+                <li>클릭 시 ADM-MEM02 회원 상세 페이지로 이동</li>
+                <li>탈퇴 회원의 [상세(읽기전용)] 버튼도 MEM02로 이동 — 케이스 D(읽기전용)로 표시됨</li>
+                <li>URL: <code>/admin/members/:userId</code></li>
+              </ul></div>
+            </div>
+          </div>
+
+          <hr class="divider">
+          <div class="text-muted">
+            <strong style="color:#374151;display:block;margin-bottom:4px">이름·마지막 로그인 컬럼 미제공</strong>
+            이름(영문)은 선택 입력 항목이라 목록에서 의미가 낮아 상세(MEM02)에서만 표시.<br>
+            마지막 로그인도 상세(MEM02)에서 확인 가능.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 케이스 B: 탈퇴회원만 보기 클릭 후 ===== -->
+    <div id="case-b" style="display:none">
+      <div class="two-col-wide">
+        <div>
+
+          <!-- 필터 바 (탈퇴회원만 보기 active 상태) -->
+          <div class="filter-bar">
+            <span class="filter-label">검색</span>
+            <input class="wf-input" style="width:220px" placeholder="이메일·회원ID 검색">
+            <span class="filter-sep"></span>
+            <button class="wf-btn wf-btn-sm" style="border:2px solid #ef4444;color:#ef4444;background:#fef2f2;font-weight:700">탈퇴회원만 보기 ✓</button>
+            <span class="filter-label">탈퇴기간</span>
+            <input class="wf-input" style="width:100px" placeholder="2026-01-01">
+            <span>~</span>
+            <input class="wf-input" style="width:100px" placeholder="2026-12-31">
+            <div class="filter-actions">
+              <button class="wf-btn wf-btn-primary wf-btn-sm">검색</button>
+              <button class="wf-btn wf-btn-ghost wf-btn-sm">초기화</button>
+              <button class="wf-btn wf-btn-download wf-btn-sm">Excel 다운로드</button>
+            </div>
+          </div>
+
+          <!-- 탈퇴 모드 안내 배너 -->
+          <div style="background:#fef2f2;border:1px solid #fca5a5;border-left:3px solid #ef4444;border-radius:6px;padding:10px 14px;font-size:12px;color:#991b1b;margin-bottom:12px">
+            <strong>탈퇴 회원 조회 모드</strong> — 탈퇴 처리된 회원 목록입니다. CS 대응 목적 조회 전용이며, 수정·편집은 불가합니다.
+          </div>
+
+          <!-- 테이블 -->
+          <div class="adm-table-wrap">
+            <table class="adm-table">
+              <thead>
+                <tr>
+                  <th>회원ID</th>
+                  <th>이메일</th>
+                  <th>상태</th>
+                  <th>가입일</th>
+                  <th>탈퇴일 <span class="wf-cn">B1</span></th>
+                  <th>예약 수</th>
+                  <th>누적 캐시백(KRW)</th>
+                  <th>관리 <span class="wf-cn">B2</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="font-family:monospace;font-size:11px">U-10035</td>
+                  <td>schoi@example.com</td>
+                  <td><span class="wf-badge" style="background:#ef4444;color:#fff;font-size:10px">탈퇴</span></td>
+                  <td>2026-01-15</td>
+                  <td style="font-size:12px;color:#6b7280">2026-05-20</td>
+                  <td style="text-align:center">2</td>
+                  <td style="text-align:right;font-size:12px;font-weight:600;color:#6b7280">₩24,000</td>
+                  <td><a href="adm-mem02.html" class="wf-btn wf-btn-outline wf-btn-sm" style="color:#6b7280;border-color:#d1d5db">상세(읽기전용)</a></td>
+                </tr>
+                <tr>
+                  <td style="font-family:monospace;font-size:11px">U-10028</td>
+                  <td>user28@example.com</td>
+                  <td><span class="wf-badge" style="background:#ef4444;color:#fff;font-size:10px">탈퇴</span></td>
+                  <td>2025-11-03</td>
+                  <td style="font-size:12px;color:#6b7280">2026-04-11</td>
+                  <td style="text-align:center">0</td>
+                  <td style="text-align:right;font-size:12px;color:#9ca3af">—</td>
+                  <td><a href="adm-mem02.html" class="wf-btn wf-btn-outline wf-btn-sm" style="color:#6b7280;border-color:#d1d5db">상세(읽기전용)</a></td>
+                </tr>
+                <tr>
+                  <td style="font-family:monospace;font-size:11px">U-10019</td>
+                  <td>jpark@example.com</td>
+                  <td><span class="wf-badge" style="background:#ef4444;color:#fff;font-size:10px">탈퇴</span></td>
+                  <td>2025-09-22</td>
+                  <td style="font-size:12px;color:#6b7280">2026-03-30</td>
+                  <td style="text-align:center">5</td>
+                  <td style="text-align:right;font-size:12px;font-weight:600;color:#6b7280">₩61,000</td>
+                  <td><a href="adm-mem02.html" class="wf-btn wf-btn-outline wf-btn-sm" style="color:#6b7280;border-color:#d1d5db">상세(읽기전용)</a></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="adm-pagination">
+              <div class="adm-pagination-info">총 47명 탈퇴 · 1–47 표시 중</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 주석 -->
+        <div class="ann">
+          <h3>주석 — 케이스 B (탈퇴회원 조회)</h3>
+
+          <div class="ann-item">
+            <span class="cn">B1</span>
+            <div class="ann-body">
+              <div class="ann-title">탈퇴일 컬럼 (케이스 B 전용)</div>
+              <div class="ann-desc"><ul>
+                <li>케이스 A에는 없는 컬럼 — 탈퇴회원 모드에서만 표시</li>
+                <li>가입기간 필터가 탈퇴기간 필터로 바뀌어 이 날짜 기준으로 조회</li>
+              </ul></div>
+              <div class="ann-rule">어드민 v0.3 4-3절 — 탈퇴 회원 처리 정책</div>
+            </div>
+          </div>
+
+          <div class="ann-item">
+            <span class="cn">B2</span>
+            <div class="ann-body">
+              <div class="ann-title">[상세(읽기전용)] 버튼</div>
+              <div class="ann-desc"><ul>
+                <li>클릭 시 MEM02 화면으로 이동 — 케이스 D (탈퇴 회원 읽기전용 모드)로 자동 표시</li>
+                <li>저장·편집 불가. 예약내역·캐시백 탭 조회는 가능</li>
+              </ul></div>
+              <div class="ann-rule">어드민 v0.3 4-3절</div>
+            </div>
+          </div>
+
+          <hr class="divider">
+          <div class="text-muted">
+            <strong style="color:#374151;display:block;margin-bottom:4px">Excel 다운로드 (케이스 B 공통)</strong>
+            케이스 A·B 어느 상태에서 버튼을 눌러도 전체 데이터 다운로드.<br>
+            시트1: 활성회원 / 시트2: 탈퇴회원으로 항상 분리 저장됨.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  function goCase(id) {
+    ['case-a','case-b'].forEach(i => {
+      document.getElementById(i).style.display = i === id ? 'block' : 'none';
+    });
+    document.querySelectorAll('.case-tab-btn').forEach((btn, idx) => {
+      btn.classList.toggle('active', ['case-a','case-b'][idx] === id);
+    });
+    document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'});
+  }
+</script>
+</body>
+</html>

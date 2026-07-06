@@ -409,7 +409,7 @@
     <li><strong>탭바 노출 범위</strong>: 메인(M01) + 이 화면(MY02-D1)에만 탭바 표시. 검색결과(S01)·숙소상세(S02)에서는 미노출.</li>
     <li><strong>데이터 출처</strong>: KAYAK Reporting API v2 Transaction Report (12-1절)</li>
     <li><strong>여행 상태 산출</strong>: <code>clickStartDate</code> / <code>clickEndDate</code>와 오늘 날짜를 자사 서버에서 비교하여 투숙예정·투숙중·투숙완료 구분. KAYAK이 직접 제공하는 값 아님.</li>
-    <li><strong>적립 상태 매핑</strong>: KAYAK Transaction Report 상태값 → <code>Waiting</code>=적립예정 / <code>Approved</code>=적립완료 / <code>Cancelled</code>=회수 (9-4절)</li>
+    <li><strong>적립 상태 매핑</strong>: KAYAK Transaction Report 상태값 → <code>Waiting</code>=적립예정 / <code>Approved</code>=적립완료 / <code>Cancelled</code>=회수 (9-4절). 실 데이터 확인(2026-07-06): Cancelled 건에서 캐시백 금액이 0으로 내려오는 경우 있음 — 금액 0이어도 취소선 표시 우선 (TransactionStatus 기준 우선 처리. cashbackType=NONE 미표시 정책과 별개)</li>
     <li><strong>총 금액</strong>: <code>Approved</code> 상태 건의 <code>cashbackAmountLocalised</code> 합산 (10-2절)</li>
     <li><strong>정렬 그룹 고정</strong>: 두 정렬 모두 투숙중 → 투숙예정 → 투숙완료 → 예약취소 순 상태 그룹 고정 후 그룹 내 날짜 정렬 적용</li>
     <li><strong>로그인 전 화면</strong>: 문구·이미지 하드코딩. API 호출 없음.</li>
@@ -897,9 +897,10 @@
           <li><b style="color:#D97706;">적립예정</b> (주황): Waiting → 아직 체크아웃 전이거나 정산 대기 중.</li>
           <li><b style="color:#059669;">적립완료</b> (초록): Approved → KAYAK 정산 완료, 금액 확정.</li>
           <li><b style="color:#9CA3AF;">회수</b> (회색): Cancelled → 취소로 인해 캐시백이 적립되지 않음. 금액에 취소선으로 표시.</li>
-          <li>⚠️ 논의항목 1: 캐시백이 없는 상품(cashbackType=NONE)의 경우 이 배지를 어떻게 표시할지 미결.</li>
+          <li>⚠️ 실 데이터 확인(2026-07-06): Cancelled 건에서 캐시백 금액이 0원으로 내려오는 경우 있음. 금액이 0원이어도 취소선 표시를 먼저 적용 — 예약이 취소됐는지를 먼저 확인하고, 취소됐다면 금액과 관계없이 취소선 처리.</li>
+          <li>cashbackType=NONE 공급사 예약 건은 캐시백 내역 자체 미표시 (별도 정책 — Cancelled 건과 다름).</li>
         </ul></div>
-        <div class="ann-front">← Transaction Report 상태: <code>Waiting</code>=적립예정 / <code>Approved</code>=적립완료 / <code>Cancelled</code>=회수</div>
+        <div class="ann-front">← Transaction Report 상태: <code>Waiting</code>=적립예정 / <code>Approved</code>=적립완료 / <code>Cancelled</code>=회수. 실 데이터 확인(2026-07-06): Cancelled 건에도 PaymentMonth 값이 있을 수 있으므로 TransactionStatus를 반드시 먼저 체크.</div>
         <div class="ann-rule">정책서 9-4절. 여행 상태 배지와 분리 표시 (여행 상태: 좌상단 / 적립 상태: 우하단).</div>
       </div>
     </div>
@@ -926,8 +927,8 @@
           <li>상태별 색상: 적립예정(주황) / 적립완료(초록) / 회수(회색 취소선 또는 "회수" 텍스트).</li>
           <li>예약취소 건은 금액 자리에 숫자 대신 "회수" 텍스트만 표시.</li>
         </ul></div>
-        <div class="ann-front">← <code>cashbackAmountLocalised</code> (Transaction Report). null·0이면 미표시.</div>
-        <div class="ann-rule">정책서 10-2절. 통화 단위는 선택 통화 기준 (<code>localisedCurrencyCode</code>).</div>
+        <div class="ann-front">← <code>cashbackAmountLocalised</code> (Transaction Report). null·0이면 미표시. 단, Cancelled 건은 0이어도 취소선 표시 우선 (TransactionStatus 기준 우선 처리).</div>
+        <div class="ann-rule">정책서 9-4절·10-2절. 통화 단위는 선택 통화 기준 (<code>localisedCurrencyCode</code>). Cancelled + 금액 0 케이스는 cashbackType=NONE 미표시 정책과 별개.</div>
       </div>
     </div>
 

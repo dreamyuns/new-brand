@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADM-EMAIL01 — 이메일 템플릿 목록</title>
+<link rel="stylesheet" href="wf-admin-styles.css">
+</head>
+<body>
+<nav class="page-nav">
+  <a class="page-nav-back" href="admin-index.html">← 목차</a>
+  <span class="page-nav-title">ADM-EMAIL01</span>
+  <span class="page-nav-route">이메일 템플릿 · 목록</span>
+  <div class="page-nav-nav">
+    <a class="page-nav-pager" href="adm-set02.html">← SET02</a>
+    <a class="page-nav-pager" href="adm-email02.html">다음: EMAIL02 →</a>
+  </div>
+</nav>
+
+<div class="adm-shell">
+  <!-- 사이드바 -->
+  <aside class="adm-sidebar">
+    <div class="adm-sidebar-logo">
+      <div class="adm-sidebar-logo-name">allmytour admin</div>
+      <div class="adm-sidebar-logo-sub">관리자 전용 시스템</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">Overview</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📊</span>대시보드</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">회원관리</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">👥</span>회원 목록</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">예약내역</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📋</span>예약내역 전체</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">캐시백관리</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">💰</span>캐시백 내역</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">📈</span>공급사별 현황</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">설정</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">⚙️</span>관리자 설정</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">이메일 템플릿</div>
+      <div class="adm-nav-item active"><span class="adm-nav-icon">✉️</span>이메일 템플릿 관리</div>
+    </div>
+    <div class="adm-sidebar-footer">
+      <div class="adm-sidebar-user"><strong>마스터 관리자</strong>admin@allmytour.com</div>
+      <div class="adm-sidebar-logout">로그아웃</div>
+    </div>
+  </aside>
+
+  <!-- 메인 -->
+  <main class="adm-main">
+
+    <div class="adm-page-hdr">
+      <div class="adm-page-title">이메일 템플릿 관리</div>
+      <div class="adm-page-sub">서비스 발송 이메일 본문 조회 및 편집</div>
+    </div>
+
+    <!-- 공통정책 블록 -->
+    <div class="sec-policy">
+      <div class="sec-policy-hdr">⚙ 공통 정책 — 이메일 템플릿</div>
+      <ul class="sec-policy-list">
+        <li><strong>조회·편집 대상:</strong> 서비스에서 자동 발송되는 이메일 본문. 발신자명·제목·본문 텍스트 편집 가능 (9-2절)</li>
+        <li><strong>발송 트리거:</strong> 각 템플릿은 서비스 이벤트(회원가입·캐시백 상태변경 등) 발생 시 자동 발송. 관리자가 트리거 조건 변경 불가 (9-1절)</li>
+        <li><strong>변수 삽입:</strong> 본문 내 <code>{{변수명}}</code> 형식으로 동적 데이터 삽입. 편집 화면에서 사용 가능한 변수 목록 제공 (9-3절)</li>
+        <li><strong>MVP 범위:</strong> 5종 편집 가능. 예약 상태 알림(#6)은 자사 직접 예약 연동 시 추가 (Phase 2)</li>
+      </ul>
+      <div class="sec-policy-rule">기준: 어드민 v0.3 9절</div>
+    </div>
+
+    <div class="two-col-wide">
+      <!-- 왼쪽: 템플릿 목록 -->
+      <div>
+
+        <!-- 안내 배너 -->
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-left:3px solid #3b82f6;border-radius:6px;padding:10px 14px;font-size:12px;color:#1e3a8a;margin-bottom:16px">
+          <strong>편집 안내:</strong> 각 템플릿의 [편집] 버튼을 클릭하면 발신자명·제목·본문을 수정할 수 있습니다. 변경 사항은 저장 즉시 다음 발송부터 반영됩니다.
+        </div>
+
+        <!-- 템플릿 목록 테이블 -->
+        <div class="adm-table-wrap">
+          <table class="adm-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>템플릿명 <span class="wf-cn">1</span></th>
+                <th>발송 트리거</th>
+                <th>마지막 수정일 <span class="wf-cn">2</span></th>
+                <th>관리 <span class="wf-cn">3</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td style="font-weight:600">이메일 인증코드</td>
+                <td style="font-size:12px;color:#6b7280">회원가입·로그인 시 인증코드 발송</td>
+                <td style="font-size:12px">2026-06-22</td>
+                <td><a href="adm-email02.html" class="wf-btn wf-btn-outline wf-btn-sm">편집</a></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td style="font-weight:600">환영 이메일</td>
+                <td style="font-size:12px;color:#6b7280">신규 회원가입 완료 직후 자동 발송</td>
+                <td style="font-size:12px">2026-06-22</td>
+                <td><a href="adm-email02.html" class="wf-btn wf-btn-outline wf-btn-sm">편집</a></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td style="font-weight:600">캐시백 적립예정 안내</td>
+                <td style="font-size:12px;color:#6b7280">아웃링크 예약완료 → Waiting 상태 전환 시</td>
+                <td style="font-size:12px">2026-07-01</td>
+                <td><a href="adm-email02.html" class="wf-btn wf-btn-outline wf-btn-sm">편집</a></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td style="font-weight:600">캐시백 지급완료 안내</td>
+                <td style="font-size:12px;color:#6b7280">KAYAK Approved 확정 후 자동 발송</td>
+                <td style="font-size:12px">2026-07-01</td>
+                <td><a href="adm-email02.html" class="wf-btn wf-btn-outline wf-btn-sm">편집</a></td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td style="font-weight:600">캐시백 취소·만료 안내</td>
+                <td style="font-size:12px;color:#6b7280">KAYAK Cancelled 상태 전환 시 자동 발송</td>
+                <td style="font-size:12px">2026-07-01</td>
+                <td><a href="adm-email02.html" class="wf-btn wf-btn-outline wf-btn-sm">편집</a></td>
+              </tr>
+              <tr style="opacity:0.5">
+                <td>6</td>
+                <td style="font-weight:600">예약 상태 알림</td>
+                <td style="font-size:12px;color:#6b7280">자사 직접 예약 확정·취소 시</td>
+                <td style="font-size:12px;color:#9ca3af">— (Phase 2)</td>
+                <td><button class="wf-btn wf-btn-ghost wf-btn-sm" disabled style="opacity:0.4;cursor:not-allowed">편집</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:12px;background:#fef3c7;border:1px solid #fde68a;border-left:3px solid #f59e0b;border-radius:6px;padding:10px 14px;font-size:12px;color:#92400e">
+          <strong>Phase 2 예정:</strong> 예약 상태 알림 템플릿은 자사 직접 예약 연동 완료 후 활성화됩니다.
+        </div>
+
+      </div><!-- /왼쪽 -->
+
+      <!-- 주석 -->
+      <div class="ann">
+        <h3>주석 — ADM-EMAIL01</h3>
+
+        <div class="ann-item">
+          <span class="cn">1</span>
+          <div class="ann-body">
+            <div class="ann-title">템플릿명 컬럼</div>
+            <div class="ann-desc"><ul>
+              <li>서비스 내부 관리 이름 (사용자에게 직접 노출되지 않음)</li>
+              <li>클릭 시 해당 템플릿 편집 화면(ADM-EMAIL02)으로 이동</li>
+            </ul></div>
+            <div class="ann-rule">어드민 v0.3 9-1절</div>
+          </div>
+        </div>
+
+        <div class="ann-item">
+          <span class="cn">2</span>
+          <div class="ann-body">
+            <div class="ann-title">마지막 수정일</div>
+            <div class="ann-desc"><ul>
+              <li>어드민에서 마지막으로 내용을 저장한 날짜</li>
+              <li>초기 배포 시 기본값은 작성일로 설정</li>
+            </ul></div>
+          </div>
+        </div>
+
+        <div class="ann-item">
+          <span class="cn">3</span>
+          <div class="ann-body">
+            <div class="ann-title">[편집] 버튼</div>
+            <div class="ann-desc"><ul>
+              <li>클릭 시 ADM-EMAIL02 편집 화면으로 이동 (해당 템플릿 데이터 로드)</li>
+              <li>Phase 2 템플릿(#6)은 비활성 — 자사 예약 연동 완료 전까지 편집 불가</li>
+            </ul></div>
+            <div class="ann-rule">어드민 v0.3 9-2절</div>
+          </div>
+        </div>
+
+        <hr class="divider">
+        <div class="text-muted">
+          <strong style="color:#374151;display:block;margin-bottom:4px">발송 트리거 변경 불가</strong>
+          이메일이 언제 발송되는지 (트리거 조건)는 개발 코드에서 결정되며, 어드민에서 변경할 수 없습니다. 본문 내용만 편집 가능합니다.
+        </div>
+      </div><!-- /ann -->
+    </div><!-- /two-col-wide -->
+
+  </main>
+</div>
+
+</body>
+</html>
