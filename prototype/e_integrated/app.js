@@ -2,7 +2,8 @@
 const state = {
   loggedIn: false,
   entryMode: null,       // 'ai' | 'form'  (결과페이지 AI추천영역 노출)
-  destination: '',       // 검색 도시
+  destination: '',       // 검색 도시(또는 호텔명)
+  destType: 'city',      // 목적지 타입 city|area|hotel (최근검색·핀 구분)
   randomCity: null,      // 지역 미입력 시 자동 지정된 도시(안내용)
   dateStr: '7월 9일 – 7월 10일',
   nights: 1,             // 박수 (금액 = 1박가 × 박수)
@@ -25,6 +26,12 @@ const state = {
   csMsgs: [],            // 고객지원 채팅 메시지 {who:'bot'|'me', text}
   csFaqOpen: true,       // 자주 묻는 질문 펼침 여부 (첫 질문 후 자동 접힘)
   earnSort: 'recent',    // 적립(MY02) 정렬: recent(최신 예약순) | checkin(체크인 임박순)
+  // 자동완성 빈 입력 시 최근 검색 (최대 저장 10 · 화면 최대 3 · M01_D1-D)
+  recentSearches: [
+    {name:'후쿠오카', dates:'6.12 – 6.13', guest:'투숙객 2명 · 객실 1개'},
+    {name:'오사카',   dates:'9.5 – 9.7',   guest:'투숙객 2명 · 객실 1개'},
+    {name:'제주',     dates:'7.9 – 7.10',  guest:'투숙객 2명 · 객실 1개'},
+  ],
   // ─ 결과페이지 정렬·필터 ─
   sort: 'popular',       // popular | price | rating
   aiFilterLabel: null,   // ✦ AI 필터 적용 여부(칩 활성용 · 버튼명은 유지)
@@ -118,8 +125,10 @@ function submitAISearch(){
   runSearch('ai', v);
 }
 function renderMainChips(){
+  // 20개 풀에서 새로고침(렌더)마다 랜덤 4개 (자연어검색 v0.4 4-2절)
+  const pool = SUGGEST_QUESTIONS.slice().sort(()=>Math.random()-0.5).slice(0,4);
   document.getElementById('mainChips').innerHTML =
-    SUGGEST_QUESTIONS.map(q=>`<span class="mchip" onclick="runSearch('ai','${q}')">✦ ${q}</span>`).join('');
+    pool.map(q=>`<span class="mchip" onclick="runSearch('ai','${q}')">✦ ${q}</span>`).join('');
 }
 
 // ── 폼 검색(ⓑ) ──
@@ -138,8 +147,24 @@ function renderAC(q){
   q=(q||'').trim();
   const body=document.getElementById('acBody');
   if(!q){
-    body.innerHTML = `<div class="ac-sec">인기 도시</div>` +
-      AUTOCOMPLETE.filter(a=>a.type==='city').slice(0,7).map(a=>acRow(a,'')).join('');
+    // M01_D1-D: 최근 검색(최대 3) + 인기도시(10 고정)
+    const rec = state.recentSearches.slice(0,3);
+    let html='';
+    if(rec.length){
+      html += `<div class="ac-sec ac-sec-row"><span>최근 검색</span><span class="ac-clear" onclick="clearRecents()">전체 삭제</span></div>`;
+      html += rec.map((r,i)=>`
+        <div class="ac-row ac-recent">
+          <div class="ac-ibox ac-recent-ic" onclick="pickRecent('${r.name}','${r.type||'city'}')">${r.type==='hotel'?'🏨':'🕐'}</div>
+          <div class="ac-info" onclick="pickRecent('${r.name}','${r.type||'city'}')"><div class="ac-name">${r.name}</div><div class="ac-sub">${r.dates} · ${r.guest}</div></div>
+          <button class="ac-del" onclick="event.stopPropagation();removeRecent(${i})">✕</button>
+        </div>`).join('');
+    }
+    html += `<div class="ac-sec">인기도시</div>` + POPULAR_DEST.map(p=>`
+      <div class="ac-row" onclick="chooseDest('${p.name}','city')">
+        <div class="ac-ibox ac-city">📍</div>
+        <div class="ac-info"><div class="ac-name">${p.name}</div><div class="ac-sub">${p.sub}</div></div>
+      </div>`).join('');
+    body.innerHTML = html;
     return;
   }
   const res = AUTOCOMPLETE.filter(a=>a.name.includes(q)||a.sub.includes(q))
@@ -153,8 +178,26 @@ function acRow(a,q){
     <div class="ac-ibox ac-${a.type}">${AC_ICON[a.type]}</div>
     <div class="ac-info"><div class="ac-name">${nm}</div><div class="ac-sub">${a.sub}</div></div></div>`;
 }
+/* 최근 검색 (M01_D1-D · 저장 최대 10, 화면 최대 3) */
+function addRecent(name, type){
+  if(!name) return;
+  const dates=state.dateStr.replace(/월 /g,'.').replace(/일/g,'').replace(/\s/g,'');
+  state.recentSearches = state.recentSearches.filter(r=>r.name!==name);
+  state.recentSearches.unshift({name, type:type||'city', dates, guest:state.guestStr});
+  if(state.recentSearches.length>10) state.recentSearches.length=10;
+}
+function removeRecent(i){ state.recentSearches.splice(i,1); renderAC(''); }
+function clearRecents(){ state.recentSearches=[]; renderAC(''); }
+/* 최근검색 탭 = 완결된 검색 → 바로 재검색·S01 갱신 (메인/결과 공통) */
+function pickRecent(name, type){
+  state.destination=name; state.destType=type||'city';
+  state.pinnedHotel = (type==='hotel') ? name : null;
+  closeOvl();
+  runSearch('form', name);
+}
 function chooseDest(name, type){
   state.destination=name;
+  state.destType = type||'city';
   state.pinnedHotel = (type==='hotel') ? name : null;   // 호텔명 선택 시 결과 최상단 고정
   closeOvl(); renderMain(); toast(`목적지: ${name}`);
   if(onResults()){ state.searchExpanded=true; renderCond(); }
@@ -273,18 +316,38 @@ function runSearch(mode, query){
     toast('저는 호텔 검색만 도와드릴 수 있어요'); return;
   }
   state.entryMode = mode;
-  let city;
+  let city, recName, recType;
   if(mode==='form'){
-    city = state.destination;
+    city = state.destination; recName = city; recType = state.destType;
   } else { // ai
-    state.pinnedHotel=null;   // AI 검색은 호텔 고정 해제
-    city = detectCity(query);
-    if(city){ state.randomCity=null; }
-    else if(state.destination){ city = state.destination; state.randomCity=null; } // 조건만 변경 → 도시 유지
-    else { city = POPULAR_CITIES[Math.floor(Math.random()*POPULAR_CITIES.length)]; state.randomCity = city; } // 지역 미입력 → 랜덤
+    const q = (query||'').trim();
+    // 호텔명 인식: 자동완성 호텔 + 전체 HOTELS 이름 중 입력에 포함된 것
+    const hotelNames = AUTOCOMPLETE.filter(a=>a.type==='hotel').map(a=>a.name).concat(HOTELS.map(h=>h.name));
+    const hm = hotelNames.find(nm => q.includes(nm));
+    city = detectCity(q);
+    const isCond = /조식|성급|원|이하|풀|수영|스파|주말|박|가격|평점/.test(q);  // 조건 변경형 후속 입력
+    if(hm){                                   // ① 우리 DB 숙소명 → 해당 호텔 고정 + 최근검색 호텔명
+      state.pinnedHotel=hm; state.randomCity=null;
+      if(!city){ const a=AUTOCOMPLETE.find(x=>x.name===hm); city = a ? (a.sub.split('·')[0]||'').trim() : (state.destination||'서울'); }
+      recName = hm; recType = 'hotel';
+    } else if(city){                          // ② 도시 인식
+      state.pinnedHotel=null; state.randomCity=null;
+      recName = city; recType = 'city';
+    } else if(q && !isCond){                  // ③ 미인식 장소/숙소명 → 입력값 그대로 최근검색
+      state.pinnedHotel=null;
+      city = state.destination || POPULAR_CITIES[Math.floor(Math.random()*POPULAR_CITIES.length)];
+      if(!state.destination) state.randomCity = city;
+      recName = q; recType = 'hotel';
+    } else {                                  // ④ 조건 후속/빈 입력 → 도시 유지 또는 랜덤
+      state.pinnedHotel=null;
+      if(state.destination){ city = state.destination; state.randomCity=null; }
+      else { city = POPULAR_CITIES[Math.floor(Math.random()*POPULAR_CITIES.length)]; state.randomCity = city; }
+      recName = city; recType = 'city';
+    }
   }
   state.destination = city;
   state.lastQuery = query || '';
+  addRecent(recName, recType);   // 최근 검색 등록 (도시·숙소명 · M01_D1-D)
   showLoading(()=>{ go('results'); renderResults(); });
 }
 
@@ -380,15 +443,15 @@ function renderFilterChips(){
   const el=document.getElementById('resFilters'); if(!el) return;
   state.listShown=10;   // 필터·정렬 변경 시 목록 처음부터
   const priceOn = state.fPriceMin!=null||state.fPriceMax!=null;
+  // 정렬 칩 제거 → 전체필터(⚙) 시트에 편입 (v0.4). ⚙ 전체필터를 필터바 맨 앞(AI필터 우측)에 배치
   el.innerHTML =
-    `<span class="chip ${state.sort!=='popular'?'active':''}" onclick="openSortSheet()">${SORT_LABEL[state.sort]} ▾</span>`+
+    `<span class="chip chip-all ${anyFilterActive()?'on':''}" onclick="openFilterSheet()">⚙ 전체필터</span>`+
     `<span class="chip ${priceOn?'active':''}" onclick="openPriceSheet()">가격 ▾</span>`+
     `<span class="chip ${state.fStars.length?'active':''}" onclick="openStarSheet()">성급${state.fStars.length?' '+state.fStars.length:''} ▾</span>`+
     `<span class="chip ${state.fTypes.length?'active':''}" onclick="openTypeSheet()">숙소유형${state.fTypes.length?' '+state.fTypes.length:''} ▾</span>`+
     `<span class="chip ${state.fChains.length?'active':''}" onclick="openChainSheet()">브랜드·체인${state.fChains.length?' '+state.fChains.length:''} ▾</span>`+
     `<span class="chip ${state.fReview7?'active':''}" onclick="toggleReview7Chip()">리뷰 7.0+${state.fReview7?' ✓':''}</span>`;
   const ai=document.getElementById('resAiChip'); if(ai) ai.classList.toggle('on', !!state.aiFilterLabel);
-  const fb=document.getElementById('resFilterBtn'); if(fb) fb.classList.toggle('on', anyFilterActive());
 }
 /* 목록 렌더 (10개 + 더보기 +10 · 금액=1박가×박수 · 빈화면) */
 function renderList(){
@@ -486,7 +549,15 @@ function reviewSecHTML(){
     <div class="flt-toggle-row"><span class="flt-t" style="margin:0;">리뷰 7.0점 이상만 보기</span>
     <div class="flt-toggle ${state.fB.fReview7?'on':''}" onclick="toggleReview7()"><span class="ft-knob"></span></div></div></div>`;
 }
-function allSecHTML(){ return priceSecHTML()+starSecHTML()+typeSecHTML()+chainSecHTML()+reviewSecHTML(); }
+/* 전체필터 시트 상단 정렬 섹션 (v0.4 — 정렬 칩 폐지·전체필터로 편입) */
+function sortSecHTML(){
+  return `<div class="flt-sec">
+    <div class="flt-t">정렬</div>
+    <div class="flt-chips">${Object.keys(SORT_LABEL).map(k=>`<span class="flt-chip ${state.sort===k?'on':''}" onclick="setSortInSheet('${k}')">${SORT_LABEL[k]}</span>`).join('')}</div>
+  </div>`;
+}
+function setSortInSheet(k){ state.sort=k; renderFilterChips(); renderList(); reRenderSheet(); }
+function allSecHTML(){ return sortSecHTML()+priceSecHTML()+starSecHTML()+typeSecHTML()+chainSecHTML()+reviewSecHTML(); }
 const SHEET_MAP = { price:priceSecHTML, star:starSecHTML, type:typeSecHTML, chain:chainSecHTML, all:allSecHTML };
 /* 개별/전체 시트 오픈 (스냅샷 → 조작은 임시 fB, [결과 N개 보기] 시 커밋) */
 function openSheetWith(scope, title){
@@ -575,12 +646,13 @@ function clearAiFilter(){ closeListSheet(); clearFilters(); renderFilterChips();
 /* AI 추천영역 빌드 (기본 2개 노출 + 더보기, 섹션 접기) */
 function buildAIRec(){
   const city = state.destination;
-  const top5 = HOTELS.slice(0,5);
+  // AI 추천 = 평점(guestRating) 높은 순 재정렬 상위 5 (전체 목록 인기순과 다른 순서) · 리뷰수 로직은 백엔드 (v0.4 #21)
+  const top5 = HOTELS.slice().sort((a,b)=>b.rating-a.rating).slice(0,5);
   // 지명 미입력(랜덤 도시) vs 지명 검색 → 요약 문구 분기 (자연어검색 v0.3 7-2절)
   const sumHTML = state.randomCity
-    ? `<div class="airec-sum">지역을 안 정하셔서 인기 도시 <b>${city}</b>로 먼저 보여드려요. 후기 좋은 곳 <b>5곳</b>을 추려봤어요.</div>
+    ? `<div class="airec-sum">지역을 안 정하셔서 인기 도시 <b>${city}</b>로 먼저 보여드려요. 후기·평점 좋은 순으로 <b>5곳</b>을 추려봤어요.</div>
        <div class="airec-note">📍 위 검색창에서 원하는 지역으로 바꿀 수 있어요.</div>`
-    : `<div class="airec-sum"><b>${city}</b> 조건에 맞춰 후기 좋은 곳 <b>5곳</b>을 추려봤어요.</div>`;
+    : `<div class="airec-sum"><b>${city}</b> 조건에 맞춰 후기·평점 좋은 순으로 <b>5곳</b>을 추려봤어요.</div>`;
   const showN = state.recListExpanded ? 5 : 2;
   const items = top5.slice(0,showN).map((h)=>`
     <div class="airec-item" onclick="openDetail('${h.id}')">
@@ -640,7 +712,7 @@ function renderCond(){
 }
 function expandCond(){ state.searchExpanded=true; renderCond(); }
 function collapseCond(){ state.searchExpanded=false; renderCond(); }
-function applyCondSearch(){ state.searchExpanded=false; reRenderResults(); }
+function applyCondSearch(){ state.searchExpanded=false; addRecent(state.destination, state.destType); reRenderResults(); }
 
 function toggleAIRec(){ state.recFolded=!state.recFolded; document.getElementById('aiRec').innerHTML=buildAIRec(); }
 function toggleRecList(){ state.recListExpanded=!state.recListExpanded; document.getElementById('aiRec').innerHTML=buildAIRec(); }
@@ -683,7 +755,7 @@ function renderOtaRows(){
   const rest=rows.length-shown.length;
   document.getElementById('dOta').innerHTML =
     shown.map(r=>`
-    <div class="ota-row">
+    <div class="ota-row" onclick="tryOutlink('${r.ota}','${h.id}')">
       <div class="ota-l">
         <div class="ota-name" style="color:${r.color}">${r.ota}${r.lowest?'<span class="ota-best">최저가</span>':''}</div>
         <div class="ota-room">${r.room}</div>
@@ -691,10 +763,9 @@ function renderOtaRows(){
       </div>
       <div class="ota-r">
         <div class="ota-price">${won(r.price*state.nights)}원</div>
-        <div class="ota-sub">${state.nights}박</div>
-        ${r.cb&&r.cb.type!=='NONE'?`<div class="ota-cash">${cbS02Label(r.cb)}</div>`:''}
+        ${r.cb&&r.cb.type!=='NONE'?`<div class="ota-cash">최대 ${won(cbWon(r.price,r.cb))} 적립</div>`:''}
       </div>
-      <button class="ota-go" onclick="tryOutlink('${r.ota}','${h.id}')">→</button>
+      <span class="ota-go">→</span>
     </div>`).join('')
     + (rest>0 ? `<button class="ota-more" onclick="moreOta()">다른 가격 더보기 (${Math.min(5,rest)}곳) ▽</button>` : '');
 }
@@ -1507,8 +1578,8 @@ function toast(msg){
 /* ═══════════ 참고 문서 (좌측 데모 패널 → 팝업) ═══════════ */
 const REF_DOCS = [
   {n:'Phase1 정책서',        v:'v0.39',    p:'phase1정책/신규_mvp_메타서치_v0.39.md'},
-  {n:'자연어검색 정책서',     v:'v0.3',     p:'신규정책/자연어검색/자연어검색_정책서_v0.3.md'},
-  {n:'E안 프로토타입(원본)',  v:'v0.3 기준', p:'prototype/chat_prototype_e.html'},
+  {n:'자연어검색 정책서',     v:'v0.4',     p:'신규정책/자연어검색/자연어검색_정책서_v0.4.md'},
+  {n:'E안 프로토타입(원본)',  v:'v0.4 기준', p:'prototype/chat_prototype_e.html'},
   {n:'화면기획서',           v:'—',        p:'new_wireframe/ m01·s01·s02_d1·login_modal·auth_login·my01~my05·out01'},
   {n:'KAYAK API 통합분석',   v:'—',        p:'api/KAYAK_API_통합분석.md (+ test_response)'},
   {n:'제작 스펙',            v:'—',        p:'통합프로토타입_제작요청서_E안 · E안_프로토타입_스펙정의'},

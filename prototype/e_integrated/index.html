@@ -64,7 +64,6 @@
                      onkeydown="if(event.key==='Enter')submitAISearch()">
               <span class="ai-mic" onclick="toast('음성 검색은 준비 중이에요 (Phase 2)')">🎙</span>
             </div>
-            <div class="ai-hint">✦ 예) "부산 해운대 오션뷰 4성급 2명"</div>
             <div class="ai-chips" id="mainChips"></div>
           </div>
 
@@ -100,12 +99,11 @@
             <input id="reInput" placeholder="AI로 다시 검색하세요!" onkeydown="if(event.key==='Enter'){doReSearch()}">
             <span class="rb-mic" onclick="event.stopPropagation();toast('음성 검색은 준비 중이에요')">🎙</span>
           </div>
-          <button class="res-filterbtn" id="resFilterBtn" onclick="openFilterSheet()">⚙</button>
         </div>
         <div class="res-cond" id="resCond"><!-- 축약 바 ↔ 검색폼 (JS) --></div>
         <div class="res-filterbar">
           <span class="chip chip-ai" id="resAiChip" onclick="openAiFilterSheet()">✦ AI 필터</span>
-          <div class="res-filters" id="resFilters"><!-- 정렬·필터 칩 (JS · 가로 스크롤) --></div>
+          <div class="res-filters" id="resFilters"><!-- 전체필터·개별필터 칩 (JS · 가로 스크롤) --></div>
         </div>
         <div class="scroll res-scroll">
           <div id="aiRec"></div>

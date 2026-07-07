@@ -2,13 +2,28 @@
 
 // 인기 도시 풀 (지역 미입력 시 랜덤 1곳) — 자연어검색 정책서 v0.3 7-2절
 const POPULAR_CITIES = ['부산','제주','오사카','도쿄','방콕','싱가포르','다낭','파리','뉴욕','서울'];
+// 자동완성 빈 입력 시 인기도시 10개 고정 노출 (M01_D1-D · 정책 4-11절, 고정 순서)
+const POPULAR_DEST = [
+  {name:'제주', sub:'제주특별자치도, 대한민국'},
+  {name:'부산', sub:'부산광역시, 대한민국'},
+  {name:'서울', sub:'서울특별시, 대한민국'},
+  {name:'오사카', sub:'일본'},
+  {name:'도쿄', sub:'일본'},
+  {name:'방콕', sub:'태국'},
+  {name:'싱가포르', sub:'싱가포르'},
+  {name:'다낭', sub:'베트남'},
+  {name:'파리', sub:'프랑스'},
+  {name:'뉴욕', sub:'미국'},
+];
 
 // 추천질문 (진입/AI검색 예시)
+// 추천질문 20개 풀 — 로드/새로고침마다 랜덤 4개 노출 (자연어검색 v0.4 7-1절)
 const SUGGEST_QUESTIONS = [
-  '서울 강남 2인 1박 20만원대',
-  '제주 주말 풀빌라 2박',
-  '부산 해운대 4성급 호텔',
-  '조식 포함 서울 호텔 주말 1박',
+  '서울 강남 2인 1박 20만원대', '제주 주말 풀빌라 2박', '부산 해운대 4성급 오션뷰', '강릉 커플 펜션 1박',
+  '서울 시청 근처 비즈니스 호텔', '조식 포함 서울 주말 1박', '도쿄 신주쿠 4성급 3박', '오사카 도톤보리 근처 가성비 호텔',
+  '방콕 수영장 있는 호텔', '싱가포르 마리나베이 뷰', '다낭 리조트 조식포함 3박', '후쿠오카 온천 호텔',
+  '파리 에펠탑 근처 4성급', '뉴욕 맨해튼 3박', '홍대 근처 10만원 이하 호텔', '제주 중문 5성급 스파',
+  '부산 서면 지하철 근처 호텔', '가족 여행 넓은 객실 서울', '속초 오션뷰 조용한 호텔', '강원 애견동반 가능 호텔',
 ];
 
 // 결과 후 추천검색어 (호텔 조건 변형만 — 항공·관광 제외)
@@ -21,19 +36,20 @@ const REC_KEYWORDS = [
 
 // 타 OTA 목록 (아웃링크 대상 · 자사 올마이투어 제외)
 // cashback: KAYAK providers[].cashback 구조 반영 — type PERCENTAGE(value=%) / FLAT(value=₩) / NONE
+// 캐시백 요율 = 공급사별 2~3% (상품가 기준 금액 계산). Expedia·여기어때는 캐시백 없음(MODAL-B 데모)
 const OTA_LIST = [
-  { name:'Booking.com', color:'#003580', cashback:{type:'PERCENTAGE', value:5.5} },
-  { name:'Agoda',       color:'#5c2d91', cashback:{type:'PERCENTAGE', value:5.5} },
+  { name:'Booking.com', color:'#003580', cashback:{type:'PERCENTAGE', value:3.0} },
+  { name:'Agoda',       color:'#5c2d91', cashback:{type:'PERCENTAGE', value:3.0} },
   { name:'Expedia',     color:'#00355f', cashback:{type:'NONE',       value:0} },
-  { name:'Trip.com',    color:'#2577e3', cashback:{type:'PERCENTAGE', value:4.0} },
-  { name:'Hotels.com',  color:'#d32f2f', cashback:{type:'PERCENTAGE', value:5.0} },
-  { name:'Priceline',   color:'#0068ef', cashback:{type:'FLAT',       value:8000} },
-  { name:'Traveloka',   color:'#1b9df0', cashback:{type:'PERCENTAGE', value:3.0} },
-  { name:'호텔스닷컴',    color:'#c2185b', cashback:{type:'PERCENTAGE', value:4.5} },
-  { name:'Klook',       color:'#ff5b00', cashback:{type:'FLAT',       value:5000} },
+  { name:'Trip.com',    color:'#2577e3', cashback:{type:'PERCENTAGE', value:2.0} },
+  { name:'Hotels.com',  color:'#d32f2f', cashback:{type:'PERCENTAGE', value:3.0} },
+  { name:'Priceline',   color:'#0068ef', cashback:{type:'PERCENTAGE', value:2.0} },
+  { name:'Traveloka',   color:'#1b9df0', cashback:{type:'PERCENTAGE', value:2.0} },
+  { name:'호텔스닷컴',    color:'#c2185b', cashback:{type:'PERCENTAGE', value:3.0} },
+  { name:'Klook',       color:'#ff5b00', cashback:{type:'PERCENTAGE', value:2.0} },
   { name:'여기어때',      color:'#00c2b3', cashback:{type:'NONE',       value:0} },
-  { name:'야놀자',        color:'#ff3d6a', cashback:{type:'PERCENTAGE', value:3.5} },
-  { name:'Ostrovok',    color:'#1f7a3d', cashback:{type:'PERCENTAGE', value:6.0} },
+  { name:'야놀자',        color:'#ff3d6a', cashback:{type:'PERCENTAGE', value:2.0} },
+  { name:'Ostrovok',    color:'#1f7a3d', cashback:{type:'PERCENTAGE', value:3.0} },
 ];
 
 // 호텔 더미 (translatedName·guestRating·address·starRating·lowestRate·aiFeature)
