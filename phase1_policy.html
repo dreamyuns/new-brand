@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Phase 1 (MVP) 정책서 v0.39 — allmytour meta</title>
+<title>Phase 1 (MVP) 정책서 v0.42 — allmytour meta</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{
@@ -145,7 +145,7 @@ body{
     <span class="pn-sep">|</span>
     <span class="pn-code">POLICY-P1</span>
     <span class="pn-name">— Phase 1 (MVP) 정책서</span>
-    <span class="pn-route">/ v0.39</span>
+    <span class="pn-route">/ v0.42</span>
   </div>
   <div class="pn-r">
     <span class="pn-btn disabled">← 이전</span>
@@ -157,8 +157,8 @@ body{
 <div class="p1-header">
   <div class="p1-header-label">allmytour meta — Phase 1 (MVP)</div>
   <div class="p1-header-title"><span class="phase">Phase 1</span> 정책서 — 신규 메타서치 MVP</div>
-  <div class="p1-header-meta">KAYAK API 기반 메타서치+OTA 하이브리드 신규 서비스 · 개발자확인용 · v0.39</div>
-  <div class="p1-header-badge">기준 정책서 <span>v0.39</span> — context/신규정책/phase1정책/신규_mvp_메타서치_v0.39.md</div>
+  <div class="p1-header-meta">KAYAK API 기반 메타서치+OTA 하이브리드 신규 서비스 · 개발자확인용 · v0.42</div>
+  <div class="p1-header-badge">기준 정책서 <span>v0.42</span> — context/신규정책/phase1정책/신규_mvp_메타서치_v0.42.md</div>
 </div>
 
 <!-- ── 바디 ── -->
@@ -177,8 +177,10 @@ body{
     <a class="p1-toc-sub" href="#sec-4-2">4-2. 자동완성 노출 순서</a>
     <a class="p1-toc-sub" href="#sec-4-5">4-5. 자동완성 선택 동작</a>
     <a class="p1-toc-sub" href="#sec-4-7">4-7. 검색 파라미터</a>
+    <a class="p1-toc-sub" href="#sec-4-8">4-8. 최근검색 정책</a>
     <a class="p1-toc-sub" href="#sec-4-9">4-9. 인원·객실 설정</a>
     <a class="p1-toc-sub" href="#sec-4-10">4-10. M01 GNB·탭바 구조</a>
+    <a class="p1-toc-sub" href="#sec-4-11">4-11. 인기도시 정책</a>
     <a class="p1-toc-art" href="#sec-5">제5조 검색결과 목록 (S01)</a>
     <a class="p1-toc-sub" href="#sec-5-2">5-2. 호텔 카드 구성</a>
     <a class="p1-toc-sub" href="#sec-5-6">5-6. 필터 옵션</a>
@@ -351,6 +353,26 @@ body{
           </div>
         </div>
 
+        <div id="sec-4-8" class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">4-8</span>최근검색 정책 <span class="tag-ok" style="font-size:10px">v0.40 노출 수 명시</span></div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>항목</th><th>정책</th></tr></thead>
+              <tbody>
+                <tr><td>저장 방식</td><td>로컬 스토리지 (서버 동기화 없음 — MVP)</td></tr>
+                <tr><td><strong>최대 저장 수</strong></td><td>10개</td></tr>
+                <tr><td><strong>최대 노출 수</strong></td><td><strong>3개</strong> (저장 10개 중 최근 3개만 화면에 표시) <em>※ v0.40 명시</em></td></tr>
+                <tr><td>정렬</td><td>최근 검색 순 (최근 검색이 최상단)</td></tr>
+                <tr><td>삭제</td><td>개별 삭제(✕) / 전체 삭제</td></tr>
+                <tr><td>저장 항목</td><td>목적지명 + entityKey + 체크인·체크아웃 날짜 + 인원 구성</td></tr>
+                <tr><td>탭 동작</td><td>해당 조건 그대로 검색폼 자동 복원 → [검색] 버튼 탭 시 S01 이동</td></tr>
+                <tr><td>UI 배치</td><td>자동완성 드롭다운 하단 고정 표시. 최근검색 영역만 독립 스크롤.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p1-text"><p><strong>날짜 만료 처리:</strong> 최근검색 항목 탭 시 체크인 날짜가 오늘 이전이면 기본값(체크인=오늘+7일, 체크아웃=체크인+1일)으로 자동 교체. 목적지·인원은 저장값 유지.</p></div>
+        </div>
+
         <div id="sec-4-9" class="p1-sub">
           <div class="p1-sub-title"><span class="p1-sub-num">4-9</span>인원·객실 설정 정책</div>
           <div class="p1-table-wrap">
@@ -419,6 +441,30 @@ body{
               <tbody>
                 <tr><td>비로그인</td><td>[로그인] 버튼</td><td>[⚙️ 설정] 버튼</td></tr>
                 <tr><td>로그인</td><td>👤 아바타 버튼</td><td>—</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="sec-4-11" class="p1-sub">
+          <div class="p1-sub-title"><span class="p1-sub-num">4-11</span>인기도시 정책 <span class="tag-ok" style="font-size:10px">v0.40 신설</span></div>
+          <div class="p1-text"><p>자동완성 드롭다운 영역에서 최근검색 섹션 아래에 고정 노출하는 정적 인기도시 목록.</p>
+            <ul>
+              <li><strong>데이터 방식:</strong> 정적 고정 목록 (하드코딩 운영 — MVP)</li>
+              <li><strong>최대 노출 수:</strong> 10개</li>
+              <li><strong>탭 동작:</strong> 선택 시 목적지 필드에 자동 입력 → [검색] 버튼 탭 시 S01 이동 (최근검색과 동일 방식)</li>
+              <li><strong>공유 목록:</strong> AI 챗봇 검색(자연어검색 정책서) 인기 도시 뱃지 10개와 동일 목록 사용</li>
+            </ul>
+          </div>
+          <div class="p1-table-wrap">
+            <table class="p1-table">
+              <thead><tr><th>순서</th><th>도시명</th><th>순서</th><th>도시명</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>제주</td><td>6</td><td>방콕</td></tr>
+                <tr><td>2</td><td>부산</td><td>7</td><td>싱가포르</td></tr>
+                <tr><td>3</td><td>서울</td><td>8</td><td>다낭</td></tr>
+                <tr><td>4</td><td>오사카</td><td>9</td><td>파리</td></tr>
+                <tr><td>5</td><td>도쿄</td><td>10</td><td>뉴욕</td></tr>
               </tbody>
             </table>
           </div>
@@ -684,18 +730,20 @@ body{
         </div>
 
         <div class="p1-sub">
-          <div class="p1-sub-title"><span class="p1-sub-num">9-4</span>예약 상태별 캐시백 처리</div>
+          <div class="p1-sub-title"><span class="p1-sub-num">9-4</span>예약 상태별 캐시백 처리 <span class="tag-ok" style="font-size:10px">v0.42 기준</span></div>
+          <div class="p1-notice" style="margin-bottom:10px"><strong>MY02 카드 표시 범위 (v0.41 확정):</strong> <code>TransactionType.TypeCode = 10</code> (Booking 건)만 카드로 표시. <code>TypeCode = 1</code> (Click 건 — 예약 미완료)은 MY02에서 완전 제외.</div>
           <div class="p1-table-wrap">
             <table class="p1-table">
-              <thead><tr><th>KAYAK 상태</th><th>MY02 표시</th></tr></thead>
+              <thead><tr><th>KAYAK 상태</th><th>정의</th><th>MY02 표시</th></tr></thead>
               <tbody>
-                <tr><td>Waiting (체크인 전 — 투숙예정)</td><td><strong>적립예정</strong> 배지</td></tr>
-                <tr><td>Waiting (체크인 ≤ 오늘 ≤ 체크아웃 — 투숙중)</td><td><strong>적립예정</strong> 배지</td></tr>
-                <tr><td>Approved (KAYAK 확인 완료 — 투숙완료)</td><td><strong>지급완료</strong> 배지</td></tr>
-                <tr><td>Cancelled (취소 — 예약취소)</td><td>배지 없음 + 금액 취소선 (예: <del>₩46,000</del>) (v0.37 변경)</td></tr>
+                <tr><td><strong>Active</strong> — 투숙예정 <em>(v0.41 정정: Waiting → Active)</em></td><td>예약 완료 후 KAYAK 정산 대기. <code>TransactionStatus = "Active"</code>. 체크인 전.</td><td><strong>적립예정</strong> 배지. ✅ Active 건에도 <code>cashbackAmountLocalised</code> 금액 내려옴 (2026-07-08 실 테스트 확인).</td></tr>
+                <tr><td><strong>Active</strong> — 투숙중</td><td><code>TransactionStatus = "Active"</code>. 체크인 ≤ 오늘 ≤ 체크아웃.</td><td><strong>적립예정</strong> 배지</td></tr>
+                <tr><td><strong>Approved</strong> — 투숙완료 <em>(v0.42 기준 변경)</em></td><td>자사 내부 정책: <strong>체크아웃일 + n일</strong> 경과 후 자사가 지급완료로 처리. n일은 미결 (⚠️ 미결 #16). <code>paymentMonth</code>는 Approved 판단 기준으로 사용하지 않음.</td><td><strong>지급완료</strong> 배지. <em>포인트 사용은 Phase 2.</em></td></tr>
+                <tr><td><strong>Cancelled</strong> — 예약취소</td><td>취소됨</td><td>배지 없음 + <strong>금액 취소선</strong> (예: <del>₩46,000</del>). <em>v0.37 변경. 금액 0이어도 취소선 표시 우선 (TransactionStatus 기준 우선 체크).</em></td></tr>
               </tbody>
             </table>
           </div>
+          <div class="p1-text"><p><strong>paymentMonth 설명:</strong> KAYAK이 예약 시점에 체크아웃 동일 월 기준으로 미리 설정하는 정산 예정 월 (KAYAK→자사 정산 참고용). 자사→고객 지급 기준(체크아웃+n일)과 무관.</p></div>
         </div>
 
         <div class="p1-sub">
@@ -722,7 +770,7 @@ body{
               <tbody>
                 <tr><td>PERCENTAGE</td><td>💸 캐시백 최대 N%</td></tr>
                 <tr><td>FLAT</td><td>💸 캐시백 최대 ₩N</td></tr>
-                <tr><td>NONE</td><td>배지 미표시</td></tr>
+                <tr><td>NONE, <code>null</code>, 또는 필드 없음 <em>(v0.41 추가)</em></td><td>배지 미표시</td></tr>
               </tbody>
             </table>
           </div>
@@ -753,7 +801,8 @@ body{
         </div>
 
         <div class="p1-sub">
-          <div class="p1-sub-title"><span class="p1-sub-num">10-2</span>캐시백 내역 (MY02) <span class="tag-ok" style="font-size:10px">v0.37 전면 재작성</span></div>
+          <div class="p1-sub-title"><span class="p1-sub-num">10-2</span>캐시백 내역 (MY02) <span class="tag-ok" style="font-size:10px">v0.42 기준</span></div>
+          <div class="p1-notice" style="margin-bottom:10px"><strong>카드 표시 범위 (v0.41 확정):</strong> <code>TypeCode = 10</code> (Booking 건)만 카드로 표시. <code>TypeCode = 1</code> (Click 건)은 완전 제외.</div>
           <div class="p1-text">
             <p><strong>진입 경로 (2가지):</strong></p>
             <ol>
@@ -762,7 +811,7 @@ body{
             </ol>
             <p><strong>화면 구성:</strong></p>
             <ul>
-              <li><strong>상단 고정:</strong> 상단 요약 2칸 — <code>적립완료 ₩N</code> (Approved 합계) + <code>적립예정 ₩N</code> (Waiting 합계) + [캐시백 사용처 안내] 버튼</li>
+              <li><strong>상단 고정:</strong> 상단 요약 2칸 — <code>적립완료 ₩N</code> (Approved 합계) + <code>적립예정 ₩N</code> (Active 합계 — 실 API: <code>TransactionStatus = "Active"</code>) + [캐시백 사용처 안내] 버튼 <em>(v0.41 Waiting→Active 정정)</em></li>
               <li><strong>목록:</strong> 기본 4건 표시 → [더보기] 탭 시 4건씩 추가. 상태별 그룹 고정 정렬 (최신순 아님)</li>
               <li><strong>빈 상태 문구:</strong> "아직 적립된 캐시백이 없어요. 호텔을 예약하고 첫 캐시백을 받아보세요!"</li>
             </ul>
@@ -771,29 +820,29 @@ body{
             <table class="p1-table">
               <thead><tr><th>카드 상태</th><th>조건</th><th>배지</th></tr></thead>
               <tbody>
-                <tr><td>투숙예정</td><td>Waiting + 체크인 전</td><td><strong>적립예정</strong></td></tr>
-                <tr><td>투숙중</td><td>Waiting + 체크인 ≤ 오늘 ≤ 체크아웃</td><td><strong>적립예정</strong></td></tr>
-                <tr><td>투숙완료</td><td>Approved</td><td><strong>지급완료</strong></td></tr>
+                <tr><td>투숙예정</td><td>Active + 체크인 전 <em>(v0.41 정정)</em></td><td><strong>적립예정</strong></td></tr>
+                <tr><td>투숙중</td><td>Active + 체크인 ≤ 오늘 ≤ 체크아웃 <em>(v0.41 정정)</em></td><td><strong>적립예정</strong></td></tr>
+                <tr><td>투숙완료</td><td>자사 내부 정책: <strong>체크아웃일 + n일</strong> 경과 (n일 미결 ⚠️, 미결 #16) <em>(v0.42 변경)</em></td><td><strong>지급완료</strong></td></tr>
                 <tr><td>예약취소</td><td>Cancelled</td><td>배지 없음 + 금액 취소선</td></tr>
               </tbody>
             </table>
           </div>
           <div class="p1-text">
-            <p><strong>카드 표시 항목 <span class="tag-ok" style="font-size:10px">v0.39 라벨 변경</span>:</strong></p>
+            <p><strong>카드 표시 항목 <span class="tag-ok" style="font-size:10px">v0.42 정정</span>:</strong></p>
           </div>
           <div class="p1-table-wrap">
             <table class="p1-table">
               <thead><tr><th>라벨</th><th>API 필드</th><th>비고</th></tr></thead>
               <tbody>
                 <tr><td>예약 날짜</td><td><code>bookingDate</code></td><td>예약 생성일</td></tr>
-                <tr><td>체크인/체크아웃</td><td><code>clickStartDate</code> / <code>clickEndDate</code></td><td>—</td></tr>
-                <tr><td>호텔명</td><td><code>hotelName</code></td><td>Hotel vertical 필드</td></tr>
+                <tr><td>체크인/체크아웃</td><td><code>bookingStartDate</code> / <code>bookingEndDate</code></td><td>Booking 건만 표시하므로 <code>clickStartDate/End</code> 사용 안 함 <em>(v0.41 정정)</em></td></tr>
+                <tr><td>호텔명</td><td><code>hotelName</code></td><td>Hotel vertical 필드. 취소 등 일부 건에서 빈 값 가능 → "—" 표시</td></tr>
                 <tr><td>도시명</td><td><code>hotelCity</code></td><td>Hotel vertical 필드</td></tr>
                 <tr><td>예약 OTA</td><td><code>siteBrandCode</code></td><td>Agoda, Booking.com 등</td></tr>
                 <tr><td>예약 ID</td><td><code>bookingId</code></td><td>고객 문의 시 참조</td></tr>
-                <tr><td><strong>상품가</strong></td><td><code>localisedBookingValue</code></td><td>₩ 표기. null·0·cashbackType=NONE 건 미표시 <em>(v0.39: 라벨 변경 — "예약 금액"→"상품가")</em></td></tr>
-                <tr><td><strong>적립금액</strong></td><td><code>cashbackAmountLocalised</code></td><td>₩ 표기. 동일 조건 미표시. 적립률(%) 미표시 <em>(v0.39: 라벨 변경·₩ 표기·적립률 삭제)</em></td></tr>
-                <tr><td>지급 월</td><td><code>paymentMonth</code></td><td>Approved 전환 월</td></tr>
+                <tr><td><strong>상품가</strong></td><td><code>localisedBookingValue</code></td><td>₩ 표기. null·0이면 미표시. cashbackType=NONE 건 미표시. 단 Cancelled 건은 금액 0이어도 취소선 표시 우선.</td></tr>
+                <tr><td><strong>적립금액</strong></td><td><code>cashbackAmountLocalised</code></td><td>₩ 표기. <strong>미노출 조건:</strong> cashbackAmountLocalised=null·0, 또는 cashbackType=NONE·null. 적립률(%) 미표시. Cancelled 건은 금액 0이어도 취소선 표시 우선. <em>(v0.41 미노출 조건 보강)</em></td></tr>
+                <tr><td>지급 월</td><td><code>paymentMonth</code></td><td>KAYAK→자사 정산 예정 월. <strong>예약 시점에 체크아웃 동일 월로 미리 설정됨</strong> (실 테스트 확인 2026-07-08). 자사→고객 지급 기준(체크아웃+n일)과 별개. MY02 카드 표시 여부는 PO 확정 필요. <em>(v0.42 정정)</em></td></tr>
               </tbody>
             </table>
           </div>
@@ -811,7 +860,7 @@ body{
                 <tr><td>1</td><td>예약상태 | 적립상태</td><td>2열 나란히 표시</td></tr>
                 <tr><td>2</td><td>호텔명</td><td><code>hotelName</code></td></tr>
                 <tr><td>3</td><td>위치(도시명)</td><td><code>hotelCity</code></td></tr>
-                <tr><td>4</td><td>체크인~체크아웃 / 박수</td><td><code>clickStartDate</code> ~ <code>clickEndDate</code> / 박수 계산</td></tr>
+                <tr><td>4</td><td>체크인~체크아웃 / 박수</td><td><code>bookingStartDate</code> ~ <code>bookingEndDate</code> / 박수 계산 <em>(v0.41 정정)</em></td></tr>
                 <tr><td>5</td><td>OTA 공급사명</td><td><code>siteBrandCode</code> — ⚠️ 개발팀 확인: 표시명 매핑 필요 여부</td></tr>
                 <tr><td>6</td><td>예약 ID</td><td><code>bookingId</code></td></tr>
                 <tr><td>7</td><td>예약일</td><td><code>bookingDate</code></td></tr>
@@ -1003,10 +1052,11 @@ body{
       <div class="p1-section-hdr"><span class="p1-art-badge">⚠</span><h2>제14조 미결 사항</h2></div>
       <div class="p1-section-body">
         <div class="p1-issue-item" style="opacity:.6"><div class="p1-issue-num" style="background:#d1fae5;color:#065f46">✅</div><div class="p1-issue-body"><div class="p1-issue-title" style="text-decoration:line-through;color:#94a3b8">cid / label 딥링크 연계 — KAYAK Reporting API Transaction Report에서 우리 userTrackId/회원ID와 label 필드 연계 가능 여부</div><div class="p1-issue-owner" style="color:#10b981;font-weight:700">✅ 해결 (2026-06-19) — 딥링크 <code>p=</code> 파라미터로 라벨(회원ID 등) 전달. Reporting API <code>labels</code> 파라미터로 회원별 필터링 가능. 9-5절 참조.</div></div></div>
-        <div class="p1-issue-item"><div class="p1-issue-num">2</div><div class="p1-issue-body"><div class="p1-issue-title">Approved 상태 전환 기준 — paymentMonth 추정 기반. KAYAK의 정확한 Approved 전환 시점 확인 필요</div><div class="p1-issue-owner">담당: KAYAK 문의</div></div></div>
+        <div class="p1-issue-item" style="opacity:.6"><div class="p1-issue-num" style="background:#d1fae5;color:#065f46">✅</div><div class="p1-issue-body"><div class="p1-issue-title" style="text-decoration:line-through;color:#94a3b8">Approved 상태 전환 기준 — paymentMonth 추정 기반. KAYAK의 정확한 Approved 전환 시점 확인 필요</div><div class="p1-issue-owner" style="color:#10b981;font-weight:700">✅ 해결 (2026-07-08 정책 전환) — 실 테스트 결과 Active 건에도 paymentMonth가 예약 시점에 이미 설정되어 paymentMonth 단독 기준으로 Approved 판단 불가 확인. 자사 내부 정책 기준(체크아웃+n일)으로 전환 결정. n일은 미결 #16 참조. 9-4절 참조.</div></div></div>
         <div class="p1-issue-item"><div class="p1-issue-num">3</div><div class="p1-issue-body"><div class="p1-issue-title">다통화 설정 — Constants API 응답 통화 목록 전수 표시 시 UX 처리 방안 (100개+ 통화)</div><div class="p1-issue-owner">담당: 윤성균 PO</div></div></div>
         <div class="p1-issue-item" style="opacity:.6"><div class="p1-issue-num" style="background:#d1fae5;color:#065f46">✅</div><div class="p1-issue-body"><div class="p1-issue-title" style="text-decoration:line-through;color:#94a3b8">아바타 실 이미지 업로드 MVP 포함 여부</div><div class="p1-issue-owner" style="color:#10b981;font-weight:700">✅ 해결 (2026-07-03) — MVP는 서비스 공통 이미지(고정 아이콘) 사용. 이니셜 생성·업로드·변경 기능 전체 없음. 10-3절 참조. (대표님 확정)</div></div></div>
-        <div class="p1-notice" style="margin-top:8px"><strong>전체 미결 사항은 v0.33.md 제14조 참조</strong></div>
+        <div class="p1-issue-item"><div class="p1-issue-num">16</div><div class="p1-issue-body"><div class="p1-issue-title">자사→고객 캐시백 지급 기준 n일 확정 (v0.42 신설) — 체크아웃일 + n일 경과 후 Approved(지급완료) 처리하는 n일 미결. 결정 후 9-4절·10-2절 업데이트 및 어드민 정산 배치 개발 일정 반영 필요</div><div class="p1-issue-owner">담당: 윤성균 PO 확정 필요</div></div></div>
+        <div class="p1-notice" style="margin-top:8px"><strong>전체 미결 사항은 v0.42.md 제14조 참조</strong></div>
       </div>
     </div>
 
@@ -1050,7 +1100,10 @@ body{
         <div class="p1-hist-item"><div class="p1-hist-ver" style="background:#e0e7ff;color:#3730a3;font-weight:900;">v0.36</div><div class="p1-hist-body"><div class="p1-hist-date">2026-07-01</div><div class="p1-hist-text">① 6-1절 GNB 구성 변경 — 공유하기 버튼 GNB 우측 고정 (기존 숙소요약정보 내 위치 폐기) / ② 6-2절 전면 재작성 — 5탭 구조 → 단일 스크롤 페이지 (섹션 순서: 이미지→숙소요약→공급사목록→숙소설명→리뷰→편의시설→위치→체크인아웃). 이미지 갤러리 바텀시트 방식 확정 / ③ 6-5절 수정 — 날짜·인원 바 위치: 공급사목록 섹션 상단 인라인 배치 / ④ 6-6절 수정 — Sticky 구조 변경: GNB + 하단 스티키 바(공급사 최저가+[가격 보기])만 고정 / ⑤ 6-8절 신설 — 리뷰 섹션 guestRatings 7개 카테고리·점수 높은 순·상위 4개+접기펼치기 / ⑥ 8-11절 신설 — 회원탈퇴 프로세스 (이메일 인증→사유 선택 6개→탈퇴 완료, 픽포인트 소멸, 7일 재가입 제한) / ⑦ 10-3절 수정 — 계정관리 화면 하단 회원탈퇴 버튼 추가 / ⑧ 10-4절 신설 — 회원탈퇴 화면 정책</div></div></div>
         <div class="p1-hist-item"><div class="p1-hist-ver">v0.37</div><div class="p1-hist-body"><div class="p1-hist-date">2026-07-02</div><div class="p1-hist-text">① 4-10절 신설 — M01 GNB 구조 확정 (☰ 제거·좌측 로그인/아바타·우측 캐시백 버튼) / ② 4-10절 — 하단 탭바 구성·노출 범위 (3탭 검색🔍·적립⭐·고객지원🦚, M01+MY02에만 노출) / ③ 4-10절 — 공작새 탭 FAQ 채팅 바텀시트 (키워드 매칭 방식, LLM 아님) / ④ 4-10절 — 캐시백 버튼 상태별 표시 정책 / ⑤ 4-10절 — 웰컴 메시지 정책 / ⑥ 5-1절 수정 — S01 GNB 뒤로가기 패턴 확정 / ⑦ 5-2절 수정 — S01 카드 캐시백 배지 미표시 확정 / ⑧ 6-3절 수정 — S02 공급사 목록 UI B안 확정 / ⑨ 9-4절 수정 — Cancelled 표시: 배지 제거 → 금액 취소선 / ⑩ 10-1절·10-2절 전면 재작성</div></div></div>
         <div class="p1-hist-item"><div class="p1-hist-ver">v0.38</div><div class="p1-hist-body"><div class="p1-hist-date">2026-07-03</div><div class="p1-hist-text">① 7절 수정 — OUT01 로그인/비로그인 분기 정책 + 체류 시간 (로그인 3초·비로그인 5~7초) / ② 7절 수정 — OUT01 체류 목적 명시 / ③ 9-7절·7절 수정 — 로그인 유도 모달 캐시백 % + 금액 동시 표시 가능 구조 + 모달 높이 기준 확정 / ④ 6-2절 수정 — S02 이미지 갤러리 탭 분류 MVP 제외 명시 (전체 나열 + 더보기, 탭 분류는 Phase 2) / ⑤ 6-2절 신설 — KAYAK 이미지 태그 활용 정책 / ⑥ 10-3절 수정 — 아바타 이미지 업로드/삭제 기능 추가 (이니셜 아바타 MVP·실 이미지 업로드 Phase 2) / ⑦ 6-3절·7절·9-7절 수정 — 캐시백 예상금액 노출 정책 신설</div></div></div>
-        <div class="p1-hist-item"><div class="p1-hist-ver" style="background:#dcfce7;color:#166534;font-weight:900;">v0.39</div><div class="p1-hist-body"><div class="p1-hist-date">2026-07-03</div><div class="p1-hist-text">① 10-3절 수정 — 아바타 이미지 정책 전면 변경 (공통 이미지 사용, 이니셜 생성·업로드·변경 기능 전체 없음, 미결 #14 해제, 대표님 확정) / ② 10-2절 수정 — 카드 내 표시 항목 라벨 변경 (예약 금액→상품가 / 적립 금액→적립금액, ₩ 표기 추가, 적립률 삭제, 대표님 확정) / ③ 10-1절 수정 — 비로그인 상태 유도 영역 제거 (공통 메뉴만 표시) / ④ 10-2절 신설 — 예약상세 모달(B1) 정책 (카드 탭 시 중앙 모달 노출, 구성 항목 확정) / ⑤ 4-10절 보완 — MY02 상단 바(GNB) 버튼 위치 명시 (로그인 전: [로그인] 좌측·[⚙️] 우측, 로그인 후: 👤 좌측)</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver">v0.39</div><div class="p1-hist-body"><div class="p1-hist-date">2026-07-03</div><div class="p1-hist-text">① 10-3절 수정 — 아바타 이미지 정책 전면 변경 (공통 이미지 사용, 이니셜 생성·업로드·변경 기능 전체 없음, 미결 #14 해제, 대표님 확정) / ② 10-2절 수정 — 카드 내 표시 항목 라벨 변경 (예약 금액→상품가 / 적립 금액→적립금액, ₩ 표기 추가, 적립률 삭제, 대표님 확정) / ③ 10-1절 수정 — 비로그인 상태 유도 영역 제거 (공통 메뉴만 표시) / ④ 10-2절 신설 — 예약상세 모달(B1) 정책 (카드 탭 시 중앙 모달 노출, 구성 항목 확정) / ⑤ 4-10절 보완 — MY02 상단 바(GNB) 버튼 위치 명시</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver">v0.40</div><div class="p1-hist-body"><div class="p1-hist-date">2026-07-06</div><div class="p1-hist-text">① 4-8절 수정 — 최근검색 최대 노출 수 3개 명시 (저장 10개 유지, 화면 노출은 최근 3개만 표시) / ② 4-11절 신설 — 인기도시 정책 (고정 10개 목록, 하드코딩 정적 운영, 자동완성 드롭다운 최근검색 하단 표시, AI 챗봇 인기도시와 동일 목록 공유)</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver">v0.41</div><div class="p1-hist-body"><div class="p1-hist-date">2026-07-07</div><div class="p1-hist-text">① 9-4절 수정 — TransactionStatus 실 API값 반영: Waiting → Active 정정 (실 API 2026-07-07 확인), MY02 카드 표시 범위 Booking 건(TypeCode=10)만으로 명시, Click 건(TypeCode=1) 완전 제외 / ② 9-7절 수정 — cashbackType=null·필드없음도 배지 미표시 조건 추가 / ③ 10-2절 수정 — Booking 건 카드 표시 조건 추가, Waiting → Active 정정, 체크인·체크아웃 API 필드 정정 (clickStartDate/End → bookingStartDate/End), 적립금액 미노출 조건 보강</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver" style="background:#dcfce7;color:#166534;font-weight:900;">v0.42</div><div class="p1-hist-body"><div class="p1-hist-date">2026-07-08</div><div class="p1-hist-text">① 9-4절 수정 — Active 상태에서도 cashbackAmountLocalised 금액 내려옴 실 테스트 확인 (2026-07-08) / ② 9-4절 수정 — Approved 판단 기준 변경: paymentMonth 기반 → 자사 내부 정책(체크아웃+n일) 기준으로 전환 결정 (미결 #10 해결, 미결 #16 신설) / ③ 9-4절 수정 — paymentMonth 구조 명시 (KAYAK이 예약 시점에 체크아웃 동일 월 기준으로 미리 설정) / ④ 10-2절 수정 — 투숙완료 판단 기준 변경(Approved → 체크아웃+n일 자사 내부 정책), paymentMonth 필드 설명 정정 / ⑤ 미결 #10 해결 처리 / ⑥ 미결 #16 신설 — 자사→고객 캐시백 지급 기준 n일 확정 필요</div></div></div>
       </div>
     </div>
 
@@ -1058,8 +1111,8 @@ body{
 </div><!-- /p1-body -->
 
 <div class="p1-footer">
-  allmytour meta. Phase 1 (MVP) 정책서 v0.39 · 2026-07-03 · 대화창 2 산출물<br>
-  전체 내용: context/신규정책/phase1정책/신규_mvp_메타서치_v0.39.md · 경로: context/신규정책/new_wireframe/phase1_policy.html
+  allmytour meta. Phase 1 (MVP) 정책서 v0.42 · 2026-07-08 · 대화창 2 산출물<br>
+  전체 내용: context/신규정책/phase1정책/신규_mvp_메타서치_v0.42.md · 경로: context/신규정책/new_wireframe/phase1_policy.html
 </div>
 
 <script>

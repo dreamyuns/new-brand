@@ -18,18 +18,6 @@
 .m-scroll { flex:1; overflow-y:auto; }
 .m-scroll::-webkit-scrollbar { display:none; }
 
-/* ── 논의 요약 테이블 ── */
-.disc-table-wrap { background:#fffbf0; border:1.5px solid #f59e0b; border-radius:10px; padding:20px 24px; margin-bottom:24px; }
-.disc-table-wrap h2 { font-size:15px; font-weight:700; color:#92400e; margin:0 0 6px; }
-.disc-table-wrap p { font-size:12px; color:#92400e; margin:0 0 14px; }
-.disc-table { width:100%; border-collapse:collapse; font-size:12px; }
-.disc-table th { background:#fef3c7; padding:7px 10px; text-align:left; font-weight:700; color:#78350f; border:1px solid #fde68a; white-space:nowrap; }
-.disc-table td { padding:8px 10px; border:1px solid #fde68a; color:#374151; vertical-align:top; line-height:1.7; }
-.disc-table tr:nth-child(even) td { background:#fffef8; }
-.disc-table td strong { color:#92400e; font-weight:700; }
-.disc-table td em { color:#d97706; font-style:normal; font-weight:600; }
-.disc-table .col-reason { min-width:340px; font-size:11.5px; }
-
 /* ── 파란 배경 히어로 ── */
 .main-hero { background:linear-gradient(180deg,#1952c7 0%,#2563eb 60%,#3b82f6 100%); padding:12px 14px 14px; flex-shrink:0; }
 
@@ -141,7 +129,7 @@
   <a class="page-nav-back" href="index.html">← 목록으로</a>
   <span class="page-nav-sep">|</span>
   <span class="page-nav-title">M01 (디자인확정) — 메인 화면</span>
-  <span class="page-nav-route">/ · 검색 진입 화면 · 정책서 v0.39 기준</span>
+  <span class="page-nav-route">/ · 검색 진입 화면 · 정책서 v0.41 기준</span>
   <div class="page-nav-nav">
     <span class="page-nav-pager-disabled">← 이전</span>
     <a class="page-nav-pager" href="s01_search.html">다음 →</a>
@@ -152,8 +140,6 @@
 <nav class="toc">
   <div class="toc-inner">
     <span class="toc-label">목차</span>
-    <a href="#disc-table" class="toc-link">📋 논의 요약</a>
-    <span class="toc-sep"></span>
     <a href="#m01d1-a" class="toc-link">A 비로그인</a>
     <span class="toc-sep"></span>
     <a href="#m01d1-b" class="toc-link">B 로그인 후</a>
@@ -168,70 +154,6 @@
 
 <div class="page">
 
-<!-- ════════════════════════════════════════════════
-  논의 요약 테이블
-════════════════════════════════════════════════ -->
-<div id="disc-table">
-  <div class="disc-table-wrap">
-    <h2>📋 논의 요약 — M01 메인 화면 (디자인확정 기준)</h2>
-    <p>기준 날짜: 2026-07-02 &nbsp;·&nbsp; 기준 정책서: v0.37</p>
-    <table class="disc-table">
-      <colgroup>
-        <col style="width:70px">
-        <col style="width:100px">
-        <col style="width:140px">
-        <col style="width:150px">
-        <col>
-      </colgroup>
-      <thead>
-        <tr>
-          <th>섹션번호</th>
-          <th>논의항목</th>
-          <th>선택지</th>
-          <th>현재 적용안</th>
-          <th class="col-reason">적용 근거(이유)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>M01_D1-A<br>M01_D1-B</td>
-          <td>GNB 우측 캐시백 버튼</td>
-          <td>비로그인/0원: 안내 문구<br>로그인+1원↑: 금액 표시</td>
-          <td>"로그인 후 최대 혜택 적립"<br>적립완료(Approved)만 표시</td>
-          <td>적립완료 금액만 표시 — 실제로 확정된 금액 기준이 사용자에게 더 신뢰감을 줌. 비로그인 문구는 로그인 CTA 역할 겸용. HotelsCombined·Rakuten Travel 동일 패턴.<br><em>⚠️ 대표 논의 필요 — 적립예정 합산 여부 최종 확인</em></td>
-        </tr>
-        <tr>
-          <td>M01_D1-B</td>
-          <td>마이페이지 진입점</td>
-          <td>A. 아바타 탭 → MY01<br>B. 적립탭 하단 통합<br>C. 기타</td>
-          <td>확정 디자인에서 [☰] 제거됨<br><em>진입점 미확정</em></td>
-          <td>Airbnb·Booking.com·KAYAK 모두 2023년 이후 [☰] → 탭바·아바타로 전환. 햄버거 메뉴는 모바일 UX 인지 장벽으로 업계 이탈 중.<br><em>⚠️ 대표 논의 후 확정</em></td>
-        </tr>
-        <tr>
-          <td>M01_D1-A<br>M01_D1-B</td>
-          <td>하단 탭바 노출 범위</td>
-          <td>A. 전 화면<br>B. 1뎁스(M01·적립탭)만</td>
-          <td>B안 — 1뎁스(메인·적립탭)만 노출<br>S01·S02 미노출</td>
-          <td>Vio.com·KAYAK·Expedia 모두 검색결과·숙소상세에서 탭바 숨김. 예약 퍼널 진입 후 탈출구 최소화가 전환율 향상에 직결됨.</td>
-        </tr>
-        <tr>
-          <td>M01_D1-C</td>
-          <td>공작새 탭 기능</td>
-          <td>A. AI 챗봇(LLM)<br>B. FAQ 채팅 UI</td>
-          <td>B안 — FAQ 채팅창 바텀시트</td>
-          <td>MVP 출시 시점에 LLM 오답·비용 리스크 관리가 어려움. 고정 시나리오 기반 채팅 UI로 CS 문의 80% 자동 처리 후 추후 LLM 업그레이드.</td>
-        </tr>
-        <tr>
-          <td>M01_D1-A<br>M01_D1-B</td>
-          <td>AI 검색창 기능</td>
-          <td>A. 자연어 처리<br>B. 키워드 검색</td>
-          <td>UI 위치·형태 확정<br>기능 상세 추후 확정</td>
-          <td>Google Hotels·KAYAK·Expedia 메인 화면 상단 자연어 검색창 채택 추세. 멀티스텝 검색폼 대비 입력 마찰 감소.<br><em>⚠️ 자연어 파싱 방식 별도 확정 필요</em></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
 
 
 <!-- ════════════════════════════════════════════════
@@ -373,9 +295,22 @@
     <div class="ann-item">
       <div class="cn">3</div>
       <div class="ann-body">
-        <div class="ann-title">AI 검색바</div>
-        <div class="ann-desc"><ul><li>"어디로 떠나세요?" 플레이스홀더가 있는 텍스트 입력창.</li><li>탭 시 텍스트 직접 입력 가능.</li><li>입력 후 확인(엔터 또는 돋보기 탭) 시 S01(검색결과) 이동.</li><li>✦ 아이콘: AI 기능을 나타내는 시각 요소. 우측 [AI] 배지 함께 표시.</li></ul></div>
-        <div class="ann-rule">⚠️ 논의중 — AI 검색창 상세 기능(자연어 처리 방식, 파라미터 변환 등) 추후 확정 예정. 현재는 UI 위치·형태만 표현. 확정 후 주석 업데이트.</div>
+        <div class="ann-title">AI 검색바 (자연어 검색 입력창)</div>
+        <div class="ann-desc"><ul>
+          <li>"어디로 떠나세요?" 플레이스홀더가 있는 텍스트 입력창. 탭 시 텍스트 직접 입력 가능.</li>
+          <li><b>추천질문 칩:</b> 검색바 아래에 추천질문 4개를 작은 버튼(칩) 형태로 표시. 20개 미리 준비된 질문 중에서 화면이 열릴 때마다 무작위로 4개를 골라 보여줌. 예: "바다 보이는 제주 호텔 추천해줘", "서울 강남 5성급 호텔 어디가 좋아?" 등. 칩 탭 시 해당 질문이 AI 검색바에 자동 입력된 것처럼 처리되어 검색결과(S01)로 이동.</li>
+          <li><b>자연어 처리 분기 (입력 후 결과 이동 시):</b>
+            <ul style="margin-top:4px;padding-left:16px;">
+              <li>숙박 관련 외 키워드(맛집·항공·날씨 등) → 화면 아래에 "호텔·숙소 검색만 가능합니다" 짧은 알림 메시지 표시, 이동 안 함.</li>
+              <li>호텔 이름 인식 → 해당 호텔을 결과 최상단에 고정하여 S01 이동.</li>
+              <li>도시 이름 인식 → 해당 도시로 S01 이동.</li>
+              <li>인식 불가 또는 빈 입력 → 이전 검색 도시 유지 or 인기도시에서 자동 선택 후 S01 이동.</li>
+            </ul>
+          </li>
+          <li><b>🎤 음성 입력 버튼:</b> Phase 2 예정. MVP에서는 버튼이 표시되지만 탭해도 동작 없음.</li>
+          <li>✦ 아이콘: AI 기능을 나타내는 시각 요소.</li>
+        </ul></div>
+        <div class="ann-rule">자연어검색 정책서 v0.4 4-2절 (추천질문 20개 풀/랜덤 4개). 자연어 처리 분기는 프로토타입(e_integrated) 기준. 🎤 음성 입력 = Phase 2.</div>
       </div>
     </div>
 
@@ -413,9 +348,13 @@
       <div class="cn">7</div>
       <div class="ann-body">
         <div class="ann-title">[검색하기] 버튼</div>
-        <div class="ann-desc"><ul><li>목적지 선택 필수. 날짜·인원은 기본값 자동 적용.</li><li>탭 시 검색 조건을 로컬 스토리지에 최근 검색으로 저장 후 S01(검색결과) 화면으로 이동.</li><li>목적지 미선택 시 S01 미이동 — 유효성 오류 처리.</li></ul></div>
+        <div class="ann-desc"><ul>
+          <li>목적지 선택 필수. 날짜·인원은 기본값 자동 적용.</li>
+          <li>탭 시 검색 조건을 로컬 스토리지에 최근 검색으로 저장 후 S01(검색결과) 화면으로 이동.</li>
+          <li><b>목적지 미선택 시:</b> S01으로 이동하지 않음. 대신 화면 아래에 "목적지를 먼저 선택해주세요" 짧은 알림 메시지(토스트)가 잠깐 나타남. 동시에 목적지 입력 전체화면이 자동으로 열려 사용자가 바로 도시를 선택할 수 있음.</li>
+        </ul></div>
         <div class="ann-front">← <code>GET /api/affiliate/search/v1/hotels</code> 호출. 파라미터: <code>destination</code>, <code>checkIn</code>, <code>checkOut</code>, <code>rooms</code>, <code>currencyCode=KRW</code>, <code>languageCode=ko_KR</code>, <code>includeTaxesInTotal=true</code></div>
-        <div class="ann-rule">정책서 4-7절.</div>
+        <div class="ann-rule">정책서 4-7절. 목적지 미선택 시 토스트 + 자동완성 오버레이 자동 오픈은 프로토타입(e_integrated) 기준.</div>
       </div>
     </div>
 
@@ -998,6 +937,23 @@
           <li>AI 챗봇 검색의 인기도시 배지 10개와 동일한 목록 공유.</li>
         </ul></div>
         <div class="ann-rule">v0.40 4-11절 — 인기도시 정책 신설</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn" style="background:#e0e7ef;color:#374151;">i</div>
+      <div class="ann-body">
+        <div class="ann-title">타이핑 중 — 실시간 필터링 결과 표시</div>
+        <div class="ann-desc"><ul>
+          <li>검색 입력창에 글자를 입력하면 "최근 검색"과 "인기도시" 섹션이 사라지고, 입력값에 맞는 결과 목록으로 바뀜.</li>
+          <li>결과는 외부 서비스(Autocomplete API)에서 실시간으로 가져옴. 입력값을 도시명·지역명·호텔명으로 검색.</li>
+          <li><b>결과 표시 순서:</b> 도시(🌆) → 지역·구역(📌) → 호텔(🏨) 순서로 분류하여 보여줌.</li>
+          <li>일치하는 글자는 파란색으로 강조 표시. 각 항목 아래에 나라·도시 이름 등 보조 정보 표시.</li>
+          <li>입력값에 맞는 결과가 없으면 "검색 결과가 없어요" 메시지 표시.</li>
+          <li>항목 탭 시 해당 목적지가 검색폼에 자동으로 채워지고 오버레이가 닫힘.</li>
+        </ul></div>
+        <div class="ann-front">← API: <code>GET /api/affiliate/autocomplete/v1/hotels?query={입력값}&languageCode=ko_KR</code> — 입력할 때마다 호출 (최소 2글자 이상 입력 시 호출 권장)</div>
+        <div class="ann-rule">v0.41 4-1절. 클라이언트에서 정렬: city 최상단 → area → hotel 순 (정책서 자동완성 순서 규칙).</div>
       </div>
     </div>
   </div>

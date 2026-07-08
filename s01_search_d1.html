@@ -43,11 +43,22 @@
   font-size: 16px; color: #374151; background: none; border: none; cursor: pointer; flex-shrink: 0;
 }
 
+/* ── 조건 축약바 ── */
+.res-cond-bar {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 14px; background: #f8f8f8; border-bottom: 1px solid #e5e7eb;
+  position: sticky; top: 52px; z-index: 25; cursor: pointer;
+}
+.rc-dest { font-size: 12px; font-weight: 700; color: #111; }
+.rc-sep { color: #d1d5db; font-size: 11px; }
+.rc-date { font-size: 10px; color: #6b7280; flex: 1; }
+.rc-edit { font-size: 10px; color: #4f46e5; font-weight: 600; white-space: nowrap; }
+
 /* ── 필터 칩 바 ── */
 .filter-bar {
   display: flex; align-items: center; gap: 6px;
   padding: 8px 14px; overflow-x: auto; background: #fff; border-bottom: 1px solid #f0f0f0;
-  position: sticky; top: 52px; z-index: 20;
+  position: sticky; top: 86px; z-index: 20;
 }
 .filter-bar::-webkit-scrollbar { display: none; }
 .f-chip {
@@ -58,6 +69,11 @@
 }
 .f-chip.active { background: #eef2ff; border-color: #4f46e5; color: #4f46e5; }
 .chip-cnt { background: #4f46e5; color: #fff; border-radius: 8px; padding: 1px 5px; font-size: 10px; }
+.f-chip-ai {
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  color: #fff; border: none; font-weight: 700;
+  min-width: 56%; justify-content: center;
+}
 
 /* ── 결과 수 헤더 ── */
 .result-hdr { padding: 10px 14px 6px; background: #f8f8f8; }
@@ -190,16 +206,53 @@
 .search-dim-bg { position: relative; }
 .search-dim-bg::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.45); z-index: 21; pointer-events: none; }
 
-/* ── 논의 요약 테이블 ── */
-.disc-table-wrap { background:#fffbf0; border:1.5px solid #f59e0b; border-radius:10px; padding:20px 24px; margin-bottom:24px; }
-.disc-table-wrap h2 { font-size:15px; font-weight:700; color:#92400e; margin:0 0 6px; }
-.disc-table-wrap p { font-size:12px; color:#92400e; margin:0 0 14px; }
-.disc-table { width:100%; border-collapse:collapse; font-size:12px; }
-.disc-table th { background:#fef3c7; padding:7px 10px; text-align:left; font-weight:700; color:#78350f; border:1px solid #fde68a; white-space:nowrap; }
-.disc-table td { padding:8px 10px; border:1px solid #fde68a; color:#374151; vertical-align:top; line-height:1.7; }
-.disc-table tr:nth-child(even) td { background:#fffef8; }
-.disc-table td strong { color:#92400e; font-weight:700; }
-.disc-table td em { color:#d97706; font-style:normal; font-weight:600; }
+/* ════ S01-F AI 검색 결과 전용 ════ */
+.s01-ai-gnb {
+  display:flex; align-items:center; gap:8px;
+  padding:8px 12px; background:#fff; border-bottom:1px solid #f0f0f0;
+  position:sticky; top:0; z-index:30;
+}
+.ai-gnb-back {
+  width:28px; height:28px; display:flex; align-items:center; justify-content:center;
+  font-size:15px; color:#374151; background:none; border:none; flex-shrink:0;
+}
+.ai-gnb-bar {
+  flex:1; display:flex; align-items:center; gap:6px;
+  background:#f3f4f6; border-radius:20px; padding:6px 10px; cursor:pointer;
+}
+.ai-gnb-placeholder { flex:1; font-size:11px; color:#9ca3af; }
+.ai-gnb-mic { color:#6366f1; font-size:13px; flex-shrink:0; }
+
+.ai-rec-box {
+  margin:0; padding:12px 14px;
+  background:#f0f0ff; border-bottom:2px solid #c7d2fe; border-left:3px solid #6366f1;
+}
+.ai-rec-hdr {
+  font-size:12px; font-weight:700; color:#4f46e5;
+  display:flex; align-items:center; gap:4px; margin-bottom:6px;
+}
+.ai-rec-summary { font-size:11px; color:#374151; margin-bottom:8px; line-height:1.5; }
+.ai-rec-list { list-style:none; padding:0; margin:0 0 8px; display:flex; flex-direction:column; gap:5px; }
+.ai-rec-item {
+  font-size:11px; padding:7px 9px;
+  background:#fff; border-radius:7px; cursor:pointer;
+  border:1px solid #e0e7ff;
+}
+.ai-rec-name { font-weight:700; color:#1e1b4b; }
+.ai-rec-meta { color:#6b7280; font-size:10px; margin-top:2px; }
+.ai-rec-ctrl {
+  display:flex; align-items:center; justify-content:space-between; margin-top:6px;
+}
+.ai-rec-toggle { font-size:10px; color:#6366f1; cursor:pointer; font-weight:600; }
+.ai-rec-disclaimer { font-size:9px; color:#9ca3af; }
+
+.ai-form-banner {
+  margin:0; padding:9px 14px;
+  background:#f0f0ff; border-bottom:1px solid #e5e7eb;
+  display:flex; align-items:center; gap:8px; font-size:11px;
+}
+.ai-form-banner .aib-text { color:#374151; flex:1; }
+.ai-form-banner .aib-link { color:#4f46e5; font-weight:700; cursor:pointer; white-space:nowrap; }
 </style>
 </head>
 <body>
@@ -208,7 +261,7 @@
   <a class="page-nav-back" href="index.html">← 목록으로</a>
   <span class="page-nav-sep">|</span>
   <span class="page-nav-title">S01 (디자인확정) — 검색결과 목록</span>
-  <span class="page-nav-route">/ 검색 후 진입 화면 · 정책서 v0.39 기준</span>
+  <span class="page-nav-route">/ 검색 후 진입 화면 · 정책서 v0.42 / 자연어검색 v0.5 기준</span>
   <div class="page-nav-nav">
     <a class="page-nav-pager" href="m01_main_d1.html">← 이전</a>
     <span class="page-nav-pager-disabled">다음 →</span>
@@ -220,6 +273,8 @@
   <div class="toc-inner">
     <span class="toc-label">목차</span>
     <a href="#s01d1-main" class="toc-link">S01_D1 메인</a>
+    <span class="toc-sep"></span>
+    <a href="#s01-f" class="toc-link">S01-F AI검색결과</a>
     <span class="toc-sep"></span>
     <a href="#s01-a" class="toc-link">S01-A 재검색</a>
     <span class="toc-sep"></span>
@@ -245,8 +300,8 @@
   <span style="font-size:12px;font-weight:400;color:#888">— 확정 디자인 기준</span>
 </div>
 <div class="sec-sub">
-  검색 실행 후 진입 화면. GNB ← + 검색조건 요약 + 필터아이콘 · 필터 칩 바 · flat 리스트형 호텔 카드 · 하단 고정 "지도로 보기" 버튼.<br>
-  플로우: GNB 검색조건 탭 → 재검색 슬라이드다운(S01-A) / 카드 탭 → S02 숙소상세 / 필터 칩 탭 → 필터 바텀시트 / 🗺 지도로 보기 탭 → 지도 화면
+  검색 실행 후 진입 화면. <strong>3줄 고정 헤더</strong>: ① GNB(← + AI 재검색바 + 🎤) · ② 조건 축약바(목적지·날짜·인원) · ③ 필터바([✦ AI 필터] + [⚙ 전체필터] + 개별 필터) · flat 리스트형 호텔 카드 · 하단 고정 "지도로 보기" 버튼.<br>
+  플로우: 조건 축약바 탭 → 재검색 슬라이드다운(S01-A) / 카드 탭 → S02 숙소상세 / 필터 칩 탭 → 필터 바텀시트 / 🗺 지도로 보기 탭 → 지도 화면
 </div>
 
 <div class="sec-policy">
@@ -255,12 +310,12 @@
     <li><strong>API</strong>: <code>GET /api/3.0/hotels?destination=kplace:{entityKey}</code> (5절, 12-1절)</li>
     <li><strong>필수 파라미터</strong>: <code>pageSize=50</code>, <code>responseOptions=topRates,images,filter</code>, <code>userTrackId</code>, <code>includeTaxesInTotal=true</code> (12-2절)</li>
     <li><strong>가격 표시</strong>: 세금 포함 최종가. <code>isCheapestRate:true</code> 기준 최저가 1건만 카드에 표시 (5-3절)</li>
-    <li><strong>GNB 패턴 변경</strong>: ← 뒤로가기 + 검색조건 요약(목적지·날짜·인원) + 필터아이콘. 로고·[☰] 제거 (확정 디자인)</li>
+    <li><strong>상단 3줄 고정</strong>: ① GNB = ← 뒤로가기 + AI 재검색바(길게) + 🎤 / ② 조건 축약바 = 목적지·날짜·인원 요약(탭시 S01-A 재검색) / ③ 필터바. 로고·[☰] 제거 (자연어검색 v0.5 5-1절)</li>
     <li><strong>페이지네이션</strong>: [목록 더보기] 버튼 방식. 종료 시 "총 N개 숙소가 모두 표시됐습니다" (5-8절)</li>
     <li><strong>비로그인 허용</strong>: 검색·가격조회 모두 허용 (8-6절)</li>
     <li><strong>캐시백 배지</strong>: S01 카드에서 미표시. S02 상세에서 표시 (확정 디자인 기준. ⚠️ 대표 논의 필요)</li>
   </ul>
-  <div class="sec-policy-rule">기준: v0.37 5절·8-6절·12-1절</div>
+  <div class="sec-policy-rule">기준: v0.42 5절·8-6절·12-1절 / 자연어검색 v0.5 5-1절·11절</div>
 </div>
 
 <div class="two-col">
@@ -269,25 +324,33 @@
       <div class="m-notch"><div class="m-notch-pill"></div></div>
       <div class="m-screen">
 
-        <!-- GNB (확정 디자인) -->
+        <!-- GNB — AI 재검색바 -->
         <div class="s01-gnb-d1">
           <button class="gnb-back-btn">← <span class="wf-cn">1</span></button>
-          <div class="gnb-search-summary">
-            <div class="gnb-dest">서울 <span class="wf-cn">2</span></div>
-            <div class="gnb-cond">6/18(목) ~ 6/19(금) · 성인 2명 · 객실 1개</div>
+          <div class="ai-gnb-bar">
+            <span style="font-size:11px;color:#6b7280;">🔍</span>
+            <span class="ai-gnb-placeholder">AI로 다시 검색하세요! <span class="wf-cn">2</span></span>
+            <span class="ai-gnb-mic">🎤</span>
           </div>
-          
         </div>
 
-        <!-- 필터/정렬 칩 바 -->
+        <!-- 조건 축약바 -->
+        <div class="res-cond-bar">
+          <span class="rc-dest">서울 <span class="wf-cn">3</span></span>
+          <span class="rc-sep">|</span>
+          <span class="rc-date">6/18 ~ 6/19 · 성인 2명 · 1실</span>
+          <span class="rc-edit">수정 ✎</span>
+        </div>
+
+        <!-- 필터 칩 바 (v0.4 재구성) -->
         <div class="filter-bar">
-          <div class="f-chip active">⊟ 전체 <span class="chip-cnt">2</span> <span class="wf-cn">3</span></div>
-          <div class="f-chip">인기순 ↕ <span class="wf-cn">4</span></div>
-          <div class="f-chip">1박 가격 ∨ <span class="wf-cn">5</span></div>
+          <div class="f-chip f-chip-ai">✦ AI 필터 <span class="wf-cn">AI</span></div>
+          <div class="f-chip active">⚙ 전체필터 <span class="chip-cnt">2</span> <span class="wf-cn">4</span></div>
+          <div class="f-chip">가격 ∨ <span class="wf-cn">6</span></div>
           <div class="f-chip">성급 ∨</div>
           <div class="f-chip">숙소유형 ∨</div>
           <div class="f-chip">브랜드·체인 ∨</div>
-          <div class="f-chip">평점 7.0+</div>
+          <div class="f-chip">리뷰</div>
         </div>
 
         <!-- 결과 수 헤더 -->
@@ -411,41 +474,80 @@
     <div class="ann-item">
       <div class="cn">1</div>
       <div class="ann-body">
-        <div class="ann-title">GNB 좌측 — 뒤로가기</div>
-        <div class="ann-desc"><ul><li>← 버튼 탭 시 이전 화면(M01 메인)으로 이동.</li><li>확정 디자인 기준 — 기존 로고 제거, 뒤로가기로 교체.</li></ul></div>
-        <div class="ann-rule">확정 디자인 기준. 정책서 5-1절 변경 예정.</div>
+        <div class="ann-title">GNB 1줄 — ← 뒤로가기</div>
+        <div class="ann-desc"><ul><li>← 버튼 탭 시 이전 화면(M01 메인)으로 이동.</li></ul></div>
+        <div class="ann-rule">정책서 v0.41 5-1절.</div>
       </div>
     </div>
 
     <div class="ann-item">
       <div class="cn">2</div>
       <div class="ann-body">
-        <div class="ann-title">GNB 중앙 — 검색조건 요약</div>
-        <div class="ann-desc"><ul><li>상단 줄: 목적지명 (굵게).</li><li>하단 줄: "체크인~체크아웃 · 성인 N명 · 객실 N개" 요약.</li><li>탭 시 → 재검색 슬라이드다운(S01-A) 진입.</li></ul></div>
-        <div class="ann-rule">정책서 5-1절. 재검색 상세 동작은 S01-A 케이스 참조.</div>
+        <div class="ann-title">GNB 1줄 — AI 재검색바 (자연어검색 v0.4 신설)</div>
+        <div class="ann-desc"><ul>
+          <li>GNB에 AI 재검색 입력칸이 길게 표시됩니다. 플레이스홀더: "AI로 다시 검색하세요!"</li>
+          <li>탭 시 → AI 재검색 입력 모드 진입. 입력 후 전송 시 AI 파이프라인 재실행 → 결과 갱신.</li>
+          <li>🎤 음성 버튼은 UI에 표시되지만, 탭해도 실제 음성 인식은 동작하지 않습니다. (Phase 2 예정)</li>
+          <li><b>역할 구분:</b> GNB AI 재검색바 = 새 자연어 조건으로 검색 / 조건 축약바(CN 3) = 날짜·인원 등 조건 수정 / AI 필터(CN AI) = 현재 결과 좁히기 전용.</li>
+        </ul></div>
+        <div class="ann-rule">자연어검색 v0.4 5-1절 · 5-5절.</div>
       </div>
     </div>
 
     <div class="ann-item">
       <div class="cn">3</div>
       <div class="ann-body">
-        <div class="ann-title">⊟ 전체 필터 칩</div>
-        <div class="ann-desc"><ul><li>탭 시 → S01-D 전체 필터 바텀시트 진입.</li><li>필터 적용 중이면 파란 배경 활성화 + 숫자 배지 (적용된 필터 수).</li></ul></div>
-        <div class="ann-rule">정책서 5-6절.</div>
+        <div class="ann-title">조건 축약바 2줄 — 목적지·날짜·인원 (자연어검색 v0.4 신설)</div>
+        <div class="ann-desc"><ul>
+          <li>GNB 바로 아래 별도 줄로 표시: 목적지명(굵게) | 날짜 범위 · 인원 수 · 객실 수.</li>
+          <li>탭 시 → 재검색 슬라이드다운(S01-A) 진입. 지역·날짜·인원 조건을 수정할 수 있습니다.</li>
+          <li>[수정 ✎] 아이콘으로 탭 가능함을 안내.</li>
+          <li>기존 GNB 안에 있던 검색조건 요약이 이 별도 줄로 분리됐습니다.</li>
+        </ul></div>
+        <div class="ann-rule">자연어검색 v0.4 5-1절. 재검색 상세 동작은 S01-A 케이스 참조.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">AI</div>
+      <div class="ann-body">
+        <div class="ann-title">✦ AI 필터 칩 3줄 — (자연어검색 v0.4 신설)</div>
+        <div class="ann-desc"><ul>
+          <li>필터바 맨 앞 고정. 전체 필터바 폭의 약 3/5을 차지하도록 길게 표시. 보라색 그라데이션 배경으로 오른쪽 칩들과 시각적으로 구분.</li>
+          <li>탭 시 → AI 필터 입력창이 아래에서 올라옵니다. 현재 검색 조건을 유지한 채 결과를 <b>좁히기만</b> 합니다.</li>
+          <li>AI 검색 진입(S01-F)과 일반 검색 진입(S01_D1 메인) 모두 동일하게 표시.</li>
+        </ul></div>
+        <div class="ann-rule">자연어검색 v0.4 5-1절 · 11절.</div>
       </div>
     </div>
 
     <div class="ann-item">
       <div class="cn">4</div>
       <div class="ann-body">
-        <div class="ann-title">정렬 칩</div>
-        <div class="ann-desc"><ul><li>기본값: "인기순".</li><li>탭 시 → S01-E 정렬 바텀시트 진입.</li><li>선택된 정렬 기준 칩에 표시.</li></ul></div>
-        <div class="ann-rule">정책서 5-6-1절.</div>
+        <div class="ann-title">⚙ 전체필터 칩 3줄 (v0.4 변경)</div>
+        <div class="ann-desc"><ul>
+          <li>탭 시 → S01-D 전체 필터 바텀시트 진입.</li>
+          <li><b>v0.4 변경:</b> AI 필터 칩 오른쪽으로 이동. 정렬 기능이 이 바텀시트 안에 편입됨 (별도 정렬 칩 없음).</li>
+          <li>필터 적용 중이면 파란 배경 활성화 + 숫자 배지.</li>
+        </ul></div>
+        <div class="ann-rule">정책서 5-6절. 자연어검색 v0.4 5-1절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item" style="opacity:0.45;">
+      <div class="cn" style="background:#9ca3af;">5</div>
+      <div class="ann-body">
+        <div class="ann-title">정렬 칩 — <span style="color:#ef4444;">자연어검색 v0.4 제거</span></div>
+        <div class="ann-desc"><ul>
+          <li>별도 정렬 칩([인기순 ↕])은 v0.4부터 필터바에서 제거됨.</li>
+          <li>정렬 기능은 [⚙ 전체필터] 바텀시트(S01-D) 안에 편입 → CN 4 참조.</li>
+        </ul></div>
+        <div class="ann-rule">자연어검색 v0.4 5-1절.</div>
       </div>
     </div>
 
     <div class="ann-item">
-      <div class="cn">5</div>
+      <div class="cn">6</div>
       <div class="ann-body">
         <div class="ann-title">개별 필터 칩 (가격·성급·숙소유형 등)</div>
         <div class="ann-desc"><ul><li>각 칩 탭 시 해당 개별 필터 바텀시트 진입 (S01-D-1 ~ D-5).</li><li>필터 적용 중이면 파란 배경 활성화.</li></ul></div>
@@ -552,6 +654,486 @@
 
   </div><!-- /ann -->
 </div><!-- /two-col S01_D1 -->
+
+<hr class="sec-divider">
+
+<!-- ════ S01-F AI 검색결과 ════ -->
+<div id="s01-f" class="sec-title">
+  <span class="sec-badge">S01-F</span>AI 검색 결과페이지 — AI 검색바 자연어 입력 후 진입
+</div>
+<div class="sec-sub">
+  AI 검색(ⓐ)으로 진입한 결과 화면. <strong>AI 추천영역 + 전체 목록 2분할 구조.</strong><br>
+  구조화 폼(ⓑ)으로 진입 시 AI 추천영역 미노출 — 대신 AI 유도 배너만 표시.
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — S01-F AI 검색 결과</div>
+  <ul class="sec-policy-list">
+    <li><strong>진입 분기</strong>: ⓐ AI 검색바 입력 → AI 추천영역 + 전체 목록 모두 표시 / ⓑ 구조화 폼 [검색하기] → AI 추천영역 미표시, AI 유도 배너만 표시 (5-1절)</li>
+    <li><strong>AI 추천영역 노출 조건</strong>: AI 검색(ⓐ) 진입 시만. 폼(ⓑ) 진입 시 자동으로 숨김 (5-2절)</li>
+    <li><strong>추천 호텔 수</strong>: 5개 고정. 정렬 기준 = 리뷰 수·평점 재정렬 (백엔드 처리). 프로토타입은 guestRating 기준 (5-2절)</li>
+    <li><strong>AI 추천 ↔ 전체 목록 중복</strong>: AI 추천 5개는 전체 목록에도 포함됨. 단 정렬 기준이 달라 순서 상이 (5-2절)</li>
+    <li><strong>항목 더보기</strong>: 기본 2개 노출 + [추천 3곳 더 보기 ▼] 탭 시 5개 전체 표시. 섹션 자체 접기/펼치기 없음 (5-2절)</li>
+    <li><strong>뒤로가기</strong>: 결과페이지 복귀. 정렬·필터·AI 추천영역 유지. 전체 목록 가격·재고만 최신화 (5-4절)</li>
+    <li><strong>GNB</strong>: AI 재검색바 길게 (← 뒤로가기 + AI 재검색 입력칸 + 🎤 음성 버튼). S01_D1의 검색조건 요약 바와 다른 형태 (5-1절)</li>
+  </ul>
+  <div class="sec-policy-rule">기준: 자연어검색 v0.5 5-1절 · 5-2절 · 5-4절</div>
+</div>
+
+<!-- ─── 상태 ⓐ: AI 검색 진입 (AI 추천영역 O) ─── -->
+<div style="margin-bottom:8px; font-size:12px; font-weight:700; color:#4f46e5; padding: 4px 0;">
+  상태 ⓐ — AI 검색바 자연어 입력으로 진입 (AI 추천영역 표시)
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- GNB — AI 재검색바 -->
+        <div class="s01-ai-gnb">
+          <button class="ai-gnb-back">← <span class="wf-cn">1</span></button>
+          <div class="ai-gnb-bar">
+            <span style="font-size:11px;color:#6b7280;">🔍</span>
+            <span class="ai-gnb-placeholder">AI로 다시 검색하세요! <span class="wf-cn">1</span></span>
+            <span class="ai-gnb-mic">🎤</span>
+          </div>
+        </div>
+
+        <!-- 조건 축약바 -->
+        <div class="res-cond-bar">
+          <span class="rc-dest">부산 <span class="wf-cn">2</span></span>
+          <span class="rc-sep">|</span>
+          <span class="rc-date">6/18 ~ 6/19 · 성인 2명 · 1실</span>
+          <span class="rc-edit">수정 ✎</span>
+        </div>
+
+        <!-- 필터바 (S01_D1과 동일 구조) -->
+        <div class="filter-bar">
+          <div class="f-chip f-chip-ai">✦ AI 필터 <span class="wf-cn">AI</span></div>
+          <div class="f-chip active">⚙ 전체필터 <span class="chip-cnt">2</span> <span class="wf-cn">4</span></div>
+          <div class="f-chip">가격 ∨ <span class="wf-cn">6</span></div>
+          <div class="f-chip">성급 ∨</div>
+          <div class="f-chip">숙소유형 ∨</div>
+          <div class="f-chip">브랜드·체인 ∨</div>
+          <div class="f-chip">리뷰</div>
+        </div>
+
+        <!-- AI 추천영역 -->
+        <div class="ai-rec-box">
+          <div class="ai-rec-hdr">
+            ✦ AI 추천 <span class="wf-cn">3</span>
+          </div>
+          <div class="ai-rec-summary">
+            "조식 포함 부산 호텔 조건에 맞춰 후기·평점 좋은 곳 5곳을 추려봤어요." <span class="wf-cn">4</span>
+          </div>
+          <ul class="ai-rec-list">
+            <li class="ai-rec-item">
+              <div class="ai-rec-name">파라다이스 호텔 부산 <span class="wf-cn">5</span></div>
+              <div class="ai-rec-meta">⭐ 8.9 · 해운대구 · 오션뷰 조식 뷔페 평점 최상</div>
+            </li>
+            <li class="ai-rec-item">
+              <div class="ai-rec-name">웨스틴 조선 부산</div>
+              <div class="ai-rec-meta">⭐ 8.7 · 해운대구 · 조식 포함 패키지 다양</div>
+            </li>
+            <!-- 3~5번 접힘 상태 → [3개 더보기] 버튼 -->
+            <li class="ai-rec-item" style="text-align:center;padding:6px 4px;cursor:pointer;border-top:1px dashed #e0d9ff;margin-top:2px;">
+              <span style="font-size:11px;color:#6366f1;font-weight:600;">3개 더보기 ▼ <span class="wf-cn">6</span></span>
+            </li>
+          </ul>
+          <div class="ai-rec-ctrl">
+            <span class="ai-rec-disclaimer">⚠ AI 추천은 실제와 다를 수 있어요 <span class="wf-cn">7</span></span>
+          </div>
+        </div>
+
+        <!-- 전체 목록 헤더 -->
+        <div class="result-hdr">
+          <div class="result-count">조건에 맞는 호텔 38곳 <span class="wf-cn">8</span></div>
+          <div class="result-sub">인기순 정렬</div>
+        </div>
+
+        <!-- 카드 1 -->
+        <div style="margin:0 14px; padding:12px 0; border-bottom:1px solid #f0f0f0; background:#fff; display:flex; gap:10px;">
+          <div style="width:80px; height:80px; background:#e5e7eb; border-radius:10px; flex-shrink:0;"></div>
+          <div style="flex:1; min-width:0;">
+            <div style="font-size:12px; font-weight:700; color:#111; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">파라다이스 호텔 부산</div>
+            <div style="font-size:10px; color:#6b7280; margin-top:2px;">해운대구 · ⭐ 8.9</div>
+            <div style="font-size:10px; color:#6b7280; margin-top:2px;">1박 · 조식포함</div>
+            <div style="font-size:13px; font-weight:700; color:#111; margin-top:4px;">₩298,000</div>
+          </div>
+        </div>
+        <!-- 카드 2 -->
+        <div style="margin:0 14px; padding:12px 0; border-bottom:1px solid #f0f0f0; background:#fff; display:flex; gap:10px;">
+          <div style="width:80px; height:80px; background:#e5e7eb; border-radius:10px; flex-shrink:0;"></div>
+          <div style="flex:1; min-width:0;">
+            <div style="font-size:12px; font-weight:700; color:#111; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">노보텔 앰배서더 부산</div>
+            <div style="font-size:10px; color:#6b7280; margin-top:2px;">해운대구 · ⭐ 8.5</div>
+            <div style="font-size:10px; color:#6b7280; margin-top:2px;">1박 · 조식포함</div>
+            <div style="font-size:13px; font-weight:700; color:#111; margin-top:4px;">₩189,000</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 주석 패널 S01-F ⓐ -->
+  <div class="ann">
+    <h3>화면 주석 — S01-F (상태 ⓐ AI 검색 진입)</h3>
+
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">GNB 1줄 — ← 뒤로가기 + AI 재검색바</div>
+        <div class="ann-desc"><ul>
+          <li>S01_D1과 동일한 GNB 구조: ← 뒤로가기 + AI 재검색 입력칸(길게) + 🎤 음성 버튼.</li>
+          <li>AI 검색(ⓐ)과 폼 검색(ⓑ) 모두 동일한 GNB 사용.</li>
+          <li>입력칸 탭 → AI 재검색 입력 모드 진입. 🎤 탭 → Phase 2 예정 (현재 미동작).</li>
+          <li>← 탭 → 이전 화면(M01 메인)으로 이동.</li>
+        </ul></div>
+        <div class="ann-rule">자연어검색 v0.4 5-1절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">조건 축약바 2줄 — 목적지·날짜·인원</div>
+        <div class="ann-desc"><ul>
+          <li>GNB 바로 아래 별도 줄: 목적지명(굵게) | 날짜 범위 · 인원 · 객실 수.</li>
+          <li>탭 시 → 재검색 슬라이드다운(S01-A) 진입. 지역·날짜·인원 조건 수정 가능.</li>
+          <li>AI 검색(ⓐ)과 폼 검색(ⓑ) 모두 동일하게 표시됩니다.</li>
+        </ul></div>
+        <div class="ann-rule">자연어검색 v0.4 5-1절. 재검색 상세 동작은 S01-A 참조.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">AI 추천영역 — AI 검색(ⓐ) 진입 시만 표시</div>
+        <div class="ann-desc"><ul>
+          <li>AI 검색바(ⓐ)로 진입한 경우에만 이 영역이 화면에 나타납니다.</li>
+          <li>구조화 폼(ⓑ)으로 진입하면 이 영역이 나타나지 않습니다. (상태 ⓑ 참조)</li>
+          <li>AI가 평점·리뷰 수 기준으로 재정렬한 호텔 5개를 보여줍니다. 배경: 연보라색.</li>
+        </ul></div>
+        <div class="ann-rule">자연어검색 v0.4 5-2절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">AI 요약 문구</div>
+        <div class="ann-desc"><ul>
+          <li>AI가 입력 내용을 분석한 결과를 대화체 한 문장으로 보여줍니다.</li>
+          <li>예: "조식 포함 부산 호텔 조건에 맞춰 후기·평점 좋은 곳 5곳을 추려봤어요."</li>
+          <li>날짜 미입력 시: "날짜를 따로 입력하지 않으셔서 7일 뒤 1박 기준으로 보여드려요." 추가.</li>
+          <li>지역 미입력 시: "지역을 안 정하셔서 인기 도시 '{도시}'로 먼저 보여드려요. 다른 도시는 위에서 바꿔주세요." 추가.</li>
+        </ul></div>
+        <div class="ann-rule">자연어검색 v0.4 4-4절 · 8-1절 · 8-2절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">5</div>
+      <div class="ann-body">
+        <div class="ann-title">추천 호텔 목록 — 5개, 리뷰·평점 재정렬</div>
+        <div class="ann-desc"><ul>
+          <li>각 항목 형식: {호텔명(굵게)} — {평점} · {주소} · {AI 한줄 특징}.</li>
+          <li>리뷰 수·평점 기준으로 재정렬. (전체 목록 인기순과 순서 다름. 백엔드 처리)</li>
+          <li>호텔명 탭 → S02 숙소상세 화면으로 바로 이동.</li>
+        </ul></div>
+        <div class="ann-front">← translatedName / guestRating / address / description(AI 요약)</div>
+        <div class="ann-rule">자연어검색 v0.4 5-2절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">6</div>
+      <div class="ann-body">
+        <div class="ann-title">항목 더보기 — 기본 2개 노출 + [3개 더보기] 버튼</div>
+        <div class="ann-desc"><ul>
+          <li>처음에는 추천 호텔 2개만 화면에 나타납니다.</li>
+          <li>리스트 맨 아래 [3개 더보기 ▼] 버튼 탭 → 3~5번 항목이 나타나 5개 전체 표시. 버튼은 사라집니다. (상태 ⓐ-2 참조)</li>
+          <li>AI 추천 섹션 자체를 숨기거나 접는 기능은 없습니다. (헤더 [접기 ▲] 버튼 미포함)</li>
+        </ul></div>
+        <div class="ann-rule">자연어검색 v0.5 5-2절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">7</div>
+      <div class="ann-body">
+        <div class="ann-title">AI 안내 문구 (디스클레이머)</div>
+        <div class="ann-desc"><ul>
+          <li>AI 추천영역 하단 항상 표시: "⚠ AI 추천은 실제와 다를 수 있어요."</li>
+        </ul></div>
+        <div class="ann-rule">자연어검색 v0.4 4-4절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">8</div>
+      <div class="ann-body">
+        <div class="ann-title">전체 목록 — 인기순 (기존 S01 카드 동일)</div>
+        <div class="ann-desc"><ul>
+          <li>AI 추천영역 아래 기존 S01 카드 목록. 정렬 기준: 인기순 (AI 추천과 순서 다름).</li>
+          <li>카드 UI·필터·정렬·페이지네이션은 S01_D1 메인과 동일하게 동작합니다.</li>
+        </ul></div>
+        <div class="ann-rule">자연어검색 v0.4 5-3절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <div class="cn">9</div>
+      <div class="ann-body">
+        <div class="ann-title">추천질문 20개 풀 (M01 메인 표시용)</div>
+        <div class="ann-desc"><ul>
+          <li>메인 화면(M01) AI 검색바 하단에 이 풀에서 <strong>랜덤 4개</strong>를 노출합니다. 페이지 로드·새로고침마다 무작위 선택.</li>
+          <li>칩 탭 → 해당 문장을 AI 검색 입력값으로 바로 실행 → 결과페이지(S01-F ⓐ)로 이동합니다.</li>
+          <li>전체 풀 20개 목록 (참고):</li>
+        </ul>
+        <ol style="font-size:11px;color:#374151;margin:4px 0 0 16px;line-height:1.7;">
+          <li>서울 강남 2인 1박 20만원대</li>
+          <li>제주 주말 풀빌라 2박</li>
+          <li>부산 해운대 4성급 오션뷰</li>
+          <li>강릉 커플 펜션 1박</li>
+          <li>서울 시청 근처 비즈니스 호텔</li>
+          <li>조식 포함 서울 주말 1박</li>
+          <li>도쿄 신주쿠 4성급 3박</li>
+          <li>오사카 도톤보리 근처 가성비 호텔</li>
+          <li>방콕 수영장 있는 호텔</li>
+          <li>싱가포르 마리나베이 뷰</li>
+          <li>다낭 리조트 조식포함 3박</li>
+          <li>후쿠오카 온천 호텔</li>
+          <li>파리 에펠탑 근처 4성급</li>
+          <li>뉴욕 맨해튼 3박</li>
+          <li>홍대 근처 10만원 이하 호텔</li>
+          <li>제주 중문 5성급 스파</li>
+          <li>부산 서면 지하철 근처 호텔</li>
+          <li>가족 여행 넓은 객실 서울</li>
+          <li>속초 오션뷰 조용한 호텔</li>
+          <li>강원 애견동반 가능 호텔</li>
+        </ol></div>
+        <div class="ann-rule">자연어검색 v0.5 7-1절.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── 상태 ⓐ-2: AI 추천 5개 펼침 ─── -->
+<div style="margin:24px 0 8px; font-size:12px; font-weight:700; color:#4f46e5; padding:4px 0;">
+  상태 ⓐ-2 — [3개 더보기] 탭 후 AI 추천 5개 전체 표시
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- GNB — AI 재검색바 -->
+        <div class="s01-ai-gnb">
+          <button class="ai-gnb-back">←</button>
+          <div class="ai-gnb-bar">
+            <span style="font-size:11px;color:#6b7280;">🔍</span>
+            <span class="ai-gnb-placeholder">AI로 다시 검색하세요!</span>
+            <span class="ai-gnb-mic">🎤</span>
+          </div>
+        </div>
+
+        <!-- 조건 축약바 -->
+        <div class="res-cond-bar">
+          <span class="rc-dest">부산</span>
+          <span class="rc-sep">|</span>
+          <span class="rc-date">6/18 ~ 6/19 · 성인 2명 · 1실</span>
+          <span class="rc-edit">수정 ✎</span>
+        </div>
+
+        <!-- 필터바 -->
+        <div class="filter-bar">
+          <div class="f-chip f-chip-ai">✦ AI 필터</div>
+          <div class="f-chip">⚙ 전체필터</div>
+          <div class="f-chip">가격 ∨</div>
+          <div class="f-chip">성급 ∨</div>
+          <div class="f-chip">숙소유형 ∨</div>
+        </div>
+
+        <!-- AI 추천영역 — 5개 전체 펼침 -->
+        <div class="ai-rec-box">
+          <div class="ai-rec-hdr">✦ AI 추천 <span class="wf-cn">E1</span></div>
+          <div class="ai-rec-summary">
+            "조식 포함 부산 호텔 조건에 맞춰 후기·평점 좋은 곳 5곳을 추려봤어요."
+          </div>
+          <ul class="ai-rec-list">
+            <li class="ai-rec-item">
+              <div class="ai-rec-name">파라다이스 호텔 부산</div>
+              <div class="ai-rec-meta">⭐ 8.9 · 해운대구 · 오션뷰 조식 뷔페 평점 최상</div>
+            </li>
+            <li class="ai-rec-item">
+              <div class="ai-rec-name">웨스틴 조선 부산</div>
+              <div class="ai-rec-meta">⭐ 8.7 · 해운대구 · 조식 포함 패키지 다양</div>
+            </li>
+            <li class="ai-rec-item">
+              <div class="ai-rec-name">롯데호텔 부산</div>
+              <div class="ai-rec-meta">⭐ 8.6 · 해운대구 · 조식 뷔페 시티뷰</div>
+            </li>
+            <li class="ai-rec-item">
+              <div class="ai-rec-name">해운대 그랜드 호텔</div>
+              <div class="ai-rec-meta">⭐ 8.4 · 해운대구 · 오션뷰 아침식사 포함</div>
+            </li>
+            <li class="ai-rec-item">
+              <div class="ai-rec-name">노보텔 앰배서더 부산</div>
+              <div class="ai-rec-meta">⭐ 8.5 · 해운대구 · 조식 포함 가성비</div>
+            </li>
+            <!-- 더보기 버튼 없음 — 5개 전체 표시 완료 -->
+          </ul>
+          <div class="ai-rec-ctrl">
+            <span class="ai-rec-disclaimer">⚠ AI 추천은 실제와 다를 수 있어요</span>
+          </div>
+        </div>
+
+        <!-- 전체 목록 헤더 -->
+        <div class="result-hdr">
+          <div class="result-count">조건에 맞는 호텔 38곳</div>
+          <div class="result-sub">인기순 정렬</div>
+        </div>
+        <div style="margin:0 14px;padding:8px 0;text-align:center;font-size:10px;color:#9ca3af;">▾ 전체 목록 계속 ▾</div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 주석 패널 S01-F ⓐ-2 -->
+  <div class="ann">
+    <h3>화면 주석 — S01-F (상태 ⓐ-2 AI 추천 5개 펼침)</h3>
+
+    <div class="ann-item">
+      <div class="cn">E1</div>
+      <div class="ann-body">
+        <div class="ann-title">AI 추천 5개 전체 표시 상태</div>
+        <div class="ann-desc"><ul>
+          <li>[3개 더보기 ▼] 탭 후 → 3~5번째 항목이 나타나 총 5개 전체가 화면에 보입니다.</li>
+          <li>더보기 버튼은 사라집니다. 5개 이상 추가 확장은 없습니다.</li>
+          <li>AI 추천 섹션 자체를 숨기거나 접는 기능은 없습니다. (접기 ▲ 버튼 미포함)</li>
+          <li>5개 항목 순서: 리뷰 수·평점 기준 재정렬 결과. (백엔드 처리, 전체 목록 인기순과 다름)</li>
+        </ul></div>
+        <div class="ann-rule">자연어검색 v0.5 5-2절.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── 상태 ⓑ: 구조화 폼 진입 (AI 추천영역 X) ─── -->
+<div style="margin:24px 0 8px; font-size:12px; font-weight:700; color:#374151; padding:4px 0;">
+  상태 ⓑ — 구조화 폼 [검색하기]로 진입 (AI 추천영역 미표시)
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- GNB — AI 재검색바 (ⓐ와 동일 형태) -->
+        <div class="s01-ai-gnb">
+          <button class="ai-gnb-back">← <span class="wf-cn">B1</span></button>
+          <div class="ai-gnb-bar">
+            <span style="font-size:11px;color:#6b7280;">🔍</span>
+            <span class="ai-gnb-placeholder">AI로 다시 검색하세요!</span>
+            <span class="ai-gnb-mic">🎤</span>
+          </div>
+        </div>
+
+        <!-- 조건 축약바 -->
+        <div class="res-cond-bar">
+          <span class="rc-dest">부산 <span class="wf-cn">B2</span></span>
+          <span class="rc-sep">|</span>
+          <span class="rc-date">6/18 ~ 6/19 · 성인 2명 · 1실</span>
+          <span class="rc-edit">수정 ✎</span>
+        </div>
+
+        <!-- 필터바 -->
+        <div class="filter-bar">
+          <div class="f-chip f-chip-ai">✦ AI 필터 <span class="wf-cn">AI</span></div>
+          <div class="f-chip">⚙ 전체필터 <span class="wf-cn">4</span></div>
+          <div class="f-chip">가격 ∨</div>
+          <div class="f-chip">성급 ∨</div>
+          <div class="f-chip">숙소유형 ∨</div>
+        </div>
+
+        <!-- AI 유도 배너 (폼 검색 진입 시만) -->
+        <div class="ai-form-banner">
+          <span style="font-size:14px;">✦</span>
+          <span class="aib-text">AI로 검색하면 취향에 맞게 추천받을 수 있어요 <span class="wf-cn">B3</span></span>
+          <span class="aib-link">AI 검색 →</span>
+        </div>
+
+        <!-- 전체 목록 -->
+        <div class="result-hdr">
+          <div class="result-count">조건에 맞는 호텔 38곳</div>
+          <div class="result-sub">인기순 정렬</div>
+        </div>
+        <div style="margin:0 14px; padding:12px 0; border-bottom:1px solid #f0f0f0; background:#fff; display:flex; gap:10px;">
+          <div style="width:80px; height:80px; background:#e5e7eb; border-radius:10px; flex-shrink:0;"></div>
+          <div style="flex:1; min-width:0;">
+            <div style="font-size:12px; font-weight:700; color:#111; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">파라다이스 호텔 부산</div>
+            <div style="font-size:10px; color:#6b7280; margin-top:2px;">해운대구 · ⭐ 8.9</div>
+            <div style="font-size:13px; font-weight:700; color:#111; margin-top:4px;">₩298,000</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 주석 패널 S01-F ⓑ -->
+  <div class="ann">
+    <h3>화면 주석 — S01-F (상태 ⓑ 폼 검색 진입)</h3>
+
+    <div class="ann-item">
+      <div class="cn">B1</div>
+      <div class="ann-body">
+        <div class="ann-title">GNB — AI 재검색바 (ⓐ와 동일 형태)</div>
+        <div class="ann-desc"><ul>
+          <li>폼 검색(ⓑ)으로 진입해도 GNB는 ⓐ와 동일하게 AI 재검색바 형태로 표시됩니다. (← + 입력칸 + 🎤)</li>
+          <li>입력칸 탭 → AI 재검색 입력 모드 진입. ← 탭 → M01 메인으로 이동.</li>
+        </ul></div>
+        <div class="ann-rule">자연어검색 v0.4 5-1절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">B2</div>
+      <div class="ann-body">
+        <div class="ann-title">조건 축약바 — 목적지·날짜·인원 (ⓐ와 동일)</div>
+        <div class="ann-desc"><ul>
+          <li>GNB 바로 아래: 목적지명 | 날짜 범위 · 인원 · 객실 수.</li>
+          <li>탭 시 → 재검색 슬라이드다운(S01-A) 진입. 폼 검색(ⓑ)도 동일하게 표시됩니다.</li>
+        </ul></div>
+        <div class="ann-rule">자연어검색 v0.4 5-1절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">B3</div>
+      <div class="ann-body">
+        <div class="ann-title">AI 유도 배너 — 폼 검색 진입 시만 표시</div>
+        <div class="ann-desc"><ul>
+          <li>AI 추천영역 대신, 필터바 바로 아래에 AI 검색으로 유도하는 배너가 나타납니다.</li>
+          <li>문구: "AI로 검색하면 취향에 맞게 추천받을 수 있어요"</li>
+          <li>[AI 검색 →] 탭 → 메인 화면(M01)으로 이동해 AI 검색바에 포커스가 맞춰집니다.</li>
+          <li>AI 검색(ⓐ)으로 진입한 경우에는 이 배너가 표시되지 않습니다.</li>
+        </ul></div>
+        <div class="ann-rule">자연어검색 v0.4 4-1절</div>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 <hr class="sec-divider">
 
@@ -715,7 +1297,8 @@
 <div class="sec-policy">
   <div class="sec-policy-hdr">⚙ 공통 정책 — S01-D 필터 바텀시트</div>
   <ul class="sec-policy-list">
-    <li><strong>필터 항목 5개</strong>: 가격슬라이더 / 성급 / 숙소유형 / 브랜드·체인 / 평점 7.0+. 무료취소 제외 확정 (<code>hasFreeCancellation</code> 필드 없음) (5-6-1절)</li>
+    <li><strong>정렬 + 필터 총 6섹션</strong>: 정렬(v0.4 전체필터 편입) / 가격슬라이더 / 성급 / 숙소유형 / 브랜드·체인 / 평점 7.0+. 무료취소 제외 확정 (<code>hasFreeCancellation</code> 필드 없음) (5-6-1절)</li>
+    <li><strong>정렬 편입 (v0.4)</strong>: 필터바의 [인기순 ↕] 칩이 전체필터 시트 내 정렬 섹션으로 통합. 선택지 3개: 인기순(기본) / 가격낮은순 / 평점높은순 (5-5절)</li>
     <li><strong>필터 옵션 출처</strong>: <code>responseOptions=filter</code> 포함 → KAYAK 집계 반환 (<code>chains</code>, <code>propertyTypes</code>, <code>starRatings</code>, <code>priceRanges</code>). 성급·평점은 고정 (5-6-2절)</li>
     <li><strong>가격 슬라이더 범위</strong>: min = <code>postFilterLowestTotalRate</code> 동적 / max = <code>postFilterHighestTotalRate</code> 동적. ₩5,000 단위. 1박 기준 (5-6-3절)</li>
     <li><strong>숙소유형·브랜드체인</strong>: 초기 5개 표시 → [더보기] 탭 시 나머지 전체 노출 (최대 10개, 총 최대 15개). <code>hotelCount</code> 내림차순. 0개 항목 제외 (5-6-3절)</li>
@@ -724,7 +1307,7 @@
     <li><strong>결과 0개 처리</strong>: 기존 목록 유지 + 상단 안내 배너 + [필터 초기화] 버튼 (5-6-4절)</li>
     <li><strong>활성 필터 수</strong>: ⊟ 전체 칩 배지로 표시 (예: <code>⊟ 전체 2</code>) (5-6-5절)</li>
   </ul>
-  <div class="sec-policy-rule">기준: v0.32 5-6절</div>
+  <div class="sec-policy-rule">기준: v0.42 5-6절</div>
 </div>
 
 <div class="two-col">
@@ -740,6 +1323,15 @@
               <button class="sheet-close">✕</button>
             </div>
             <div class="sheet-body">
+              <!-- ⓪ 정렬 (v0.4 편입) -->
+              <div class="filter-sec">
+                <div class="filter-sec-t">정렬 <span class="wf-cn">정렬</span></div>
+                <div class="filter-chips">
+                  <span class="fchk on">인기순</span>
+                  <span class="fchk">가격낮은순</span>
+                  <span class="fchk">평점높은순</span>
+                </div>
+              </div>
               <!-- ① 1박 가격 범위 -->
               <div class="filter-sec">
                 <div class="filter-sec-t">1박 가격 범위 <span class="wf-cn">2</span></div>
@@ -800,6 +1392,22 @@
   </div>
   <div class="ann">
     <h3>화면 주석 — S01-D</h3>
+    <div class="ann-item">
+      <div class="cn" style="font-size:9px;letter-spacing:-0.5px;">정렬</div>
+      <div class="ann-body">
+        <div class="ann-title">정렬 섹션 — 전체필터 시트 맨 위 배치 (v0.4 편입)</div>
+        <div class="ann-desc"><ul>
+          <li>v0.4 이전: 필터바의 [인기순 ↕] 칩을 탭하면 정렬 바텀시트가 별도로 열렸음 (S01-E 참조, Deprecated)</li>
+          <li>v0.4 이후: 정렬 선택지가 전체필터 시트 맨 위 섹션으로 통합됨</li>
+          <li><b>선택지 3개:</b> 인기순(기본) / 가격낮은순 / 평점높은순. 단일 선택 (라디오 방식)</li>
+          <li><b>기본값:</b> 인기순 (<code>sortField=popularity</code>)</li>
+          <li><b>API 파라미터:</b> 인기순 → <code>popularity</code> / 가격낮은순 → <code>minRate</code> / 평점높은순 → <code>consumerRating</code></li>
+          <li>정렬 선택 후 [결과 N개 보기] 탭 시 <code>sortField</code> 변경 + <code>pageIndex=0</code> 리셋 후 API 재호출</li>
+        </ul></div>
+        <div class="ann-front">← API sortField: popularity / minRate / consumerRating</div>
+        <div class="ann-rule">확정: 자연어검색 v0.4 / 정책서 v0.41 5-5절</div>
+      </div>
+    </div>
     <div class="ann-item">
       <div class="cn">1</div>
       <div class="ann-body">
@@ -1103,22 +1711,31 @@
       <div class="m-notch"><div class="m-notch-pill"></div></div>
       <div class="m-screen">
 
-        <!-- GNB (확정 디자인) -->
+        <!-- GNB — AI 재검색바 -->
         <div class="s01-gnb-d1">
           <button class="gnb-back-btn">←</button>
-          <div class="gnb-search-summary">
-            <div class="gnb-dest">서울</div>
-            <div class="gnb-cond">6/18(목) ~ 6/19(금) · 성인 2명 · 객실 1개</div>
+          <div class="ai-gnb-bar">
+            <span style="font-size:11px;color:#6b7280;">🔍</span>
+            <span class="ai-gnb-placeholder">AI로 다시 검색하세요!</span>
+            <span class="ai-gnb-mic">🎤</span>
           </div>
-          
         </div>
 
-        <!-- 필터/정렬 바 (필터 적용 상태) -->
+        <!-- 조건 축약바 -->
+        <div class="res-cond-bar">
+          <span class="rc-dest">서울</span>
+          <span class="rc-sep">|</span>
+          <span class="rc-date">6/18 ~ 6/19 · 성인 2명 · 1실</span>
+          <span class="rc-edit">수정 ✎</span>
+        </div>
+
+        <!-- 필터바 (필터 적용 상태) -->
         <div class="filter-bar">
-          <div class="f-chip active">⊟ 전체 <span class="chip-cnt">2</span></div>
-          <div class="f-chip">인기순 ↕</div>
-          <div class="f-chip active">★★★★★ <span class="wf-cn">2</span></div>
-          <div class="f-chip active">₩300,000+</div>
+          <div class="f-chip f-chip-ai">✦ AI 필터</div>
+          <div class="f-chip active">⚙ 전체필터 <span class="chip-cnt">2</span></div>
+          <div class="f-chip active">성급 ∨ <span class="wf-cn">2</span></div>
+          <div class="f-chip active">가격 ∨</div>
+          <div class="f-chip">숙소유형 ∨</div>
         </div>
 
         <!-- 안내 배너 -->
@@ -1182,16 +1799,17 @@
 
 <hr class="sec-divider">
 
-<!-- ════ S01-E 정렬 ════ -->
-<div id="s01-e" class="sec-title"><span class="sec-badge">S01-E</span>정렬 바텀시트 — [인기순 ↕] 칩 탭</div>
+<!-- ════ S01-E 정렬 (Deprecated) ════ -->
+<div id="s01-e" class="sec-title"><span class="sec-badge">S01-E</span>정렬 바텀시트 — [인기순 ↕] 칩 탭 <span class="sec-badge" style="background:#9ca3af;margin-left:6px;font-size:10px;">Deprecated</span></div>
 
-<div class="sec-policy">
-  <div class="sec-policy-hdr">⚙ 공통 정책 — S01-E 정렬 바텀시트</div>
+<div class="sec-policy" style="border-color:#e5e7eb;background:#f9fafb;">
+  <div class="sec-policy-hdr" style="color:#6b7280;">⚠ 공통 정책 — S01-E 정렬 바텀시트 (Deprecated)</div>
   <ul class="sec-policy-list">
-    <li><strong>정렬 옵션 4개</strong>: 인기순 기본(<code>popularity</code>) / 가격 낮은 순(<code>minRate</code>) / 평점 높은 순(<code>consumerRating</code>) / 거리순(<code>distance</code>, 좌표 검색 시만 유효) (5-5절)</li>
+    <li style="color:#ef4444;"><strong>⚠ v0.4 이후 Deprecated</strong>: 정렬 기능이 필터바의 [인기순 ↕] 독립 칩에서 <strong>전체필터 시트(S01-D) 내 정렬 섹션</strong>으로 편입됨. 이 케이스는 더 이상 구현하지 않는다. S01-D 주석의 [정렬] 섹션을 참조할 것.</li>
+    <li><strong>정렬 옵션 4개 (참고용)</strong>: 인기순 기본(<code>popularity</code>) / 가격 낮은 순(<code>minRate</code>) / 평점 높은 순(<code>consumerRating</code>) / 거리순(<code>distance</code>, 좌표 검색 시만 유효) (5-5절)</li>
     <li><strong>정렬 변경 시</strong>: API 재호출 + <code>pageIndex=0</code> 리셋 (5-6-5절)</li>
   </ul>
-  <div class="sec-policy-rule">기준: v0.29 5-5절</div>
+  <div class="sec-policy-rule">기준: v0.29 5-5절 (Deprecated — v0.4에서 S01-D 전체필터로 편입)</div>
 </div>
 
 <div class="two-col">
@@ -1215,13 +1833,14 @@
     </div>
   </div>
   <div class="ann">
-    <h3>화면 주석 — S01-E</h3>
-    <div class="ann-item">
-      <div class="cn">1</div>
+    <h3>화면 주석 — S01-E <span style="font-size:11px;font-weight:400;color:#9ca3af;margin-left:4px;">[Deprecated — v0.4에서 S01-D로 편입]</span></h3>
+    <div class="ann-item" style="opacity:0.6;">
+      <div class="cn" style="background:#9ca3af;">1</div>
       <div class="ann-body">
-        <div class="ann-title">정렬 기준 (단일 선택)</div>
-        <div class="ann-desc"><ul><li>단일 선택 (라디오 방식). 기본값: 인기순(<code>popularity</code>).</li><li>선택 즉시 바텀시트 자동 닫힘 + API <code>sortField</code> 변경으로 S01 결과 재호출 + 필터바 정렬 칩 텍스트 업데이트.</li><li><b>선택 옵션 및 API 값:</b></li><li>인기순 → <code>sortField=popularity</code></li><li>낮은 가격순 → <code>sortField=minRate</code></li><li>평점 높은순 → <code>sortField=consumerRating</code></li><li>거리순 → <code>sortField=distance</code> — KAYAK 서버 처리. 좌표(klatlon·kpolygon) 검색 시 유효. ⚠️ 도시(kplace) 검색 시 표시 여부 미결 — 개발 시 실 테스트 필요.</li></ul></div>
+        <div class="ann-title">정렬 기준 (단일 선택) — <span style="color:#ef4444;font-size:11px;">⚠ Deprecated: S01-D 전체필터 정렬 섹션으로 편입됨</span></div>
+        <div class="ann-desc"><ul><li><b>이 케이스는 구현하지 않는다.</b> v0.4부터 정렬 선택지가 전체필터 시트(S01-D) 맨 위 섹션으로 통합됨.</li><li>단일 선택 (라디오 방식). 기본값: 인기순(<code>popularity</code>).</li><li>선택 즉시 바텀시트 자동 닫힘 + API <code>sortField</code> 변경으로 S01 결과 재호출 + 필터바 정렬 칩 텍스트 업데이트.</li><li>인기순 → <code>sortField=popularity</code> / 낮은 가격순 → <code>sortField=minRate</code> / 평점 높은순 → <code>sortField=consumerRating</code> / 거리순 → <code>sortField=distance</code></li></ul></div>
         <div class="ann-front">← API sortField: popularity / minRate / consumerRating / distance</div>
+        <div class="ann-rule">⚠ Deprecated — 자연어검색 v0.4 이후 S01-D 전체필터로 편입. 이 섹션은 참고 기록용으로만 유지.</div>
       </div>
     </div>
   </div>

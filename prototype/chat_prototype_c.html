@@ -359,14 +359,6 @@ body.mode-d .hero-d{display:block;}
 .sf-toast{position:absolute;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(26,31,46,.92);color:#fff;font-size:11px;padding:9px 15px;border-radius:20px;white-space:nowrap;z-index:55;opacity:0;transition:opacity .3s;pointer-events:none;text-align:center;}
 .sf-toast.show{opacity:1;}
 
-/* ── 주석: 확정 논의 항목 표 ── */
-.disc-box{background:#1f2937;border:1px solid #facc15;border-radius:12px;padding:16px;margin:14px 0 6px;}
-.disc-hdr{font-size:14px;font-weight:800;color:#fbbf24;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
-.disc-table{width:100%;border-collapse:collapse;font-size:11.5px;}
-.disc-table td{padding:8px;border-top:1px solid #374151;vertical-align:top;color:#cbd5e1;line-height:1.55;}
-.disc-table tr:first-child td{border-top:none;}
-.disc-num{color:#fbbf24;font-weight:800;width:20px;}
-.disc-name{color:#fff;font-weight:700;width:96px;}
 
 @media(max-width:1240px){body{grid-template-columns:1fr;}.left,.play,.guide{justify-self:center;}.play,.guide{max-width:560px;width:100%;}.left,.play{position:static;}}
 
@@ -660,17 +652,6 @@ body.mode-d .hero-d{display:block;}
 <!-- ════════ 오른쪽: 안내(주석) 패널 ════════ -->
 <div class="guide">
   <h2>자연어 검색 챗봇 — 동작 시연본</h2>
-
-  <div class="disc-box">
-    <div class="disc-hdr">📌 확정 논의 항목</div>
-    <table class="disc-table">
-      <tr><td class="disc-num">1</td><td class="disc-name">챗봇 진입 UI 범위</td><td>메인·검색결과 <b>C안 확정</b><br><span style="color:#4ade80;">✅ 2026-06-26 대표님 논의 확정 — 숙소상세(S02) 전용 챗봇은 두지 않기로 결정.</span></td></tr>
-      <tr><td class="disc-num">2</td><td class="disc-name">AI 필터 분기 정책</td><td>결과 내 필터(성급·<b>가격</b>·편의시설·평점·브랜드) / 지역·날짜·인원·필터불가 → 챗봇 인계. <b>이 분기로 확정?</b></td></tr>
-      <tr><td class="disc-num">3</td><td class="disc-name">메인 AI 진입 — C안 vs D안</td><td><b>C안)</b> 구조화 검색폼 + 검색버튼 하단 AI 배너 (일반 검색 우선, AI는 보조)<br><b>D안)</b> [AI 검색 | 일반 검색] 탭, <b>기본 AI 검색</b> (AI 우선 노출, 쇼케이싱 강)<br><span style="color:#94a3b8;">좌측 위 탭으로 직접 비교 — 어느 쪽으로 확정할지</span></td></tr>
-      <tr><td class="disc-num">4</td><td class="disc-name">AI 추천 결과 강조</td><td>챗봇 추천 호텔을 검색결과 최상단 <b>"✦ AI 추천"</b>으로 강조 유지할지</td></tr>
-      <tr><td class="disc-num">5</td><td class="disc-name">지역 필수·되묻기 처리</td><td><b>A안)</b> 미입력 시 검색 불가 → 되묻기(2회) 후 <b>인기도시 목록 클릭 유도</b><br><b>B안)</b> 미입력 시 인기도시를 API 검색어로 자동 전송 → 유저는 랜덤 지역 결과</td></tr>
-    </table>
-  </div>
 
   <div class="sub">검색창에 키워드를 넣는 대신, <b>말하듯이 한 문장</b>으로 호텔을 찾는 AI 챗봇입니다. 아래 순서대로 직접 눌러 체험해 보세요.<br>※ 실제 서버에 연결되지 않은 시연본으로, 미리 준비한 예시 안에서 동작합니다.</div>
 
