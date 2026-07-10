@@ -261,45 +261,67 @@
 .detail-modal {
   background: #fff; border-radius: 16px; width: 100%; max-height: 92%;
   overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,.25);
+  display: flex; flex-direction: column;
 }
 .detail-modal::-webkit-scrollbar { display: none; }
-.detail-modal-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 13px 14px 11px; border-bottom: 1px solid #f0f0f0;
+
+/* 썸네일 이미지 영역 */
+.detail-thumb-wrap {
+  position: relative; width: 100%; height: 130px; flex-shrink: 0;
+  border-radius: 16px 16px 0 0; overflow: hidden;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 40%, #f5576c 70%, #f093fb 100%);
 }
-.detail-modal-title { font-size: 13px; font-weight: 800; color: #111; }
-.detail-modal-close {
-  width: 24px; height: 24px; border-radius: 50%; background: #f0f0f0;
+.detail-thumb-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,.05) 0%, rgba(0,0,0,.55) 100%);
+}
+.detail-thumb-close {
+  position: absolute; top: 10px; right: 10px; z-index: 2;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: rgba(0,0,0,.35); border: none; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  font-size: 12px; color: #374151; border: none; cursor: pointer;
+  font-size: 12px; color: #fff;
 }
-.detail-status-row {
-  display: grid; grid-template-columns: 1fr 1px 1fr; align-items: center;
-  padding: 11px 14px;
+.detail-thumb-content {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+  padding: 8px 12px 10px;
 }
-.detail-status-col { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-.detail-status-label { font-size: 10px; color: #9ca3af; font-weight: 600; letter-spacing:.3px; }
-.detail-status-divider { background: #f0f0f0; align-self: stretch; }
-.detail-status-badge {
-  display: inline-flex; align-items: center; padding: 4px 10px;
-  border-radius: 6px; font-size: 11px; font-weight: 700;
+.detail-thumb-badges { display: flex; gap: 5px; margin-bottom: 5px; }
+.detail-thumb-badge {
+  font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 12px;
 }
-.dsb-booking { background: #dbeafe; color: #2563EB; }
-.dsb-pending  { background: #fef3c7; color: #D97706; }
-.dsb-done     { background: #d1fae5; color: #059669; }
-.dsb-refund   { background: #f3f4f6; color: #9CA3AF; }
-.detail-divider { height: 1px; background: #f0f0f0; margin: 0 14px; }
-.detail-hotel-section { padding: 11px 14px; }
-.detail-hotel-name { font-size: 13px; font-weight: 800; color: #111; margin-bottom: 2px; }
-.detail-hotel-loc  { font-size: 11px; color: #9ca3af; }
+.dtb-booking { background: #dbeafe; color: #1d4ed8; }
+.dtb-pending  { background: #fef3c7; color: #b45309; }
+.dtb-done     { background: #d1fae5; color: #065f46; }
+.dtb-cancel   { background: #f3f4f6; color: #6b7280; }
+.detail-thumb-hotel-name {
+  font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 2px;
+  text-shadow: 0 1px 4px rgba(0,0,0,.5);
+}
+.detail-thumb-loc {
+  font-size: 11px; color: rgba(255,255,255,.85);
+  text-shadow: 0 1px 3px rgba(0,0,0,.4);
+}
+
+/* 날짜 행 */
 .detail-date-section {
-  padding: 10px 14px; display: grid; grid-template-columns: 1fr auto 1fr; gap: 6px; align-items: center;
+  padding: 10px 14px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid #f0f0f0;
 }
+.detail-date-inner { display: flex; align-items: center; gap: 6px; }
 .detail-date-col { display: flex; flex-direction: column; gap: 2px; }
 .detail-date-label { font-size: 10px; color: #9ca3af; font-weight: 600; }
 .detail-date-val   { font-size: 12px; font-weight: 700; color: #111; }
-.detail-date-nights { font-size: 11px; color: #9ca3af; text-align: center; }
-.detail-info-section { padding: 10px 14px; }
+.detail-date-nights { font-size: 11px; color: #9ca3af; }
+.d-day-badge {
+  background: #f97316; color: #fff; border-radius: 50%;
+  width: 34px; height: 34px; font-size: 10px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+/* 정보 행 */
+.detail-info-section { padding: 8px 14px; }
 .detail-info-row {
   display: flex; align-items: center; justify-content: space-between;
   padding: 5px 0; border-bottom: 1px solid #f8f8f6;
@@ -307,14 +329,22 @@
 .detail-info-row:last-child { border-bottom: none; }
 .detail-info-label { font-size: 10px; color: #9ca3af; }
 .detail-info-val   { font-size: 11px; font-weight: 700; color: #111; }
-.detail-info-flag  { font-size: 9px; color: #ef4444; font-weight: 600; margin-left: 3px; }
-.detail-amount-section { padding: 10px 14px 14px; background: #f8f8f6; border-radius: 0 0 16px 16px; }
-.detail-amount-row {
-  display: flex; align-items: center; justify-content: space-between; padding: 4px 0;
+
+/* 캐시백 금액 강조 행 */
+.detail-cashback-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 5px 0; border-bottom: 1px solid #f8f8f6;
 }
-.detail-amount-label { font-size: 10px; color: #9ca3af; }
-.detail-amount-val   { font-size: 12px; font-weight: 800; color: #111; }
-.detail-amount-val.earn { color: #059669; }
+.detail-cashback-label { font-size: 10px; color: #059669; font-weight: 600; }
+.detail-cashback-val   { font-size: 14px; font-weight: 800; color: #059669; }
+
+/* [숙소 보러가기] 버튼 */
+.detail-goto-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  width: calc(100% - 24px); margin: 10px 12px 14px;
+  padding: 13px; background: #111; color: #fff;
+  border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer;
+}
 
 </style>
 </head>
@@ -362,9 +392,8 @@
     <li><strong>데이터 출처</strong>: KAYAK Reporting API v2 Transaction Report (12-1절)</li>
     <li><strong>카드 표시 범위</strong>: <code>transactionType = 10 (Booking)</code> 건만 표시. Lead(TypeCode=1) 건은 제외 (10-2절)</li>
     <li><strong>여행 상태 산출</strong>: <code>bookingStartDate</code> / <code>bookingEndDate</code>와 오늘 날짜를 자사 서버에서 비교하여 투숙예정·투숙중·투숙완료 구분. KAYAK이 직접 제공하는 값 아님.</li>
-    <li><strong>적립 상태 매핑</strong>: KAYAK Transaction Report 상태값 → <code>Active</code>=적립예정 / <code>Approved</code>=적립완료 / <code>Cancelled</code>=회수 (9-4절). 실 데이터 확인(2026-07-06): Cancelled 건에서 캐시백 금액이 0으로 내려오는 경우 있음 — 금액 0이어도 취소선 표시 우선 (TransactionStatus 기준 우선 처리. cashbackType=NONE 미표시 정책과 별개)</li>
+    <li><strong>적립 상태 매핑</strong>: KAYAK Transaction Report 상태값 → <code>Active</code>=적립예정 / <code>Approved</code>=적립완료 / <code>Cancelled</code>=회수 (9-4절). Cancelled 건은 금액 행 자체 미표시 (금액 0 여부와 무관, TransactionStatus 기준 우선 처리. cashbackType=NONE 미표시 정책과 별개)</li>
     <li><strong>총 금액</strong>: <code>Approved</code> 상태 건의 <code>cashbackAmountLocalised</code> 합산 (10-2절)</li>
-    <li><strong>정렬 그룹 고정</strong>: 두 정렬 모두 투숙중 → 투숙예정 → 투숙완료 → 예약취소 순 상태 그룹 고정 후 그룹 내 날짜 정렬 적용</li>
     <li><strong>로그인 전 화면</strong>: 문구·이미지 하드코딩. API 호출 없음.</li>
   </ul>
   <div class="sec-policy-rule">기준: v0.42 9-4절·10-2절</div>
@@ -663,7 +692,7 @@
                   <div class="trip-date" style="color:#d1d5db;">06.05 ~ 06.07</div>
                 </div>
                 <div class="trip-bottom">
-                  <span class="trip-amount ta-refund">₩46,000</span>
+                  <span class="earn-badge eb-refund">회수</span>
                 </div>
               </div>
             </div>
@@ -783,10 +812,7 @@
         <div class="ann-desc"><ul>
           <li>기본값: "최신 예약순" (가장 최근에 예약한 건이 위로).</li>
           <li>탭 시 → 정렬 선택 팝업(바텀시트) 열림: <b>최신 예약순</b> / <b>체크인 임박순</b>.</li>
-          <li>두 정렬 모두 상태 그룹 고정 적용 → 투숙중 → 투숙예정 → 투숙완료 → 예약취소 순.</li>
-          <li>체크인 임박순: 투숙중·투숙예정 그룹 내에서 체크인 날짜가 빠른 것이 위. 투숙완료·취소는 날짜 최신순.</li>
         </ul></div>
-        <div class="ann-rule">정렬 그룹 우선순위 고정. 그룹 내 세부 정렬만 변경됨.</div>
       </div>
     </div>
 
@@ -812,7 +838,7 @@
           <li><b style="color:#64748B;">투숙완료</b> (회청): 오늘이 체크아웃 날짜 이후인 경우 (체크아웃 당일 +1일부터). ← 정렬 3순위</li>
           <li><b style="color:#9CA3AF;">예약취소</b> (회색): KAYAK 상태가 Cancelled인 경우. ← 정렬 4순위</li>
         </ul></div>
-        <div class="ann-front">← 자사 서버 계산: <code>clickStartDate</code> / <code>clickEndDate</code> vs 오늘 날짜. ⚠️ 개발팀 확인 필요 — 서버 or 프론트 계산 여부.</div>
+        <div class="ann-front">← 자사 서버 계산: <code>bookingStartDate</code> / <code>bookingEndDate</code> vs 오늘 날짜. ⚠️ 개발팀 확인 필요 — 서버 or 프론트 계산 여부.</div>
         <div class="ann-rule">정렬 우선순위: 투숙중(1) → 투숙예정(2) → 투숙완료(3) → 예약취소(4).</div>
       </div>
     </div>
@@ -849,11 +875,11 @@
           <li>KAYAK Transaction Report 상태값을 아래처럼 바꿔 표시한다.</li>
           <li><b style="color:#D97706;">적립예정</b> (주황): Active 상태 → 아직 체크아웃 전이거나 정산 대기 중.</li>
           <li><b style="color:#059669;">적립완료</b> (초록): Approved → KAYAK 정산 완료, 금액 확정.</li>
-          <li><b style="color:#9CA3AF;">회수</b> (회색): Cancelled → 취소로 인해 캐시백이 적립되지 않음. 금액에 취소선으로 표시.</li>
-          <li>⚠️ 실 데이터 확인(2026-07-06): Cancelled 건에서 캐시백 금액이 0원으로 내려오는 경우 있음. 금액이 0원이어도 취소선 표시를 먼저 적용 — 예약이 취소됐는지를 먼저 확인하고, 취소됐다면 금액과 관계없이 취소선 처리.</li>
+          <li><b style="color:#9CA3AF;">회수</b> (회색): Cancelled → 취소로 인해 캐시백이 적립되지 않음. <b>금액 행 미표시</b> — 금액 자리 없이 배지만 표시.</li>
+          <li>⚠️ 실 데이터 확인(2026-07-06): Cancelled 건에서 캐시백 금액이 0원으로 내려오는 경우 있음. Cancelled 건은 금액과 무관하게 금액 행 자체 숨김 — TransactionStatus=Cancelled이면 금액 없이 "회수" 배지만 표시.</li>
           <li>cashbackType=NONE 공급사 예약 건은 캐시백 내역 자체 미표시 (별도 정책 — Cancelled 건과 다름).</li>
         </ul></div>
-        <div class="ann-front">← Transaction Report 상태: <code>Active</code>=적립예정 / <code>Approved</code>=적립완료 / <code>Cancelled</code>=회수. 실 데이터 확인(2026-07-06): Cancelled 건에도 PaymentMonth 값이 있을 수 있으므로 TransactionStatus를 반드시 먼저 체크.</div>
+        <div class="ann-front">← Transaction Report 상태: <code>Active</code>=적립예정 / <code>Approved</code>=적립완료 / <code>Cancelled</code>=회수(금액 행 미표시). TransactionStatus를 먼저 체크 — Cancelled면 cashbackAmountLocalised 값 무관하게 금액 숨김.</div>
         <div class="ann-rule">정책서 9-4절. 여행 상태 배지와 분리 표시 (여행 상태: 좌상단 / 적립 상태: 우하단).</div>
       </div>
     </div>
@@ -877,10 +903,10 @@
         <div class="ann-title">캐시백 금액 (카드 우하단)</div>
         <div class="ann-desc"><ul>
           <li>KAYAK Transaction Report에서 가져온 금액. 자사에서 다시 계산하지 않는다.</li>
-          <li>상태별 색상: 적립예정(주황) / 적립완료(초록) / 회수(회색 취소선 또는 "회수" 텍스트).</li>
-          <li>예약취소 건은 금액 자리에 숫자 대신 "회수" 텍스트만 표시.</li>
+          <li>상태별 금액 표시: 적립예정(주황 금액 표시) / 적립완료(초록 금액 표시) / 회수(금액 행 미표시).</li>
+          <li>예약취소(Cancelled) 건은 캐시백 금액 행 자체를 표시하지 않는다. 카드 우하단에 "회수" 배지(eb-refund)만 표시.</li>
         </ul></div>
-        <div class="ann-front">← <code>cashbackAmountLocalised</code> (Transaction Report). 미표시 조건: ① null ② 0 ③ <code>cashbackType=NONE</code> ④ <code>cashbackAmountLocalised</code>=null. 단, Cancelled 건은 0이어도 취소선 표시 우선 (TransactionStatus 기준 우선 처리).</div>
+        <div class="ann-front">← <code>cashbackAmountLocalised</code> (Transaction Report). 미표시 조건: ① <code>cashbackType=NONE</code> ② Cancelled 건 (금액 행 전체 숨김, TransactionStatus 기준 우선 처리). cashbackAmountLocalised=null/0도 숨김.</div>
         <div class="ann-rule">정책서 9-4절·10-2절. 통화 단위는 선택 통화 기준 (<code>localisedCurrencyCode</code>). Cancelled + 금액 0 케이스는 cashbackType=NONE 미표시 정책과 별개.</div>
       </div>
     </div>
@@ -992,77 +1018,66 @@
           <div class="earn-tab earn-tab-cs"><div class="earn-tab-icon">🦚</div><span></span></div>
         </div>
 
-        <!-- ── 예약상세 모달 ── -->
+        <!-- ── 예약상세 모달 (확정 디자인 기준) ── -->
         <div class="detail-modal-overlay">
           <div class="detail-modal">
 
-            <div class="detail-modal-header">
-              <span class="detail-modal-title">예약 상세 <span class="wf-cn">M1</span></span>
-              <button class="detail-modal-close">✕</button>
-            </div>
-
-            <div class="detail-status-row">
-              <div class="detail-status-col">
-                <span class="detail-status-label">예약 상태 <span class="wf-cn">M2</span></span>
-                <span class="detail-status-badge dsb-booking">예약 확정</span>
-              </div>
-              <div class="detail-status-divider"></div>
-              <div class="detail-status-col">
-                <span class="detail-status-label">적립 상태 <span class="wf-cn">M3</span></span>
-                <span class="detail-status-badge dsb-pending">💸 적립예정</span>
+            <!-- 썸네일 이미지 영역 -->
+            <div class="detail-thumb-wrap">
+              <div class="detail-thumb-bg"></div>
+              <button class="detail-thumb-close">✕ <span class="wf-cn">M1</span></button>
+              <div class="detail-thumb-content">
+                <div class="detail-thumb-badges">
+                  <span class="detail-thumb-badge dtb-booking">투숙 예정 <span class="wf-cn">M2</span></span>
+                  <span class="detail-thumb-badge dtb-pending">적립 예정 <span class="wf-cn">M3</span></span>
+                </div>
+                <div class="detail-thumb-hotel-name">제주 신라 호텔 <span class="wf-cn">M4</span></div>
+                <div class="detail-thumb-loc">서귀포시, 제주특별자치도</div>
               </div>
             </div>
-            <div class="detail-divider"></div>
 
-            <div class="detail-hotel-section">
-              <div class="detail-hotel-name">제주도 신라 호텔 <span class="wf-cn">M4</span></div>
-              <div class="detail-hotel-loc">제주 · 대한민국</div>
-            </div>
-            <div class="detail-divider"></div>
-
+            <!-- 체크인 – 체크아웃 + D-DAY 배지 -->
             <div class="detail-date-section">
-              <div class="detail-date-col">
-                <span class="detail-date-label">체크인 <span class="wf-cn">M5</span></span>
-                <span class="detail-date-val">07.01</span>
+              <div class="detail-date-inner">
+                <div class="detail-date-col">
+                  <span class="detail-date-label">체크인 <span class="wf-cn">M5</span></span>
+                  <span class="detail-date-val">2026.12.05</span>
+                </div>
+                <div class="detail-date-nights">— 2박</div>
+                <div class="detail-date-col">
+                  <span class="detail-date-label">체크아웃</span>
+                  <span class="detail-date-val">2026.12.07</span>
+                </div>
               </div>
-              <div class="detail-date-nights">→&nbsp;2박</div>
-              <div class="detail-date-col" style="align-items:flex-end;">
-                <span class="detail-date-label">체크아웃</span>
-                <span class="detail-date-val">07.03</span>
-              </div>
+              <div class="d-day-badge">D-5 <span class="wf-cn">M6</span></div>
             </div>
-            <div class="detail-divider"></div>
 
+            <!-- 예약 정보 행 -->
             <div class="detail-info-section">
               <div class="detail-info-row">
-                <span class="detail-info-label">OTA 공급사 <span class="wf-cn">M6</span></span>
-                <span class="detail-info-val">Booking.com <span class="detail-info-flag">⚠️</span></span>
+                <span class="detail-info-label">예약일 <span class="wf-cn">M7</span></span>
+                <span class="detail-info-val">2026.06.25</span>
               </div>
               <div class="detail-info-row">
-                <span class="detail-info-label">예약 ID <span class="wf-cn">M7</span></span>
-                <span class="detail-info-val" style="font-size:10px;">BK-20260701-XXXX</span>
+                <span class="detail-info-label">예약처 <span class="wf-cn">M8</span></span>
+                <span class="detail-info-val">booking.com</span>
               </div>
               <div class="detail-info-row">
-                <span class="detail-info-label">예약일 <span class="wf-cn">M8</span></span>
-                <span class="detail-info-val">2026.06.20</span>
+                <span class="detail-info-label">상품가 <span class="wf-cn">M9</span></span>
+                <span class="detail-info-val">₩154,000</span>
+              </div>
+              <div class="detail-cashback-row">
+                <span class="detail-cashback-label">캐시백 금액 <span class="wf-cn" style="color:#9ca3af;background:#f3f4f6;">M10</span></span>
+                <span class="detail-cashback-val">₩3,000</span>
+              </div>
+              <div class="detail-info-row">
+                <span class="detail-info-label">적립예정일 <span class="wf-cn">M11</span></span>
+                <span class="detail-info-val">2026.12.12</span>
               </div>
             </div>
-            <div class="detail-divider"></div>
 
-            <div class="detail-amount-section">
-              <div class="detail-amount-row">
-                <span class="detail-amount-label">상품가 <span class="wf-cn">M9</span></span>
-                <span class="detail-amount-val">₩ 420,000</span>
-              </div>
-              <div class="detail-amount-row">
-                <span class="detail-amount-label">적립금액 <span class="wf-cn">M10</span></span>
-                <span class="detail-amount-val earn">₩ 42,000</span>
-              </div>
-              <div class="detail-amount-row">
-                <span class="detail-amount-label">정산 예정월 <span class="wf-cn">M11</span></span>
-                <span class="detail-amount-val">2026.09</span>
-              </div>
-            </div>
+            <!-- [숙소 보러가기] 버튼 -->
+            <button class="detail-goto-btn">숙소 보러가기 → <span class="wf-cn">M12</span></button>
 
           </div><!-- /detail-modal -->
         </div><!-- /detail-modal-overlay -->
@@ -1081,7 +1096,7 @@
         <div class="ann-title">모달 진입 조건 및 닫기</div>
         <div class="ann-desc"><ul>
           <li>B 화면에서 여행 카드(trip-card) 어디든 탭 → 해당 예약의 상세 모달이 화면 중앙에 나타난다.</li>
-          <li>배경 어두운 영역(딤)을 탭하거나 [✕] 버튼을 탭 → 모달이 닫히고 B 화면 목록으로 돌아온다.</li>
+          <li>배경 어두운 영역(딤)을 탭하거나 썸네일 우측 상단 [✕] 버튼을 탭 → 모달이 닫히고 B 화면 목록으로 돌아온다.</li>
           <li>데이터 출처: KAYAK Reporting API v2 — Hotel vertical (<code>/api/transactions/hotels</code>)</li>
         </ul></div>
         <div class="ann-rule">정책서 10-2절. Reporting API Hotel vertical 필드 사용.</div>
@@ -1091,60 +1106,67 @@
     <div class="ann-item">
       <div class="cn">M1</div>
       <div class="ann-body">
-        <div class="ann-title">모달 헤더 — "예약 상세" + [✕] 닫기</div>
+        <div class="ann-title">썸네일 이미지 + [✕] 닫기 버튼</div>
         <div class="ann-desc"><ul>
-          <li>모달 상단에 "예약 상세" 제목이 표시된다.</li>
-          <li>[✕] 버튼을 탭하면 모달이 닫힌다.</li>
+          <li>모달 상단에 호텔 썸네일 이미지가 풀 너비로 표시된다 (목록 카드와 동일한 이미지 소스).</li>
+          <li>[✕] 닫기 버튼이 이미지 오른쪽 위에 반투명 원형 버튼으로 겹쳐서 나타난다.</li>
+          <li>탭하면 모달이 닫히고 B 목록 화면으로 돌아온다.</li>
         </ul></div>
+        <div class="ann-rule">확정 디자인 기준. 썸네일 위 오버레이 방식.</div>
       </div>
     </div>
 
     <div class="ann-item">
       <div class="cn">M2</div>
       <div class="ann-body">
-        <div class="ann-title">예약 상태 배지 (모달 최상단 좌측)</div>
+        <div class="ann-title">예약 상태 배지 — 썸네일 이미지 위 좌측</div>
         <div class="ann-desc"><ul>
-          <li>MY02는 <code>transactionType = 10 (Booking)</code> 예약 확정 건만 표시한다. Lead 건(TypeCode=1)은 카드에 나타나지 않는다.</li>
-          <li><b style="color:#2563EB;">예약 확정</b> 배지 (파란색): 예약이 완료된 건임을 나타낸다.</li>
+          <li>썸네일 이미지 왼쪽 아래에 예약 상태 배지가 겹쳐서 나타난다.</li>
+          <li><b style="color:#6b7280;">예약취소</b> (회색, <code>dtb-cancel</code>): <code>transactionStatus = Cancelled</code>인 경우 — 투숙 날짜 계산 없이 이 배지 하나만 표시. <b>M3 적립상태 배지 미표시.</b></li>
+          <li>비취소 건 (<code>dtb-booking</code>): <b style="color:#1d4ed8;">투숙예정</b> / <b style="color:#0891B2;">투숙중</b> / <b style="color:#64748B;">투숙완료</b> — <code>bookingStartDate</code> / <code>bookingEndDate</code>와 오늘 날짜 비교로 자사에서 계산. (B 케이스 CN9 참조)</li>
         </ul></div>
-        <div class="ann-front">← <code>transactionType = 10</code> (Booking 건만 표시)</div>
-        <div class="ann-rule">정책서 10-2절.</div>
+        <div class="ann-front">← <code>transactionStatus = Cancelled</code> 우선 체크. Cancelled이면 <code>dtb-cancel</code> "예약취소" 단독. 비취소이면 bookingStartDate/bookingEndDate 기준 투숙 상태 계산</div>
+        <div class="ann-rule">취소 건은 "예약취소" 배지 하나만 (확정 2026-07-09). 정책서 10-2절.</div>
       </div>
     </div>
 
     <div class="ann-item">
       <div class="cn">M3</div>
       <div class="ann-body">
-        <div class="ann-title">적립 상태 배지 (모달 최상단 우측)</div>
+        <div class="ann-title">적립 상태 배지 — 예약 상태 배지 옆 나란히</div>
         <div class="ann-desc"><ul>
-          <li><b style="color:#D97706;">💸 적립예정</b>: <code>transactionStatus = Active</code> 상태인 경우.</li>
-          <li><b style="color:#059669;">💸 지급완료</b>: <b>자사 내부 정책 기준</b> — 체크아웃일 기준으로 n일이 지나면 지급완료로 처리한다. <code>paymentMonth</code> 필드 기준이 아님 (paymentMonth는 예약 시점에 이미 설정되므로 지급완료 판단 기준으로 사용 불가). n일 값은 미확정 — 개발 시점에 PO가 확정한 값을 사용.</li>
-          <li><b style="color:#9ca3af;">취소·만료</b>: <code>transactionStatus = Cancelled</code> 상태인 경우.</li>
+          <li>예약 상태 배지 오른쪽에 나란히 표시된다. B 케이스 목록 카드의 적립 상태 배지(CN12)와 동일한 로직.</li>
+          <li><b style="color:#b45309;">적립예정</b> (노란색): <code>transactionStatus = Active</code>인 경우.</li>
+          <li><b style="color:#065f46;">적립완료</b> (초록색): <code>transactionStatus = Approved</code> — KAYAK 정산 완료.</li>
+          <li><b style="color:#6b7280;">Cancelled 건: 이 배지 미표시.</b> M2에 "예약취소" 배지가 단독으로 표시되므로 M3는 나타나지 않는다.</li>
         </ul></div>
-        <div class="ann-front">← <code>transactionStatus</code> 값 + 자사 내부 판단 (체크아웃+n일 경과 여부)</div>
-        <div class="ann-rule">정책서 v0.42 9-4절·10-2절. 지급완료 표시는 paymentMonth 아닌 자사 내부 정책 기준(체크아웃+n일). n일은 미결 #16.</div>
+        <div class="ann-front">← <code>transactionStatus</code>. Cancelled 건은 M3 미표시. 비취소 건: Active=적립예정 / Approved=적립완료</div>
+        <div class="ann-rule">정책서 v0.42 9-4절·10-2절. 취소 건 M3 미표시 확정 2026-07-09. B 케이스 CN12 참조.</div>
       </div>
     </div>
 
     <div class="ann-item">
       <div class="cn">M4</div>
       <div class="ann-body">
-        <div class="ann-title">호텔명 + 위치</div>
+        <div class="ann-title">호텔명 + 위치 — 썸네일 이미지 위 하단</div>
         <div class="ann-desc"><ul>
-          <li>호텔명: <code>hotelName</code> (Hotel vertical 전용 필드)</li>
-          <li>위치: <code>hotelCity</code> + <code>hotelCountry</code> — "도시 · 국가" 형식 표시.</li>
+          <li>썸네일 이미지 하단에 흰색 텍스트로 겹쳐서 나타난다.</li>
+          <li>호텔명: <code>hotelName</code> (굵은 흰색 글자)</li>
+          <li>위치: <code>hotelCity</code> + <code>hotelCountry</code> — "도시, 국가" 형식으로 표시. 예: "서귀포시, 제주특별자치도"</li>
         </ul></div>
         <div class="ann-front">← <code>hotelName</code> / <code>hotelCity</code> / <code>hotelCountry</code></div>
+        <div class="ann-rule">위치 표시 형식 변경: 기존 "도시 · 국가" → "도시, 국가" (쉼표 구분). 확정 디자인 기준.</div>
       </div>
     </div>
 
     <div class="ann-item">
       <div class="cn">M5</div>
       <div class="ann-body">
-        <div class="ann-title">체크인·체크아웃 + 박수</div>
+        <div class="ann-title">체크인 · 체크아웃 날짜 + 박수</div>
         <div class="ann-desc"><ul>
-          <li>체크인: <code>bookingStartDate</code>, 체크아웃: <code>bookingEndDate</code>. MY02는 Booking 건만 표시하므로 항상 이 두 필드를 사용한다.</li>
-          <li>박수: 두 날짜 차이를 자사에서 계산하여 표시. 예: 07.01 → 07.03 = 2박.</li>
+          <li>체크인: <code>bookingStartDate</code>, 체크아웃: <code>bookingEndDate</code>.</li>
+          <li>박수: 두 날짜 차이를 자사에서 계산 후 "(N박)" 형식으로 체크아웃 옆에 표시.</li>
+          <li>표시 형식: "YYYY.MM.DD — YYYY.MM.DD (N박)"</li>
         </ul></div>
         <div class="ann-front">← <code>bookingStartDate</code> / <code>bookingEndDate</code> (Booking 전용 필드)</div>
       </div>
@@ -1153,36 +1175,40 @@
     <div class="ann-item">
       <div class="cn">M6</div>
       <div class="ann-body">
-        <div class="ann-title">OTA 공급사명 ⚠️ 개발팀 확인사항</div>
+        <div class="ann-title">D-DAY 배지 — 체크인까지 남은 일수</div>
         <div class="ann-desc"><ul>
-          <li>Booking.com·Agoda·Expedia 등 실제 예약이 이루어진 OTA 이름을 표시한다.</li>
-          <li>Reporting API는 이 값을 직접 주지 않는다. <code>siteBrandCode</code>는 "kayak"·"HotelsCombined" 등 플랫폼명이므로 공급사명이 아님.</li>
-          <li>권장 방식: 아웃링크 클릭 시점(OUT01)에 자사 DB에 <code>providerName</code>을 저장 → Reporting API <code>clickId</code>로 연결해서 불러오는 방식.</li>
+          <li>체크인/체크아웃 행 오른쪽에 주황색 원형 배지로 표시된다.</li>
+          <li>계산: 오늘 날짜 기준, 체크인까지 남은 일수. 예: 5일 남으면 "D-5".</li>
+          <li>D ≥ 1 (체크인 당일 포함 이전)일 때만 배지가 나타난다.</li>
+          <li>체크인 당일 이후 (D ≤ 0, 즉 투숙 중·완료 상태)에는 배지를 표시하지 않는다.</li>
         </ul></div>
-        <div class="ann-front">← ⚠️ 개발팀 확인 필요: 아웃링크 클릭 시점에 <code>providerName</code>을 자사 DB에 저장하는 방식 검토 요망.</div>
-        <div class="ann-rule">Reporting API에 없는 필드. 별도 저장 로직 필요.</div>
+        <div class="ann-rule">확정 디자인 신규 항목. 오늘 날짜는 클라이언트 기기 기준으로 계산.</div>
       </div>
     </div>
 
     <div class="ann-item">
       <div class="cn">M7</div>
       <div class="ann-body">
-        <div class="ann-title">예약 ID</div>
+        <div class="ann-title">예약일</div>
         <div class="ann-desc"><ul>
-          <li><code>bookingId</code> — Booking 타입(<code>transactionType=10</code>)인 건에만 값이 있다. Lead 건은 이 항목을 표시하지 않는다.</li>
+          <li>Reporting API <code>date</code> 필드 — 클릭 또는 예약이 발생한 날짜.</li>
+          <li>표시 형식: "YYYY.MM.DD"</li>
         </ul></div>
-        <div class="ann-front">← <code>bookingId</code> (Booking 타입만)</div>
+        <div class="ann-front">← <code>date</code> (Transaction 발생일)</div>
       </div>
     </div>
 
     <div class="ann-item">
       <div class="cn">M8</div>
       <div class="ann-body">
-        <div class="ann-title">예약일</div>
+        <div class="ann-title">예약처 ⚠️ 개발팀 확인사항</div>
         <div class="ann-desc"><ul>
-          <li>Reporting API <code>date</code> 필드 — 클릭 또는 예약이 발생한 날짜.</li>
+          <li>Booking.com·Agoda·Expedia 등 실제 예약이 이루어진 OTA 이름을 표시한다.</li>
+          <li>Reporting API는 이 값을 직접 제공하지 않는다. <code>siteBrandCode</code>는 "kayak"·"HotelsCombined" 등 플랫폼명이므로 공급사명이 아님.</li>
+          <li>권장 방식: 아웃링크 클릭 시점(OUT01)에 자사 DB에 <code>providerName</code>을 저장 → Reporting API <code>clickId</code>로 연결해서 불러오는 방식.</li>
         </ul></div>
-        <div class="ann-front">← <code>date</code> (Transaction 발생일)</div>
+        <div class="ann-front">← ⚠️ 개발팀 확인 필요: 아웃링크 클릭 시점에 <code>providerName</code>을 자사 DB에 저장하는 방식 검토 요망.</div>
+        <div class="ann-rule">라벨명 "예약처" (기존 "OTA 공급사"에서 변경, 확정 디자인 기준). Reporting API에 없는 필드 — 별도 저장 로직 필요.</div>
       </div>
     </div>
 
@@ -1192,6 +1218,7 @@
         <div class="ann-title">상품가</div>
         <div class="ann-desc"><ul>
           <li><code>localisedBookingValue</code> + <code>localisedCurrencyCode</code> — 사용자가 선택한 통화 기준의 상품 금액.</li>
+          <li>표시 형식: "₩N,NNN" (원화 기준)</li>
         </ul></div>
         <div class="ann-front">← <code>localisedBookingValue</code> / <code>localisedCurrencyCode</code></div>
         <div class="ann-rule">라벨명 "상품가" 확정 (20260703 대표님 확정).</div>
@@ -1201,28 +1228,44 @@
     <div class="ann-item">
       <div class="cn">M10</div>
       <div class="ann-body">
-        <div class="ann-title">적립금액</div>
+        <div class="ann-title">캐시백 금액 (초록 강조)</div>
         <div class="ann-desc"><ul>
-          <li><code>cashbackAmountLocalised</code> — 원화 환산 적립 금액. ₩ 단위로 표시. 적립률(%) 표시 없음.</li>
-          <li>표시 형식: "₩ N,NNN" (통화 기호 + 금액만. 퍼센트 표기 삭제.)</li>
+          <li><code>cashbackAmountLocalised</code> — 원화 환산 적립 금액. ₩ 단위 초록색 굵은 글자로 표시.</li>
           <li>자사에서 다시 계산하지 않고 KAYAK이 주는 값 그대로 표시한다.</li>
+          <li>라벨과 값 모두 초록색으로 강조하여 다른 항목과 구분한다.</li>
+          <li><b>Cancelled 건: 이 캐시백 금액 행 자체를 표시하지 않는다.</b> M11(적립예정일)과 함께 사라짐 — B 케이스 카드 CN14와 동일 처리.</li>
         </ul></div>
-        <div class="ann-front">← <code>cashbackAmountLocalised</code></div>
-        <div class="ann-rule">라벨명 "적립금액", ₩ 표시, 적립률 삭제 확정 (20260703 대표님 확정). 정책서 9-1절.</div>
+        <div class="ann-front">← <code>cashbackAmountLocalised</code>. 미표시 조건: Cancelled 건(TransactionStatus 기준 우선)</div>
+        <div class="ann-rule">확정 디자인 기준. 라벨명 "캐시백 금액". 정책서 9-1절.</div>
       </div>
     </div>
 
     <div class="ann-item">
       <div class="cn">M11</div>
       <div class="ann-body">
-        <div class="ann-title">정산 예정월 ⚠️ PO 확정 필요</div>
+        <div class="ann-title">적립예정일 / 적립완료 — 상태별 분기 표시</div>
         <div class="ann-desc"><ul>
-          <li><code>paymentMonth</code> = KAYAK이 <b>예약 시점에</b> 체크아웃과 동일한 월을 기준으로 미리 설정해 두는 정산 예정 월. 예: 체크아웃이 9월이면 예약 즉시 "2026.09"로 설정됨.</li>
-          <li>이 값은 자사가 고객에게 지급완료 처리하는 기준(체크아웃+n일)과 <b>별개의 개념</b>. 지급완료 판단에 사용하지 않는다.</li>
-          <li>MY02 카드에 이 항목을 표시할지 여부는 PO 확정 필요.</li>
+          <li>적립 상태에 따라 이 항목의 라벨과 값이 달라진다.</li>
+          <li><b>Active (적립예정) 상태</b>: 라벨 "적립예정일" + 날짜 값 (예: 2026.12.12). <code>bookingEndDate</code>(체크아웃일)를 기준으로 자사에서 계산한 날짜.</li>
+          <li><b>Approved (지급완료) 상태</b>: 라벨 "적립완료" + 값 없음 (또는 완료 날짜 표시 — 개발 시 확인).</li>
+          <li><b>Cancelled 상태</b>: 이 행 자체를 화면에 표시하지 않음.</li>
         </ul></div>
-        <div class="ann-front">← <code>paymentMonth</code> (예약 시점에 체크아웃 동일 월로 미리 설정. 실 테스트 2026-07-08 확인)</div>
-        <div class="ann-rule">정책서 v0.42 10-2절. 지급완료 판단 기준(체크아웃+n일)과 별개 개념. MY02 카드 표시 여부 PO 확정 필요.</div>
+        <div class="ann-front">← 상태별 분기: Active → 날짜 계산 표시 / Approved → "적립완료" / Cancelled → 미표시</div>
+        <div class="ann-rule">확정 디자인 기준 (기존 "정산 예정월" 항목에서 변경). 정책서 v0.42 10-2절.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">M12</div>
+      <div class="ann-body">
+        <div class="ann-title">[숙소 보러가기 →] 버튼 — 신규</div>
+        <div class="ann-desc"><ul>
+          <li>모달 하단에 검정 버튼이 고정 표시된다.</li>
+          <li>탭 시 해당 호텔의 숙소 상세 화면(S02)으로 이동한다. Reporting API Hotel vertical의 <code>HotelID</code> 값을 사용해 어떤 숙소인지 특정한다.</li>
+          <li>S02에서 뒤로가기 탭 → MY02 적립 화면으로 복귀 (모달은 닫힌 상태).</li>
+        </ul></div>
+        <div class="ann-front">← Reporting API Hotel vertical <code>HotelID</code> → S02 이동 키. 예: HotelID = 3345777</div>
+        <div class="ann-rule">확정 디자인 신규 항목. 이동 대상: S02 숙소 상세 화면. 뒤로가기 복귀 경로: MY02.</div>
       </div>
     </div>
 

@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>포인트 정책서 v0.1 — allmytour meta</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"Malgun Gothic","Apple SD Gothic Neo","Segoe UI",sans-serif;
+  background:#f0fdf4;color:#1e293b;min-height:100vh;
+  padding-top:44px;
+}
+
+/* ── 상단 네비 ── */
+.page-nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(5,46,22,.96);backdrop-filter:blur(8px);
+  height:44px;display:flex;align-items:center;padding:0 20px;
+  gap:16px;border-bottom:1px solid rgba(255,255,255,.08);
+}
+.page-nav a{font-size:12px;color:rgba(255,255,255,.55);text-decoration:none;}
+.page-nav a:hover{color:#fff}
+.page-nav-sep{color:rgba(255,255,255,.2)}
+.page-nav .cur{color:#6ee7b7;font-weight:700}
+
+/* ── 헤더 ── */
+.pt-header{background:linear-gradient(135deg,#052e16,#065f46);color:#fff;padding:40px 48px 32px}
+.pt-header-label{font-size:11px;font-weight:700;letter-spacing:.12em;color:#6ee7b7;margin-bottom:8px;text-transform:uppercase}
+.pt-header-title{font-size:28px;font-weight:800;letter-spacing:-.5px;margin-bottom:6px}
+.pt-header-title .pt-mark{color:#34d399}
+.pt-header-meta{font-size:13px;color:rgba(255,255,255,.45);margin-bottom:14px}
+.pt-header-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.3);
+  color:#6ee7b7;font-size:12px;font-weight:700;padding:5px 14px;border-radius:6px;
+}
+.pt-header-badge span{color:#fff;font-weight:800}
+
+/* ── 레이아웃 ── */
+.pt-body-wrap{display:flex;max-width:1280px;margin:0 auto;padding:32px 24px;gap:28px;align-items:flex-start}
+
+/* ── 목차 ── */
+.pt-toc{
+  width:240px;flex-shrink:0;position:sticky;top:58px;
+  background:#fff;border:1px solid #bbf7d0;border-radius:10px;
+  padding:16px 0;max-height:calc(100vh - 72px);overflow-y:auto;
+}
+.pt-toc-hdr{
+  font-size:10px;font-weight:700;letter-spacing:.1em;color:#6b7280;text-transform:uppercase;
+  padding:0 16px 10px;border-bottom:1px solid #d1fae5;margin-bottom:8px;
+}
+.pt-toc-art{
+  display:block;font-size:12px;font-weight:700;color:#374151;
+  padding:5px 16px;text-decoration:none;
+  transition:background .12s,color .12s;border-left:3px solid transparent;
+}
+.pt-toc-art:hover{background:#f0fdf4;color:#065f46}
+.pt-toc-art.active{background:#dcfce7;color:#065f46;border-left-color:#10b981}
+.pt-toc-sub{
+  display:block;font-size:11px;color:#6b7280;
+  padding:3px 16px 3px 26px;text-decoration:none;
+  transition:background .12s,color .12s;border-left:3px solid transparent;
+}
+.pt-toc-sub:hover{background:#f0fdf4;color:#065f46}
+.pt-toc-sub.active{color:#065f46;border-left-color:#bbf7d0}
+.pt-toc-divider{height:1px;background:#d1fae5;margin:8px 0}
+
+/* ── 본문 ── */
+.pt-content{flex:1;min-width:0}
+
+.pt-section{background:#fff;border:1px solid #bbf7d0;border-radius:12px;margin-bottom:20px;overflow:hidden}
+.pt-section-hdr{
+  background:#f0fdf4;border-bottom:1px solid #bbf7d0;
+  padding:16px 24px;display:flex;align-items:center;gap:10px;
+}
+.art-badge{
+  background:#10b981;color:#fff;font-size:10px;font-weight:700;
+  padding:3px 9px;border-radius:4px;white-space:nowrap;letter-spacing:.05em;
+}
+.pt-section-hdr h2{font-size:16px;font-weight:700;color:#064e3b;letter-spacing:-.3px}
+.pt-section-body{padding:20px 24px}
+
+.pt-sub{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid #f0fdf4}
+.pt-sub:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.pt-sub-title{font-size:14px;font-weight:700;color:#1e293b;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.pt-sub-num{font-size:11px;font-weight:700;color:#059669;background:#d1fae5;padding:2px 8px;border-radius:3px}
+
+.pt-text{font-size:13px;color:#475569;line-height:1.8}
+.pt-text p{margin-bottom:8px}
+.pt-text p:last-child{margin-bottom:0}
+.pt-text strong{color:#1e293b;font-weight:700}
+.pt-text ul{margin:6px 0 6px 18px}
+.pt-text li{margin-bottom:4px}
+.pt-text blockquote{
+  background:#f0fdf4;border-left:4px solid #10b981;
+  padding:10px 14px;border-radius:0 8px 8px 0;
+  margin:10px 0;font-size:12px;color:#374151;line-height:1.7;
+}
+
+/* ── 테이블 ── */
+.pt-table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0;overflow-x:auto;display:block}
+.pt-table th{background:#d1fae5;color:#065f46;font-weight:700;padding:8px 12px;text-align:left;border:1px solid #a7f3d0;font-size:11px;letter-spacing:.03em;white-space:nowrap}
+.pt-table td{padding:8px 12px;border:1px solid #d1fae5;color:#475569;vertical-align:top;line-height:1.6}
+.pt-table tr:nth-child(even) td{background:#f0fdf4}
+.pt-table code{background:#dcfce7;color:#065f46;padding:1px 5px;border-radius:3px;font-size:11px;font-family:monospace}
+
+/* ── 상태 흐름 박스 ── */
+.flow-box{background:#052e16;color:#a7f3d0;border-radius:10px;padding:18px 20px;font-size:12px;font-family:monospace;line-height:1.8;white-space:pre;overflow-x:auto;margin:10px 0}
+.flow-box .hl{color:#34d399;font-weight:700}
+.flow-box .note{color:#6b7280;font-style:italic}
+
+/* ── 배지 ── */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;white-space:nowrap}
+.badge-green{background:#d1fae5;color:#065f46}
+.badge-yellow{background:#fef9c3;color:#854d0e}
+.badge-gray{background:#f1f5f9;color:#64748b}
+.badge-red{background:#fee2e2;color:#991b1b}
+.badge-blue{background:#dbeafe;color:#1d4ed8}
+.badge-orange{background:#ffedd5;color:#c2410c}
+
+/* ── 변경이력 섹션 ── */
+.hist-badge{background:#e5e7eb;color:#374151;font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px}
+
+/* ── 미결 사항 강조 ── */
+.pending-item{
+  display:flex;align-items:flex-start;gap:10px;
+  background:#fefce8;border:1px solid #fde68a;border-radius:8px;
+  padding:12px 14px;margin-bottom:8px;
+}
+.pending-num{
+  background:#f59e0b;color:#fff;font-size:11px;font-weight:800;
+  padding:2px 7px;border-radius:4px;flex-shrink:0;margin-top:1px;
+}
+.pending-body{font-size:12px;color:#374151;line-height:1.6}
+.pending-body strong{color:#1e293b}
+
+/* 해결된 미결 */
+.pending-item.resolved{background:#f0fdf4;border-color:#bbf7d0}
+.pending-item.resolved .pending-num{background:#10b981}
+
+/* ── 구분선 ── */
+.pt-divider{height:1px;background:#e2e8f0;margin:6px 0}
+</style>
+</head>
+<body>
+
+<!-- ── 상단 네비 ── -->
+<nav class="page-nav">
+  <a href="index.html">← 목록으로</a>
+  <span class="page-nav-sep">|</span>
+  <span class="cur">포인트 정책서 v0.1</span>
+</nav>
+
+<!-- ── 헤더 ── -->
+<div class="pt-header">
+  <div class="pt-header-label">Policy Document · MVP 개발 범위용</div>
+  <div class="pt-header-title">포인트 <span class="pt-mark">정책서</span> v0.1</div>
+  <div class="pt-header-meta">작성일: 2026-07-10 · 작성자: 윤성균 (PO) · 연관: Phase 1 정책서 v0.43 9절</div>
+  <div class="pt-header-badge">기준 문서 <span>context/신규정책/캐시백관리/포인트_정책서_v0.1.md</span></div>
+</div>
+
+<div class="pt-body-wrap">
+
+  <!-- ── 목차 ── -->
+  <nav class="pt-toc">
+    <div class="pt-toc-hdr">목차</div>
+    <a class="pt-toc-art" href="#sec-hist">변경이력</a>
+    <a class="pt-toc-art" href="#sec-1">1절. 핵심 전제</a>
+    <a class="pt-toc-art" href="#sec-2">2절. 적립 정책</a>
+    <a class="pt-toc-sub" href="#sec-2-1">2-1. 적립 발생 조건 및 시점</a>
+    <a class="pt-toc-sub" href="#sec-2-2">2-2. 적립 금액 계산</a>
+    <a class="pt-toc-sub" href="#sec-2-3">2-3. 적립 매칭 (p= 파라미터)</a>
+    <a class="pt-toc-sub" href="#sec-2-4">2-4. 적립 상태값</a>
+    <a class="pt-toc-sub" href="#sec-2-5">2-5. Reporting API +4일 노출 정책</a>
+    <div class="pt-toc-divider"></div>
+    <a class="pt-toc-art" href="#sec-3">3절. 감소 정책</a>
+    <a class="pt-toc-sub" href="#sec-3-1">3-1. 취소 케이스 분기</a>
+    <a class="pt-toc-sub" href="#sec-3-2">3-2. 기간 소멸 배치</a>
+    <a class="pt-toc-sub" href="#sec-3-3">3-3. 선적립 회수 배치</a>
+    <a class="pt-toc-sub" href="#sec-3-4">3-4. 탈퇴 소멸</a>
+    <div class="pt-toc-divider"></div>
+    <a class="pt-toc-art" href="#sec-4">4절. DB 구조</a>
+    <a class="pt-toc-sub" href="#sec-4-1">4-1. 포인트 잔액 테이블</a>
+    <a class="pt-toc-sub" href="#sec-4-2">4-2. 포인트 내역 테이블</a>
+    <a class="pt-toc-sub" href="#sec-4-3">4-3. OTA URL 매핑 테이블</a>
+    <div class="pt-toc-divider"></div>
+    <a class="pt-toc-art" href="#sec-5">5절. MY02 화면 정책</a>
+    <a class="pt-toc-sub" href="#sec-5-1">5-1. 상단 잔액 표시</a>
+    <a class="pt-toc-sub" href="#sec-5-2">5-2. 공통 주의문구</a>
+    <a class="pt-toc-sub" href="#sec-5-3">5-3. 내역 카드 표시 항목</a>
+    <a class="pt-toc-sub" href="#sec-5-4">5-4. 빈 상태</a>
+    <div class="pt-toc-divider"></div>
+    <a class="pt-toc-art" href="#sec-6">6절. MVP 제외 항목</a>
+    <a class="pt-toc-art" href="#sec-7">7절. 미결 사항</a>
+  </nav>
+
+  <!-- ── 본문 ── -->
+  <div class="pt-content">
+
+    <!-- 변경이력 -->
+    <div id="sec-hist" class="pt-section">
+      <div class="pt-section-hdr">
+        <span class="art-badge">이력</span>
+        <h2>변경이력</h2>
+      </div>
+      <div class="pt-section-body">
+        <table class="pt-table">
+          <thead>
+            <tr><th>버전</th><th>날짜</th><th>변경 내용</th><th>결정자</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge badge-green">v0.1</span></td>
+              <td>2026-07-10</td>
+              <td>최초 작성 — MVP 포인트 적립·감소·소멸 개발 범위 정의</td>
+              <td>윤성균</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-blue">v0.1 수정</span></td>
+              <td>2026-07-10</td>
+              <td>적립 시점 변경 (KAYAK Approved 의존 → 체크아웃+7일 자사 배치 선적립). <code>booking_clawback</code> 이벤트 타입 추가. 미결 4번 해결.</td>
+              <td>윤성균</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 1절. 핵심 전제 -->
+    <div id="sec-1" class="pt-section">
+      <div class="pt-section-hdr">
+        <span class="art-badge">1절</span>
+        <h2>핵심 전제</h2>
+      </div>
+      <div class="pt-section-body">
+        <table class="pt-table">
+          <thead>
+            <tr><th>항목</th><th>확정 내용</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>포인트 명칭</td><td><strong>포인트(가칭)</strong> — 공식 명칭은 추후 확정</td></tr>
+            <tr><td>단위</td><td><strong>1KRW = 1P</strong> 고정</td></tr>
+            <tr><td>기준 통화</td><td><strong>KRW 전용</strong> — 환율 적용 없음</td></tr>
+            <tr><td>대상</td><td>한국인 타겟 MVP</td></tr>
+            <tr><td>적립 재계산</td><td>금지 — KAYAK API 반환값 그대로 사용</td></tr>
+            <tr><td>포인트 사용</td><td><strong>MVP 제외 (Phase 2)</strong> — 적립 및 소멸만 구현</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 2절. 적립 정책 -->
+    <div id="sec-2" class="pt-section">
+      <div class="pt-section-hdr">
+        <span class="art-badge">2절</span>
+        <h2>적립 정책</h2>
+      </div>
+      <div class="pt-section-body">
+
+        <div id="sec-2-1" class="pt-sub">
+          <div class="pt-sub-title"><span class="pt-sub-num">2-1</span>적립 발생 조건 및 시점</div>
+          <div class="pt-text">
+            <ul>
+              <li>KAYAK 아웃링크를 통해 타 OTA에서 예약 완료</li>
+              <li><strong>적립 시점: 체크아웃일 + 7일 (자사 배치 처리)</strong> — KAYAK 정산 완료 여부와 무관하게 자사가 먼저 지급</li>
+              <li>배치 주기: 일 1회 (매일 자정, 체크아웃일 기준 +7일 도달한 건 일괄 적립)</li>
+            </ul>
+            <blockquote>배경: KAYAK 정산 시점까지 기다리면 고객 불만이 쌓일 수 있으므로 자사 기준으로 선적립. 이후 KAYAK Cancelled 전환 시 회수 처리(3-3절 참조).</blockquote>
+          </div>
+        </div>
+
+        <div id="sec-2-2" class="pt-sub">
+          <div class="pt-sub-title"><span class="pt-sub-num">2-2</span>적립 금액 계산</div>
+          <div class="pt-text">
+            <table class="pt-table">
+              <thead><tr><th>항목</th><th>내용</th></tr></thead>
+              <tbody>
+                <tr><td>기준값</td><td>KAYAK Reporting API <code>cashbackAmountLocalised</code> (KRW 환산 완성값)</td></tr>
+                <tr><td>변환</td><td>1KRW = 1P 고정. 소수점 이하 버림</td></tr>
+                <tr><td>재계산</td><td>금지 — 자사에서 금액 재계산하지 않음</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="sec-2-3" class="pt-sub">
+          <div class="pt-sub-title"><span class="pt-sub-num">2-3</span>적립 매칭 (p= 파라미터)</div>
+          <div class="pt-text">
+            <ul>
+              <li>아웃링크 이동 시 URL에 <code>p={userTrackId}</code> 파라미터 삽입</li>
+              <li>KAYAK Reporting API <code>labels</code> 필드로 자사 예약 건 필터링</li>
+              <li>p= 값으로 유저-예약 건 매칭 처리</li>
+            </ul>
+            <blockquote>⚠️ p= 파라미터 연동이 빠지면 MY02에서 자사 예약 건을 특정할 수 없음. <strong>최우선 구현 필요</strong></blockquote>
+          </div>
+        </div>
+
+        <div id="sec-2-4" class="pt-sub">
+          <div class="pt-sub-title"><span class="pt-sub-num">2-4</span>적립 상태값</div>
+          <div class="pt-text">
+            <p>자사 포인트 상태는 <strong>자사 배치 처리 기준</strong>으로 결정한다. KAYAK TransactionStatus는 취소 감지용으로만 참조.</p>
+            <table class="pt-table" style="margin-top:10px">
+              <thead>
+                <tr><th>자사 상태</th><th>조건</th><th>MY02 배지</th><th>적립일 텍스트</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="badge badge-yellow">적립예정</span></td>
+                  <td>체크아웃+7일 미도래 (KAYAK Active)</td>
+                  <td><code>적립예정</code></td>
+                  <td>"적립예정일 YYYY.MM.DD" (= checkoutDate+7일)</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-green">지급완료</span></td>
+                  <td>체크아웃+7일 배치 처리 완료</td>
+                  <td><code>지급완료</code></td>
+                  <td>"적립완료"</td>
+                </tr>
+                <tr>
+                  <td><span class="badge badge-gray">취소·만료</span></td>
+                  <td>KAYAK <code>Cancelled</code> 전환 또는 회수 처리 완료</td>
+                  <td><code>취소·만료</code></td>
+                  <td>미표시</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="pt-text" style="margin-top:12px">
+              <p><strong>KAYAK TransactionStatus 모니터링 (별도 배치):</strong></p>
+              <ul>
+                <li>KAYAK Reporting API를 주기적으로 조회하여 <code>Cancelled</code> 전환 건 감지</li>
+                <li>자사에서 이미 선적립한 건이 Cancelled로 전환되면 → <code>booking_clawback</code> 회수 처리 (3-3절)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div id="sec-2-5" class="pt-sub">
+          <div class="pt-sub-title"><span class="pt-sub-num">2-5</span>Reporting API +4일 노출 정책</div>
+          <div class="pt-text">
+            <p style="margin-bottom:10px">KAYAK Reporting API는 예약 직후 데이터가 불규칙하게 반영되는 특성이 있음. <code>bookingDate</code> 기준으로 노출 상태를 분기한다.</p>
+
+            <p style="font-weight:700;margin-bottom:6px;color:#1e293b">[ +4일 이전 ]</p>
+            <table class="pt-table" style="margin-bottom:16px">
+              <thead><tr><th>항목</th><th>처리</th></tr></thead>
+              <tbody>
+                <tr><td>카드 노출</td><td>✅ 노출</td></tr>
+                <tr><td>호텔명·예약처(OTA)·상품가·적립금액</td><td>✅ 표시</td></tr>
+                <tr><td>체크인~체크아웃 날짜</td><td>❌ 미표시</td></tr>
+                <tr><td>D-DAY 배지</td><td>❌ 미표시</td></tr>
+                <tr><td>투숙예정 배지</td><td>❌ 미표시</td></tr>
+                <tr><td>주의문구</td><td>✅ 표시 — "예약 직후 포인트 내역은 최대 4일 이내 반영됩니다"</td></tr>
+                <tr><td>[예약사이트 이동] 버튼</td><td>✅ 표시 — siteBrandCode 기반 OTA 페이지 이동</td></tr>
+              </tbody>
+            </table>
+
+            <p style="font-weight:700;margin-bottom:6px;color:#1e293b">[ +4일 이후 ]</p>
+            <table class="pt-table">
+              <thead><tr><th>항목</th><th>처리</th></tr></thead>
+              <tbody>
+                <tr><td>카드 노출</td><td>✅ 정상 노출</td></tr>
+                <tr><td>전체 항목</td><td>✅ 정상 표시 (D-DAY, 적립예정 배지 포함)</td></tr>
+                <tr><td>주의문구</td><td>❌ 미표시</td></tr>
+                <tr><td>[예약사이트 이동] 버튼</td><td>❌ 미표시</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 3절. 감소 정책 -->
+    <div id="sec-3" class="pt-section">
+      <div class="pt-section-hdr">
+        <span class="art-badge">3절</span>
+        <h2>감소 정책</h2>
+      </div>
+      <div class="pt-section-body">
+
+        <div class="pt-text" style="margin-bottom:16px">
+          <p>MVP에서 발생하는 감소 케이스는 아래 4가지.</p>
+          <table class="pt-table" style="margin-top:10px">
+            <thead>
+              <tr><th>이벤트 타입</th><th>발생 조건</th><th>처리</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>booking_cancel</code></td>
+                <td>선적립 이전에 KAYAK <code>Cancelled</code> 전환 (체크아웃+7일 미도래)</td>
+                <td>적립 없이 카드 상태만 취소·만료로 변경</td>
+              </tr>
+              <tr>
+                <td><code>booking_clawback</code></td>
+                <td>선적립 이후 KAYAK <code>Cancelled</code> 전환 (체크아웃+7일 이후)</td>
+                <td>선적립 포인트 회수 (차감)</td>
+              </tr>
+              <tr>
+                <td><code>expiry</code></td>
+                <td>적립일 기준 +1년 경과</td>
+                <td>소멸 대상 포인트 자동 처리 (배치)</td>
+              </tr>
+              <tr>
+                <td><code>withdrawal</code></td>
+                <td>회원 탈퇴 처리 시</td>
+                <td>잔여 포인트 전액 소멸</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="sec-3-1" class="pt-sub">
+          <div class="pt-sub-title"><span class="pt-sub-num">3-1</span>취소 케이스 분기</div>
+          <div class="pt-text">
+            <table class="pt-table">
+              <thead><tr><th>취소 시점</th><th>처리 방식</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td>체크아웃+7일 <strong>이전</strong> 취소 (선적립 전)</td>
+                  <td>KAYAK Cancelled 감지 → 적립 없이 카드 상태만 취소·만료 표시. <code>booking_cancel</code></td>
+                </tr>
+                <tr>
+                  <td>체크아웃+7일 <strong>이후</strong> 취소 (선적립 후)</td>
+                  <td>KAYAK Cancelled 감지 → 선적립 포인트 회수. <code>booking_clawback</code></td>
+                </tr>
+              </tbody>
+            </table>
+            <blockquote style="margin-top:8px">MVP에서는 포인트 사용 기능이 없으므로 회수 시 잔액 부족 케이스 발생하지 않음. 회수 로직 단순 구현 가능.</blockquote>
+          </div>
+        </div>
+
+        <div id="sec-3-2" class="pt-sub">
+          <div class="pt-sub-title"><span class="pt-sub-num">3-2</span>기간 소멸 배치</div>
+          <div class="pt-text">
+            <ul>
+              <li>기준: 각 적립 건의 <code>적립일(booking_earn 처리일) + 1년</code></li>
+              <li>처리 주기: 일 1회 (매일 자정 소멸 대상 일괄 처리)</li>
+              <li>처리 내용: 소멸 대상 건을 이벤트 타입 <code>expiry</code>로 내역 기록 후 잔액 차감</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="sec-3-3" class="pt-sub">
+          <div class="pt-sub-title"><span class="pt-sub-num">3-3</span>선적립 회수 배치 (booking_clawback)</div>
+          <div class="pt-text">
+            <ul>
+              <li>KAYAK Reporting API를 주기적으로 조회하여 <code>Cancelled</code> 전환 건 감지</li>
+              <li>자사 이벤트 타입 <code>booking_clawback</code>으로 차감 내역 기록</li>
+              <li>회수 후 MY02 카드 배지: <span class="badge badge-gray">취소·만료</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="sec-3-4" class="pt-sub">
+          <div class="pt-sub-title"><span class="pt-sub-num">3-4</span>탈퇴 소멸</div>
+          <div class="pt-text">
+            <ul>
+              <li>회원 탈퇴 요청 처리 시 잔여 포인트 전액 이벤트 타입 <code>withdrawal</code>로 소멸 처리</li>
+              <li>탈퇴 완료 후 복구 불가</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 4절. DB 구조 -->
+    <div id="sec-4" class="pt-section">
+      <div class="pt-section-hdr">
+        <span class="art-badge">4절</span>
+        <h2>DB 구조 (MVP 개요)</h2>
+      </div>
+      <div class="pt-section-body">
+
+        <div id="sec-4-1" class="pt-sub">
+          <div class="pt-sub-title"><span class="pt-sub-num">4-1</span>포인트 잔액 테이블</div>
+          <div class="pt-text">
+            <table class="pt-table">
+              <thead><tr><th>컬럼</th><th>설명</th></tr></thead>
+              <tbody>
+                <tr><td><code>user_id</code></td><td>유저 식별자</td></tr>
+                <tr><td><code>balance_point</code></td><td>현재 잔액 (P)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="sec-4-2" class="pt-sub">
+          <div class="pt-sub-title"><span class="pt-sub-num">4-2</span>포인트 내역 테이블</div>
+          <div class="pt-text">
+            <table class="pt-table">
+              <thead><tr><th>컬럼</th><th>설명</th></tr></thead>
+              <tbody>
+                <tr><td><code>id</code></td><td>내역 ID</td></tr>
+                <tr><td><code>user_id</code></td><td>유저 식별자</td></tr>
+                <tr>
+                  <td><code>event_type</code></td>
+                  <td>
+                    <code>booking_earn</code> /
+                    <code>booking_cancel</code> /
+                    <code>booking_clawback</code> /
+                    <code>expiry</code> /
+                    <code>withdrawal</code>
+                  </td>
+                </tr>
+                <tr><td><code>point_delta</code></td><td>변화량 (적립: +, 감소: -)</td></tr>
+                <tr><td><code>balance_after</code></td><td>처리 후 잔액</td></tr>
+                <tr><td><code>kayak_booking_key</code></td><td>KAYAK 예약 매칭 키 (booking_earn / booking_cancel / booking_clawback 건)</td></tr>
+                <tr><td><code>checkout_date</code></td><td>체크아웃 날짜 (booking_earn 건만 — 배치 기준: checkout_date+7일)</td></tr>
+                <tr><td><code>created_at</code></td><td>처리 일시</td></tr>
+                <tr><td><code>expire_at</code></td><td>소멸 예정일 (booking_earn 건만 — 적립 처리일+1년)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="sec-4-3" class="pt-sub">
+          <div class="pt-sub-title"><span class="pt-sub-num">4-3</span>OTA URL 매핑 테이블</div>
+          <div class="pt-text">
+            <table class="pt-table">
+              <thead><tr><th>컬럼</th><th>설명</th></tr></thead>
+              <tbody>
+                <tr><td><code>site_brand_code</code></td><td>KAYAK siteBrandCode 값 (예: booking, agoda, expedia)</td></tr>
+                <tr><td><code>ota_url</code></td><td>해당 OTA 이동 URL (홈 or 마이예약 페이지)</td></tr>
+              </tbody>
+            </table>
+            <blockquote style="margin-top:8px">미결: OTA 이동 버튼 목적지 수준 — 사이트 홈 vs 개별 예약 상세 URL. 개발팀 확인 필요. (7절 미결 1번)</blockquote>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 5절. MY02 화면 정책 -->
+    <div id="sec-5" class="pt-section">
+      <div class="pt-section-hdr">
+        <span class="art-badge">5절</span>
+        <h2>MY02 화면 정책 (포인트 내역 화면)</h2>
+      </div>
+      <div class="pt-section-body">
+
+        <div id="sec-5-1" class="pt-sub">
+          <div class="pt-sub-title"><span class="pt-sub-num">5-1</span>상단 잔액 표시</div>
+          <div class="pt-text">
+            <ul>
+              <li>표시 기준: 자사 이벤트 타입 <code>booking_earn</code> 처리 완료 건의 누적 합계 (회수·소멸 차감 후 잔액)</li>
+              <li>표시 형식: <strong>총 N P</strong></li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="sec-5-2" class="pt-sub">
+          <div class="pt-sub-title"><span class="pt-sub-num">5-2</span>공통 주의문구</div>
+          <div class="pt-text">
+            <ul>
+              <li>위치: "나의 여행" 타이틀 하단 고정</li>
+              <li>문구: "예약 직후 포인트 내역은 최대 4일 이내 반영됩니다"</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="sec-5-3" class="pt-sub">
+          <div class="pt-sub-title"><span class="pt-sub-num">5-3</span>내역 카드 표시 항목</div>
+          <div class="pt-text">
+
+            <p style="font-weight:700;margin-bottom:8px;color:#1e293b">[ 카드 목록 — +4일 이전 ]</p>
+            <ul style="margin-bottom:14px">
+              <li>호텔명 / 예약처(OTA) / 예약일 / 상품가 / 적립금액</li>
+              <li>주의문구 (섹션 하단 고정)</li>
+              <li>[예약사이트 이동] 버튼 (siteBrandCode → OTA URL) — 금액 하단</li>
+            </ul>
+
+            <p style="font-weight:700;margin-bottom:8px;color:#1e293b">[ 카드 목록 — +4일 이후 ]</p>
+            <ul style="margin-bottom:14px">
+              <li>호텔명 / 예약처(OTA) / 예약일 / 상품가 / 적립금액</li>
+              <li>체크인~체크아웃 날짜</li>
+              <li>D-DAY 배지 (D≥1 표시, D≤0 미표시)</li>
+              <li>상태 배지: <span class="badge badge-yellow">적립예정</span> / <span class="badge badge-green">지급완료</span> / <span class="badge badge-gray">취소·만료</span></li>
+            </ul>
+
+            <p style="font-weight:700;margin-bottom:8px;color:#1e293b">[ 상세 모달 — 적립일 상태별 분기 ]</p>
+            <table class="pt-table">
+              <thead><tr><th>상태</th><th>표시 텍스트</th></tr></thead>
+              <tbody>
+                <tr><td><span class="badge badge-yellow">적립예정</span> (체크아웃+7일 미도래)</td><td>"적립예정일 YYYY.MM.DD" (= checkoutDate + 7일)</td></tr>
+                <tr><td><span class="badge badge-green">지급완료</span> (체크아웃+7일 배치 완료)</td><td>"적립완료"</td></tr>
+                <tr><td><span class="badge badge-gray">취소·만료</span></td><td>미표시</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="sec-5-4" class="pt-sub">
+          <div class="pt-sub-title"><span class="pt-sub-num">5-4</span>빈 상태</div>
+          <div class="pt-text">
+            <blockquote>"아직 적립된 포인트가 없어요. 호텔을 예약하고 첫 포인트를 받아보세요!"</blockquote>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 6절. MVP 제외 항목 -->
+    <div id="sec-6" class="pt-section">
+      <div class="pt-section-hdr">
+        <span class="art-badge">6절</span>
+        <h2>MVP 제외 항목 (Phase 2)</h2>
+      </div>
+      <div class="pt-section-body">
+        <div class="pt-text">
+          <table class="pt-table">
+            <thead><tr><th>항목</th><th>비고</th></tr></thead>
+            <tbody>
+              <tr><td>포인트 사용 (결제 연동)</td><td>Phase 2</td></tr>
+              <tr><td>기초/기말 정산</td><td>회계 정산 목적 — Phase 2</td></tr>
+              <tr><td>환율 적용</td><td>글로벌 확장 시</td></tr>
+              <tr><td>소멸 전 알림 푸시</td><td>Phase 2</td></tr>
+              <tr><td>어썸멤버십 포인트 마이그레이션</td><td>Phase 2</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7절. 미결 사항 -->
+    <div id="sec-7" class="pt-section">
+      <div class="pt-section-hdr">
+        <span class="art-badge">7절</span>
+        <h2>미결 사항</h2>
+      </div>
+      <div class="pt-section-body">
+
+        <div class="pending-item">
+          <div class="pending-num">#1</div>
+          <div class="pending-body">
+            <strong>OTA 이동 버튼 목적지</strong><br>
+            사이트 홈 vs 개별 예약 상세 URL — 개발팀 확인 필요
+          </div>
+        </div>
+
+        <div class="pending-item">
+          <div class="pending-num">#2</div>
+          <div class="pending-body">
+            <strong>+4일 분기 처리 위치</strong><br>
+            프론트(bookingDate 계산) vs 백엔드(API 응답 플래그 포함) — 개발팀 결정
+          </div>
+        </div>
+
+        <div class="pending-item">
+          <div class="pending-num">#3</div>
+          <div class="pending-body">
+            <strong>포인트 공식 명칭</strong><br>
+            현재 "포인트(가칭)" — 대표님 확정 후 전면 반영
+          </div>
+        </div>
+
+        <div class="pending-item resolved">
+          <div class="pending-num">#4</div>
+          <div class="pending-body">
+            <strong><span style="text-decoration:line-through;color:#9ca3af">포인트 지급 기준일</span></strong> ✅ 해결<br>
+            <strong>체크아웃+7일 자사 배치 선적립</strong>으로 확정 (2026-07-10)
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /pt-content -->
+</div><!-- /pt-body-wrap -->
+
+</body>
+</html>
