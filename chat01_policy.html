@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI 자연어 검색 정책서 v0.6 — allmytour meta</title>
+<title>AI 자연어 검색 정책서 v0.7 — allmytour meta</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{
@@ -166,10 +166,10 @@ body{
 <header class="chat-header">
   <div class="chat-header-label">Policy Document — AI Natural Language Search</div>
   <div class="chat-header-title"><span class="ai-mark">✦</span> AI 자연어 검색 정책서</div>
-  <div class="chat-header-meta">자연어검색 정책서 v0.6 · 2026-07-13 업데이트 · 윤성균 PO</div>
+  <div class="chat-header-meta">자연어검색 정책서 v0.7 · 2026-07-14 업데이트 · 윤성균 PO</div>
   <div class="chat-header-badge">
-    최신 버전 <span>v0.6</span>
-    &nbsp;·&nbsp; 기준 파일: 자연어검색_정책서_v0.6.md
+    최신 버전 <span>v0.7</span>
+    &nbsp;·&nbsp; 기준 파일: 자연어검색_정책서_v0.7.md
   </div>
 </header>
 
@@ -283,7 +283,8 @@ body{
             <tr><td>v0.3</td><td>2026-07-02</td><td>E안 전면 개정 — 채팅창 폐지, 입력→바로 결과, 2분할 결과페이지, AI 추천영역 스트링 구조, 인기도시 랜덤, 폼 검색 시 추천영역 미노출</td><td>윤성균 PO</td></tr>
             <tr><td>v0.4</td><td>2026-07-07</td><td>대표 논의 반영 — ① 메인 '예시 힌트' 삭제, 추천질문 4개 고정·20개 풀에서 랜덤 ② 필터바 재구성 ([⚙ 전체필터] 상단 제거→필터바 이동, [✦ AI 필터] 강조 3/5폭, 정렬→전체필터 편입) ③ AI 추천 재정렬 확정 (리뷰·평점 기반, 백엔드) ④ 결과 후속 추천검색어 노출 제외</td><td>윤성균 PO</td></tr>
             <tr><td>v0.5</td><td>2026-07-08</td><td>AI 추천영역 접기/펼치기 정책 확정 — 섹션 자체 접기 없음, 기본 2개 노출 + [추천 3곳 더 보기 ▼] 탭 시 5개 전체 표시 (5-2절)</td><td>윤성균 PO</td></tr>
-            <tr class="hist-new"><td>v0.6</td><td>2026-07-13</td><td>AI 개발 미팅 반영 — ① AI 추천영역 노출 조건 변경: ⓐ 전용 → ⓐ+ⓑ 모두 표시 (ⓑ는 고정 요약문 "후기·평점 좋은 호텔을 골라봤어요") ② 추천 정렬 처리 위치 변경: 백엔드 → 클라이언트(guestRating+numberOfReviews 점수화) ③ 필터 변경 시 AI 추천영역 함께 갱신 (pageSize=200 재호출) 신설 ④ LLM: Claude API (Anthropic) 확정 ⑤ 지역 미입력 시 1순위 AI 문맥 분석 추천 → 실패 시 2순위 인기도시 랜덤 폴백 (5-2절 · 8-2절)</td><td>윤성균 PO</td></tr>
+            <tr><td>v0.6</td><td>2026-07-13</td><td>AI 개발 미팅 반영 — ① AI 추천영역 노출 조건 변경: ⓐ 전용 → ⓐ+ⓑ 모두 표시 (ⓑ는 고정 요약문 "후기·평점 좋은 호텔을 골라봤어요") ② 추천 정렬 처리 위치 변경: 백엔드 → 클라이언트(guestRating+numberOfReviews 점수화) ③ 필터 변경 시 AI 추천영역 함께 갱신 (pageSize=200 재호출) 신설 ④ LLM: Claude API (Anthropic) 확정 ⑤ 지역 미입력 시 1순위 AI 문맥 분석 추천 → 실패 시 2순위 인기도시 랜덤 폴백 (5-2절 · 8-2절)</td><td>윤성균 PO</td></tr>
+            <tr class="hist-new"><td>v0.7</td><td>2026-07-14</td><td>화면기획서(대화창2) 인계 반영 — 4-1절 수정: AI 검색바 플레이스홀더 확정 "어디 호텔을 찾으세요." (기존 "AI로 검색하세요!" 변경)</td><td>윤성균 PO</td></tr>
           </tbody>
         </table>
       </div>
@@ -429,7 +430,7 @@ body{
           <table class="chat-table">
             <thead><tr><th>요소</th><th>정책</th></tr></thead>
             <tbody>
-              <tr><td><strong>AI 검색바</strong></td><td>상단 강조. 플레이스홀더 "AI로 검색하세요!" + <strong>🎤 음성 버튼 노출</strong> (STT 동작은 Phase 2, MVP는 탭 시 안내/비활성)</td></tr>
+              <tr><td><strong>AI 검색바</strong></td><td>상단 강조. 플레이스홀더 <strong>"어디 호텔을 찾으세요."</strong> <span class="badge badge-green">v0.7 확정</span> + <strong>🎤 음성 버튼 노출</strong> (STT 동작은 Phase 2, MVP는 탭 시 안내/비활성)</td></tr>
               <tr><td><strong>추천질문 칩</strong></td><td>AI 검색바 하단에 <strong>4개 노출</strong>. 20개 풀에서 새로고침마다 랜덤 4개 (7-1절). 칩 탭 → 바로 AI 검색</td></tr>
               <tr><td>'예시(✦ 예)…)' 힌트</td><td><strong>삭제</strong> (v0.4) — 추천질문 칩이 예시 역할을 대체</td></tr>
               <tr><td>구조화 폼</td><td>목적지 · 날짜 · 인원 (일반 검색용)</td></tr>
@@ -851,7 +852,7 @@ body{
 </div><!-- /chat-body-wrap -->
 
 <footer style="text-align:center;padding:24px;font-size:11px;color:#94a3b8;">
-  자연어 검색 정책서 v0.6 · 2026-07-13 · allmytour meta
+  자연어 검색 정책서 v0.7 · 2026-07-14 · allmytour meta
 </footer>
 
 <script>
