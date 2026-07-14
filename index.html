@@ -231,6 +231,11 @@ a{text-decoration:none;color:inherit}
         PC 래핑
         <span class="idx-toc-count">1</span>
       </a>
+      <a class="idx-toc-item" href="#group-etc" data-color="#6b7280">
+        <span class="idx-toc-dot" style="background:#6b7280"></span>
+        기타 페이지
+        <span class="idx-toc-count">1</span>
+      </a>
 
       <div class="idx-toc-divider"></div>
 
@@ -313,15 +318,15 @@ a{text-decoration:none;color:inherit}
           </a>
 
           <a class="screen-card card-chat" href="chat01_policy.html">
-            <div class="sc-num">POLICY-CHAT <span class="sc-date">최종수정 : 07.08</span></div>
+            <div class="sc-num">POLICY-CHAT <span class="sc-date">최종수정 : 07.14</span></div>
             <div class="sc-name">AI 자연어 검색 정책서</div>
             <div class="sc-route">chat01_policy.html</div>
-            <div class="sc-desc">자연어검색 정책서 v0.5 전문 · E안 확정(채팅창 폐지·2분할 결과) · LLM 파이프라인 · AI 추천영역(기본2개+더보기3) · 필터바 재구성 · 20개 풀 랜덤 추천질문 · 인기도시 랜덤 · AI 필터</div>
+            <div class="sc-desc">자연어검색 정책서 v0.6 전문 · E안 확정(채팅창 폐지·2분할 결과) · ⓐ+ⓑ 모두 AI 추천영역 표시 · 클라이언트 점수화(guestRating+numberOfReviews) · 필터 연동 갱신 · Claude API 확정 · 지역미입력 2단계 폴백</div>
             <div class="sc-cases">
               <span class="sc-case-chip">E안 확정</span>
               <span class="sc-case-chip">2분할 결과페이지</span>
-              <span class="sc-case-chip">AI 추천영역</span>
-              <span class="sc-case-chip">LLM → KAYAK</span>
+              <span class="sc-case-chip">AI 추천영역 ⓐ+ⓑ</span>
+              <span class="sc-case-chip">Claude API 확정</span>
               <span class="sc-case-chip">AI 필터</span>
             </div>
             <div class="sc-arrow">→</div>
@@ -353,7 +358,7 @@ a{text-decoration:none;color:inherit}
         <div class="screen-grid group-search">
 
           <a class="screen-card" href="m01_main_d1.html" style="border-left:3px solid #10b981;">
-            <div class="sc-num">M01 <span style="background:#dcfce7;color:#166534;padding:1px 7px;border-radius:6px;font-size:10px;font-weight:700;margin-left:6px;">디자인확정</span> <span class="sc-date">최종수정 : 07.08</span></div>
+            <div class="sc-num">M01 <span style="background:#dcfce7;color:#166534;padding:1px 7px;border-radius:6px;font-size:10px;font-weight:700;margin-left:6px;">디자인확정</span> <span class="sc-date">최종수정 : 07.14</span></div>
             <div class="sc-name">메인 (디자인확정)</div>
             <div class="sc-route">m01_main_d1.html</div>
             <div class="sc-desc">파란 배경 GNB · 좌측[로그인]/우측[캐시백] · AI 검색바 · 검색폼 · 하단 탭바 3탭(검색/적립/공작새)</div>
@@ -381,10 +386,10 @@ a{text-decoration:none;color:inherit}
           </a>
 
           <a class="screen-card" href="s01_search_d1.html" style="border-left:3px solid #10b981;">
-            <div class="sc-num">S01 <span style="background:#dcfce7;color:#166534;padding:1px 7px;border-radius:6px;font-size:10px;font-weight:700;margin-left:6px;">디자인확정</span> <span class="sc-date">최종수정 : 07.10</span></div>
+            <div class="sc-num">S01 <span style="background:#dcfce7;color:#166534;padding:1px 7px;border-radius:6px;font-size:10px;font-weight:700;margin-left:6px;">디자인확정</span> <span class="sc-date">최종수정 : 07.14</span></div>
             <div class="sc-name">검색결과 목록 (디자인확정)</div>
             <div class="sc-route">s01_search_d1.html</div>
-            <div class="sc-desc">← GNB(일반)/AI 재검색바 · [✦ AI 필터] 강조 칩 + [⚙ 전체필터(정렬 편입)] + 개별 필터(가격·성급·숙소유형) · flat 리스트형 카드 · AI 검색결과 2분할 · AI 필터 바텀시트(S01-AI-Filter) 신규</div>
+            <div class="sc-desc">← GNB(일반)/AI 재검색바 · [✦ AI 필터] 강조 칩 + [⚙ 전체필터(정렬 편입)] + 개별 필터(가격·성급·숙소유형) · flat 리스트형 카드 · AI 검색결과 2분할 · AI 필터 바텀시트 / S01-zero(초기검색 0건) · S01-D-zero(필터결과 0건) 케이스 추가</div>
             <div class="sc-cases">
               <span class="sc-case-chip">S01_D1 메인</span>
               <span class="sc-case-chip">S01-A 재검색</span>
@@ -394,6 +399,8 @@ a{text-decoration:none;color:inherit}
               <span class="sc-case-chip">S01-F ⓐ-2 AI추천 5개</span>
               <span class="sc-case-chip">S01-F ⓑ 폼검색</span>
               <span class="sc-case-chip" style="background:#ede9fe;color:#6d28d9;border-color:#a78bfa;">AI-Filter ✦</span>
+              <span class="sc-case-chip" style="background:#fef3c7;color:#92400e;border-color:#f59e0b;">S01-zero 검색결과없음 ⚠</span>
+              <span class="sc-case-chip">S01-D-zero 필터결과없음</span>
             </div>
             <div class="sc-arrow">→</div>
           </a>
@@ -428,13 +435,14 @@ a{text-decoration:none;color:inherit}
           </a>
 
           <a class="screen-card" href="s02_hotel_detail_d1.html" style="border-left:3px solid #10b981;">
-            <div class="sc-num">S02 <span style="background:#dcfce7;color:#166534;padding:1px 7px;border-radius:6px;font-size:10px;font-weight:700;margin-left:6px;">디자인확정</span> <span class="sc-date">최종수정 : 07.03</span></div>
+            <div class="sc-num">S02 <span style="background:#dcfce7;color:#166534;padding:1px 7px;border-radius:6px;font-size:10px;font-weight:700;margin-left:6px;">디자인확정</span> <span class="sc-date">최종수정 : 07.14</span></div>
             <div class="sc-name">숙소상세 (디자인확정)</div>
             <div class="sc-route">s02_hotel_detail_d1.html</div>
-            <div class="sc-desc">이미지 오버레이 GNB(←+⬆) · 날짜바 탭→재검색 슬라이드다운 · row형 공급사 목록 · 최저가 배지 · 원화 캐시백 예상금액 표시 · 20개+더보기</div>
+            <div class="sc-desc">이미지 오버레이 GNB(←+⬆) · 날짜바 탭→재검색 슬라이드다운 · row형 공급사 목록 · 최저가 배지 · 원화 캐시백 예상금액 표시 · 20개+더보기 / D1-zero(공급사없음) 케이스 추가</div>
             <div class="sc-cases">
               <span class="sc-case-chip">S02_D1 메인</span>
               <span class="sc-case-chip">D1-A 날짜재검색</span>
+              <span class="sc-case-chip" style="background:#fef3c7;color:#92400e;border-color:#f59e0b;">D1-zero 공급사없음 ⚠</span>
               <span class="sc-case-chip">C 갤러리</span>
               <span class="sc-case-chip">B4~B8 정보섹션</span>
               <span class="sc-case-chip">G TTL만료</span>
@@ -645,6 +653,29 @@ a{text-decoration:none;color:inherit}
         </div>
       </div>
 
+      <!-- ═══ 기타 페이지 ═══ -->
+      <div id="group-etc" class="group">
+        <div class="group-title">
+          <span class="group-title-dot" style="background:#6b7280"></span>
+          기타 페이지 — Utility Pages
+        </div>
+        <div class="screen-grid" style="--card-border:#6b7280">
+
+          <a class="screen-card" href="error.html" style="border-left:3px solid #6b7280;">
+            <div class="sc-num" style="color:#9ca3af;">ERR <span class="sc-date">최종수정 : 07.14</span></div>
+            <div class="sc-name">오류 페이지</div>
+            <div class="sc-route">error.html</div>
+            <div class="sc-desc">404 / 일반 오류 2케이스 · 로고만 GNB · 탭바 없음 · [홈으로] 단일 버튼</div>
+            <div class="sc-cases">
+              <span class="sc-case-chip" style="background:rgba(107,114,128,.12);color:#9ca3af;">ERR-A — 404 페이지없음</span>
+              <span class="sc-case-chip" style="background:rgba(107,114,128,.12);color:#9ca3af;">ERR-B — 일반오류</span>
+            </div>
+            <div class="sc-arrow">→</div>
+          </a>
+
+        </div>
+      </div>
+
       <!-- ═══ AI 챗봇 검색 ═══ -->
       <div id="group-chat" class="group" style="display:none">
         <div class="group-title">
@@ -691,7 +722,7 @@ a{text-decoration:none;color:inherit}
   </div><!-- /cover-body -->
 
   <div class="footer">
-    allmy meta. 신규 메타서치 화면기획서 · 정책서 v0.43 기준 · 2026-07-13 · 대화창 2 산출물<br>
+    allmy meta. 신규 메타서치 화면기획서 · 정책서 v0.43 기준 · 2026-07-14 · 대화창 2 산출물<br>
     와이어프레임은 레이아웃·기능·정책 기준이며, 실제 비주얼 디자인은 별도 진행합니다.<br>
     경로: context/신규정책/new_wireframe/
   </div>

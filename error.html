@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ERR — 오류 페이지 | allmy meta 화면기획서</title>
+<link rel="stylesheet" href="./wf-styles.css">
+<style>
+.two-col { grid-template-columns: 480px 1fr; gap: 28px; }
+
+/* ── 모바일 프레임 ── */
+.mobile-wrap {
+  display: flex; justify-content: center; align-items: flex-start;
+  padding: 20px 16px; background: #2a2a2a; border-radius: 8px; min-height: 520px;
+}
+.mobile-device {
+  width: 375px; background: #1a1f2e; border-radius: 44px; padding: 10px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 20px 50px rgba(0,0,0,.5);
+}
+.m-notch { height: 22px; background: #111; border-radius: 11px 11px 0 0; display: flex; align-items: center; justify-content: center; }
+.m-notch-pill { width: 68px; height: 13px; background: #111; border-radius: 7px; }
+.m-screen {
+  background: #fff; height: 640px; overflow: hidden;
+  border-radius: 0 0 6px 6px; font-size: 13px; position: relative;
+  display: flex; flex-direction: column;
+}
+
+/* ── 에러 페이지 GNB ── */
+.err-gnb {
+  flex-shrink: 0; height: 48px; display: flex; align-items: center;
+  justify-content: space-between; padding: 0 14px;
+  border-bottom: 1px solid #f0f0f0; background: #fff;
+}
+.err-gnb-spc { width: 32px; } /* 좌측 더미 — 로고 중앙 정렬용 */
+.err-gnb-logo {
+  font-size: 14px; font-weight: 900; color: #1a1f2e; letter-spacing: -.3px;
+}
+.err-gnb-logo em { color: #4f46e5; font-style: normal; }
+.err-gnb-back {
+  position: relative;
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  background: none; border: 1px solid #e5e7eb; border-radius: 8px;
+  font-size: 16px; color: #374151; cursor: pointer;
+}
+
+/* ── 에러 콘텐츠 영역 ── */
+.err-body {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 0 32px; text-align: center;
+}
+.err-code {
+  font-size: 80px; font-weight: 900; color: #f1f0ff;
+  line-height: 1; letter-spacing: -4px; margin-bottom: -8px;
+  font-variant-numeric: tabular-nums;
+}
+.err-icon { font-size: 40px; margin-bottom: 16px; }
+.err-title {
+  font-size: 17px; font-weight: 800; color: #1a1f2e;
+  line-height: 1.4; margin-bottom: 10px;
+}
+.err-desc {
+  font-size: 12px; color: #6b7280; line-height: 1.8;
+}
+</style>
+</head>
+<body>
+
+<!-- 상단 네비 -->
+<nav class="page-nav">
+  <a href="index.html" class="page-nav-back">← 목차</a>
+  <span class="page-nav-title">ERR — 오류 페이지</span>
+  <span class="page-nav-route">
+    <span class="page-nav-sep">›</span> error.html
+    <span class="page-nav-sep">·</span> 정책서 v0.43 기준
+  </span>
+  <div class="page-nav-nav">
+    <a href="my05_withdrawal.html" class="page-nav-pager">← 이전</a>
+    <a href="index.html" class="page-nav-pager">목차 →</a>
+  </div>
+</nav>
+
+<nav class="toc">
+  <div class="toc-inner">
+    <span class="toc-label">ERR</span>
+    <a class="toc-link" href="#err-a">ERR-A. 404 페이지없음</a>
+    <span class="toc-sep"></span>
+    <a class="toc-link" href="#err-b">ERR-B. 일반 오류</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<hr class="sec-divider" style="margin-top:0">
+
+<!-- ════ ERR-A : 404 ════ -->
+<div id="err-a" class="sec-title">
+  <span class="sec-badge">ERR-A</span>404 — 페이지를 찾을 수 없음
+</div>
+<div class="sec-sub">
+  존재하지 않는 URL 접근, 삭제된 페이지, 오타 입력 등으로 해당 경로를 찾을 수 없을 때 표시.<br>
+  GNB: [←](뒤로가기, 좌측) + 로고(중앙). 탭바 없음. [홈으로] 버튼 없음.
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — ERR-A 404</div>
+  <ul class="sec-policy-list">
+    <li><strong>노출 조건</strong>: 라우터에서 매칭 경로 없음 (404 Not Found)</li>
+    <li><strong>GNB</strong>: 뒤로가기 버튼(좌측) + 로고(중앙). 로그인·메뉴 버튼 없음</li>
+    <li><strong>뒤로가기 버튼 동작</strong>: <code>history.length &gt; 1</code> → 직전 페이지 이동 / 이전 페이지 없음 → M01 메인으로 이동 (직접 URL 입력·외부 링크 진입 시)</li>
+    <li><strong>탭바</strong>: 미표시</li>
+    <li><strong>[홈으로] 버튼</strong>: 미사용 (삭제). 사용자가 직접 판단해 뒤로가기로 복귀</li>
+    <li><strong>에러 코드 표기</strong>: 장식용 대형 텍스트 "404" 배경에 연하게 표시</li>
+  </ul>
+  <div class="sec-policy-rule">⚠ 정책 미결 — 에러 페이지 라우팅 처리 방식 개발 확인 필요</div>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- GNB: 로고(중앙) + 뒤로가기(우측) -->
+        <div class="err-gnb">
+          <div style="position:relative;">
+            <button class="err-gnb-back">←</button>
+            <span class="wf-cn" style="position:absolute;top:-5px;right:-5px;">2</span>
+          </div>
+          <div class="err-gnb-logo">allmy<em>meta</em> <span class="wf-cn">1</span></div>
+          <div class="err-gnb-spc"></div>
+        </div>
+
+        <!-- 에러 콘텐츠 -->
+        <div class="err-body">
+          <div class="err-code">404</div>
+          <div class="err-icon">🔍</div>
+          <div class="err-title">페이지를 찾을 수 없어요 <span class="wf-cn">3</span></div>
+          <div class="err-desc">
+            입력한 주소가 바뀌었거나<br>
+            삭제된 페이지예요. <span class="wf-cn">4</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <h3>화면 주석 — ERR-A (404 오류)</h3>
+
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">GNB — 로고 (가운데)</div>
+        <div class="ann-desc"><ul>
+          <li>로고는 GNB 가운데에 표시됩니다.</li>
+          <li>로고 탭 시 → M01 메인으로 이동합니다.</li>
+        </ul></div>
+        <div class="ann-rule">탭 시 M01(메인)으로 이동.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">GNB — 뒤로가기 버튼 (좌측)</div>
+        <div class="ann-desc"><ul>
+          <li>GNB 오른쪽에 [←] 버튼을 표시합니다.</li>
+          <li><strong>탭 시 동작 2단계:</strong>
+            <ol style="margin:4px 0 0 16px;line-height:1.9;">
+              <li>이전에 본 페이지가 있으면 → 바로 그 페이지로 돌아갑니다.</li>
+              <li>이전 페이지가 없으면 (앱을 처음 열자마자 오류 페이지로 왔거나, 주소창에 직접 입력한 경우) → M01 메인으로 이동합니다.</li>
+            </ol>
+          </li>
+        </ul></div>
+        <div class="ann-rule">history.length &gt; 1 → history.back() / 없으면 → M01 이동.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">에러 타이틀</div>
+        <div class="ann-desc"><ul>
+          <li>문구: "페이지를 찾을 수 없어요"</li>
+          <li>뒤로 보이는 연한 "404" 텍스트는 장식용이며, 실제 정보는 타이틀이 전달합니다.</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">에러 설명 문구</div>
+        <div class="ann-desc"><ul>
+          <li>문구: "입력한 주소가 바뀌었거나 삭제된 페이지예요."</li>
+          <li>직접 코드에 넣어둔 고정 텍스트. [홈으로] 버튼은 없으므로 뒤로가기 버튼(CN 2)으로 복귀를 유도합니다.</li>
+        </ul></div>
+      </div>
+    </div>
+
+  </div><!-- /ann -->
+</div><!-- /two-col -->
+
+<hr class="sec-divider">
+
+<!-- ════ ERR-B : 일반 오류 ════ -->
+<div id="err-b" class="sec-title">
+  <span class="sec-badge">ERR-B</span>일반 오류 — 서버·네트워크 오류
+</div>
+<div class="sec-sub">
+  서버 오류(500), 네트워크 연결 실패, 예상치 못한 앱 오류 등 복구 방법을 안내할 수 없는 경우.<br>
+  GNB: [←](뒤로가기, 좌측) + 로고(중앙). 탭바 없음. [홈으로] 버튼 없음.
+</div>
+
+<div class="sec-policy">
+  <div class="sec-policy-hdr">⚙ 공통 정책 — ERR-B 일반 오류</div>
+  <ul class="sec-policy-list">
+    <li><strong>노출 조건</strong>: HTTP 5xx 오류, 네트워크 타임아웃, 앱 예외(Exception) 등 복구 불가 에러</li>
+    <li><strong>에러 코드 노출</strong>: 사용자에게 에러 코드(500 등) 직접 표시 않음. 개발자 콘솔·로그로만 확인</li>
+    <li><strong>GNB</strong>: 뒤로가기 버튼(좌측) + 로고(중앙). 로그인·메뉴 버튼 없음</li>
+    <li><strong>뒤로가기 버튼 동작</strong>: ERR-A와 동일. <code>history.length &gt; 1</code> → 직전 페이지 이동 / 없으면 → M01 메인</li>
+    <li><strong>탭바</strong>: 미표시</li>
+    <li><strong>[홈으로] 버튼</strong>: 미사용 (삭제)</li>
+    <li><strong>ERR-A와 구분</strong>: 아이콘·문구만 다름. GNB·레이아웃 동일</li>
+  </ul>
+  <div class="sec-policy-rule">⚠ 정책 미결 — 오류 유형별 세분화(네트워크/서버/앱) 개발 확인 필요</div>
+</div>
+
+<div class="two-col">
+  <div class="mobile-wrap">
+    <div class="mobile-device">
+      <div class="m-notch"><div class="m-notch-pill"></div></div>
+      <div class="m-screen">
+
+        <!-- GNB: 로고(중앙) + 뒤로가기(우측) -->
+        <div class="err-gnb">
+          <div style="position:relative;">
+            <button class="err-gnb-back">←</button>
+            <span class="wf-cn" style="position:absolute;top:-5px;right:-5px;">2</span>
+          </div>
+          <div class="err-gnb-logo">allmy<em>meta</em> <span class="wf-cn">1</span></div>
+          <div class="err-gnb-spc"></div>
+        </div>
+
+        <!-- 에러 콘텐츠 -->
+        <div class="err-body">
+          <div class="err-icon" style="font-size:52px;margin-bottom:20px;">⚠️</div>
+          <div class="err-title">오류가 발생했어요 <span class="wf-cn">3</span></div>
+          <div class="err-desc">
+            잠시 후 다시 시작해 보세요. <span class="wf-cn">4</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <h3>화면 주석 — ERR-B (일반 오류)</h3>
+
+    <div class="ann-item">
+      <div class="cn">1</div>
+      <div class="ann-body">
+        <div class="ann-title">GNB — 로고 (가운데)</div>
+        <div class="ann-desc"><ul>
+          <li>ERR-A와 동일. 로고 가운데 표시. 탭 시 → M01 메인으로 이동.</li>
+        </ul></div>
+        <div class="ann-rule">탭 시 M01(메인)으로 이동.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">2</div>
+      <div class="ann-body">
+        <div class="ann-title">GNB — 뒤로가기 버튼 (좌측)</div>
+        <div class="ann-desc"><ul>
+          <li>ERR-A와 동일한 동작. 이전 페이지가 있으면 그 페이지로 / 없으면 M01 메인으로 이동.</li>
+          <li>오류 화면에서 굳이 홈으로 보내지 않고, 사용자가 있던 화면으로 그대로 돌려보내는 것이 더 자연스러운 흐름입니다.</li>
+        </ul></div>
+        <div class="ann-rule">history.length &gt; 1 → history.back() / 없으면 → M01 이동.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">3</div>
+      <div class="ann-body">
+        <div class="ann-title">에러 타이틀</div>
+        <div class="ann-desc"><ul>
+          <li>문구: "오류가 발생했어요"</li>
+          <li>에러 코드(500 등)는 사용자에게 직접 노출하지 않습니다. 기술적인 코드보다 상황 설명이 더 친절하기 때문입니다.</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">4</div>
+      <div class="ann-body">
+        <div class="ann-title">에러 설명 문구</div>
+        <div class="ann-desc"><ul>
+          <li>문구: "잠시 후 다시 시작해 보세요."</li>
+          <li>직접 코드에 넣어둔 고정 텍스트. 모든 일반 오류에 동일하게 표시합니다.</li>
+        </ul></div>
+      </div>
+    </div>
+
+  </div><!-- /ann -->
+</div><!-- /two-col -->
+
+</div><!-- /page -->
+
+<script>
+function goBack() {
+  if (history.length > 1) {
+    history.back();
+  } else {
+    location.href = 'm01_main_d1.html';
+  }
+}
+/* 화면기획서 내 뒤로가기 버튼에 실제 동작 연결 */
+document.querySelectorAll('.err-gnb-back').forEach(function(btn) {
+  btn.addEventListener('click', goBack);
+});
+</script>
+</body>
+</html>
