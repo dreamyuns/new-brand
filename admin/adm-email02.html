@@ -59,8 +59,8 @@
       <div class="adm-nav-item"><span class="adm-nav-icon">📋</span>예약내역 전체</div>
     </div>
     <div class="adm-sidebar-section">
-      <div class="adm-sidebar-section-label">캐시백관리</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">💰</span>캐시백 내역</div>
+      <div class="adm-sidebar-section-label">포인트관리</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">💰</span>포인트 내역</div>
       <div class="adm-nav-item"><span class="adm-nav-icon">📈</span>공급사별 현황</div>
     </div>
     <div class="adm-sidebar-section">
@@ -105,9 +105,9 @@
     <div class="case-tab-bar">
       <button class="case-tab-btn active" onclick="goCase('case-a')">케이스 A — 이메일 인증코드</button>
       <button class="case-tab-btn" onclick="goCase('case-b')">케이스 B — 환영 이메일</button>
-      <button class="case-tab-btn" onclick="goCase('case-c')">케이스 C — 캐시백 적립예정</button>
-      <button class="case-tab-btn" onclick="goCase('case-d')">케이스 D — 캐시백 지급완료</button>
-      <button class="case-tab-btn" onclick="goCase('case-e')">케이스 E — 캐시백 취소·만료</button>
+      <button class="case-tab-btn" onclick="goCase('case-c')">케이스 C — 포인트 적립예정</button>
+      <button class="case-tab-btn" onclick="goCase('case-d')">케이스 D — 포인트 지급완료</button>
+      <button class="case-tab-btn" onclick="goCase('case-e')">케이스 E — 포인트 취소·만료</button>
       <button class="case-tab-btn" onclick="goCase('case-f')" style="color:#9ca3af">케이스 F — 예약상태알림 (Phase 2)</button>
     </div>
 
@@ -295,7 +295,7 @@
 {{service_name}} 가입을 진심으로 환영합니다.
 
 전 세계 수백만 개 호텔의 최저가를 한눈에 비교하고,
-예약할 때마다 캐시백을 받아보세요.
+예약할 때마다 포인트를 받아보세요.
 
 앞으로 즐거운 여행이 함께하길 바랍니다.
 
@@ -329,7 +329,7 @@
 올마이투어 가입을 진심으로 환영합니다.
 
 전 세계 수백만 개 호텔의 최저가를 한눈에 비교하고,
-예약할 때마다 캐시백을 받아보세요.
+예약할 때마다 포인트를 받아보세요.
 
 앞으로 즐거운 여행이 함께하길 바랍니다.
 
@@ -357,10 +357,10 @@
       </div>
     </div><!-- /case-b -->
 
-    <!-- ===== 케이스 C: 캐시백 적립예정 안내 ===== -->
+    <!-- ===== 케이스 C: 포인트 적립예정 안내 ===== -->
     <div id="case-c" style="display:none">
       <div class="adm-page-hdr" style="margin-top:0;padding-top:0;border-top:none">
-        <div class="adm-page-title" style="font-size:15px;color:#374151">템플릿 #3 — 캐시백 적립예정 안내</div>
+        <div class="adm-page-title" style="font-size:15px;color:#374151">템플릿 #3 — 포인트 적립예정 안내</div>
         <div class="adm-page-actions"><button class="wf-btn wf-btn-primary">저장</button></div>
       </div>
       <div class="email-edit-wrap">
@@ -374,18 +374,18 @@
               </div>
               <div class="adm-form-row">
                 <div class="adm-form-label">이메일 제목</div>
-                <input class="wf-input" style="max-width:480px" value="{{hotel_name}} 예약 캐시백이 적립 예정입니다">
+                <input class="wf-input" style="max-width:480px" value="{{hotel_name}} 예약 포인트가 적립 예정입니다">
               </div>
             </div>
             <div class="adm-form-section">
               <div class="adm-form-section-title">본문</div>
               <textarea class="wf-input" rows="10" style="width:100%;resize:vertical;font-family:inherit;line-height:1.75">안녕하세요, {{user_name}}님!
 
-{{hotel_name}} 예약에 대한 캐시백이 적립 예정으로 등록되었습니다.
+{{hotel_name}} 예약에 대한 포인트가 적립 예정으로 등록되었습니다.
 
 ■ 예약 호텔: {{hotel_name}}
 ■ 체크아웃 예정일: {{checkout_date}}
-■ 적립 예정 금액: {{cashback_amount}}
+■ 적립 예정 포인트: {{point_amount}}
 
 체크아웃 후 예약이 확인되면 지급완료 안내를 드립니다.
 
@@ -394,7 +394,7 @@
                 <div class="var-guide-title">사용 가능한 변수</div>
                 <div><span class="var-chip">{{user_name}}</span> <span style="font-size:11px;color:#6b7280">회원 이름</span></div>
                 <div style="margin-top:6px"><span class="var-chip">{{hotel_name}}</span> <span style="font-size:11px;color:#6b7280">예약 호텔명</span></div>
-                <div style="margin-top:6px"><span class="var-chip">{{cashback_amount}}</span> <span style="font-size:11px;color:#6b7280">적립 예정 금액 (KRW)</span></div>
+                <div style="margin-top:6px"><span class="var-chip">{{point_amount}}</span> <span style="font-size:11px;color:#6b7280">적립 예정 포인트 (P 단위)</span></div>
                 <div style="margin-top:6px"><span class="var-chip">{{checkout_date}}</span> <span style="font-size:11px;color:#6b7280">체크아웃 예정일 (YYYY-MM-DD)</span></div>
                 <div style="margin-top:8px;font-size:11px;color:#9ca3af">변수를 복사해 본문에 붙여넣으면 발송 시 실제 값으로 자동 교체됩니다.</div>
               </div>
@@ -414,15 +414,15 @@
             <div class="email-preview-card">
               <div class="email-preview-header">
                 <div class="email-preview-from">발신: 올마이투어 &lt;noreply@{브랜드도메인}&gt;</div>
-                <div class="email-preview-subject">파리 힐튼 오페라 예약 캐시백이 적립 예정입니다</div>
+                <div class="email-preview-subject">파리 힐튼 오페라 예약 포인트가 적립 예정입니다</div>
               </div>
               <div class="email-preview-body">안녕하세요, 홍길동님!
 
-파리 힐튼 오페라 예약에 대한 캐시백이 적립 예정으로 등록되었습니다.
+파리 힐튼 오페라 예약에 대한 포인트가 적립 예정으로 등록되었습니다.
 
 ■ 예약 호텔: 파리 힐튼 오페라
 ■ 체크아웃 예정일: 2026-08-15
-■ 적립 예정 금액: ₩12,000
+■ 적립 예정 포인트: 12,000P
 
 체크아웃 후 예약이 확인되면 지급완료 안내를 드립니다.
 
@@ -436,13 +436,13 @@
             <div class="ann-item">
               <span class="cn">C</span>
               <div class="ann-body">
-                <div class="ann-title">캐시백 적립예정 안내 특이사항</div>
+                <div class="ann-title">포인트 적립예정 안내 특이사항</div>
                 <div class="ann-desc"><ul>
-                  <li>아웃링크 예약완료 후 KAYAK에서 Waiting 상태가 확인되면 자동 발송</li>
-                  <li><code>{{cashback_amount}}</code>는 KRW 원화 기준 캐시백 금액</li>
+                  <li>아웃링크 예약완료 후 KAYAK에서 Active 상태가 확인되면 자동 발송</li>
+                  <li><code>{{point_amount}}</code>는 적립 예정 포인트 금액 (P 단위. 1P = 1원)</li>
                   <li>편집 폼 구조·저장·테스트 발송 동작은 케이스 A 주석과 동일</li>
                 </ul></div>
-                <div class="ann-rule">어드민 v0.3 9-1절 — 발송 트리거: Waiting 전환 시</div>
+                <div class="ann-rule">어드민 v0.3 9-1절 — 발송 트리거: Active 전환 시</div>
               </div>
             </div>
           </div>
@@ -450,10 +450,10 @@
       </div>
     </div><!-- /case-c -->
 
-    <!-- ===== 케이스 D: 캐시백 지급완료 안내 ===== -->
+    <!-- ===== 케이스 D: 포인트 지급완료 안내 ===== -->
     <div id="case-d" style="display:none">
       <div class="adm-page-hdr" style="margin-top:0;padding-top:0;border-top:none">
-        <div class="adm-page-title" style="font-size:15px;color:#374151">템플릿 #4 — 캐시백 지급완료 안내</div>
+        <div class="adm-page-title" style="font-size:15px;color:#374151">템플릿 #4 — 포인트 지급완료 안내</div>
         <div class="adm-page-actions"><button class="wf-btn wf-btn-primary">저장</button></div>
       </div>
       <div class="email-edit-wrap">
@@ -467,16 +467,16 @@
               </div>
               <div class="adm-form-row">
                 <div class="adm-form-label">이메일 제목</div>
-                <input class="wf-input" style="max-width:480px" value="{{hotel_name}} 캐시백이 지급되었습니다 💸">
+                <input class="wf-input" style="max-width:480px" value="{{hotel_name}} 포인트가 지급되었습니다 💸">
               </div>
             </div>
             <div class="adm-form-section">
               <div class="adm-form-section-title">본문</div>
               <textarea class="wf-input" rows="12" style="width:100%;resize:vertical;font-family:inherit;line-height:1.75">안녕하세요, {{user_name}}님!
 
-{{hotel_name}} 숙박에 대한 캐시백 {{cashback_amount}}이(가) 지급 완료되었습니다.
+{{hotel_name}} 숙박에 대한 포인트 {{point_amount}}가 지급 완료되었습니다.
 
-■ 지급 금액: {{cashback_amount}}
+■ 지급 포인트: {{point_amount}}
 ■ 예약 호텔: {{hotel_name}}
 ■ 지급 확정월: {{payment_month}}
 
@@ -486,7 +486,7 @@
               <div class="var-guide">
                 <div class="var-guide-title">사용 가능한 변수</div>
                 <div><span class="var-chip">{{user_name}}</span> <span style="font-size:11px;color:#6b7280">회원 이름</span></div>
-                <div style="margin-top:6px"><span class="var-chip">{{cashback_amount}}</span> <span style="font-size:11px;color:#6b7280">캐시백 금액 (KRW)</span></div>
+                <div style="margin-top:6px"><span class="var-chip">{{point_amount}}</span> <span style="font-size:11px;color:#6b7280">포인트 금액 (P 단위)</span></div>
                 <div style="margin-top:6px"><span class="var-chip">{{hotel_name}}</span> <span style="font-size:11px;color:#6b7280">예약 호텔명</span></div>
                 <div style="margin-top:6px"><span class="var-chip">{{payment_month}}</span> <span style="font-size:11px;color:#6b7280">지급 확정월 (YYYY-MM, EST 기준)</span></div>
                 <div style="margin-top:6px"><span class="var-chip">{{service_name}}</span> <span style="font-size:11px;color:#6b7280">서비스 브랜드명</span></div>
@@ -508,13 +508,13 @@
             <div class="email-preview-card">
               <div class="email-preview-header">
                 <div class="email-preview-from">발신: 올마이투어 &lt;noreply@{브랜드도메인}&gt;</div>
-                <div class="email-preview-subject">싱가포르 마리나베이샌즈 캐시백이 지급되었습니다 💸</div>
+                <div class="email-preview-subject">싱가포르 마리나베이샌즈 포인트가 지급되었습니다 💸</div>
               </div>
               <div class="email-preview-body">안녕하세요, 홍길동님!
 
-싱가포르 마리나베이샌즈 숙박에 대한 캐시백 ₩12,000이(가) 지급 완료되었습니다.
+싱가포르 마리나베이샌즈 숙박에 대한 포인트 12,000P가 지급 완료되었습니다.
 
-■ 지급 금액: ₩12,000
+■ 지급 포인트: 12,000P
 ■ 예약 호텔: 마리나베이샌즈
 ■ 지급 확정월: 2026-08
 
@@ -530,13 +530,13 @@
             <div class="ann-item">
               <span class="cn">D</span>
               <div class="ann-body">
-                <div class="ann-title">캐시백 지급완료 안내 특이사항</div>
+                <div class="ann-title">포인트 지급완료 안내 특이사항</div>
                 <div class="ann-desc"><ul>
-                  <li>KAYAK Approved 확정(TransactionStatus=Active + PaymentMonth 존재) 시 자동 발송</li>
+                  <li>자사 내부 기준(체크아웃+n일 경과) Approved 확정 시 자동 발송</li>
                   <li><code>{{payment_month}}</code>는 KAYAK EST(미국 동부 시간) 기준 지급월</li>
                   <li>편집 폼 구조·저장·테스트 발송 동작은 케이스 A 주석과 동일</li>
                 </ul></div>
-                <div class="ann-rule">어드민 v0.3 9-1절 · 6-2절 — Approved 판단 기준</div>
+                <div class="ann-rule">어드민 v0.3 9-1절 · 6-2절 — Approved 판단 기준(v0.42)</div>
               </div>
             </div>
           </div>
@@ -544,10 +544,10 @@
       </div>
     </div><!-- /case-d -->
 
-    <!-- ===== 케이스 E: 캐시백 취소·만료 안내 ===== -->
+    <!-- ===== 케이스 E: 포인트 취소·만료 안내 ===== -->
     <div id="case-e" style="display:none">
       <div class="adm-page-hdr" style="margin-top:0;padding-top:0;border-top:none">
-        <div class="adm-page-title" style="font-size:15px;color:#374151">템플릿 #5 — 캐시백 취소·만료 안내</div>
+        <div class="adm-page-title" style="font-size:15px;color:#374151">템플릿 #5 — 포인트 취소·만료 안내</div>
         <div class="adm-page-actions"><button class="wf-btn wf-btn-primary">저장</button></div>
       </div>
       <div class="email-edit-wrap">
@@ -561,19 +561,19 @@
               </div>
               <div class="adm-form-row">
                 <div class="adm-form-label">이메일 제목</div>
-                <input class="wf-input" style="max-width:480px" value="{{hotel_name}} 캐시백이 취소·만료되었습니다">
+                <input class="wf-input" style="max-width:480px" value="{{hotel_name}} 포인트가 취소·만료되었습니다">
               </div>
             </div>
             <div class="adm-form-section">
               <div class="adm-form-section-title">본문</div>
               <textarea class="wf-input" rows="10" style="width:100%;resize:vertical;font-family:inherit;line-height:1.75">안녕하세요, {{user_name}}님.
 
-아쉽게도 아래 예약의 캐시백이 취소 또는 만료 처리되었습니다.
+아쉽게도 아래 예약의 포인트가 취소 또는 만료 처리되었습니다.
 
 ■ 예약 호텔: {{hotel_name}}
 ■ 예약 번호: {{booking_id}}
 
-예약 취소 또는 예약 확인 불가 등의 이유로 캐시백이 지급되지 않습니다.
+예약 취소 또는 예약 확인 불가 등의 이유로 포인트가 지급되지 않습니다.
 문의사항이 있으시면 고객센터로 연락해주세요.
 
 올마이투어 드림</textarea>
@@ -600,16 +600,16 @@
             <div class="email-preview-card">
               <div class="email-preview-header">
                 <div class="email-preview-from">발신: 올마이투어 &lt;noreply@{브랜드도메인}&gt;</div>
-                <div class="email-preview-subject">방콕 그랜드 하얏트 캐시백이 취소·만료되었습니다</div>
+                <div class="email-preview-subject">방콕 그랜드 하얏트 포인트가 취소·만료되었습니다</div>
               </div>
               <div class="email-preview-body">안녕하세요, 홍길동님.
 
-아쉽게도 아래 예약의 캐시백이 취소 또는 만료 처리되었습니다.
+아쉽게도 아래 예약의 포인트가 취소 또는 만료 처리되었습니다.
 
 ■ 예약 호텔: 방콕 그랜드 하얏트
 ■ 예약 번호: BKK-19928
 
-예약 취소 또는 예약 확인 불가 등의 이유로 캐시백이 지급되지 않습니다.
+예약 취소 또는 예약 확인 불가 등의 이유로 포인트가 지급되지 않습니다.
 문의사항이 있으시면 고객센터로 연락해주세요.
 
 올마이투어 드림</div>
@@ -622,7 +622,7 @@
             <div class="ann-item">
               <span class="cn">E</span>
               <div class="ann-body">
-                <div class="ann-title">캐시백 취소·만료 안내 특이사항</div>
+                <div class="ann-title">포인트 취소·만료 안내 특이사항</div>
                 <div class="ann-desc"><ul>
                   <li>KAYAK Cancelled 상태 전환 시 자동 발송</li>
                   <li>PERCENTAGE 타입이어도 금액 0원인 경우 취소·만료로 처리됨 (실데이터 주의)</li>

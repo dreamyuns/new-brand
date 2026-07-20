@@ -37,8 +37,8 @@
       <div class="adm-nav-item"><span class="adm-nav-icon">📋</span>예약내역 전체</div>
     </div>
     <div class="adm-sidebar-section">
-      <div class="adm-sidebar-section-label">캐시백관리</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">💰</span>캐시백 내역</div>
+      <div class="adm-sidebar-section-label">포인트관리</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">💰</span>포인트 내역</div>
       <div class="adm-nav-item"><span class="adm-nav-icon">📈</span>공급사별 현황</div>
     </div>
     <div class="adm-sidebar-section">
@@ -73,9 +73,9 @@
       <ul class="sec-policy-list">
         <li><strong>수정 가능 필드:</strong> 이름(영문 First/Last)·국적·전화번호·마케팅 동의. 이메일은 읽기전용 (4-2절)</li>
         <li><strong>수정 불가:</strong> 이메일(인증 기반 계정 식별자)·회원ID·가입일 (4-2절)</li>
-        <li><strong>탈퇴 회원 조회:</strong> 탈퇴 완료 후에도 예약내역·캐시백 내역 조회 가능 — CS 대응 목적. 상단에 [탈퇴 회원] 배지 + 탈퇴일 표시. 정보 수정 전체 읽기전용 전환 (4-2절)</li>
+        <li><strong>탈퇴 회원 조회:</strong> 탈퇴 완료 후에도 예약내역·포인트 내역 조회 가능 — CS 대응 목적. 상단에 [탈퇴 회원] 배지 + 탈퇴일 표시. 정보 수정 전체 읽기전용 전환 (4-2절)</li>
         <li><strong>예약내역 탭:</strong> KAYAK Reporting API <code>labels</code> 필터 + 자사 회원ID 매핑으로 해당 회원 예약만 조회 (5조)</li>
-        <li><strong>캐시백 탭:</strong> KAYAK Reporting API <code>labels</code> 파라미터로 해당 회원 귀속 캐시백만 조회. MVP 조회전용 (6조)</li>
+        <li><strong>포인트 탭:</strong> KAYAK Reporting API <code>labels</code> 파라미터로 해당 회원 귀속 포인트만 조회. MVP 조회전용 (6조)</li>
       </ul>
       <div class="sec-policy-rule">기준: 어드민 v0.3 4-2절·5조·6조</div>
     </div>
@@ -84,7 +84,7 @@
     <div class="adm-tabs" style="margin-bottom:0">
       <button class="adm-tab case-tab-btn active" onclick="goCase('case-a')">케이스 A — 회원정보</button>
       <button class="adm-tab case-tab-btn" onclick="goCase('case-b')">케이스 B — 예약내역 <span class="wf-cn">6</span></button>
-      <button class="adm-tab case-tab-btn" onclick="goCase('case-c')">케이스 C — 캐시백 내역</button>
+      <button class="adm-tab case-tab-btn" onclick="goCase('case-c')">케이스 C — 포인트 내역</button>
       <button class="adm-tab case-tab-btn" onclick="goCase('case-d')">케이스 D — 탈퇴 회원 <span class="wf-cn">9</span></button>
     </div>
 
@@ -170,8 +170,8 @@
           <div class="ann-body">
             <div class="ann-title">이메일 (읽기전용)</div>
             <div class="ann-desc"><ul>
-              <li>이메일 인증코드 기반 계정 식별자 — 변경 불가</li>
-              <li>"인증완료" 배지 항상 표시</li>
+              <li>이 서비스는 이메일 인증코드로 로그인하기 때문에, 이메일이 계정을 구분하는 유일한 식별자임 → 수정 불가</li>
+              <li>"인증완료" 배지는 이메일 인증이 완료된 계정임을 항상 표시</li>
             </ul></div>
             <div class="ann-rule">정책서 v0.30 8-2절 — 이메일 인증코드 방식</div>
           </div>
@@ -182,8 +182,8 @@
           <div class="ann-body">
             <div class="ann-title">이름·성 수정</div>
             <div class="ann-desc"><ul>
-              <li>영문만 허용. 한글 입력 시 유효성 오류</li>
-              <li>선택 항목 — 미입력도 저장 가능</li>
+              <li>영문(알파벳)만 입력 가능. 한글 입력 시 유효성 오류 메시지 표시</li>
+              <li>선택 항목 — 입력하지 않아도 저장 가능</li>
             </ul></div>
           </div>
         </div>
@@ -193,8 +193,8 @@
           <div class="ann-body">
             <div class="ann-title">국적 변경</div>
             <div class="ann-desc"><ul>
-              <li>[변경] 버튼 클릭 → 국가 선택 바텀시트 (프런트 화면 MY03 참조)</li>
-              <li>KAYAK Constants API 국가 목록 기반</li>
+              <li>[변경] 버튼 클릭 → 국가 선택 팝업(바텀시트) 열림 — 프런트 화면 MY03(계정관리) 패턴 참조</li>
+              <li>국가 목록은 KAYAK Constants API에서 가져온 국가 목록 기반</li>
             </ul></div>
           </div>
         </div>
@@ -204,9 +204,8 @@
           <div class="ann-body">
             <div class="ann-title">전화번호</div>
             <div class="ann-desc"><ul>
-              <li>국가코드(+82) + 번호 입력</li>
-              <li>숫자·하이픈만 허용. 형식: 010-XXXX-XXXX</li>
-              <li>선택 항목</li>
+              <li>국가 코드(예: +82)와 전화번호를 따로 입력. 형식: 010-XXXX-XXXX</li>
+              <li>숫자와 하이픈(-)만 허용. 선택 항목 — 입력 안 해도 저장 가능</li>
             </ul></div>
           </div>
         </div>
@@ -216,9 +215,9 @@
           <div class="ann-body">
             <div class="ann-title">마케팅 동의 토글</div>
             <div class="ann-desc"><ul>
-              <li>관리자가 직접 ON/OFF 변경 가능</li>
-              <li>변경 이력(날짜)은 자사 DB 기록</li>
-              <li>변경 시 확인 창(다이얼로그) 노출 권장</li>
+              <li>관리자가 직접 ON/OFF 바꿀 수 있음</li>
+              <li>변경 날짜(이력)는 자사 서버에 기록됨</li>
+              <li>변경 전 "정말 바꾸시겠습니까?" 확인 창(다이얼로그)을 보여주는 것을 권장</li>
             </ul></div>
           </div>
         </div>
@@ -228,10 +227,10 @@
           <div class="ann-body">
             <div class="ann-title">예약내역 탭 (케이스 B 참조)</div>
             <div class="ann-desc"><ul>
-              <li>해당 회원의 KAYAK 예약 목록 표시</li>
-              <li>ADM-BOOK01과 동일 구조, 해당 회원 필터 적용 상태</li>
-              <li>KAYAK Reporting API <code>labels</code> 파라미터로 회원 식별</li>
-              <li>탈퇴 회원도 예약내역 탭 조회 가능 — CS 대응 목적 (케이스 D에서도 유지)</li>
+              <li>해당 회원이 한 KAYAK 기반 예약 목록을 보여줌</li>
+              <li>ADM-BOOK01(예약내역 전체) 화면과 같은 구조인데, 이 회원의 예약만 자동으로 필터링된 상태</li>
+              <li>KAYAK Reporting API의 <code>labels</code> 파라미터에 회원 ID를 넣어 해당 회원 예약만 가져옴</li>
+              <li>탈퇴 회원도 예약내역 탭 조회 가능 — CS(고객 대응) 목적 (케이스 D에서도 유지)</li>
             </ul></div>
             <div class="ann-rule">어드민 v0.3 4-2절 · 5조</div>
           </div>
@@ -242,10 +241,10 @@
           <div class="ann-body">
             <div class="ann-title">[저장] 버튼</div>
             <div class="ann-desc"><ul>
-              <li>변경된 필드만 서버로 전송 (PATCH 방식)</li>
-              <li>입력 오류 시 해당 필드 아래 빨간 메시지 표시</li>
+              <li>변경된 항목만 서버로 전송 (PATCH 방식 — 바뀐 것만 업데이트)</li>
+              <li>입력 오류가 있으면 해당 필드 아래에 빨간 오류 메시지 표시</li>
               <li>저장 성공 시 화면 상단에 "저장되었습니다" 알림 표시</li>
-              <li><strong>탈퇴 회원(케이스 D)은 저장 버튼 비활성 — 전체 읽기전용</strong></li>
+              <li><strong>탈퇴 회원(케이스 D)은 저장 버튼이 비활성 — 어떤 필드도 수정 불가</strong></li>
             </ul></div>
             <div class="ann-rule">어드민 v0.3 4-2절</div>
           </div>
@@ -254,7 +253,7 @@
         <hr class="divider">
         <div class="text-muted">
           <strong style="color:#374151;display:block;margin-bottom:4px">탈퇴 회원 처리 (케이스 D)</strong>
-          MVP에서 탈퇴 회원 CS 조회 유지. 탈퇴 후에도 예약·캐시백 탭 조회 가능. 정보 수정 불가(전체 읽기전용). 강제탈퇴 기능은 추후 논의 예정.
+          MVP에서 탈퇴 회원 CS 조회 유지. 탈퇴 후에도 예약·포인트 탭 조회 가능. 정보 수정 불가(전체 읽기전용). 강제탈퇴 기능은 추후 논의 예정.
         </div>
       </div>
     </div>
@@ -281,7 +280,7 @@
         <div class="stat-card amber">
           <div class="stat-card-label">적립예정</div>
           <div class="stat-card-value">1</div>
-          <div class="stat-card-sub">Waiting</div>
+          <div class="stat-card-sub">Active</div>
         </div>
       </div>
 
@@ -297,7 +296,7 @@
               <th>체크인</th>
               <th>체크아웃</th>
               <th>예약금액</th>
-              <th>캐시백</th>
+              <th>포인트</th>
               <th>상태</th>
             </tr>
           </thead>
@@ -310,7 +309,7 @@
               <td>2026-07-01</td>
               <td>2026-07-03</td>
               <td style="font-weight:600">₩320,000</td>
-              <td style="color:#f59e0b;font-weight:600">₩9,600</td>
+              <td style="color:#f59e0b;font-weight:600">9,600P</td>
               <td><span class="wf-badge badge-approved">지급완료</span></td>
             </tr>
             <tr>
@@ -321,7 +320,7 @@
               <td>2026-09-10</td>
               <td>2026-09-12</td>
               <td style="font-weight:600">₩3,800,000</td>
-              <td style="color:#f59e0b;font-weight:600">₩190,000</td>
+              <td style="color:#f59e0b;font-weight:600">190,000P</td>
               <td><span class="wf-badge badge-waiting">적립예정</span></td>
             </tr>
             <tr>
@@ -349,12 +348,12 @@
       <div class="ann-item">
         <span class="cn">9</span>
         <div class="ann-body">
-          <div class="ann-title">예약 통계 계산식</div>
+          <div class="ann-title">예약 통계 계산 방식</div>
           <div class="ann-desc"><ul>
-            <li><strong>전체 예약(3):</strong> 해당 회원(<code>labels=U-10042</code>) 귀속 전체 Booking 건수</li>
-            <li><strong>지급완료(1):</strong> Approved 건. 취소(Cancelled) 1건은 별도 카드 없이 전체에 포함</li>
-            <li><strong>적립예정(1):</strong> Waiting 건 (체크아웃 전)</li>
-            <li>검증: 3 = 1(Approved) + 1(Waiting) + 1(Cancelled) ✓</li>
+            <li><strong>전체 예약(3건):</strong> 이 회원 ID(<code>labels=U-10042</code>)로 귀속된 예약 완료 건 수 전체</li>
+            <li><strong>지급완료(1건):</strong> 포인트 지급이 확정된(Approved) 건. 취소(Cancelled) 1건은 별도 카드 없이 전체 수에 포함됨</li>
+            <li><strong>적립예정(1건):</strong> 아직 체크아웃 전이거나 포인트 확정 안 된(Active) 건</li>
+            <li>검산: 3 = 1(Approved) + 1(Active) + 1(Cancelled) ✓</li>
           </ul></div>
           <div class="ann-rule">KAYAK Reporting API labels 파라미터 / 정책서 v0.30 9-4절</div>
         </div>
@@ -364,9 +363,9 @@
         <div class="ann-body">
           <div class="ann-title">예약 테이블 구조</div>
           <div class="ann-desc"><ul>
-            <li>ADM-BOOK01 전체 목록과 동일 컬럼 구조</li>
-            <li>회원 컬럼 생략 (이미 특정 회원 기준)</li>
-            <li>건수가 적으므로 페이지네이션 없이 전체 표시 (50건 초과 시 표시 필요)</li>
+            <li>ADM-BOOK01(예약내역 전체) 화면과 같은 컬럼 구조</li>
+            <li>이미 특정 회원 기준이므로 회원 컬럼은 생략</li>
+            <li>건수가 적으면 페이지 나눔 없이 전체 표시. 50건 초과 시 페이지 나눔 필요</li>
           </ul></div>
           <div class="ann-rule">ADM-BOOK01 참조 / 정책서 v0.30 9절</div>
         </div>
@@ -374,28 +373,28 @@
     </div><!-- /ann -->
     </div><!-- /two-col -->
 
-    <!-- ── 케이스 C: 캐시백 내역 탭 ── -->
-    <div id="case-c" class="sec-title" style="margin-top:40px;padding-top:28px;border-top:2px dashed #e5e7eb;color:#4f7cff">케이스 C — 캐시백 내역 탭</div>
+    <!-- ── 케이스 C: 포인트 내역 탭 ── -->
+    <div id="case-c" class="sec-title" style="margin-top:40px;padding-top:28px;border-top:2px dashed #e5e7eb;color:#4f7cff">케이스 C — 포인트 내역 탭</div>
     <div class="sec-sub">Gildong Hong (U-10042) 기준 · ADM-CB01과 동일 구조 · MVP 조회전용</div>
 
     <div class="two-col" style="align-items:start">
     <div>
       <!-- 통계 -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:13px;font-weight:700;color:#374151">캐시백 통계</span><span class="wf-cn">11</span></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:13px;font-weight:700;color:#374151">포인트 통계</span><span class="wf-cn">11</span></div>
       <div class="stat-grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:16px">
         <div class="stat-card amber">
           <div class="stat-card-label">지급완료 (Approved)</div>
-          <div class="stat-card-value" style="font-size:20px">₩9,600</div>
+          <div class="stat-card-value" style="font-size:20px">9,600P</div>
           <div class="stat-card-sub">1건 확정</div>
         </div>
         <div class="stat-card amber">
-          <div class="stat-card-label">적립예정 (Waiting)</div>
-          <div class="stat-card-value" style="font-size:20px">₩280,000</div>
+          <div class="stat-card-label">적립예정 (Active)</div>
+          <div class="stat-card-value" style="font-size:20px">190,000P</div>
           <div class="stat-card-sub">1건 체크아웃 전</div>
         </div>
       </div>
 
-      <!-- 캐시백 테이블 -->
+      <!-- 포인트 테이블 -->
       <div class="adm-table-wrap">
         <table class="adm-table">
           <thead>
@@ -406,7 +405,7 @@
               <th>체크아웃</th>
               <th>공급사(OTA)</th>
               <th>예약금액</th>
-              <th>캐시백 금액</th>
+              <th>포인트 금액</th>
               <th>타입 <span class="wf-cn">12</span></th>
               <th>상태</th>
               <th>지급일</th>
@@ -420,7 +419,7 @@
               <td>2026-07-03</td>
               <td>Booking.com</td>
               <td>₩320,000</td>
-              <td style="font-weight:600;color:#f59e0b">₩9,600 (3%)</td>
+              <td style="font-weight:600;color:#f59e0b">9,600P (3%)</td>
               <td><span class="wf-badge badge-active" style="font-size:9px">PERCENTAGE</span></td>
               <td><span class="wf-badge badge-approved">지급완료</span></td>
               <td>2026-08-01</td>
@@ -432,7 +431,7 @@
               <td>2026-09-12</td>
               <td>Agoda</td>
               <td>₩3,800,000</td>
-              <td style="font-weight:600;color:#f59e0b">₩190,000 (5%)</td>
+              <td style="font-weight:600;color:#f59e0b">190,000P (5%)</td>
               <td><span class="wf-badge badge-active" style="font-size:9px">PERCENTAGE</span></td>
               <td><span class="wf-badge badge-waiting">적립예정</span></td>
               <td>—</td>
@@ -458,48 +457,48 @@
 
       <!-- Phase 2 안내 -->
       <div style="margin-top:14px;background:#fef3c7;border:1px solid #fde68a;border-left:3px solid #f59e0b;border-radius:6px;padding:10px 14px;font-size:12px;color:#92400e">
-        <strong>Phase 2 예정:</strong> 캐시백 수동 지급·삭제·회수 기능. MVP에서는 조회만 가능.
+        <strong>Phase 2 예정:</strong> 포인트 수동 지급·삭제·회수 기능. MVP에서는 조회만 가능.
       </div>
     </div><!-- /첫 번째 컬럼 -->
 
     <!-- 주석 (케이스 C) -->
     <div class="ann">
-      <h3>주석 — 케이스 C (캐시백 내역)</h3>
+      <h3>주석 — 케이스 C (포인트 내역)</h3>
       <div class="ann-item">
         <span class="cn">11</span>
         <div class="ann-body">
-          <div class="ann-title">캐시백 통계 계산식</div>
+          <div class="ann-title">포인트 통계 계산 방식</div>
           <div class="ann-desc"><ul>
-            <li><strong>지급완료 ₩9,600:</strong> Approved 건 캐시백 금액 합산</li>
-            <li><strong>적립예정 ₩280,000:</strong> Waiting 건 캐시백 금액 합산 (체크아웃 전)</li>
-            <li>캐시백 금액 KRW 원화 기준 단일 통화</li>
+            <li><strong>지급완료 9,600P:</strong> 이 회원에게 지급이 확정된(Approved) 건의 포인트를 더한 값. 단위는 P(포인트), 1P = 1원</li>
+            <li><strong>적립예정 190,000P:</strong> 아직 체크아웃 전이거나 확정 안 된(Active) 건의 포인트 합계</li>
+            <li>포인트 금액은 KRW(원화) 기준으로 통일</li>
           </ul></div>
-          <div class="ann-rule">어드민 v0.3 6-4절</div>
+          <div class="ann-rule">어드민 v0.3 6-4절 — 포인트 단위 P, 1P=1원</div>
         </div>
       </div>
       <div class="ann-item">
         <span class="cn">12</span>
         <div class="ann-body">
-          <div class="ann-title">캐시백 타입 배지</div>
+          <div class="ann-title">포인트 타입 배지</div>
           <div class="ann-desc"><ul>
-            <li><code>PERCENTAGE</code>: 예약금액 대비 % 지급</li>
-            <li><code>FLAT</code>: 고정 금액 지급</li>
-            <li><code>NONE</code>: 캐시백 없음 (예약 건만 존재)</li>
+            <li><code>PERCENTAGE</code>: 예약금액의 몇 % 를 포인트로 줌</li>
+            <li><code>FLAT</code>: 예약금액과 관계없이 정해진 포인트 금액을 그대로 줌</li>
+            <li><code>NONE</code>: 포인트 없음 — 예약 기록은 존재하지만 포인트 미발생</li>
           </ul></div>
-          <div class="ann-rule">정책서 v0.30 9-7절 캐시백 배지 타입</div>
+          <div class="ann-rule">정책서 v0.30 9-7절 — 포인트 배지 타입</div>
         </div>
       </div>
       <hr class="divider">
       <div class="text-muted">
         <strong style="color:#374151;display:block;margin-bottom:4px">ADM-CB01 연계</strong>
-        캐시백 전체 목록(ADM-CB01)에서 해당 회원 이메일로 검색하면 동일 데이터 확인 가능.
+        포인트 전체 목록(ADM-CB01)에서 이 회원 이메일로 검색하면 동일 데이터를 확인할 수 있음.
       </div>
     </div><!-- /ann -->
     </div><!-- /two-col -->
 
     <!-- ── 케이스 D: 탈퇴 회원 ── -->
     <div id="case-d" class="sec-title" style="margin-top:40px;padding-top:28px;border-top:2px dashed #e5e7eb;color:#ef4444">케이스 D — 탈퇴 회원</div>
-    <div class="sec-sub">탈퇴 완료 회원 · 전체 읽기전용 · 예약·캐시백 탭 조회만 가능</div>
+    <div class="sec-sub">탈퇴 완료 회원 · 전체 읽기전용 · 예약·포인트 탭 조회만 가능</div>
 
     <div class="two-col-wide" style="align-items:start">
       <div>
@@ -568,7 +567,7 @@
 
         <!-- 예약내역 탭 조회 가능 안내 -->
         <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-left:3px solid #22c55e;border-radius:6px;padding:10px 14px;font-size:12px;color:#15803d;margin-bottom:12px">
-          <strong>예약내역·캐시백 탭 조회 가능</strong> — 탈퇴 후에도 CS 대응 목적으로 이력 조회 허용. 아래 예약내역(케이스 B)·캐시백(케이스 C) 탭 구조와 동일.
+          <strong>예약내역·포인트 탭 조회 가능</strong> — 탈퇴 후에도 CS 대응 목적으로 이력 조회 허용. 아래 예약내역(케이스 B)·포인트(케이스 C) 탭 구조와 동일.
         </div>
       </div>
 
@@ -581,10 +580,10 @@
           <div class="ann-body">
             <div class="ann-title">탈퇴 회원 배너 + 전체 읽기전용</div>
             <div class="ann-desc"><ul>
-              <li>상단에 빨간 [탈퇴 회원] 배지 + 탈퇴일 표시</li>
-              <li>모든 입력 필드 비활성 (클릭해도 수정 안 됨)</li>
-              <li>[저장] 버튼 비활성화 (disabled)</li>
-              <li>예약내역·캐시백 탭은 조회 가능 유지 — CS 대응 목적</li>
+              <li>화면 상단에 빨간 [탈퇴 회원] 배지와 탈퇴 날짜가 표시됨</li>
+              <li>모든 입력 필드가 비활성 상태 — 클릭해도 수정할 수 없음</li>
+              <li>[저장] 버튼이 비활성(disabled) 상태로 표시됨</li>
+              <li>예약내역·포인트 탭은 조회 가능 유지 — 고객 문의(CS) 대응 목적</li>
               <li>강제탈퇴 기능은 MVP 제외 — 추후 논의 예정</li>
             </ul></div>
             <div class="ann-rule">어드민 v0.3 4-2절 — 탈퇴 회원 CS 조회 정책</div>
@@ -596,8 +595,8 @@
           <div class="ann-body">
             <div class="ann-title">탈퇴 회원 탭 진입 조건</div>
             <div class="ann-desc"><ul>
-              <li>ADM-MEM01에서 [탈퇴회원만 보기] 버튼 → 탈퇴 회원 목록 → [상세] 클릭 → 케이스 D로 자동 진입</li>
-              <li>탈퇴 회원 상세는 항상 케이스 D 상태로 진입 (케이스 A 탭 비활성은 아님 — 탭은 있지만 모든 필드 읽기전용)</li>
+              <li>진입 순서: ADM-MEM01에서 [탈퇴회원만 보기] 버튼 클릭 → 탈퇴 회원 목록 → [상세(읽기전용)] 클릭 → 케이스 D로 자동 진입</li>
+              <li>탈퇴 회원 상세는 항상 케이스 D 상태로 열림. 탭이 있지만 모든 필드가 읽기전용으로 표시됨</li>
             </ul></div>
             <div class="ann-rule">어드민 v0.3 4-1절 · 4-2절</div>
           </div>

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -37,8 +37,8 @@
       <div class="adm-nav-item"><span class="adm-nav-icon">📋</span>예약내역 전체</div>
     </div>
     <div class="adm-sidebar-section">
-      <div class="adm-sidebar-section-label">캐시백관리</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">💰</span>캐시백 내역</div>
+      <div class="adm-sidebar-section-label">포인트관리</div>
+      <div class="adm-nav-item"><span class="adm-nav-icon">💰</span>포인트 내역</div>
       <div class="adm-nav-item"><span class="adm-nav-icon">📈</span>공급사별 현황</div>
     </div>
     <div class="adm-sidebar-section">
@@ -61,7 +61,7 @@
     <div class="adm-page-hdr">
       <div class="adm-page-title">대시보드</div>
       <div class="adm-page-sub">주요 운영 지표 한눈에 보기 · 2026-06-22 기준<br>
-        <span style="color:#f59e0b;font-size:12px;font-weight:600">⚠️ 우선순위 낮음 — 핵심 화면(회원관리·예약·캐시백) 완성 후 구현</span>
+        <span style="color:#f59e0b;font-size:12px;font-weight:600">⚠️ 우선순위 낮음 — 핵심 화면(회원관리·예약·포인트) 완성 후 구현</span>
       </div>
     </div>
 
@@ -88,14 +88,14 @@
           <div class="stat-card-sub">누적 1,203건</div>
         </div>
         <div class="stat-card amber">
-          <div class="stat-card-label">이번 달 캐시백</div>
-          <div class="stat-card-value">₩1.2M</div>
+          <div class="stat-card-label">이번 달 포인트</div>
+          <div class="stat-card-value">1,200,000P</div>
           <div class="stat-card-sub">Approved 기준</div>
         </div>
         <div class="stat-card amber">
           <div class="stat-card-label">적립예정</div>
-          <div class="stat-card-value">₩340K</div>
-          <div class="stat-card-sub">Waiting</div>
+          <div class="stat-card-value">340,000P</div>
+          <div class="stat-card-sub">Active</div>
         </div>
       </div>
 
@@ -218,9 +218,10 @@
           <div class="ann-title">핵심 지표 카드</div>
           <div class="ann-desc">
             <ul>
-              <li>자사 DB + KAYAK Reporting API 합산 집계</li>
-              <li>갱신 주기: 실시간 or 1시간 캐싱 — 개발팀 협의 필요</li>
-              <li>"오늘" 기준: 오전 0시 ~ 현재 시각</li>
+              <li>자사 회원 DB + KAYAK Reporting API(예약·포인트 데이터)를 합쳐서 계산한 값</li>
+              <li>화면에 표시되는 숫자가 얼마나 자주 새로 고침될지는 개발팀과 협의 필요 (예: 실시간 / 1시간마다 한 번)</li>
+              <li>"오늘" 기준: 자정(0시)부터 현재 시각까지</li>
+              <li>포인트 단위는 P(포인트). 1P = 1원 기준</li>
             </ul>
           </div>
           <div class="ann-rule">우선순위 낮음 — 핵심 화면 완성 후 구현 (어드민 v0.1 3조)</div>
@@ -232,8 +233,8 @@
           <div class="ann-title">최근 예약 5건</div>
           <div class="ann-desc">
             <ul>
-              <li>ADM-BOOK01 데이터 기반, 최신 5건만 요약 표시</li>
-              <li>[전체 예약 보기] → ADM-BOOK01 이동</li>
+              <li>예약내역 전체(ADM-BOOK01) 화면의 데이터를 가져와서 가장 최근 5건만 요약해 보여줌</li>
+              <li>[전체 예약 보기] 버튼을 누르면 ADM-BOOK01 화면으로 이동</li>
             </ul>
           </div>
         </div>
@@ -244,9 +245,9 @@
           <div class="ann-title">최근 가입 회원 5명</div>
           <div class="ann-desc">
             <ul>
-              <li>ADM-MEM01 데이터 기반, 최신 5명만 요약 표시</li>
-              <li>[전체 회원 보기] → ADM-MEM01 이동</li>
-              <li>이름 미입력 회원: "—" 표시</li>
+              <li>회원 목록(ADM-MEM01) 화면의 데이터를 가져와서 가장 최근에 가입한 5명만 요약해 보여줌</li>
+              <li>[전체 회원 보기] 버튼을 누르면 ADM-MEM01 화면으로 이동</li>
+              <li>이름을 입력하지 않은 회원은 이름 칸에 "—"으로 표시</li>
             </ul>
           </div>
         </div>

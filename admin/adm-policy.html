@@ -126,7 +126,7 @@ body{background:#f8fafc;margin:0}
     <a class="policy-toc-sub" href="#sec5-2">표시 항목</a>
     <a class="policy-toc-sub" href="#sec5-4">Excel 다운로드</a>
     <div class="policy-toc-divider"></div>
-    <a class="policy-toc-item" href="#sec6">제6조 — 캐시백 관리</a>
+    <a class="policy-toc-item" href="#sec6">제6조 — 포인트 관리</a>
     <a class="policy-toc-sub" href="#sec6-1">MVP 운영 방침</a>
     <a class="policy-toc-sub" href="#sec6-2">내역 조회</a>
     <a class="policy-toc-sub" href="#sec6-4">공급사별 현황</a>
@@ -148,7 +148,7 @@ body{background:#f8fafc;margin:0}
     <div class="policy-cover">
       <div class="policy-cover-label">Admin Policy · v0.3</div>
       <div class="policy-cover-title">신규 MVP 어드민 정책서</div>
-      <div class="policy-cover-sub">KAYAK 메타서치 MVP 어드민 기능·권한·운영 정책<br>관련 문서: Phase1 정책서 v0.39</div>
+      <div class="policy-cover-sub">KAYAK 메타서치 MVP 어드민 기능·권한·운영 정책<br>관련 문서: Phase1 정책서 v0.44</div>
       <div class="policy-cover-meta">
         <div class="policy-cover-meta-item"><strong>버전</strong>v0.3</div>
         <div class="policy-cover-meta-item"><strong>최종수정</strong>2026-07-06</div>
@@ -190,7 +190,7 @@ body{background:#f8fafc;margin:0}
             <tr><td>1</td><td>대시보드</td><td><span class="ok">✅ 낮은 우선순위</span></td><td>핵심 수치 요약. 우선순위 낮음 — 공수 확인 후 결정</td></tr>
             <tr><td>2</td><td>회원관리</td><td><span class="ok">✅</span></td><td>회원 목록·상세 조회 + 수정. 탈퇴 회원 CS 조회 포함</td></tr>
             <tr><td>3</td><td>예약내역</td><td><span class="ok">✅</span></td><td>KAYAK Reporting API 예약완료 기준</td></tr>
-            <tr><td>4</td><td>캐시백관리</td><td><span class="ok">✅</span></td><td>MVP = 조회 전용. Phase 2 = 상태변경·지급·회수</td></tr>
+            <tr><td>4</td><td>포인트관리</td><td><span class="ok">✅</span></td><td>MVP = 조회 전용. Phase 2 = 상태변경·지급·회수</td></tr>
             <tr><td>5</td><td>어드민 관리자 설정</td><td><span class="ok">✅</span></td><td>마스터 계정 관리. 서브아이디는 Phase 2</td></tr>
             <tr><td>6</td><td>이메일 템플릿 관리</td><td><span class="ok">✅</span></td><td>발송 템플릿 조회·편집. MVP 5종 + Phase 2 1종. 9절 참조</td></tr>
           </tbody>
@@ -205,8 +205,8 @@ body{background:#f8fafc;margin:0}
             <tr><td>탈퇴 회원 CS 조회</td><td><span class="ok">✅ MVP 포함 확정</span></td><td>탈퇴 후에도 어드민 조회 유지. 정보 수정 불가, 읽기전용. 4-2절 참조</td></tr>
             <tr><td>강제탈퇴 기능</td><td>추후 논의</td><td>CS 정책·개인정보 파기 프로세스 확정 후 추가</td></tr>
             <tr><td>서브 관리자 계정 (권한 설정)</td><td>Phase 2</td><td>권한 체계 별도 논의 필요</td></tr>
-            <tr><td>캐시백 수동 상태변경·지급·회수</td><td>Phase 2</td><td>1단계 조회 전용 → 2단계 관리 기능</td></tr>
-            <tr><td>공급사 캐시백 요율 설정 UI</td><td>MVP 제외</td><td>KAYAK 양식 제출 방식 (자사 개발 불필요)</td></tr>
+            <tr><td>포인트 수동 상태변경·지급·회수</td><td>Phase 2</td><td>1단계 조회 전용 → 2단계 관리 기능</td></tr>
+            <tr><td>공급사 포인트율 설정 UI</td><td>MVP 제외</td><td>KAYAK 양식 제출 방식 (자사 개발 불필요)</td></tr>
           </tbody>
         </table>
       </div>
@@ -256,7 +256,7 @@ body{background:#f8fafc;margin:0}
           <tbody>
             <tr><td>오늘 클릭 수</td><td>KAYAK Reporting API</td><td>당일 Click 건수</td></tr>
             <tr><td>오늘 예약완료 건수</td><td>KAYAK Reporting API</td><td>당일 Booking 건수</td></tr>
-            <tr><td>오늘 캐시백 발생액</td><td>KAYAK Reporting API</td><td><code>cashbackAmountLocalised</code> 합계</td></tr>
+            <tr><td>오늘 포인트 발생액</td><td>KAYAK Reporting API</td><td><code>cashbackAmountLocalised</code> 합계</td></tr>
             <tr><td>누적 가입 회원 수</td><td>자사 DB</td><td>전체 회원 수</td></tr>
             <tr><td>이번 달 신규 가입 수</td><td>자사 DB</td><td>당월 가입 건수</td></tr>
           </tbody>
@@ -311,7 +311,7 @@ body{background:#f8fafc;margin:0}
           <thead><tr><th>항목</th><th>탈퇴 후 정책</th></tr></thead>
           <tbody>
             <tr><td>어드민 조회</td><td>유지 — [탈퇴회원만 보기] 버튼으로 탈퇴 회원 단독 조회 가능 (CS 대응 목적)</td></tr>
-            <tr><td>예약내역·캐시백 탭</td><td>조회 가능 유지 — 이력 확인 필요 시</td></tr>
+            <tr><td>예약내역·포인트 탭</td><td>조회 가능 유지 — 이력 확인 필요 시</td></tr>
             <tr><td>정보 수정</td><td>전체 읽기전용 전환. [저장] 버튼 비활성</td></tr>
             <tr><td>배지</td><td>회원 상세 상단에 [탈퇴 회원] 빨간 배지 + 탈퇴일 표시</td></tr>
             <tr><td>강제탈퇴 (어드민)</td><td>MVP 제외 — 추후 논의 예정</td></tr>
@@ -357,8 +357,8 @@ body{background:#f8fafc;margin:0}
             <tr><td>예약 OTA</td><td><code>ProviderCode</code></td><td>공급사 코드</td></tr>
             <tr><td>예약금액(상품가)</td><td><code>LocalisedBookingValue</code></td><td>현지화 통화 기준. "상품가" 라벨로 표기 통일</td></tr>
             <tr><td>통화</td><td><code>LocalisedCurrencyCode</code></td><td></td></tr>
-            <tr><td>캐시백 유형</td><td><code>CashbackType</code></td><td>PERCENTAGE / FLAT / NONE</td></tr>
-            <tr><td>캐시백 금액</td><td><code>CashbackAmountLocalised</code></td><td>지급 캐시백 금액</td></tr>
+            <tr><td>포인트 유형</td><td><code>CashbackType</code></td><td>PERCENTAGE / FLAT / NONE</td></tr>
+            <tr><td>포인트 금액</td><td><code>CashbackAmountLocalised</code></td><td>지급 포인트 금액</td></tr>
             <tr><td>상태</td><td><code>TransactionStatus</code></td><td>Active 등</td></tr>
             <tr><td>지급월</td><td><code>PaymentMonth</code></td><td>Approved 기준</td></tr>
             <tr><td>회원 식별자</td><td><code>Label</code></td><td>p= 파라미터로 삽입된 값</td></tr>
@@ -379,7 +379,7 @@ body{background:#f8fafc;margin:0}
 
     <!-- ═══ 제6조 ═══ -->
     <div id="sec6" class="policy-section">
-      <div class="policy-h2">제6조 <span class="policy-h2-badge" style="background:#f59e0b">캐시백 관리</span></div>
+      <div class="policy-h2">제6조 <span class="policy-h2-badge" style="background:#f59e0b">포인트 관리</span></div>
 
       <div id="sec6-1" class="policy-h3">6-1. MVP 운영 방침</div>
       <p class="policy-p"><strong>MVP(1단계)는 조회 전용으로 운영한다. 수동 조정·지급·회수 기능은 Phase 2에 추가한다.</strong></p>
@@ -392,14 +392,14 @@ body{background:#f8fafc;margin:0}
             <tr><td>상태별 필터</td><td><span class="ok">✅</span></td><td><span class="ok">✅</span></td></tr>
             <tr><td>공급사별 현황</td><td><span class="ok">✅</span></td><td><span class="ok">✅</span></td></tr>
             <tr><td>수동 상태변경</td><td><span class="no">❌</span></td><td>✅ (공급사별 수동 또는 자동 처리)</td></tr>
-            <tr><td>캐시백 지급</td><td><span class="no">❌</span></td><td><span class="ok">✅</span></td></tr>
-            <tr><td>캐시백 취소·회수</td><td><span class="no">❌</span></td><td><span class="ok">✅</span></td></tr>
+            <tr><td>포인트 지급</td><td><span class="no">❌</span></td><td><span class="ok">✅</span></td></tr>
+            <tr><td>포인트 취소·회수</td><td><span class="no">❌</span></td><td><span class="ok">✅</span></td></tr>
             <tr><td>Excel 다운로드</td><td>개발 공수 확인 후 결정</td><td><span class="ok">✅</span></td></tr>
           </tbody>
         </table>
       </div>
 
-      <div id="sec6-2" class="policy-h3">6-2. 캐시백 내역 조회 (v0.3 업데이트)</div>
+      <div id="sec6-2" class="policy-h3">6-2. 포인트 내역 조회 (v0.3 업데이트)</div>
       <p class="policy-p"><strong>데이터 출처:</strong> KAYAK Reporting API <code>cashbackAmountLocalised</code></p>
       <div class="policy-table-wrap">
         <table class="policy-table">
@@ -410,25 +410,26 @@ body{background:#f8fafc;margin:0}
             <tr><td>체크인/체크아웃</td><td><code>BookingStartDate / End</code></td><td></td></tr>
             <tr><td>호텔명</td><td><code>HotelName</code></td><td></td></tr>
             <tr><td>예약 OTA</td><td><code>ProviderCode</code></td><td></td></tr>
-            <tr><td>캐시백 유형</td><td><code>CashbackType</code></td><td>PERCENTAGE / FLAT / NONE</td></tr>
-            <tr><td>캐시백 금액</td><td><code>CashbackAmountLocalised</code></td><td>KAYAK 환율 환산 완료 후 반환</td></tr>
+            <tr><td>포인트 유형</td><td><code>CashbackType</code></td><td>PERCENTAGE / FLAT / NONE</td></tr>
+            <tr><td>포인트 금액</td><td><code>CashbackAmountLocalised</code></td><td>KAYAK 환율 환산 완료 후 반환. 단위: P</td></tr>
             <tr><td>지급월</td><td><code>PaymentMonth</code></td><td>EST(미국 동부 시간) 기준. 한국 시간과 최대 13~14시간 차이</td></tr>
             <tr><td>상태 배지</td><td>내부 정의</td><td><code>적립예정</code> / <code>지급완료</code> / <code>취소·만료</code></td></tr>
           </tbody>
         </table>
       </div>
-      <p class="policy-p"><strong>Approved(지급완료) 판단 기준 (2026-06-23 KAYAK 공식 확인):</strong><br>
-      <code>TransactionStatus = Active</code> AND <code>PaymentMonth 값 존재</code> 조건 모두 충족 시 지급완료로 판단.</p>
+      <p class="policy-p"><strong>Approved(지급완료) 판단 기준 (v0.42 변경):</strong><br>
+      자사 내부 기준 — 체크아웃일로부터 n일 경과 후 자동으로 지급완료 전환. KAYAK <code>PaymentMonth</code> 단독 기준이 아님.<br>
+      <code>TransactionStatus = Active</code> AND 자사 체크아웃+n일 조건 충족 시 지급완료 처리. 정확한 n일은 개발팀과 협의 후 확정.</p>
       <p class="policy-p"><strong>Cancelled(취소·만료) 주의사항 (2026-07-06 실데이터 확인):</strong><br>
-      <code>TransactionStatus = Cancelled</code>. PERCENTAGE 타입이어도 캐시백 금액 0원인 실데이터 케이스 존재. 타입만으로 금액 유추 불가.</p>
+      <code>TransactionStatus = Cancelled</code>. PERCENTAGE 타입이어도 포인트 금액 0원인 실데이터 케이스 존재. 타입만으로 금액 유추 불가.</p>
       <p class="policy-p"><strong>NONE/0원 건 미표시:</strong><br>
-      <code>CashbackType = NONE</code> 또는 캐시백 금액 0원인 건은 캐시백 내역 화면에 표시하지 않음. 예약내역(ADM-BOOK01)에서만 조회 가능.</p>
+      <code>CashbackType = NONE</code> 또는 포인트 금액 0원인 건은 포인트 내역 화면에 표시하지 않음. 예약내역(ADM-BOOK01)에서만 조회 가능.</p>
 
       <div class="policy-h3">6-3. 필터·검색</div>
       <p class="policy-p">기간 필터 (예약일 / 지급월 기준 선택) / 상태 필터 (적립예정 / 지급완료 / 취소·만료) / 공급사 필터 (<code>ProviderCode</code>) / 회원 이메일 검색</p>
 
-      <div id="sec6-4" class="policy-h3">6-4. 공급사별 캐시백 현황</div>
-      <p class="policy-p">공급사 코드별 캐시백 발생 건수·합계 금액 집계. 기간 필터 적용 가능.</p>
+      <div id="sec6-4" class="policy-h3">6-4. 공급사별 포인트 현황</div>
+      <p class="policy-p">공급사 코드별 포인트 발생 건수·합계 금액 집계. 기간 필터 적용 가능.</p>
       <div class="policy-blockquote">⚠️ CPC 예외 공급사: 일부 공급사는 CPA(예약 완료 시 수수료) 대신 CPC(클릭 시 수수료) 모델로 운영됨. CPC 건은 TransactionType=Click으로 분류되어 예약내역에 표시되지 않음. 공급사별 수익 분석 시 이 점 고려 필요.</div>
     </div>
 
@@ -468,8 +469,8 @@ body{background:#f8fafc;margin:0}
       <div class="unresolved-item" style="opacity:0.55;border-style:dashed">
         <div class="unresolved-num" style="color:#059669">✅</div>
         <div>
-          <div class="unresolved-content-title" style="color:#059669">[해결] 캐시백 Approved 판단 기준</div>
-          <div class="unresolved-content-desc"><code>TransactionStatus = Active</code> + <code>PaymentMonth 값 존재</code> 조합이 공식 기준. 2026-06-23 KAYAK 공식 확인 완료. 6-2절 반영.</div>
+          <div class="unresolved-content-title" style="color:#059669">[해결] 포인트 Approved 판단 기준</div>
+          <div class="unresolved-content-desc">v0.42 변경: 자사 내부 기준(체크아웃+n일 경과 후 자동 전환)으로 확정. KAYAK <code>PaymentMonth</code> 단독 기준 아님. 6-2절 반영.</div>
         </div>
         <div class="unresolved-owner"><strong>해결일</strong>2026-06-23</div>
       </div>
@@ -493,7 +494,7 @@ body{background:#f8fafc;margin:0}
         <div class="unresolved-num" style="color:#059669">✅</div>
         <div>
           <div class="unresolved-content-title" style="color:#059669">[해결] 탈퇴 회원 어드민 처리</div>
-          <div class="unresolved-content-desc">탈퇴 회원 CS 조회 유지로 결정. 읽기전용 전환 + [탈퇴 회원] 배지 표시 + 예약·캐시백 탭 조회 유지. 강제탈퇴는 추후 논의. 4-3절 반영.</div>
+          <div class="unresolved-content-desc">탈퇴 회원 CS 조회 유지로 결정. 읽기전용 전환 + [탈퇴 회원] 배지 표시 + 예약·포인트 탭 조회 유지. 강제탈퇴는 추후 논의. 4-3절 반영.</div>
         </div>
         <div class="unresolved-owner"><strong>해결일</strong>2026-07-06</div>
       </div>
@@ -535,9 +536,9 @@ body{background:#f8fafc;margin:0}
           <tbody>
             <tr><td>1</td><td>이메일 인증코드</td><td>회원가입·로그인 시 인증코드 입력 요청</td><td><span class="ok">✅</span></td></tr>
             <tr><td>2</td><td>환영 이메일</td><td>신규 회원가입 완료 직후 자동 발송</td><td><span class="ok">✅</span></td></tr>
-            <tr><td>3</td><td>캐시백 적립예정 안내</td><td>아웃링크 통한 예약완료 후 (Waiting 상태)</td><td><span class="ok">✅</span></td></tr>
-            <tr><td>4</td><td>캐시백 지급완료 안내</td><td>KAYAK Approved 확정 후 자동 발송</td><td><span class="ok">✅</span></td></tr>
-            <tr><td>5</td><td>캐시백 취소·만료 안내</td><td>Cancelled 상태 전환 시 자동 발송</td><td><span class="ok">✅</span></td></tr>
+            <tr><td>3</td><td>포인트 적립예정 안내</td><td>아웃링크 통한 예약완료 후 (Active 상태)</td><td><span class="ok">✅</span></td></tr>
+            <tr><td>4</td><td>포인트 지급완료 안내</td><td>Approved 확정 후 자동 발송 (자사 내부 기준)</td><td><span class="ok">✅</span></td></tr>
+            <tr><td>5</td><td>포인트 취소·만료 안내</td><td>Cancelled 상태 전환 시 자동 발송</td><td><span class="ok">✅</span></td></tr>
             <tr><td>6</td><td>예약 상태 알림</td><td>자사 직접 예약 시 예약확정·취소 알림</td><td><span class="no">❌ Phase 2</span></td></tr>
           </tbody>
         </table>
@@ -552,7 +553,7 @@ body{background:#f8fafc;margin:0}
             <tr><td>발신자명</td><td>예: "올마이투어" 또는 브랜드명</td></tr>
             <tr><td>이메일 제목</td><td>텍스트 필드</td></tr>
             <tr><td>본문 (텍스트)</td><td>멀티라인 텍스트 입력. HTML 편집기는 Phase 2 검토</td></tr>
-            <tr><td>변수 삽입</td><td>읽기전용 가이드 제공. 예: <code>{{user_name}}</code> <code>{{cashback_amount}}</code> 등</td></tr>
+            <tr><td>변수 삽입</td><td>읽기전용 가이드 제공. 예: <code>{{user_name}}</code> <code>{{point_amount}}</code> 등</td></tr>
           </tbody>
         </table>
       </div>
@@ -567,7 +568,7 @@ body{background:#f8fafc;margin:0}
           <tbody>
             <tr><td><code>{{user_name}}</code></td><td>회원 이름 (미입력 시 "고객"으로 대체)</td><td>전체</td></tr>
             <tr><td><code>{{auth_code}}</code></td><td>6자리 인증코드</td><td>인증코드</td></tr>
-            <tr><td><code>{{cashback_amount}}</code></td><td>캐시백 금액 (KRW)</td><td>캐시백 안내 3종</td></tr>
+            <tr><td><code>{{point_amount}}</code></td><td>포인트 금액 (P)</td><td>포인트 안내 3종</td></tr>
             <tr><td><code>{{hotel_name}}</code></td><td>예약 호텔명</td><td>캐시백 안내 3종</td></tr>
             <tr><td><code>{{payment_month}}</code></td><td>지급 예정월 (YYYY-MM)</td><td>지급완료 안내</td></tr>
             <tr><td><code>{{service_name}}</code></td><td>서비스 브랜드명</td><td>전체</td></tr>

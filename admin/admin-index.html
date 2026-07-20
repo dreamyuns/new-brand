@@ -150,12 +150,12 @@
     </div>
 
     <div class="idx-toc-group">
-      <div class="idx-toc-group-label">캐시백관리</div>
+      <div class="idx-toc-group-label">포인트관리</div>
       <a class="idx-toc-link" href="#card-cb01">
-        <span class="idx-toc-dot" style="background:#f59e0b"></span>캐시백 내역
+        <span class="idx-toc-dot" style="background:#f59e0b"></span>포인트 내역
       </a>
       <a class="idx-toc-link" href="#card-cb02" style="padding-left:22px">
-        <span class="idx-toc-dot" style="background:#f59e0b;opacity:.6"></span>공급사별 캐시백 현황
+        <span class="idx-toc-dot" style="background:#f59e0b;opacity:.6"></span>공급사별 포인트 현황
       </a>
     </div>
 
@@ -186,7 +186,7 @@
       <div class="idx-cover-title">올마이투어 신규서비스<br>어드민 화면기획서</div>
       <div class="idx-cover-sub">KAYAK 메타서치 MVP 어드민 관리 화면<br>정책서 어드민 v0.3 기준 · 8개 기능 영역 · 총 11개 화면</div>
       <div class="idx-cover-meta">
-        <div class="idx-cover-meta-item"><strong>기준 정책서</strong>어드민 v0.3 + Phase1 v0.39</div>
+        <div class="idx-cover-meta-item"><strong>기준 정책서</strong>어드민 v0.3 + Phase1 v0.44</div>
         <div class="idx-cover-meta-item"><strong>화면 기준</strong>PC 1280px 이상</div>
         <div class="idx-cover-meta-item"><strong>최종수정</strong>2026-07-06</div>
         <div class="idx-cover-meta-item"><strong>작성자</strong>윤성균 PO</div>
@@ -199,11 +199,11 @@
       <ul>
         <li><strong>접근 제어:</strong> 로그인(아이디+비밀번호) 세션이 없으면 모든 화면은 <code>ADM-LOGIN</code>으로 리다이렉트 (1조)</li>
         <li><strong>권한 구조:</strong> MVP에서는 마스터 단일 권한. 서브계정·권한 분리는 Phase 2 (2조)</li>
-        <li><strong>데이터 소스:</strong> 회원·예약·캐시백 데이터는 자사 DB + KAYAK Reporting API 연동 (5조·6조)</li>
+        <li><strong>데이터 소스:</strong> 회원·예약·포인트 데이터는 자사 DB + KAYAK Reporting API 연동 (5조·6조)</li>
         <li><strong>PC 전용:</strong> 모바일 반응형 미포함. 1280px 이상 권장 해상도 (1조)</li>
         <li><strong>세션 관리:</strong> 세션 만료 시 로그인 페이지로 이동 + 경고 알림 — 상세 정책 추후 확정 (8조 미결 2)</li>
       </ul>
-      <div class="idx-policy-rule">기준: 어드민 v0.3 전체 / Phase1 v0.39</div>
+      <div class="idx-policy-rule">기준: 어드민 v0.3 전체 / Phase1 v0.44</div>
     </div>
 
     <!-- ===== 정책서 (최상단) ===== -->
@@ -266,7 +266,7 @@
           <div class="sc-num">ADM-DASH <span class="sc-date">최종수정 06.22</span></div>
           <div class="sc-name">대시보드</div>
           <div class="sc-route">adm-dashboard.html</div>
-          <div class="sc-desc">주요 수치 요약 카드. 신규회원·예약·캐시백 현황 한눈에 확인</div>
+          <div class="sc-desc">주요 수치 요약 카드. 신규회원·예약·포인트 현황 한눈에 확인</div>
           <div class="sc-cases">
             <span class="sc-case-chip">통계 카드</span>
             <span class="sc-case-chip">최근 예약</span>
@@ -289,10 +289,10 @@
           <div class="sc-num">ADM-MEM01 <span class="sc-date">최종수정 07.06</span></div>
           <div class="sc-name">회원 목록</div>
           <div class="sc-route">adm-mem01.html</div>
-          <div class="sc-desc">전체 회원 목록. 이메일·ID 검색·필터. 누적 캐시백(KRW) 컬럼. 탈퇴회원만 보기 버튼</div>
+          <div class="sc-desc">전체 회원 목록. 이메일·ID 검색·필터. 누적 포인트(P) 컬럼. 탈퇴회원만 보기 버튼</div>
           <div class="sc-cases">
             <span class="sc-case-chip">목록·검색</span>
-            <span class="sc-case-chip">누적 캐시백(KRW)</span>
+            <span class="sc-case-chip">누적 포인트(P)</span>
             <span class="sc-case-chip">탈퇴회원 조회</span>
           </div>
           <span class="sc-priority chip-p1">P1 핵심</span>
@@ -302,11 +302,11 @@
           <div class="sc-num">ADM-MEM02 <span class="sc-date">최종수정 07.06</span></div>
           <div class="sc-name">회원 상세·수정</div>
           <div class="sc-route">adm-mem02.html</div>
-          <div class="sc-desc">회원정보 조회·수정, 예약·캐시백 탭. 탈퇴 회원 CS 조회 케이스 D 포함</div>
+          <div class="sc-desc">회원정보 조회·수정, 예약·포인트 탭. 탈퇴 회원 CS 조회 케이스 D 포함</div>
           <div class="sc-cases">
             <span class="sc-case-chip">회원정보</span>
             <span class="sc-case-chip">예약내역 탭</span>
-            <span class="sc-case-chip">캐시백 탭</span>
+            <span class="sc-case-chip">포인트 탭</span>
             <span class="sc-case-chip">탈퇴회원 D</span>
           </div>
           <span class="sc-priority chip-p1">P1 핵심</span>
@@ -339,19 +339,19 @@
       </div>
     </div>
 
-    <!-- ===== 캐시백관리 ===== -->
+    <!-- ===== 포인트관리 ===== -->
     <div class="idx-section" id="sec-cb">
       <div class="idx-section-hdr">
         <span class="idx-section-dot" style="background:#f59e0b"></span>
-        <span class="idx-section-label">캐시백관리</span>
+        <span class="idx-section-label">포인트관리</span>
         <span class="idx-section-count">2개</span>
       </div>
       <div class="screen-grid">
         <a id="card-cb01" class="screen-card card-cb" href="adm-cb01.html">
           <div class="sc-num">ADM-CB01 <span class="sc-date">최종수정 07.06</span></div>
-          <div class="sc-name">캐시백 내역</div>
+          <div class="sc-name">포인트 내역</div>
           <div class="sc-route">adm-cb01.html</div>
-          <div class="sc-desc">회원별 캐시백 내역 조회. NONE·0원 건 미표시. Approved 판단 기준 반영. EST 기준 지급월</div>
+          <div class="sc-desc">회원별 포인트 내역 조회. NONE·0원 건 미표시. Approved 판단 기준 반영. EST 기준 지급월</div>
           <div class="sc-cases">
             <span class="sc-case-chip">내역 목록</span>
             <span class="sc-case-chip">상태 필터</span>
@@ -361,9 +361,9 @@
         </a>
         <a id="card-cb02" class="screen-card card-cb" href="adm-cb02.html">
           <div class="sc-num">ADM-CB02 <span class="sc-date">최종수정 07.06</span></div>
-          <div class="sc-name">공급사별 캐시백 현황</div>
+          <div class="sc-name">공급사별 포인트 현황</div>
           <div class="sc-route">adm-cb02.html</div>
-          <div class="sc-desc">공급사(OTA)별 캐시백 집계 현황. 월별 통계</div>
+          <div class="sc-desc">공급사(OTA)별 포인트 집계 현황. 월별 통계</div>
           <div class="sc-cases">
             <span class="sc-case-chip">공급사별 집계</span>
             <span class="sc-case-chip">월별 통계</span>
@@ -442,7 +442,7 @@
       1. 세션 만료 시간·2FA·IP 제한 보안 정책 미확정 &nbsp;|&nbsp;
       2. 예약내역 Excel 다운로드 개발 공수 확인 필요 &nbsp;|&nbsp;
       3. 예약 상태 수동 변경 기능 Phase 2 범위 &nbsp;|&nbsp;
-      4. 캐시백 지급·회수·삭제 기능 Phase 2 &nbsp;|&nbsp;
+      4. 포인트 지급·회수·삭제 기능 Phase 2 &nbsp;|&nbsp;
       5. 서브계정 권한 설계 Phase 2 &nbsp;|&nbsp;
       6. 강제탈퇴 기능 추후 진행 &nbsp;|&nbsp;
       7. 취소·만료 실데이터 금액 0원 케이스 표시 기준 확인 필요 (8조 #7) &nbsp;|&nbsp;
