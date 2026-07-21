@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PC — PC 래핑 화면 | allmy meta 화면기획서</title>
+<title>PC — PC 래핑 화면 | 픽콕 화면기획서</title>
 <link rel="stylesheet" href="./wf-styles.css">
 <style>
-/* ── 모바일 프레임 (wf-styles.css에 없으므로 직접 포함) ── */
+/* ── 모바일 프레임 ── */
 .mobile-device {
   width: 395px; background: #1a1f2e; border-radius: 44px; padding: 10px;
   box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 20px 50px rgba(0,0,0,.5);
@@ -28,7 +28,7 @@
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0,0,0,.08);
   background: #f0f2f5;
-  width: 760px; /* scale 기준 원본 너비 */
+  width: 760px;
 }
 .pc-browser-bar {
   height: 38px; background: #e5e7eb;
@@ -47,42 +47,41 @@
 
 .pc-left {
   width: 280px; flex-shrink: 0;
-  background: #1a1f2e; padding: 32px 24px;
-  display: flex; flex-direction: column; gap: 22px;
+  background: #fff; padding: 32px 24px;
+  display: flex; flex-direction: column; gap: 24px;
+  border-right: 1px solid #e5e7eb;
 }
-.pc-logo { font-size: 19px; font-weight: 800; letter-spacing: -0.5px; }
-.pc-logo .brand { color: #4f46e5; }
-.pc-logo .meta  { color: #a5b4fc; }
+
+.pc-logo {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 18px; font-weight: 800; letter-spacing: -0.5px;
+}
+.pc-logo .brand { color: #1d4ed8; }
+.pc-logo .sub { color: #6b7280; font-size: 12px; font-weight: 600; }
 
 .pc-headline { display: flex; flex-direction: column; gap: 4px; }
-.pc-headline-label { font-size: 10px; font-weight: 600; color: #4f46e5; letter-spacing:.1em; text-transform:uppercase; }
-.pc-headline-ko { font-size: 18px; font-weight: 700; color: #fff; line-height: 1.4; margin: 4px 0 2px; }
-.pc-headline-sub { font-size: 11px; color: rgba(255,255,255,.45); line-height: 1.65; }
+.pc-headline-ko { font-size: 16px; font-weight: 700; color: #111827; line-height: 1.65; }
 
-.pc-settings { display: flex; flex-direction: column; gap: 7px; }
-.pc-setting-btn {
-  display: flex; align-items: center; gap: 8px;
-  background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1);
-  border-radius: 8px; padding: 8px 11px;
-  color: rgba(255,255,255,.7); font-size: 12px; font-weight: 500;
-  cursor: pointer; width: 100%; text-align: left;
+/* AI 검색 섹션 */
+.pc-ai-section { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+.pc-ai-label { font-size: 13px; font-weight: 600; color: #1d4ed8; }
+.pc-ai-row { display: flex; align-items: center; gap: 8px; }
+.pc-ai-input-wrap {
+  flex: 1; display: flex; align-items: center;
+  background: #f9fafb; border: 1.5px solid #d1d5db; border-radius: 10px;
+  overflow: hidden;
 }
-.pc-setting-btn:hover { background: rgba(255,255,255,.12); }
-.pc-setting-icon { font-size: 12px; flex-shrink: 0; }
-.pc-setting-label { flex: 1; }
-.pc-setting-val { font-size: 11px; color: rgba(255,255,255,.38); }
-
-.pc-cta {
-  background: #4f46e5; color: #fff;
-  border: none; border-radius: 10px; padding: 12px 15px;
-  cursor: pointer; text-align: left; width: 100%; line-height: 1.5;
+.pc-ai-input-wrap:focus-within { border-color: #1d4ed8; }
+.pc-ai-input {
+  flex: 1; border: none; background: transparent; padding: 10px 12px;
+  font-size: 13px; color: #111827; outline: none;
 }
-.pc-cta-label { font-size: 10px; font-weight: 500; opacity: .65; margin-bottom: 3px; display: block; }
-.pc-cta-text { font-size: 13px; font-weight: 700; }
-.pc-cta-text .hl { color: #fde68a; }
-.pc-cta.no-action {
-  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); cursor: default;
+.pc-ai-input::placeholder { color: #9ca3af; }
+.pc-ai-btn {
+  background: #1d4ed8; color: #fff; border: none; padding: 10px 13px;
+  font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap;
 }
+.pc-ai-btn:hover { background: #1e40af; }
 
 .pc-right {
   flex: 1; background: #f8f9fb;
@@ -91,13 +90,9 @@
 }
 
 /* ── scale 래퍼 ── */
-/*
-  원본 pc-browser: 760px × ~742px
-  scale(0.72) 표시: 547px × 534px
-*/
 .pc-scale-outer {
-  width: 548px;   /* 760 × 0.72 */
-  height: 538px;  /* 747 × 0.72 (bar 38 + frame 700 + border 4 + 여유) */
+  width: 548px;
+  height: 538px;
   overflow: hidden;
   position: relative;
   border-radius: 10px;
@@ -117,13 +112,6 @@
   gap: 28px;
   align-items: start;
 }
-
-/* ── 케이스 구분 태그 ── */
-.diff-badge {
-  display: inline-block; font-size: 10px; font-weight: 700;
-  padding: 2px 8px; border-radius: 10px;
-  background: #fef3c7; color: #92400e; margin-left: 6px; vertical-align: middle;
-}
 </style>
 </head>
 <body>
@@ -131,7 +119,7 @@
 <nav class="page-nav">
   <a class="page-nav-back" href="index.html">← 목차</a>
   <span class="page-nav-title">PC</span>
-  <span class="page-nav-route">PC 래핑 화면 — 정책서 v0.33 기준</span>
+  <span class="page-nav-route">PC 래핑 화면 — 정책서 v0.44 기준</span>
   <div class="page-nav-nav">
     <span class="page-nav-pager-disabled">← 이전</span>
     <span class="page-nav-pager-disabled">다음 →</span>
@@ -141,9 +129,7 @@
 <div class="toc">
   <div class="toc-inner">
     <span class="toc-label">PC</span>
-    <a href="#pc-a" class="toc-link">PC-A 비로그인</a>
-    <span class="toc-sep"></span>
-    <a href="#pc-b" class="toc-link">PC-B 로그인</a>
+    <a href="#pc-main" class="toc-link">PC 래핑 화면</a>
   </div>
 </div>
 
@@ -152,35 +138,35 @@
   <!-- 섹션 타이틀 -->
   <div class="sec-title">
     <span class="sec-badge">PC</span>PC 래핑 화면
-    <span style="font-size:12px;font-weight:400;color:#888">— 정책서 v0.33 기준 / PC 브라우저 전체 레이아웃</span>
+    <span style="font-size:12px;font-weight:400;color:#888">— 정책서 v0.44 기준 / PC 브라우저 전체 레이아웃</span>
   </div>
   <div class="sec-sub">
-    모바일 화면(375px)을 왼쪽 브랜딩 패널로 감싸 PC 브라우저에서 표시.<br>
-    M01·S01·S02·MAP01·OUT01·MY01 등 <strong>전 화면 동일 래핑 구조</strong> 적용. 왼쪽 패널 sticky 고정.
+    왼쪽 브랜딩+AI 검색 패널(픽콕)과 오른쪽 모바일 프레임(375px)을 나란히 표시.<br>
+    M01·S01·S02·OUT01·MY01 등 <strong>전 화면 동일 래핑 구조</strong> 적용. 왼쪽 패널 sticky 고정.<br>
+    로그인 상태에 따른 UI 분기는 오른쪽 모바일 프레임 내에서 처리.
   </div>
 
   <div class="sec-policy">
     <div class="sec-policy-hdr">⚙ 공통 정책 — PC 래핑 전체</div>
     <ul class="sec-policy-list">
-      <li><strong>적용 범위</strong>: M01·S01·S02·MAP01·OUT01·MY01 등 전 화면 동일 래핑 구조. URL 직접 진입 포함 (3-3절)</li>
-      <li><strong>왼쪽 패널</strong>: sticky 고정. 스크롤 시에도 항상 노출. 구성 순서: 로고 → 헤드카피 → 언어/통화 선택 → 로그인 CTA (3-3절)</li>
-      <li><strong>바텀시트·모달 위치</strong>: 오른쪽 모바일 프레임 안에서만 노출. PC 전체 화면 팝업 방식 미사용 (3-3절)</li>
-      <li><strong>언어·통화 선택</strong>: 왼쪽 패널 버튼 탭 → 오른쪽 모바일 프레임 내 바텀시트. MY01-C·MY01-D와 동일 UX (3-3절 · 11-2절)</li>
-      <li><strong>비로그인 CTA</strong>: "지금 [로그인] 하고 캐시백 적립 받아보세요!" → 탭 시 모바일 프레임 내 AUTH 바텀시트 진입 (3-3절)</li>
-      <li><strong>로그인 CTA</strong>: "지금 '예약' 하고 캐시백 적립 받아보세요!" → 탭 시 액션 없음 (3-3절)</li>
-      <li><strong>앱 다운로드</strong>: MVP 제외. QR코드·스토어 배지 미사용 (3-3절)</li>
-      <li><strong>하단 푸터</strong>: 미결 — 별도 논의 예정</li>
+      <li><strong>적용 범위:</strong> M01·S01·S02·OUT01·MY01 등 전 화면 동일 래핑 구조. URL 직접 진입 포함 (3-3절)</li>
+      <li><strong>왼쪽 패널:</strong> sticky 고정. 스크롤 시에도 항상 노출. 구성 순서: 로고 → 헤드카피 → AI 검색창 (3-3절)</li>
+      <li><strong>AI 검색창:</strong> 왼쪽 패널에서 직접 텍스트 입력 후 [검색하기 →] → S01 검색결과 페이지로 이동. 모바일 M01 검색폼과 동일한 S01 진입 (3-3절)</li>
+      <li><strong>바텀시트·모달 위치:</strong> 오른쪽 모바일 프레임 안에서만 노출. PC 전체 화면 팝업 방식 미사용 (3-3절)</li>
+      <li><strong>언어·통화 선택:</strong> 왼쪽 패널에서 제거. 오른쪽 모바일 프레임 내 MY01 통해 접근 (3-3절)</li>
+      <li><strong>로그인 상태 분기:</strong> 왼쪽 패널은 로그인 상태와 무관하게 동일 UI. 오른쪽 모바일 프레임 내 GNB에서 로그인 상태 반영 (3-3절)</li>
+      <li><strong>앱 다운로드:</strong> MVP 제외. QR코드·스토어 배지 미사용 (3-3절)</li>
     </ul>
-    <div class="sec-policy-rule">기준: v0.33 3-3절</div>
+    <div class="sec-policy-rule">기준: v0.44 3-3절</div>
   </div>
 
   <hr class="sec-divider">
 
-  <!-- ════ PC-A: 비로그인 ════ -->
-  <div id="pc-a" class="sec-title">
-    <span class="sec-badge">PC-A</span>비로그인 상태
+  <!-- ════ PC — 단일 케이스 ════ -->
+  <div id="pc-main" class="sec-title">
+    <span class="sec-badge">PC</span>PC 래핑 화면 — 단일 케이스
   </div>
-  <div class="sec-sub">로그인 전 기본 상태. CTA 버튼 탭 시 모바일 프레임 내 로그인 바텀시트 진입.</div>
+  <div class="sec-sub">로그인 상태와 무관하게 왼쪽 패널은 동일 UI.</div>
 
   <div class="pc-wf-col">
 
@@ -192,37 +178,33 @@
             <div class="pc-br-dot" style="background:#ef4444;"></div>
             <div class="pc-br-dot" style="background:#f59e0b;"></div>
             <div class="pc-br-dot" style="background:#22c55e;"></div>
-            <div class="pc-br-url">allmymeta.com</div>
+            <div class="pc-br-url">pickoq.com</div>
           </div>
           <div class="pc-frame">
 
-            <!-- 왼쪽 브랜딩 패널 -->
+            <!-- 왼쪽 브랜딩+AI검색 패널 -->
             <div class="pc-left">
               <div class="pc-logo">
-                <span class="brand">allmy</span><span class="meta">meta.</span>
+                <span class="brand">PickoQ</span>
+                <span class="sub">픽콕 · 호텔 가격비교</span>
                 <span class="wf-cn">1</span>
               </div>
               <div class="pc-headline">
-                <div class="pc-headline-label">Real-Time Price Comparison</div>
-                <div class="pc-headline-ko">전 세계 호텔<br>최저가를 한눈에 <span class="wf-cn">2</span></div>
-                <div class="pc-headline-sub">주요 OTA 가격을 한번에 비교하고<br>캐시백까지 받아보세요.</div>
+                <div class="pc-headline-ko">
+                  원하는 조건에 맞는 곳만<br>골라보세요<br>예약할수록 포인트가 쌓여요
+                  <span class="wf-cn">2</span>
+                </div>
               </div>
-              <div class="pc-settings">
-                <button class="pc-setting-btn">
-                  <span class="pc-setting-icon">🌐</span>
-                  <span class="pc-setting-label">언어 선택 <span class="wf-cn">3</span></span>
-                  <span class="pc-setting-val">한국어</span>
-                </button>
-                <button class="pc-setting-btn">
-                  <span class="pc-setting-icon">💱</span>
-                  <span class="pc-setting-label">통화 선택 <span class="wf-cn">4</span></span>
-                  <span class="pc-setting-val">KRW ₩</span>
-                </button>
+              <div class="pc-ai-section">
+                <div class="pc-ai-label">✦ 픽콕 AI 검색해보세요 ↓ <span class="wf-cn">3</span></div>
+                <div class="pc-ai-row">
+                  <div class="pc-ai-input-wrap">
+                    <input class="pc-ai-input" type="text" placeholder="검색 input">
+                    <button class="pc-ai-btn">검색하기 →</button>
+                  </div>
+                  <span class="wf-cn">4</span>
+                </div>
               </div>
-              <button class="pc-cta">
-                <span class="pc-cta-label">캐시백 적립 안내</span>
-                <div class="pc-cta-text">지금 <span class="hl">[로그인]</span> 하고<br>캐시백 적립 받아보세요! <span class="wf-cn">5</span></div>
-              </button>
             </div>
 
             <!-- 오른쪽 모바일 프레임 -->
@@ -240,7 +222,7 @@
                   ></iframe>
                 </div>
               </div>
-              <span class="wf-cn" style="align-self:flex-start;margin-top:8px;">6</span>
+              <span class="wf-cn" style="align-self:flex-start;margin-top:8px;">5</span>
             </div>
 
           </div>
@@ -250,18 +232,18 @@
 
     <!-- 오른쪽: 주석 -->
     <div class="ann">
-      <h3>화면 주석 — PC-A (비로그인)</h3>
+      <h3>화면 주석 — PC 래핑 (단일 케이스)</h3>
 
       <div class="ann-item">
         <div class="cn">1</div>
         <div class="ann-body">
           <div class="ann-title">로고 + sticky 패널</div>
           <div class="ann-desc"><ul>
-            <li>실제 브랜드명·로고 디자이너 확정 후 반영. 현재 임시 텍스트.</li>
-            <li>왼쪽 패널 전체 <code>position: sticky</code> 고정 — 오른쪽 스크롤 시에도 항상 노출.</li>
-            <li>M01·S01·S02·MY01 등 전 화면 동일 구조 유지.</li>
+            <li>실제 브랜드명·로고는 디자이너가 만든 최종본으로 반영. 현재 텍스트는 임시.</li>
+            <li>왼쪽 패널 전체가 화면에 고정됨 — 오른쪽을 스크롤해도 항상 보임.</li>
+            <li>M01·S01·S02·MY01 등 모든 화면에서 동일한 패널 구조 사용.</li>
           </ul></div>
-          <div class="ann-rule">정책서 v0.32 3-3절</div>
+          <div class="ann-rule">정책서 v0.44 3-3절</div>
         </div>
       </div>
 
@@ -271,8 +253,7 @@
           <div class="ann-title">헤드카피 ★ (임시 문구)</div>
           <div class="ann-desc"><ul>
             <li><strong>현재 텍스트는 임시.</strong> 마케팅팀·디자이너 확정 후 반영.</li>
-            <li>구조: 영문 레이블(소형) → 한국어 메인 카피(대형) → 서브텍스트.</li>
-            <li>왼쪽 패널 배경색·세부 레이아웃은 디자이너 담당.</li>
+            <li>왼쪽 패널 배경색·폰트·세부 레이아웃은 디자이너 담당.</li>
           </ul></div>
           <div class="ann-rule">카피 미확정 — 마케팅·디자이너 협의 필요</div>
         </div>
@@ -281,160 +262,45 @@
       <div class="ann-item">
         <div class="cn">3</div>
         <div class="ann-body">
-          <div class="ann-title">언어 선택 버튼</div>
+          <div class="ann-title">AI 검색 유도 문구</div>
           <div class="ann-desc"><ul>
-            <li>탭 → <strong>오른쪽 모바일 프레임 내 바텀시트</strong> 노출. MY01-C와 동일 UX.</li>
-            <li>현재 선택 언어 우측 표시 (예: 한국어 / English / 日本語).</li>
-            <li>PC 전체 화면 팝업 방식 미사용.</li>
+            <li>"✦ 픽콕 AI 검색해보세요 ↓" — 아래 검색창으로 시선을 유도하는 레이블.</li>
+            <li>임시 문구. 마케팅팀 확정 후 반영.</li>
           </ul></div>
-          <div class="ann-front">← 바텀시트 위치: 오른쪽 모바일 프레임 내</div>
-          <div class="ann-rule">정책서 v0.32 3-3절 · 11-2절</div>
+          <div class="ann-rule">정책서 v0.44 3-3절</div>
         </div>
       </div>
 
       <div class="ann-item">
         <div class="cn">4</div>
         <div class="ann-body">
-          <div class="ann-title">통화 선택 버튼</div>
+          <div class="ann-title">AI 검색창 ★</div>
           <div class="ann-desc"><ul>
-            <li>탭 → <strong>오른쪽 모바일 프레임 내 바텀시트</strong> 노출. MY01-D와 동일 UX.</li>
-            <li>현재 선택 통화 코드+기호 우측 표시 (예: KRW ₩ / USD $ / JPY ¥).</li>
-            <li>Constants API 기반 전체 통화 목록. 기본값 KRW.</li>
+            <li>텍스트를 입력하고 [검색하기 →] 버튼을 누르면 → <strong>S01 검색결과 페이지로 이동.</strong></li>
+            <li>키보드 Enter 키 입력도 동일하게 검색 실행.</li>
+            <li>모바일 M01의 검색폼과 동일한 S01 결과 화면으로 진입.</li>
+            <li>빈 값으로 검색 시 처리 방식: 미결 — 개발팀 확인 필요 (유효성 검사 여부).</li>
           </ul></div>
-          <div class="ann-front">← 바텀시트 위치: 오른쪽 모바일 프레임 내</div>
-          <div class="ann-rule">정책서 v0.32 3-3절 · 11-2절</div>
+          <div class="ann-rule">정책서 v0.44 3-3절</div>
         </div>
       </div>
 
       <div class="ann-item">
         <div class="cn">5</div>
         <div class="ann-body">
-          <div class="ann-title">로그인 CTA 버튼 — 비로그인 ★</div>
+          <div class="ann-title">오른쪽 모바일 프레임</div>
           <div class="ann-desc"><ul>
-            <li><strong>문구:</strong> "지금 [로그인] 하고 캐시백 적립 받아보세요!"</li>
-            <li><strong>탭 동작:</strong> 오른쪽 모바일 프레임 내 로그인 바텀시트(AUTH) 노출.</li>
-            <li>PC 전체 팝업 방식 미사용.</li>
+            <li>실제 <code>m01_main.html</code>을 <code>?embed</code> 모드로 불러옴. m01 내용이 바뀌면 여기도 자동 반영.</li>
+            <li>embed 모드: 기획서 상단 네비게이션·목차·주석이 제거되고 모바일 화면 본문만 표시.</li>
+            <li>모바일 프레임 너비 375px 고정. 내부 위아래 스크롤 가능.</li>
+            <li><strong>바텀시트·모달은 이 프레임 안에서만 나타남.</strong> PC 전체 화면 팝업 방식 미사용.</li>
+            <li>로그인 여부에 따른 GNB 버튼 변화(예: [로그인] 표시)는 이 프레임 내에서 처리됨.</li>
           </ul></div>
-          <div class="ann-rule">정책서 v0.32 3-3절</div>
-          <div class="ann-case">◼ PC-A(비로그인): 보라색 버튼 + "[로그인]" 강조 + 탭 → AUTH 바텀시트<br>◼ PC-B(로그인): 반투명 버튼 + "'예약'" 강조 + 탭 → 액션 없음</div>
-        </div>
-      </div>
-
-      <div class="ann-item">
-        <div class="cn">6</div>
-        <div class="ann-body">
-          <div class="ann-title">오른쪽 모바일 프레임 — iframe</div>
-          <div class="ann-desc"><ul>
-            <li>실제 <code>m01_main.html</code>을 <code>?embed</code> 모드로 iframe 임베드. m01 변경 시 자동 반영.</li>
-            <li>embed 모드: 기획서 page-nav·TOC·주석 제거 → 모바일 화면 컨텐츠만 표시.</li>
-            <li>모바일 프레임 375px 고정. 내부 세로 스크롤 가능.</li>
-            <li><strong>바텀시트·모달은 이 프레임 내에서만 노출.</strong></li>
-            <li>실제 서비스: 현재 접속 화면(S01·S02·MY01 등)이 표시됨.</li>
-          </ul></div>
-          <div class="ann-rule">정책서 v0.32 3-3절</div>
+          <div class="ann-rule">정책서 v0.44 3-3절</div>
         </div>
       </div>
 
     </div><!-- /ann -->
-  </div><!-- /pc-wf-col -->
-
-  <hr class="sec-divider">
-
-  <!-- ════ PC-B: 로그인 상태 ════ -->
-  <div id="pc-b" class="sec-title">
-    <span class="sec-badge">PC-B</span>로그인 상태
-    <span class="diff-badge">CTA 문구만 변경</span>
-  </div>
-  <div class="sec-sub">왼쪽 패널 CTA 문구만 변경. 나머지 구조 PC-A와 동일.</div>
-
-  <div class="pc-wf-col">
-
-    <!-- 왼쪽: PC 프레임 (scale 축소) -->
-    <div class="pc-scale-outer">
-      <div class="pc-scale-inner">
-        <div class="pc-browser">
-          <div class="pc-browser-bar">
-            <div class="pc-br-dot" style="background:#ef4444;"></div>
-            <div class="pc-br-dot" style="background:#f59e0b;"></div>
-            <div class="pc-br-dot" style="background:#22c55e;"></div>
-            <div class="pc-br-url">allmymeta.com</div>
-          </div>
-          <div class="pc-frame">
-
-            <div class="pc-left">
-              <div class="pc-logo">
-                <span class="brand">allmy</span><span class="meta">meta.</span>
-              </div>
-              <div class="pc-headline">
-                <div class="pc-headline-label">Real-Time Price Comparison</div>
-                <div class="pc-headline-ko">전 세계 호텔<br>최저가를 한눈에</div>
-                <div class="pc-headline-sub">주요 OTA 가격을 한번에 비교하고<br>캐시백까지 받아보세요.</div>
-              </div>
-              <div class="pc-settings">
-                <button class="pc-setting-btn">
-                  <span class="pc-setting-icon">🌐</span>
-                  <span class="pc-setting-label">언어 선택</span>
-                  <span class="pc-setting-val">한국어</span>
-                </button>
-                <button class="pc-setting-btn">
-                  <span class="pc-setting-icon">💱</span>
-                  <span class="pc-setting-label">통화 선택</span>
-                  <span class="pc-setting-val">KRW ₩</span>
-                </button>
-              </div>
-              <!-- 로그인 상태 CTA ★ -->
-              <button class="pc-cta no-action">
-                <span class="pc-cta-label">캐시백 적립 안내</span>
-                <div class="pc-cta-text">지금 <span class="hl">'예약'</span> 하고<br>캐시백 적립 받아보세요! <span class="wf-cn">1</span></div>
-              </button>
-            </div>
-
-            <div class="pc-right">
-              <div class="mobile-device">
-                <div class="m-notch"><div class="m-notch-pill"></div></div>
-                <div class="m-screen">
-                  <iframe
-                    src="m01_main.html?embed"
-                    width="375"
-                    height="640"
-                    frameborder="0"
-                    scrolling="yes"
-                    style="display:block;border:none;"
-                  ></iframe>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 오른쪽: 주석 -->
-    <div class="ann">
-      <h3>화면 주석 — PC-B (로그인) <span class="diff-badge">PC-A 대비 변경점</span></h3>
-
-      <div class="ann-item">
-        <div class="cn">1</div>
-        <div class="ann-body">
-          <div class="ann-title">로그인 CTA 버튼 — 로그인 상태 ★</div>
-          <div class="ann-desc"><ul>
-            <li><strong>문구:</strong> "지금 '예약' 하고 캐시백 적립 받아보세요!" (<code>'예약'</code> 강조)</li>
-            <li><strong>탭 동작:</strong> 액션 없음. 버튼 UI는 유지, 클릭 이벤트 처리 안 함.</li>
-            <li>버튼 스타일: 비로그인(보라색 배경) → 로그인(반투명 배경) 시각 구분.</li>
-            <li>세션 만료(30일) 후 비로그인 상태 복귀 → PC-A CTA로 전환.</li>
-          </ul></div>
-          <div class="ann-rule">정책서 v0.32 3-3절 · 8-7절 (세션 30일)</div>
-          <div class="ann-case">◼ PC-A(비로그인): 보라색 버튼 + "[로그인]" 강조 + 탭 → AUTH 바텀시트<br>◼ PC-B(로그인): 반투명 버튼 + "'예약'" 강조 + 탭 → 액션 없음</div>
-        </div>
-      </div>
-
-      <div style="margin-top:12px;padding:12px;background:#f9fafb;border-radius:8px;font-size:12px;color:#6b7280;line-height:1.8;">
-        <strong style="color:#374151;display:block;margin-bottom:4px;">PC-A와 동일한 항목</strong>
-        CN1 로고·sticky 패널 · CN2 헤드카피(임시) · CN3 언어 선택 · CN4 통화 선택 · CN6 모바일 프레임(iframe)
-      </div>
-    </div>
-
   </div><!-- /pc-wf-col -->
 
 </div><!-- /page -->
