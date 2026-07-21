@@ -65,6 +65,10 @@
   .sc-arrow{position:absolute;bottom:14px;right:16px;font-size:14px;color:#2d3748;transition:color .15s}
   .screen-card:hover .sc-arrow{color:#64748b}
 
+  /* 비활성 카드 (백엔드 관리 등) */
+  .card-disabled{opacity:.35;pointer-events:none;cursor:not-allowed;filter:grayscale(.5)}
+  .card-disabled .sc-arrow{display:none}
+
   /* 카드 테마 색상 */
   .card-login{border-top:2px solid #4f7cff}
   .card-login .sc-num{color:#818cf8}
@@ -166,14 +170,14 @@
       </a>
     </div>
 
-    <div class="idx-toc-group">
-      <div class="idx-toc-group-label">이메일 템플릿</div>
-      <a class="idx-toc-link" href="#card-email01">
+    <div class="idx-toc-group" style="opacity:.4;pointer-events:none">
+      <div class="idx-toc-group-label">이메일 템플릿 <span style="font-size:10px;color:#64748b">(백엔드 관리)</span></div>
+      <span class="idx-toc-link" style="cursor:not-allowed">
         <span class="idx-toc-dot" style="background:#0891b2"></span>템플릿 목록
-      </a>
-      <a class="idx-toc-link" href="#card-email02" style="padding-left:22px">
+      </span>
+      <span class="idx-toc-link" style="padding-left:22px;cursor:not-allowed">
         <span class="idx-toc-dot" style="background:#0891b2;opacity:.6"></span>템플릿 편집
-      </a>
+      </span>
     </div>
   </nav>
 
@@ -184,7 +188,7 @@
     <div class="idx-cover">
       <div class="idx-cover-label">Admin Wireframe · PC 전용 기획서</div>
       <div class="idx-cover-title">올마이투어 신규서비스<br>어드민 화면기획서</div>
-      <div class="idx-cover-sub">KAYAK 메타서치 MVP 어드민 관리 화면<br>정책서 어드민 v0.3 기준 · 8개 기능 영역 · 총 11개 화면</div>
+      <div class="idx-cover-sub">KAYAK 메타서치 MVP 어드민 관리 화면<br>정책서 어드민 v0.3 기준 · 8개 기능 영역 · 총 9개 화면 <span style="opacity:.5;font-size:13px">(이메일 템플릿 2개 백엔드 관리)</span></div>
       <div class="idx-cover-meta">
         <div class="idx-cover-meta-item"><strong>기준 정책서</strong>어드민 v0.3 + Phase1 v0.44</div>
         <div class="idx-cover-meta-item"><strong>화면 기준</strong>PC 1280px 이상</div>
@@ -405,7 +409,7 @@
         <span class="idx-section-count">2개</span>
       </div>
       <div class="screen-grid">
-        <a id="card-email01" class="screen-card card-email" href="adm-email01.html">
+        <div id="card-email01" class="screen-card card-email card-disabled">
           <div class="sc-num">ADM-EMAIL01 <span class="sc-date">최종수정 07.06</span></div>
           <div class="sc-name">이메일 템플릿 목록</div>
           <div class="sc-route">adm-email01.html</div>
@@ -414,10 +418,9 @@
             <span class="sc-case-chip">MVP 5종</span>
             <span class="sc-case-chip">Phase2 1종</span>
           </div>
-          <span class="sc-priority chip-p1">P1</span>
-          <div class="sc-arrow">→</div>
-        </a>
-        <a id="card-email02" class="screen-card card-email" href="adm-email02.html">
+          <span class="sc-priority chip-low">백엔드 관리</span>
+        </div>
+        <div id="card-email02" class="screen-card card-email card-disabled">
           <div class="sc-num">ADM-EMAIL02 <span class="sc-date">최종수정 07.06</span></div>
           <div class="sc-name">이메일 템플릿 편집</div>
           <div class="sc-route">adm-email02.html</div>
@@ -430,9 +433,8 @@
             <span class="sc-case-chip">케이스 E — 취소만료</span>
             <span class="sc-case-chip">케이스 F — Phase2</span>
           </div>
-          <span class="sc-priority chip-p1">P1</span>
-          <div class="sc-arrow">→</div>
-        </a>
+          <span class="sc-priority chip-low">백엔드 관리</span>
+        </div>
       </div>
     </div>
 
