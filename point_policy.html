@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>포인트 정책서 v0.1 — allmytour meta</title>
+<title>포인트 정책서 v0.2 — allmytour meta</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{
@@ -149,15 +149,15 @@ body{
 <nav class="page-nav">
   <a href="index.html">← 목록으로</a>
   <span class="page-nav-sep">|</span>
-  <span class="cur">포인트 정책서 v0.1</span>
+  <span class="cur">포인트 정책서 v0.2</span>
 </nav>
 
 <!-- ── 헤더 ── -->
 <div class="pt-header">
   <div class="pt-header-label">Policy Document · MVP 개발 범위용</div>
-  <div class="pt-header-title">포인트 <span class="pt-mark">정책서</span> v0.1</div>
-  <div class="pt-header-meta">작성일: 2026-07-10 · 작성자: 윤성균 (PO) · 연관: Phase 1 정책서 v0.43 9절</div>
-  <div class="pt-header-badge">기준 문서 <span>context/신규정책/캐시백관리/포인트_정책서_v0.1.md</span></div>
+  <div class="pt-header-title">포인트 <span class="pt-mark">정책서</span> v0.2</div>
+  <div class="pt-header-meta">작성일: 2026-07-10 · 최종수정: 2026-07-22 · 작성자: 윤성균 (PO) · 연관: Phase 1 정책서 v0.44 9절</div>
+  <div class="pt-header-badge">기준 문서 <span>context/신규정책/캐시백관리/포인트_정책서_v0.2.md</span></div>
 </div>
 
 <div class="pt-body-wrap">
@@ -168,7 +168,7 @@ body{
     <a class="pt-toc-art" href="#sec-hist">변경이력</a>
     <a class="pt-toc-art" href="#sec-1">1절. 핵심 전제</a>
     <a class="pt-toc-art" href="#sec-2">2절. 적립 정책</a>
-    <a class="pt-toc-sub" href="#sec-2-1">2-1. 적립 발생 조건 및 시점</a>
+    <a class="pt-toc-sub" href="#sec-2-1">2-1. 적립 발생 조건·시점·예외</a>
     <a class="pt-toc-sub" href="#sec-2-2">2-2. 적립 금액 계산</a>
     <a class="pt-toc-sub" href="#sec-2-3">2-3. 적립 매칭 (p= 파라미터)</a>
     <a class="pt-toc-sub" href="#sec-2-4">2-4. 적립 상태값</a>
@@ -222,6 +222,12 @@ body{
               <td>적립 시점 변경 (KAYAK Approved 의존 → 체크아웃+7일 자사 배치 선적립). <code>booking_clawback</code> 이벤트 타입 추가. 미결 4번 해결.</td>
               <td>윤성균</td>
             </tr>
+            <tr>
+              <td><span class="badge badge-orange">v0.2</span></td>
+              <td>2026-07-22</td>
+              <td>KAYAK 실측 확인(2026-07-22) 기반 추가: ①캐시백 통화 결정 기준(display 통화 아닌 유저 접속 IP 기준) ②해외 접속 유저 포인트 미적립 예외 ③<code>x-original-client-ip</code> 헤더 필수 전달 명시. 미결 #5·#6 신규 추가.</td>
+              <td>윤성균</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -241,7 +247,8 @@ body{
           <tbody>
             <tr><td>포인트 명칭</td><td><strong>포인트(가칭)</strong> — 공식 명칭은 추후 확정</td></tr>
             <tr><td>단위</td><td><strong>1KRW = 1P</strong> 고정</td></tr>
-            <tr><td>기준 통화</td><td><strong>KRW 전용</strong> — 환율 적용 없음</td></tr>
+            <tr><td>기준 통화</td><td><strong>KRW 전용</strong> — 환율 적용 없음. display 통화(EUR·USD 등) 선택과 무관하게 캐시백은 항상 KRW 반환</td></tr>
+            <tr><td>통화 결정 기준</td><td><strong>유저 접속 IP(Client Country)</strong> — KAYAK이 IP 기반으로 캐시백 통화를 결정. <code>currencyCode</code> 파라미터 영향 없음 (2026-07-22 실측 확인)</td></tr>
             <tr><td>대상</td><td>한국인 타겟 MVP</td></tr>
             <tr><td>적립 재계산</td><td>금지 — KAYAK API 반환값 그대로 사용</td></tr>
             <tr><td>포인트 사용</td><td><strong>MVP 제외 (Phase 2)</strong> — 적립 및 소멸만 구현</td></tr>
@@ -267,6 +274,24 @@ body{
               <li>배치 주기: 일 1회 (매일 자정, 체크아웃일 기준 +7일 도달한 건 일괄 적립)</li>
             </ul>
             <blockquote>배경: KAYAK 정산 시점까지 기다리면 고객 불만이 쌓일 수 있으므로 자사 기준으로 선적립. 이후 KAYAK Cancelled 전환 시 회수 처리(3-3절 참조).</blockquote>
+
+            <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:12px 14px;margin-top:12px;">
+              <p style="font-weight:700;color:#92400e;margin-bottom:6px;">⚠️ 해외 접속 유저 예외 (v0.2 추가)</p>
+              <ul>
+                <li>한국 유저라도 <strong>해외에서 접속</strong>하면 KAYAK이 해당 예약의 ClientCountryCode를 KR이 아닌 <strong>접속 국가</strong>로 판단</li>
+                <li>결과: <strong>포인트 미발생</strong> — 자사 소급 적립 불가</li>
+                <li>CS 안내: "해외 접속 환경에서는 포인트가 적립되지 않을 수 있습니다"</li>
+              </ul>
+            </div>
+
+            <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px 14px;margin-top:10px;">
+              <p style="font-weight:700;color:#1d4ed8;margin-bottom:6px;">🔧 x-original-client-ip 헤더 필수 전달 (v0.2 추가)</p>
+              <ul>
+                <li>Hotels Search API 호출 시 <code>x-original-client-ip</code> 헤더에 유저의 <strong>실제 접속 IP</strong> 반드시 전달</li>
+                <li>미전달 시 KAYAK이 서버 IP를 Client Country로 오인 → 캐시백 미발생 가능</li>
+                <li>개발팀 구현 필수 항목 (7절 미결 #6 참조)</li>
+              </ul>
+            </div>
           </div>
         </div>
 
@@ -659,6 +684,22 @@ body{
           <div class="pending-body">
             <strong><span style="text-decoration:line-through;color:#9ca3af">포인트 지급 기준일</span></strong> ✅ 해결<br>
             <strong>체크아웃+7일 자사 배치 선적립</strong>으로 확정 (2026-07-10)
+          </div>
+        </div>
+
+        <div class="pending-item">
+          <div class="pending-num">#5</div>
+          <div class="pending-body">
+            <strong>해외 접속 유저 포인트 배지 표시 정책</strong><br>
+            한국 유저가 해외에서 접속 시 포인트 배지(💸)를 숙소상세(S02)에서 어떻게 표시할지 — 배지 숨김 vs 그대로 표시 후 적립 안내 문구 추가. 개발팀 실측 확인 필요.
+          </div>
+        </div>
+
+        <div class="pending-item">
+          <div class="pending-num">#6</div>
+          <div class="pending-body">
+            <strong>x-original-client-ip 헤더 전달 방식</strong><br>
+            Hotels Search API 호출 시 유저 실제 IP를 <code>x-original-client-ip</code> 헤더로 전달하는 구현 방식 확인 — 프록시·CDN 환경에서 실제 IP 추출 방법. 개발팀 확인 필요.
           </div>
         </div>
 
