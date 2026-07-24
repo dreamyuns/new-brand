@@ -316,7 +316,7 @@ body{
               <tbody>
                 <tr><td>1</td><td><code>city</code></td><td>최상단 고정</td></tr>
                 <tr><td>2</td><td><code>region</code></td><td>city 다음</td></tr>
-                <tr><td>3</td><td>나머지 placeType 값 전체<br><small style="color:#64748b;font-weight:400">airport · country · trainstation · touristregion · neighborhood · landmark · nationalpark · island · hotel 등</small></td><td>API 인기순 그대로</td></tr>
+                <tr><td>3</td><td>나머지 placeType 값 전체<br><small style="color:#64748b;font-weight:400">지역(country · neighborhood · island · touristregion) · 랜드마크(landmark · nationalpark · trainstation) · airport · hotel 등</small></td><td>API 인기순 그대로</td></tr>
               </tbody>
             </table>
           </div>
@@ -330,7 +330,7 @@ body{
             <ul>
               <li>도시·지역 선택 → 해당 지역 전체 호텔 목록</li>
               <li>호텔 선택 → 선택 호텔 최상단 + 동일 지역 목록</li>
-              <li>아이콘: <code>primaryPlaceType</code> 기반 자체 아이콘 세트 (city/region = 지명, hotel = 숙박, airport = 공항, landmark = 명소)</li>
+              <li>아이콘: <code>primaryPlaceType</code> 기반 자체 픽토그램 세트 — 지역(city · region · country · neighborhood · island · touristregion) / 랜드마크(landmark · nationalpark · trainstation) / 공항(airport) / 숙박(hotel)</li>
             </ul>
           </div>
         </div>

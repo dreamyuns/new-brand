@@ -694,12 +694,13 @@
       <div class="cn" style="background:#22c55e;">i</div>
       <div class="ann-body">
         <div class="ann-title">아이콘 처리 정책</div>
-        <div class="ann-desc"><ul><li>Autocomplete API 응답에 아이콘 이미지 URL 없음.</li><li><code>primaryPlaceType</code> 값 기반으로 자체 아이콘 세트 클라이언트에서 매핑 필요 (디자이너 SVG 아이콘 제작 후 적용).</li></ul></div>
+        <div class="ann-desc"><ul><li>Autocomplete API 응답에 아이콘 이미지 URL 없음.</li><li><code>primaryPlaceType</code> 값 기반으로 자체 픽토그램 5종을 클라이언트에서 매핑. 디자이너 제작 후 적용.</li></ul></div>
         <div class="ann-rule">정책서 4-6절.</div>
         <div class="ann-case">
-          city/region → 지역/지도 아이콘 / neighborhood → 핀 아이콘<br>
-          hotel/resort/b&amp;b → 호텔 아이콘 / airport → 공항 아이콘<br>
-          세부 분류 필요 시: <code>displayPlaceType.type</code> 활용 (hotel/resort/bb/city/neighborhood 등 상세 타입 제공)
+          지역(city · region · country · neighborhood · island · touristregion) → 지역 아이콘<br>
+          랜드마크(landmark · nationalpark · trainstation) → 랜드마크 아이콘<br>
+          공항(airport) → 공항 아이콘 / 숙박(hotel) → 호텔 아이콘<br>
+          그 외 미정의 값 → 기본 핀 아이콘 (fallback)
         </div>
       </div>
     </div>
