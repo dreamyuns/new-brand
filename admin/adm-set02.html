@@ -25,28 +25,20 @@
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">Overview</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">📊</span>대시보드</div>
+      <a class="adm-nav-item" href="adm-dashboard.html"><span class="adm-nav-icon">📊</span>대시보드</a>
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">회원관리</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">👥</span>회원 목록</div>
-    </div>
-    <div class="adm-sidebar-section">
-      <div class="adm-sidebar-section-label">예약내역</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">📋</span>예약내역 전체</div>
+      <a class="adm-nav-item" href="adm-mem01.html"><span class="adm-nav-icon">👥</span>회원 목록</a>
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">포인트관리</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">💰</span>포인트 내역</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">📈</span>공급사별 현황</div>
+      <a class="adm-nav-item" href="adm-cb01.html"><span class="adm-nav-icon">💰</span>포인트 내역</a>
+      <a class="adm-nav-item" href="adm-cb02.html"><span class="adm-nav-icon">📈</span>공급사별 현황</a>
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">설정</div>
-      <div class="adm-nav-item active"><span class="adm-nav-icon">⚙️</span>관리자 설정</div>
-    </div>
-    <div class="adm-sidebar-section">
-      <div class="adm-sidebar-section-label">이메일 템플릿</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">✉️</span>이메일 템플릿 관리</div>
+      <a class="adm-nav-item active" href="adm-set01.html"><span class="adm-nav-icon">⚙️</span>관리자 설정</a>
     </div>
     <div class="adm-sidebar-footer">
       <div class="adm-sidebar-user"><strong>마스터 관리자</strong>admin@allmytour.com</div>
@@ -64,71 +56,54 @@
       </div>
     </div>
 
-    <!-- 공통정책 블록 -->
-    <div class="sec-policy">
-      <div class="sec-policy-hdr">⚙ 공통 정책 — 관리자 계정 상세·수정</div>
-      <ul class="sec-policy-list">
-        <li><strong>MVP 범위:</strong> 마스터 단일 계정 비밀번호 변경만 제공 (7-2절)</li>
-        <li><strong>아이디 변경:</strong> 불가. 초기 발급 후 고정 (7-2절)</li>
-        <li><strong>비밀번호 초기화:</strong> 임시 비밀번호 발급 기능 포함 (7-2절)</li>
-        <li><strong>보안 정책:</strong> 세션 만료 시간·2FA·IP 제한 — 미결 (8조 미결 1)</li>
-      </ul>
-      <div class="sec-policy-rule">기준: 어드민 v0.2 7-2절</div>
-    </div>
-
     <div class="two-col" style="align-items:start">
       <div>
 
-        <!-- 계정 상태 통계 -->
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-          <span style="font-size:14px;font-weight:700;color:#374151">계정 상태</span>
-          <span class="wf-cn">4</span>
-        </div>
-        <div class="stat-grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:20px">
-          <div class="stat-card blue">
-            <div class="stat-card-label">마지막 로그인</div>
-            <div class="stat-card-value" style="font-size:16px">06-22 09:15</div>
-            <div class="stat-card-sub">2026-06-22</div>
-          </div>
-          <div class="stat-card gray">
-            <div class="stat-card-label">비밀번호 최종 변경</div>
-            <div class="stat-card-value" style="font-size:16px;color:#9ca3af">초기값</div>
-            <div class="stat-card-sub">2026-01-01 (미변경)</div>
-          </div>
-          <div class="stat-card amber">
-            <div class="stat-card-label">현재 세션</div>
-            <div class="stat-card-value" style="font-size:16px;color:#f59e0b">활성</div>
-            <div class="stat-card-sub">09:15 시작 · 만료 미설정</div>
-          </div>
-          <div class="stat-card green">
-            <div class="stat-card-label">총 로그인 횟수</div>
-            <div class="stat-card-value">142</div>
-            <div class="stat-card-sub">누적 (자사 DB 기준)</div>
-          </div>
-        </div>
-        <hr class="divider" style="margin-bottom:20px">
-
         <!-- 현재 계정 정보 -->
-        <div class="sec-title">현재 계정 정보</div>
+        <div class="sec-title">계정 정보</div>
         <div class="adm-form" style="margin-bottom:24px">
+
+          <!-- 마지막 로그인 (읽기전용) -->
           <div class="adm-form-row">
-            <div class="adm-form-label">아이디</div>
+            <div class="adm-form-label">마지막 로그인 <span class="wf-cn">1</span></div>
+            <div class="adm-form-readonly">2026-06-22 09:15</div>
+          </div>
+
+          <!-- 현재 세션 (읽기전용) -->
+          <div class="adm-form-row">
+            <div class="adm-form-label">현재 세션 <span class="wf-cn">2</span></div>
+            <div class="adm-form-readonly" style="display:flex;align-items:center;gap:8px">
+              <span class="wf-badge badge-approved">활성</span>
+              <span style="font-size:11px;color:#6b7280">09:15 시작 · 만료 미설정 (8조 미결 1)</span>
+            </div>
+          </div>
+
+          <hr class="divider" style="margin:12px 0">
+
+          <!-- 아이디 (읽기전용) -->
+          <div class="adm-form-row">
+            <div class="adm-form-label">아이디 <span class="wf-cn">3</span></div>
             <div class="adm-form-readonly" style="display:flex;align-items:center;gap:8px">
               admin01
               <span class="wf-badge badge-active">마스터</span>
-              <span class="wf-cn">1</span>
             </div>
           </div>
+
+          <!-- 이메일 (읽기전용) -->
           <div class="adm-form-row">
             <div class="adm-form-label">이메일</div>
             <div class="adm-form-readonly">admin@allmytour.com</div>
           </div>
+
+          <!-- 계정 생성일 (읽기전용) -->
           <div class="adm-form-row">
             <div class="adm-form-label">계정 생성일</div>
             <div class="adm-form-readonly">2026-01-01</div>
           </div>
+
+          <!-- 권한 (셀렉트) -->
           <div class="adm-form-row">
-            <div class="adm-form-label">권한 <span class="wf-cn">5</span></div>
+            <div class="adm-form-label">권한 <span class="wf-cn">4</span></div>
             <div>
               <select class="wf-select" style="width:220px">
                 <option value="master" selected>마스터</option>
@@ -137,10 +112,26 @@
               <div class="wf-hint">서브 권한은 Phase 2에서 활성화 예정</div>
             </div>
           </div>
+
+          <!-- 상태 (셀렉트) -->
+          <div class="adm-form-row">
+            <div class="adm-form-label">상태 <span class="wf-cn">5</span></div>
+            <div>
+              <select class="wf-select" style="width:180px">
+                <option value="active" selected>활성</option>
+                <option value="inactive">비활성</option>
+              </select>
+              <div class="wf-hint">비활성 선택 시 해당 계정 로그인이 즉시 차단됩니다</div>
+            </div>
+          </div>
+
+          <div style="text-align:right;margin-top:8px">
+            <button class="wf-btn wf-btn-primary">저장</button>
+          </div>
         </div>
 
         <!-- 비밀번호 변경 -->
-        <div class="sec-title">비밀번호 변경 <span class="wf-cn">2</span></div>
+        <div class="sec-title">비밀번호 변경 <span class="wf-cn">6</span></div>
         <div class="adm-form" style="margin-bottom:24px">
           <div class="adm-form-row" style="margin-bottom:14px">
             <div class="adm-form-label required">현재 비밀번호</div>
@@ -158,8 +149,21 @@
             <input class="wf-input" type="password" placeholder="새 비밀번호 다시 입력">
           </div>
           <div style="text-align:right;margin-top:8px">
-            <button class="wf-btn wf-btn-primary">비밀번호 변경 <span class="wf-cn">3</span></button>
+            <button class="wf-btn wf-btn-primary">비밀번호 변경 <span class="wf-cn">7</span></button>
           </div>
+        </div>
+
+        <!-- 위험 영역 — 계정 삭제 -->
+        <div class="sec-title" style="color:#dc2626;border-bottom-color:#fca5a5">
+          계정 삭제
+        </div>
+        <div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:16px 20px;margin-bottom:24px">
+          <p style="font-size:13px;color:#374151;margin-bottom:12px">
+            계정을 삭제하면 어드민 로그인이 불가능해집니다. 삭제 요청은 백엔드 API를 통해 처리되며, 즉시 적용됩니다.
+          </p>
+          <button class="wf-btn" style="background:#dc2626;color:#fff;border:none">
+            삭제 요청 <span class="wf-cn">8</span>
+          </button>
         </div>
 
         <!-- 서브계정 (Phase 2) -->
@@ -179,71 +183,120 @@
 
       <!-- 주석 -->
       <div class="ann">
+        <!-- 공통정책 블록 (주석 패널 최상단) -->
+        <div class="sec-policy">
+          <div class="sec-policy-hdr">⚙ 공통 정책 — 관리자 계정 상세·수정</div>
+          <ul class="sec-policy-list">
+            <li><strong>MVP 범위:</strong> 마스터 단일 계정 정보 조회·비밀번호 변경·상태 변경만 제공 (7-2절)</li>
+            <li><strong>아이디 변경:</strong> 불가. 초기 발급 후 고정 (7-2절)</li>
+            <li><strong>계정 삭제:</strong> 어드민 화면에서 직접 삭제 로직 없음. 백엔드 API 요청 방식으로 처리 (7-2절)</li>
+            <li><strong>보안 정책:</strong> 세션 만료 시간·2FA·IP 제한 — 미결 (8조 미결 1)</li>
+          </ul>
+          <div class="sec-policy-rule">기준: 어드민 v0.5 7-2절</div>
+        </div>
+
         <h3>주석 — ADM-SET02</h3>
-
-        <div class="ann-item">
-          <span class="cn">4</span>
-          <div class="ann-body">
-            <div class="ann-title">계정 상태 카드 — 데이터 소스</div>
-            <div class="ann-desc"><ul>
-              <li><strong>마지막 로그인:</strong> 자사 DB 로그인 이력 테이블 최신 기록</li>
-              <li><strong>비밀번호 최종 변경:</strong> 자사 DB 비밀번호 변경 이력. 초기값(최초 발급) 표시</li>
-              <li><strong>현재 세션:</strong> 활성 세션 여부. 세션 만료 시간은 미확정 (8조 미결 1)</li>
-              <li><strong>총 로그인 횟수:</strong> 자사 DB 로그인 이력 누적 카운트</li>
-            </ul></div>
-            <div class="ann-rule">세션 만료 시간 미확정 — 보안 정책 확정 필요 (8조 미결 1)</div>
-          </div>
-        </div>
-
-        <div class="ann-item">
-          <span class="cn">5</span>
-          <div class="ann-body">
-            <div class="ann-title">권한 셀렉트 박스</div>
-            <div class="ann-desc"><ul>
-              <li><strong>마스터:</strong> 전체 어드민 기능 접근 가능. MVP 유일 권한</li>
-              <li><strong>서브 (disabled):</strong> Phase 2 활성화 예정. 현재 선택 불가 상태로 렌더링</li>
-              <li>MVP에서는 마스터 고정이므로 실제 변경 불가 — 저장 시 마스터로만 처리</li>
-            </ul></div>
-            <div class="ann-rule">어드민 v0.2 7-2절 — 서브 권한 Phase 2 예정</div>
-          </div>
-        </div>
 
         <div class="ann-item">
           <span class="cn">1</span>
           <div class="ann-body">
-            <div class="ann-title">아이디 (읽기전용)</div>
+            <div class="ann-title">마지막 로그인 (읽기전용)</div>
             <div class="ann-desc"><ul>
-              <li>초기 발급 후 변경 불가</li>
-              <li>"마스터" 배지로 권한 구분</li>
+              <li>자사 DB 로그인 이력 테이블에서 가장 최근 기록을 가져와서 보여줌</li>
+              <li>수정 불가. 시스템이 자동으로 기록하는 값</li>
             </ul></div>
-            <div class="ann-rule">어드민 v0.2 7-2절 — 마스터 단일 권한</div>
           </div>
         </div>
 
         <div class="ann-item">
           <span class="cn">2</span>
           <div class="ann-body">
-            <div class="ann-title">비밀번호 변경 폼</div>
+            <div class="ann-title">현재 세션 (읽기전용)</div>
             <div class="ann-desc"><ul>
-              <li>현재 비밀번호 검증 후 변경 허용</li>
-              <li>새 비밀번호 규칙: 영문+숫자+특수문자 8자 이상</li>
-              <li>새 비밀번호 ≠ 현재 비밀번호 (동일 불가)</li>
+              <li>지금 이 계정이 어드민에 로그인 되어있는지 여부. 활성 = 현재 사용 중</li>
+              <li>세션 만료 시간은 아직 정해지지 않은 상태 — 나중에 보안 정책이 확정되면 반영 (8조 미결 1)</li>
+              <li>수정 불가. 시스템이 자동으로 관리하는 값</li>
             </ul></div>
-            <div class="ann-rule">비밀번호 복잡도 기준 — 보안 정책 확정 후 반영 (8조 미결 1)</div>
+            <div class="ann-rule">세션 만료 시간 미확정 — 보안 정책 확정 필요 (8조 미결 1)</div>
           </div>
         </div>
 
         <div class="ann-item">
           <span class="cn">3</span>
           <div class="ann-body">
+            <div class="ann-title">아이디 (읽기전용)</div>
+            <div class="ann-desc"><ul>
+              <li>처음 계정이 만들어질 때 발급된 아이디. 이후 변경 불가</li>
+              <li>"마스터" 배지로 이 계정의 권한 등급을 한눈에 확인 가능</li>
+            </ul></div>
+            <div class="ann-rule">어드민 v0.2 7-2절 — 아이디 고정 정책</div>
+          </div>
+        </div>
+
+        <div class="ann-item">
+          <span class="cn">4</span>
+          <div class="ann-body">
+            <div class="ann-title">권한 셀렉트</div>
+            <div class="ann-desc"><ul>
+              <li><strong>마스터:</strong> 어드민 전체 기능에 접근 가능. MVP 유일 권한</li>
+              <li><strong>서브 (선택 불가):</strong> Phase 2에서 활성화 예정. 지금은 선택 자체가 막혀 있음</li>
+              <li>MVP에서는 마스터 고정이므로 실제 변경 불가 — 저장 버튼을 눌러도 마스터로만 처리됨</li>
+            </ul></div>
+            <div class="ann-rule">어드민 v0.2 7-2절 — 서브 권한 Phase 2 예정</div>
+          </div>
+        </div>
+
+        <div class="ann-item">
+          <span class="cn">5</span>
+          <div class="ann-body">
+            <div class="ann-title">상태 셀렉트</div>
+            <div class="ann-desc"><ul>
+              <li><strong>활성:</strong> 이 계정으로 어드민 로그인 가능한 상태</li>
+              <li><strong>비활성:</strong> 로그인 즉시 차단. 계정을 삭제하지 않고 접근만 막을 때 사용</li>
+              <li>저장 버튼을 누르면 바로 적용됨. 비활성으로 바꾸면 현재 접속 중인 세션도 종료됨</li>
+            </ul></div>
+            <div class="ann-rule">어드민 v0.2 7-2절 — 비활성 처리 정책</div>
+          </div>
+        </div>
+
+        <div class="ann-item">
+          <span class="cn">6</span>
+          <div class="ann-body">
+            <div class="ann-title">비밀번호 변경 폼</div>
+            <div class="ann-desc"><ul>
+              <li>지금 쓰고 있는 비밀번호를 먼저 입력해서 본인 확인 후 변경 허용</li>
+              <li>새 비밀번호 규칙: 영문+숫자+특수문자 조합, 8자 이상</li>
+              <li>새 비밀번호는 현재 비밀번호와 달라야 함</li>
+            </ul></div>
+            <div class="ann-rule">비밀번호 복잡도 기준 — 보안 정책 확정 후 반영 (8조 미결 1)</div>
+          </div>
+        </div>
+
+        <div class="ann-item">
+          <span class="cn">7</span>
+          <div class="ann-body">
             <div class="ann-title">[비밀번호 변경] 버튼</div>
             <div class="ann-desc"><ul>
-              <li>전체 3필드 입력 + 유효성 통과 시 활성</li>
-              <li>성공 시: 토스트 "비밀번호가 변경되었습니다" + 로그아웃 후 재로그인 유도</li>
-              <li>현재 비밀번호 오류: "현재 비밀번호가 올바르지 않습니다" 에러</li>
-              <li>새 비밀번호 불일치: "비밀번호가 일치하지 않습니다" 에러</li>
+              <li>3개 필드 모두 입력하고 규칙을 통과해야 버튼이 활성화됨</li>
+              <li>변경 성공 시: "비밀번호가 변경되었습니다" 메시지 표시 후 자동 로그아웃 → 재로그인 유도</li>
+              <li>현재 비밀번호 틀림: "현재 비밀번호가 올바르지 않습니다" 오류 표시</li>
+              <li>새 비밀번호 두 칸이 다름: "비밀번호가 일치하지 않습니다" 오류 표시</li>
             </ul></div>
-            <div class="ann-front">프론트: 변경 성공 후 자동 로그아웃 처리 — 보안 정책 확정 후 결정</div>
+            <div class="ann-front">프론트: 변경 성공 후 자동 로그아웃 처리 — 보안 정책 확정 후 최종 결정</div>
+          </div>
+        </div>
+
+        <div class="ann-item">
+          <span class="cn">8</span>
+          <div class="ann-body">
+            <div class="ann-title">[삭제 요청] 버튼</div>
+            <div class="ann-desc"><ul>
+              <li>버튼을 누르면 "정말 삭제하시겠습니까?" 확인 창이 나타남</li>
+              <li>확인 시 백엔드 API에 삭제 요청을 보냄. 어드민 화면에서 직접 DB를 삭제하지 않음</li>
+              <li>삭제 완료 시 해당 계정으로 로그인 불가. 어드민 접근 차단</li>
+              <li>실수 방지를 위해 버튼 색을 빨간색으로 표시 (위험 영역)</li>
+            </ul></div>
+            <div class="ann-rule">어드민 v0.5 7-2절 — 삭제는 백엔드 API 요청 방식</div>
           </div>
         </div>
 

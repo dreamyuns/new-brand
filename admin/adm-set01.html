@@ -25,28 +25,20 @@
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">Overview</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">📊</span>대시보드</div>
+      <a class="adm-nav-item" href="adm-dashboard.html"><span class="adm-nav-icon">📊</span>대시보드</a>
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">회원관리</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">👥</span>회원 목록</div>
-    </div>
-    <div class="adm-sidebar-section">
-      <div class="adm-sidebar-section-label">예약내역</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">📋</span>예약내역 전체</div>
+      <a class="adm-nav-item" href="adm-mem01.html"><span class="adm-nav-icon">👥</span>회원 목록</a>
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">포인트관리</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">💰</span>포인트 내역</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">📈</span>공급사별 현황</div>
+      <a class="adm-nav-item" href="adm-cb01.html"><span class="adm-nav-icon">💰</span>포인트 내역</a>
+      <a class="adm-nav-item" href="adm-cb02.html"><span class="adm-nav-icon">📈</span>공급사별 현황</a>
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">설정</div>
-      <div class="adm-nav-item active"><span class="adm-nav-icon">⚙️</span>관리자 설정</div>
-    </div>
-    <div class="adm-sidebar-section">
-      <div class="adm-sidebar-section-label">이메일 템플릿</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">✉️</span>이메일 템플릿 관리</div>
+      <a class="adm-nav-item active" href="adm-set01.html"><span class="adm-nav-icon">⚙️</span>관리자 설정</a>
     </div>
     <div class="adm-sidebar-footer">
       <div class="adm-sidebar-user"><strong>마스터 관리자</strong>admin@allmytour.com</div>
@@ -59,17 +51,6 @@
     <div class="adm-page-hdr">
       <div class="adm-page-title">관리자 계정 목록</div>
       <div class="adm-page-sub">어드민 접근 계정 관리 · MVP = 마스터 단일 계정</div>
-    </div>
-
-    <!-- 공통정책 블록 -->
-    <div class="sec-policy">
-      <div class="sec-policy-hdr">⚙ 공통 정책 — 관리자 설정</div>
-      <ul class="sec-policy-list">
-        <li><strong>MVP 범위:</strong> 마스터 단일 계정만 운영. 서브계정은 Phase 2 (7-1절)</li>
-        <li><strong>[+ 계정 추가] 버튼:</strong> MVP에서 생략. Phase 2 추가 시 목록 화면에 배치 예정 (7-3절)</li>
-        <li><strong>계정 비활성화:</strong> 삭제 대신 비활성 처리. 비활성 계정은 로그인 차단 (7-2절)</li>
-      </ul>
-      <div class="sec-policy-rule">기준: 어드민 v0.2 7조</div>
     </div>
 
     <div class="two-col" style="align-items:start">
@@ -115,6 +96,17 @@
 
     <!-- 주석 -->
     <div class="ann">
+      <!-- 공통정책 블록 (주석 패널 최상단) -->
+      <div class="sec-policy">
+        <div class="sec-policy-hdr">⚙ 공통 정책 — 관리자 설정</div>
+        <ul class="sec-policy-list">
+          <li><strong>MVP 범위:</strong> 마스터 단일 계정만 운영. 서브계정은 Phase 2 (7-1절)</li>
+          <li><strong>[+ 계정 추가] 버튼:</strong> MVP에서 생략. Phase 2 추가 시 목록 화면에 배치 예정 (7-3절)</li>
+          <li><strong>계정 비활성화:</strong> 삭제 대신 비활성 처리. 비활성 계정은 로그인 차단 (7-2절)</li>
+        </ul>
+        <div class="sec-policy-rule">기준: 어드민 v0.5 7조</div>
+      </div>
+
       <h3>주석 — ADM-SET01</h3>
 
       <div class="ann-item">

@@ -26,28 +26,20 @@
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">Overview</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">📊</span>대시보드</div>
+      <a class="adm-nav-item" href="adm-dashboard.html"><span class="adm-nav-icon">📊</span>대시보드</a>
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">회원관리</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">👥</span>회원 목록</div>
-    </div>
-    <div class="adm-sidebar-section">
-      <div class="adm-sidebar-section-label">예약내역</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">📋</span>예약내역 전체</div>
+      <a class="adm-nav-item" href="adm-mem01.html"><span class="adm-nav-icon">👥</span>회원 목록</a>
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">포인트관리</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">💰</span>포인트 내역</div>
-      <div class="adm-nav-item active"><span class="adm-nav-icon">📈</span>공급사별 현황</div>
+      <a class="adm-nav-item" href="adm-cb01.html"><span class="adm-nav-icon">💰</span>포인트 내역</a>
+      <a class="adm-nav-item active" href="adm-cb02.html"><span class="adm-nav-icon">📈</span>공급사별 현황</a>
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">설정</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">⚙️</span>관리자 설정</div>
-    </div>
-    <div class="adm-sidebar-section">
-      <div class="adm-sidebar-section-label">이메일 템플릿</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">✉️</span>이메일 템플릿 관리</div>
+      <a class="adm-nav-item" href="adm-set01.html"><span class="adm-nav-icon">⚙️</span>관리자 설정</a>
     </div>
     <div class="adm-sidebar-footer">
       <div class="adm-sidebar-user"><strong>마스터 관리자</strong>admin@allmytour.com</div>
@@ -66,18 +58,6 @@
     <div class="two-col" style="align-items:start">
     <div>
 
-      <!-- 공통정책 블록 -->
-      <div class="sec-policy">
-        <div class="sec-policy-hdr">⚙ 공통 정책 — 공급사별 포인트 현황</div>
-        <ul class="sec-policy-list">
-          <li><strong>데이터 소스:</strong> KAYAK Reporting API — <code>providers</code> 기준으로 OTA별로 집계 (6조)</li>
-          <li><strong>집계 기준:</strong> 지급완료(Approved) 건 기준. 적립예정(Active)·취소·만료(Cancelled) 건은 별도 표시 (정책서 v0.30 9-4절)</li>
-          <li><strong>포인트 단위:</strong> P (포인트), 1P = 1원. KAYAK 정산 기준 KRW로 통일 (6-4절)</li>
-          <li><strong>MVP 조회전용:</strong> 포인트율 수동 조정 기능 없음 (Phase 2 후 논의)</li>
-        </ul>
-        <div class="sec-policy-rule">기준: 어드민 v0.1 6조 / 정책서 v0.30 9절</div>
-      </div>
-
       <!-- 월 선택 필터 -->
       <div class="filter-bar" style="margin-bottom:20px">
         <span class="filter-label">기준 월</span>
@@ -93,36 +73,6 @@
         </div>
       </div>
 
-      <!-- 요약 카드 (해당 월 기준) -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:12px;font-weight:700;color:#374151">2026-06 기준 요약 통계</span><span class="wf-cn">3</span></div>
-      <div class="stat-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:24px">
-        <div class="stat-card amber">
-          <div class="stat-card-label">총 포인트 (Approved)</div>
-          <div class="stat-card-value">1,200,000P</div>
-          <div class="stat-card-sub">지급완료 합계</div>
-        </div>
-        <div class="stat-card blue">
-          <div class="stat-card-label">총 예약 건수</div>
-          <div class="stat-card-value">312</div>
-          <div class="stat-card-sub">Booking 기준</div>
-        </div>
-        <div class="stat-card green">
-          <div class="stat-card-label">참여 OTA 수</div>
-          <div class="stat-card-value">7</div>
-          <div class="stat-card-sub">이번 달 발생</div>
-        </div>
-        <div class="stat-card amber">
-          <div class="stat-card-label">적립예정 (Active)</div>
-          <div class="stat-card-value">340,000P</div>
-          <div class="stat-card-sub">미확정</div>
-        </div>
-        <div class="stat-card gray">
-          <div class="stat-card-label">평균 포인트율</div>
-          <div class="stat-card-value">3.8%</div>
-          <div class="stat-card-sub">Approved 기준</div>
-        </div>
-      </div>
-
       <!-- 공급사별 테이블 -->
       <div class="sec-title">공급사별 상세 <span class="wf-cn">2</span></div>
       <div class="adm-table-wrap">
@@ -134,8 +84,8 @@
               <th>Active</th>
               <th>Approved</th>
               <th>Cancelled</th>
-              <th>포인트 합계</th>
-              <th>포인트율/금액 <span class="wf-cn">4</span></th>
+              <th>포인트 합계 <span class="wf-cn">4</span></th>
+              <th>포인트율/금액 <span class="wf-cn">3</span></th>
               <th>타입</th>
             </tr>
           </thead>
@@ -213,6 +163,18 @@
 
     <!-- 주석 -->
     <div class="ann">
+      <!-- 공통정책 블록 (주석 패널 최상단) -->
+      <div class="sec-policy">
+        <div class="sec-policy-hdr">⚙ 공통 정책 — 공급사별 포인트 현황</div>
+        <ul class="sec-policy-list">
+          <li><strong>데이터 소스:</strong> KAYAK Reporting API — <code>providers</code> 기준으로 OTA별로 집계 (6조)</li>
+          <li><strong>집계 기준:</strong> 지급완료(Approved) 건 기준. 적립예정(Active)·취소·만료(Cancelled) 건은 별도 표시 (6-2절)</li>
+          <li><strong>포인트 단위:</strong> P (포인트), 1P = 1원. KAYAK 정산 기준 KRW로 통일 (6-4절)</li>
+          <li><strong>MVP 조회전용:</strong> 포인트율 수동 조정 기능 없음 (Phase 2 후 논의)</li>
+        </ul>
+        <div class="sec-policy-rule">기준: 어드민 v0.5 6조</div>
+      </div>
+
       <h3>주석 — ADM-CB02</h3>
       <div class="ann-item">
         <span class="cn">1</span>
@@ -245,30 +207,27 @@
       <div class="ann-item">
         <span class="cn">3</span>
         <div class="ann-body">
-          <div class="ann-title">요약 통계 계산 방식</div>
-          <div class="ann-desc">
-            <ul>
-              <li><strong>총 포인트(Approved) 1,200,000P:</strong> 해당 월 지급완료 건의 포인트를 모두 더한 값</li>
-              <li><strong>총 예약 건수(312건):</strong> 해당 월 예약 완료 건 전체 — 적립예정(Active) + 지급완료(Approved) + 취소(Cancelled) 합산</li>
-              <li><strong>참여 OTA 수(7개):</strong> 해당 월에 예약이 1건 이상 발생한 OTA의 수</li>
-              <li><strong>적립예정(Active) 340,000P:</strong> 해당 월 발생 건 중 아직 체크아웃 전이거나 확정 안 된 포인트 합계</li>
-              <li><strong>평균 포인트율 3.8%:</strong> PERCENTAGE 타입 OTA에서 (포인트 합계 ÷ 예약금액 합계) × 100. FLAT·NONE 타입 OTA 제외</li>
-            </ul>
-          </div>
-          <div class="ann-rule">어드민 v0.3 6-4절</div>
-        </div>
-      </div>
-      <div class="ann-item">
-        <span class="cn">4</span>
-        <div class="ann-body">
-          <div class="ann-title">포인트율/금액 컬럼 — 타입별 표시 방식</div>
+          <div class="ann-title">포인트율/금액 · 타입 컬럼</div>
           <div class="ann-desc"><ul>
+            <li>KAYAK API에서 받아오는 값을 그대로 표시. 자사에서 별도 계산하지 않음 (현재 적용 기준 따름)</li>
             <li><strong>PERCENTAGE 타입:</strong> 포인트율(%)만 표시 — 예: 3.2% (예약금액의 3.2%를 포인트로 줌)</li>
             <li><strong>FLAT 타입:</strong> 고정 포인트 금액만 표시 — 예: 240,000P (예약금액과 무관하게 항상 이 금액을 줌)</li>
             <li><strong>NONE 타입:</strong> "—" 표시 — 포인트 없는 OTA</li>
             <li>두 값(% + 금액)을 한 행에 같이 표시하지 않음. 타입에 따라 하나만 표시</li>
           </ul></div>
-          <div class="ann-rule">어드민 v0.3 6-4절 — KAYAK 포인트 타입 구분</div>
+          <div class="ann-rule">어드민 v0.3 6-4절 — KAYAK 포인트 타입 구분. 자사 재계산 없음</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <span class="cn">4</span>
+        <div class="ann-body">
+          <div class="ann-title">포인트 합계 컬럼</div>
+          <div class="ann-desc"><ul>
+            <li>지급완료(Approved) 상태인 건들의 포인트 누적 합계만 표시</li>
+            <li>적립예정(Active)·취소·만료(Cancelled) 건의 포인트는 이 합계에 포함되지 않음. 각각 Active·Cancelled 카운트 컬럼에서 별도 확인</li>
+            <li>단위는 P(포인트). 1P = 1원 기준. 소수점 이하 버림</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.3 6-2절·6-4절 — Approved 누적합계 기준</div>
         </div>
       </div>
       <hr class="divider">

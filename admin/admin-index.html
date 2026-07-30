@@ -147,13 +147,6 @@
     </div>
 
     <div class="idx-toc-group">
-      <div class="idx-toc-group-label">예약내역</div>
-      <a class="idx-toc-link" href="#card-book01">
-        <span class="idx-toc-dot" style="background:#3b82f6"></span>예약내역 전체 목록
-      </a>
-    </div>
-
-    <div class="idx-toc-group">
       <div class="idx-toc-group-label">포인트관리</div>
       <a class="idx-toc-link" href="#card-cb01">
         <span class="idx-toc-dot" style="background:#f59e0b"></span>포인트 내역
@@ -188,11 +181,11 @@
     <div class="idx-cover">
       <div class="idx-cover-label">Admin Wireframe · PC 전용 기획서</div>
       <div class="idx-cover-title">올마이투어 신규서비스<br>어드민 화면기획서</div>
-      <div class="idx-cover-sub">KAYAK 메타서치 MVP 어드민 관리 화면<br>정책서 어드민 v0.3 기준 · 8개 기능 영역 · 총 9개 화면 <span style="opacity:.5;font-size:13px">(이메일 템플릿 2개 백엔드 관리)</span></div>
+      <div class="idx-cover-sub">KAYAK 메타서치 MVP 어드민 관리 화면<br>정책서 어드민 v0.5 기준 · 7개 기능 영역 · 총 8개 화면 <span style="opacity:.5;font-size:13px">(이메일 템플릿 2개 백엔드 관리)</span></div>
       <div class="idx-cover-meta">
-        <div class="idx-cover-meta-item"><strong>기준 정책서</strong>어드민 v0.3 + Phase1 v0.44</div>
+        <div class="idx-cover-meta-item"><strong>기준 정책서</strong>어드민 v0.5 + Phase1 v0.44</div>
         <div class="idx-cover-meta-item"><strong>화면 기준</strong>PC 1280px 이상</div>
-        <div class="idx-cover-meta-item"><strong>최종수정</strong>2026-07-20</div>
+        <div class="idx-cover-meta-item"><strong>최종수정</strong>2026-07-30</div>
         <div class="idx-cover-meta-item"><strong>작성자</strong>윤성균 PO</div>
       </div>
     </div>
@@ -207,7 +200,7 @@
         <li><strong>PC 전용:</strong> 모바일 반응형 미포함. 1280px 이상 권장 해상도 (1조)</li>
         <li><strong>세션 관리:</strong> 세션 만료 시 로그인 페이지로 이동 + 경고 알림 — 상세 정책 추후 확정 (8조 미결 2)</li>
       </ul>
-      <div class="idx-policy-rule">기준: 어드민 v0.3 전체 / Phase1 v0.44</div>
+      <div class="idx-policy-rule">기준: 어드민 v0.5 전체 / Phase1 v0.44</div>
     </div>
 
     <!-- ===== 정책서 (최상단) ===== -->
@@ -219,7 +212,7 @@
       </div>
       <div class="screen-grid">
         <a id="card-policy" class="screen-card card-policy" href="adm-policy.html">
-          <div class="sc-num">ADM-POLICY <span class="sc-date">최종수정 07.20</span></div>
+          <div class="sc-num">ADM-POLICY <span class="sc-date">최종수정 07.30</span></div>
           <div class="sc-name">어드민 정책서</div>
           <div class="sc-route">adm-policy.html</div>
           <div class="sc-desc">어드민 서비스 전체 정책 기준 문서. 접근제어·권한·세션·API 연동 정책. 포인트 소수점 버림·지급기준 7일 확정 반영. 8조 미결 #9/#10 추가</div>
@@ -267,7 +260,7 @@
       </div>
       <div class="screen-grid">
         <a id="card-dash" class="screen-card card-dash" href="adm-dashboard.html">
-          <div class="sc-num">ADM-DASH <span class="sc-date">최종수정 06.22</span></div>
+          <div class="sc-num">ADM-DASH <span class="sc-date">최종수정 07.30</span></div>
           <div class="sc-name">대시보드</div>
           <div class="sc-route">adm-dashboard.html</div>
           <div class="sc-desc">주요 수치 요약 카드. 신규회원·예약·포인트 현황 한눈에 확인</div>
@@ -290,52 +283,25 @@
       </div>
       <div class="screen-grid">
         <a id="card-mem01" class="screen-card card-mem" href="adm-mem01.html">
-          <div class="sc-num">ADM-MEM01 <span class="sc-date">최종수정 07.06</span></div>
+          <div class="sc-num">ADM-MEM01 <span class="sc-date">최종수정 07.30</span></div>
           <div class="sc-name">회원 목록</div>
           <div class="sc-route">adm-mem01.html</div>
-          <div class="sc-desc">전체 회원 목록. 이메일·ID 검색·필터. 누적 포인트(P) 컬럼. 탈퇴회원만 보기 버튼</div>
+          <div class="sc-desc">전체 회원 목록. 이메일·ID 검색·필터. 누적 포인트(P) 컬럼. 탈퇴회원 즉시 삭제(B안) — 목록에 미표시</div>
           <div class="sc-cases">
             <span class="sc-case-chip">목록·검색</span>
             <span class="sc-case-chip">누적 포인트(P)</span>
-            <span class="sc-case-chip">탈퇴회원 조회</span>
           </div>
           <span class="sc-priority chip-p1">P1 핵심</span>
           <div class="sc-arrow">→</div>
         </a>
         <a id="card-mem02" class="screen-card card-mem" href="adm-mem02.html">
-          <div class="sc-num">ADM-MEM02 <span class="sc-date">최종수정 07.06</span></div>
+          <div class="sc-num">ADM-MEM02 <span class="sc-date">최종수정 07.30</span></div>
           <div class="sc-name">회원 상세·수정</div>
           <div class="sc-route">adm-mem02.html</div>
-          <div class="sc-desc">회원정보 조회·수정, 예약·포인트 탭. 탈퇴 회원 CS 조회 케이스 D 포함</div>
+          <div class="sc-desc">회원정보(A)·포인트내역(C) 2탭. 마케팅동의 미노출. 공통정책 주석패널 최상단 배치. 예약내역·탈퇴회원 탭 삭제</div>
           <div class="sc-cases">
-            <span class="sc-case-chip">회원정보</span>
-            <span class="sc-case-chip">예약내역 탭</span>
-            <span class="sc-case-chip">포인트 탭</span>
-            <span class="sc-case-chip">탈퇴회원 D</span>
-          </div>
-          <span class="sc-priority chip-p1">P1 핵심</span>
-          <div class="sc-arrow">→</div>
-        </a>
-      </div>
-    </div>
-
-    <!-- ===== 예약내역 ===== -->
-    <div class="idx-section" id="sec-book">
-      <div class="idx-section-hdr">
-        <span class="idx-section-dot" style="background:#3b82f6"></span>
-        <span class="idx-section-label">예약내역</span>
-        <span class="idx-section-count">1개</span>
-      </div>
-      <div class="screen-grid">
-        <a id="card-book01" class="screen-card card-book" href="adm-book01.html">
-          <div class="sc-num">ADM-BOOK01 <span class="sc-date">최종수정 07.06</span></div>
-          <div class="sc-name">예약내역 전체 목록</div>
-          <div class="sc-route">adm-book01.html</div>
-          <div class="sc-desc">KAYAK Reporting API 기준 전체 예약 목록. 예약금액(상품가) 라벨 표기. 검색·필터·Excel 다운로드</div>
-          <div class="sc-cases">
-            <span class="sc-case-chip">전체 목록</span>
-            <span class="sc-case-chip">기간 필터</span>
-            <span class="sc-case-chip">Excel 다운로드</span>
+            <span class="sc-case-chip">A — 회원정보</span>
+            <span class="sc-case-chip">C — 포인트 내역</span>
           </div>
           <span class="sc-priority chip-p1">P1 핵심</span>
           <div class="sc-arrow">→</div>
@@ -352,10 +318,10 @@
       </div>
       <div class="screen-grid">
         <a id="card-cb01" class="screen-card card-cb" href="adm-cb01.html">
-          <div class="sc-num">ADM-CB01 <span class="sc-date">최종수정 07.20</span></div>
+          <div class="sc-num">ADM-CB01 <span class="sc-date">최종수정 07.30</span></div>
           <div class="sc-name">포인트 내역</div>
           <div class="sc-route">adm-cb01.html</div>
-          <div class="sc-desc">회원별 포인트 내역 조회. 소수점 버림 명시. KAYAK 정산 상태 표시 방식 미결 추가. NONE·0P 건 미표시</div>
+          <div class="sc-desc">회원별 포인트 내역 조회. 요약통계 삭제. NONE·0P 건 미표시. 소수점 이하 버림. KAYAK 정산 상태 표시 방식 미결</div>
           <div class="sc-cases">
             <span class="sc-case-chip">내역 목록</span>
             <span class="sc-case-chip">상태 필터</span>
@@ -364,13 +330,12 @@
           <div class="sc-arrow">→</div>
         </a>
         <a id="card-cb02" class="screen-card card-cb" href="adm-cb02.html">
-          <div class="sc-num">ADM-CB02 <span class="sc-date">최종수정 07.06</span></div>
+          <div class="sc-num">ADM-CB02 <span class="sc-date">최종수정 07.30</span></div>
           <div class="sc-name">공급사별 포인트 현황</div>
           <div class="sc-route">adm-cb02.html</div>
-          <div class="sc-desc">공급사(OTA)별 포인트 집계 현황. 월별 통계</div>
+          <div class="sc-desc">공급사(OTA)별 포인트 집계 현황. 월별 조회. 포인트합계=Approved 누적합계. 포인트율·타입 KAYAK 기준 그대로</div>
           <div class="sc-cases">
             <span class="sc-case-chip">공급사별 집계</span>
-            <span class="sc-case-chip">월별 통계</span>
           </div>
           <span class="sc-priority chip-p1">P1</span>
           <div class="sc-arrow">→</div>
@@ -387,10 +352,10 @@
       </div>
       <div class="screen-grid">
         <a id="card-set01" class="screen-card card-set" href="adm-set01.html">
-          <div class="sc-num">ADM-SET01 <span class="sc-date">최종수정 06.22</span></div>
+          <div class="sc-num">ADM-SET01·SET02 <span class="sc-date">최종수정 07.30</span></div>
           <div class="sc-name">관리자 계정 설정</div>
-          <div class="sc-route">adm-set01.html</div>
-          <div class="sc-desc">마스터 계정 비밀번호 변경. 서브계정 관리는 Phase 2</div>
+          <div class="sc-route">adm-set01.html · adm-set02.html</div>
+          <div class="sc-desc">마스터 계정 목록(SET01) + 상세·수정(SET02). 상태 활성/비활성 셀렉트·삭제 요청 추가. 서브계정은 Phase 2</div>
           <div class="sc-cases">
             <span class="sc-case-chip">계정정보</span>
             <span class="sc-case-chip">비밀번호 변경</span>
@@ -440,17 +405,13 @@
 
     <!-- 미결 안내 -->
     <div class="idx-note">
-      <strong>⚠ 주요 미결 사항 (어드민 v0.3 8조)</strong>
-      1. 세션 만료 시간·2FA·IP 제한 보안 정책 미확정 &nbsp;|&nbsp;
-      2. 예약내역 Excel 다운로드 개발 공수 확인 필요 &nbsp;|&nbsp;
-      3. 예약 상태 수동 변경 기능 Phase 2 범위 &nbsp;|&nbsp;
-      4. 포인트 지급·회수·삭제 기능 Phase 2 &nbsp;|&nbsp;
-      5. 서브계정 권한 설계 Phase 2 &nbsp;|&nbsp;
-      6. 강제탈퇴 기능 추후 진행 &nbsp;|&nbsp;
-      7. 취소·만료 실데이터 금액 0원 케이스 표시 기준 확인 필요 (8조 #7) &nbsp;|&nbsp;
-      8. 예약 상태 라벨 형식 통일 필요 (BookingStatus 다양성 — 8조 #8) &nbsp;|&nbsp;
-      9. KAYAK TransactionStatus(Active/Cancelled) 어드민 표시 방식 미결 — 컬럼/툴팁/팝업 중 결정 필요 (8조 #9) &nbsp;|&nbsp;
-      10. Reporting API 조회 주기 및 자사 DB 동기화 방식 개발팀 결정 필요 (8조 #10)
+      <strong>⚠ 주요 미결 사항 (어드민 v0.5 8조)</strong>
+      1. 어드민 로그인 보안 보완 — 2FA·IP 제한·세션 만료 정책 추후 논의 필요 &nbsp;|&nbsp;
+      3. 대시보드 MVP 포함 여부 — 개발 공수 확인 후 결정 &nbsp;|&nbsp;
+      4. Excel 다운로드 MVP 포함 여부 — 공수 크면 Phase 2 &nbsp;|&nbsp;
+      6. 서브 관리자 권한 체계 — Phase 2 (역할·기능 단위 접근 제어) &nbsp;|&nbsp;
+      8. 라벨 형식 다양성 — Click 건 UUID 외 긴 문자열 혼재. 라벨 파싱·회원 매핑 로직 개발팀 확인 필요
+      <br><span style="color:#4ade80;font-size:13px">✅ 해결 완료 — #2 Approved 판단 기준(v0.4 자사 배치 확정) · #5 탈퇴 처리(v0.5 B안 확정, 탭 제거) · #7 다중 통화(v0.4 KRW 단일 확정)</span>
     </div>
 
   </main>

@@ -12,7 +12,7 @@
   <span class="page-nav-title">ADM-CB01</span>
   <span class="page-nav-route">포인트관리 · 포인트 내역</span>
   <div class="page-nav-nav">
-    <a class="page-nav-pager" href="adm-book01.html">← BOOK01</a>
+    <a class="page-nav-pager" href="adm-mem02.html">← MEM02</a>
     <a class="page-nav-pager" href="adm-cb02.html">다음: CB02 →</a>
   </div>
 </nav>
@@ -26,28 +26,20 @@
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">Overview</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">📊</span>대시보드</div>
+      <a class="adm-nav-item" href="adm-dashboard.html"><span class="adm-nav-icon">📊</span>대시보드</a>
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">회원관리</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">👥</span>회원 목록</div>
-    </div>
-    <div class="adm-sidebar-section">
-      <div class="adm-sidebar-section-label">예약내역</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">📋</span>예약내역 전체</div>
+      <a class="adm-nav-item" href="adm-mem01.html"><span class="adm-nav-icon">👥</span>회원 목록</a>
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">포인트관리</div>
-      <div class="adm-nav-item active"><span class="adm-nav-icon">💰</span>포인트 내역</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">📈</span>공급사별 현황</div>
+      <a class="adm-nav-item active" href="adm-cb01.html"><span class="adm-nav-icon">💰</span>포인트 내역</a>
+      <a class="adm-nav-item" href="adm-cb02.html"><span class="adm-nav-icon">📈</span>공급사별 현황</a>
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">설정</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">⚙️</span>관리자 설정</div>
-    </div>
-    <div class="adm-sidebar-section">
-      <div class="adm-sidebar-section-label">이메일 템플릿</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">✉️</span>이메일 템플릿 관리</div>
+      <a class="adm-nav-item" href="adm-set01.html"><span class="adm-nav-icon">⚙️</span>관리자 설정</a>
     </div>
     <div class="adm-sidebar-footer">
       <div class="adm-sidebar-user"><strong>마스터 관리자</strong>admin@allmytour.com</div>
@@ -65,48 +57,6 @@
 
     <div class="two-col" style="align-items:start">
     <div>
-
-      <!-- 공통정책 블록 -->
-      <div class="sec-policy">
-        <div class="sec-policy-hdr">⚙ 공통 정책 — 포인트 내역</div>
-        <ul class="sec-policy-list">
-          <li><strong>데이터 소스:</strong> KAYAK Reporting API — <code>labels</code> 파라미터로 회원에게 귀속된 포인트 내역을 가져옴 (6조)</li>
-          <li><strong>표시 대상:</strong> TypeCode=10(예약 완료 건)만 표시. TypeCode=1(클릭 건)은 표시하지 않음 (6-2절)</li>
-          <li><strong>MVP 조회전용:</strong> 포인트 지급·삭제·회수 기능은 없음. Phase 2에서 추가 예정 (6조)</li>
-          <li><strong>지급완료(Approved) 판단:</strong> 자사 내부 기준 적용 — 체크아웃 후 일정 기간 경과 시 자동 전환. KAYAK <code>paymentMonth</code> 값 단독 기준 아님 (6-2절 v0.42)</li>
-          <li><strong>적립예정(Active) 주의:</strong> KAYAK API 상태값은 <code>Active</code>. 체크아웃 전 미확인 상태 (6-2절)</li>
-          <li><strong>취소·만료(Cancelled):</strong> <code>TransactionStatus = Cancelled</code>. PERCENTAGE 타입이어도 포인트 금액 0인 실데이터 케이스 있음 (6-2절)</li>
-          <li><strong>NONE/0P 건 미표시:</strong> <code>cashbackType = NONE</code> 또는 포인트 금액 0인 건은 이 화면에 표시하지 않음. 예약내역(ADM-BOOK01)에서만 확인 가능 (6-2절)</li>
-          <li><strong>금액 단위:</strong> P (포인트). 1P = 1원 기준. <strong>소수점 이하 버림</strong> (예: 7,659.42 → 7,659P) (6-4절 / 포인트_정책서 v0.1 2-2절)</li>
-          <li><strong>KAYAK 정산 상태 표시 방식:</strong> TransactionStatus(Active/Cancelled) 어드민 별도 표시 여부 미결 — 개발팀 확인 필요 (8조 미결 9)</li>
-        </ul>
-        <div class="sec-policy-rule">기준: 어드민 v0.3 6조</div>
-      </div>
-
-      <!-- 요약 카드 -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:13px;font-weight:700;color:#374151">요약 통계</span><span class="wf-cn">5</span></div>
-      <div class="stat-grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:16px">
-        <div class="stat-card amber">
-          <div class="stat-card-label">누적 포인트 (Approved)</div>
-          <div class="stat-card-value">12,400,000P</div>
-          <div class="stat-card-sub">지급완료 기준</div>
-        </div>
-        <div class="stat-card amber">
-          <div class="stat-card-label">적립예정 (Active)</div>
-          <div class="stat-card-value">2,100,000P</div>
-          <div class="stat-card-sub">체크아웃 전</div>
-        </div>
-        <div class="stat-card gray">
-          <div class="stat-card-label">취소·만료 (Cancelled)</div>
-          <div class="stat-card-value">340,000P</div>
-          <div class="stat-card-sub">반환 불가</div>
-        </div>
-        <div class="stat-card blue">
-          <div class="stat-card-label">귀속 회원 수</div>
-          <div class="stat-card-value">872</div>
-          <div class="stat-card-sub">포인트 발생 회원</div>
-        </div>
-      </div>
 
       <!-- 필터 바 -->
       <div class="filter-bar">
@@ -209,6 +159,23 @@
 
     <!-- 주석 -->
     <div class="ann">
+      <!-- 공통정책 블록 (주석 패널 최상단) -->
+      <div class="sec-policy">
+        <div class="sec-policy-hdr">⚙ 공통 정책 — 포인트 내역</div>
+        <ul class="sec-policy-list">
+          <li><strong>데이터 소스:</strong> KAYAK Reporting API — <code>labels</code> 파라미터로 회원에게 귀속된 포인트 내역을 가져옴 (6조)</li>
+          <li><strong>표시 대상:</strong> TypeCode=10(예약 완료 건)만 표시. TypeCode=1(클릭 건)은 표시하지 않음 (6-2절)</li>
+          <li><strong>MVP 조회전용:</strong> 포인트 지급·삭제·회수 기능은 없음. Phase 2에서 추가 예정 (6조)</li>
+          <li><strong>지급완료(Approved) 판단:</strong> 자사 내부 기준 적용 — 체크아웃 후 일정 기간 경과 시 자동 전환. KAYAK <code>paymentMonth</code> 값 단독 기준 아님 (6-2절 v0.42)</li>
+          <li><strong>적립예정(Active) 주의:</strong> KAYAK API 상태값은 <code>Active</code>. 체크아웃 전 미확인 상태 (6-2절)</li>
+          <li><strong>취소·만료(Cancelled):</strong> <code>TransactionStatus = Cancelled</code>. PERCENTAGE 타입이어도 포인트 금액 0인 실데이터 케이스 있음 (6-2절)</li>
+          <li><strong>NONE/0P 건 미표시:</strong> <code>cashbackType = NONE</code> 또는 포인트 금액 0인 건은 이 화면에 표시하지 않음 (6-2절)</li>
+          <li><strong>금액 단위:</strong> P (포인트). 1P = 1원 기준. <strong>소수점 이하 버림</strong> (예: 7,659.42 → 7,659P) (6-4절 / 포인트_정책서 v0.1 2-2절)</li>
+          <li><strong>KAYAK 정산 상태 표시 방식:</strong> TransactionStatus(Active/Cancelled) 어드민 별도 표시 여부 미결 — 개발팀 확인 필요 (8조 미결 9)</li>
+        </ul>
+        <div class="sec-policy-rule">기준: 어드민 v0.5 6조</div>
+      </div>
+
       <h3>주석 — ADM-CB01</h3>
       <div class="ann-item">
         <span class="cn">1</span>
@@ -264,21 +231,6 @@
             </ul>
           </div>
           <div class="ann-rule">어드민 v0.3 6-2절 / 6-4절 — NONE 미표시 + 실데이터 주의사항</div>
-        </div>
-      </div>
-      <div class="ann-item">
-        <span class="cn">5</span>
-        <div class="ann-body">
-          <div class="ann-title">요약 통계 계산 방식</div>
-          <div class="ann-desc">
-            <ul>
-              <li><strong>누적 포인트(Approved) 12,400,000P:</strong> 지급완료 상태인 모든 건의 포인트를 더한 값. 단위는 P(포인트), 1P = 1원</li>
-              <li><strong>적립예정(Active) 2,100,000P:</strong> 아직 체크아웃 전이거나 확인 중인 건의 포인트 합계. 최종 지급이 확정되지 않은 예정 금액</li>
-              <li><strong>취소·만료(Cancelled) 340,000P:</strong> 취소되거나 만료된 건의 포인트 합계. 이 금액은 환불되지 않고 자사 수익으로 처리됨</li>
-              <li><strong>귀속 회원 수 872명:</strong> 포인트가 1건 이상 적립된 로그인 회원 수. 로그인 없이 이용한 경우는 귀속되지 않으므로 이 숫자에 포함되지 않음</li>
-            </ul>
-          </div>
-          <div class="ann-rule">어드민 v0.3 6-4절 — 포인트 단위 P, 1P=1원</div>
         </div>
       </div>
     </div><!-- /ann -->

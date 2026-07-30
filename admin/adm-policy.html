@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ADM-POLICY — 어드민 정책서 v0.3</title>
+<title>ADM-POLICY — 어드민 정책서 v0.4</title>
 <link rel="stylesheet" href="wf-admin-styles.css">
 <style>
 body{background:#f8fafc;margin:0}
@@ -122,10 +122,6 @@ body{background:#f8fafc;margin:0}
     <a class="policy-toc-sub" href="#sec4-2">회원 상세·수정</a>
     <a class="policy-toc-sub" href="#sec4-3">탈퇴 회원 처리</a>
     <div class="policy-toc-divider"></div>
-    <a class="policy-toc-item" href="#sec5">제5조 — 예약내역</a>
-    <a class="policy-toc-sub" href="#sec5-2">표시 항목</a>
-    <a class="policy-toc-sub" href="#sec5-4">Excel 다운로드</a>
-    <div class="policy-toc-divider"></div>
     <a class="policy-toc-item" href="#sec6">제6조 — 포인트 관리</a>
     <a class="policy-toc-sub" href="#sec6-1">MVP 운영 방침</a>
     <a class="policy-toc-sub" href="#sec6-2">내역 조회</a>
@@ -146,12 +142,12 @@ body{background:#f8fafc;margin:0}
 
     <!-- 커버 -->
     <div class="policy-cover">
-      <div class="policy-cover-label">Admin Policy · v0.3</div>
+      <div class="policy-cover-label">Admin Policy · v0.4</div>
       <div class="policy-cover-title">신규 MVP 어드민 정책서</div>
       <div class="policy-cover-sub">KAYAK 메타서치 MVP 어드민 기능·권한·운영 정책<br>관련 문서: Phase1 정책서 v0.44</div>
       <div class="policy-cover-meta">
-        <div class="policy-cover-meta-item"><strong>버전</strong>v0.3</div>
-        <div class="policy-cover-meta-item"><strong>최종수정</strong>2026-07-06</div>
+        <div class="policy-cover-meta-item"><strong>버전</strong>v0.4</div>
+        <div class="policy-cover-meta-item"><strong>최종수정</strong>2026-07-30</div>
         <div class="policy-cover-meta-item"><strong>작성자</strong>윤성균 PO</div>
         <div class="policy-cover-meta-item"><strong>미결 사항</strong>제8조 (8개)</div>
       </div>
@@ -168,7 +164,8 @@ body{background:#f8fafc;margin:0}
           <tbody>
             <tr><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.55)">v0.1</td><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.35)">2026-06-22</td><td style="color:rgba(255,255,255,.35)">최초 작성</td></tr>
             <tr><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.55)">v0.2</td><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.35)">2026-06-30</td><td style="color:rgba(255,255,255,.35)">이메일 검색 → 이름·이메일·회원ID 통합 검색, 멤버십 컬럼 삭제, 이름 미입력 검색 불가 명시, Approved 판단 기준(KAYAK 비공식 확인)</td></tr>
-            <tr><td style="padding:4px 10px 4px 0;color:#4f7cff;font-weight:700">v0.3</td><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.35)">2026-07-06</td><td style="color:rgba(255,255,255,.35)">이메일 템플릿 관리 1뎁스 추가(9절 신설), 탈퇴 회원 MVP 포함 확정, NONE/0원 미표시, EST 기준, Approved 판단 기준 KAYAK 공식 확인 완료, CPC 각주, 취소·만료 실데이터 주의사항</td></tr>
+            <tr><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.55)">v0.3</td><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.35)">2026-07-06</td><td style="color:rgba(255,255,255,.35)">이메일 템플릿 관리 1뎁스 추가(9절 신설), 탈퇴 회원 MVP 포함 확정, NONE/0원 미표시, EST 기준, Approved 판단 기준 KAYAK 공식 확인 완료, CPC 각주, 취소·만료 실데이터 주의사항</td></tr>
+            <tr><td style="padding:4px 10px 4px 0;color:#4f7cff;font-weight:700">v0.4</td><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.35)">2026-07-30</td><td style="color:rgba(255,255,255,.35)">예약내역 MVP 제외(1-2절·5조 삭제), 탈퇴 처리 B안 확정(1-2절·1-3절·4-3절), 어드민 계정 상태 변경·삭제 요청 추가(7-1절), 8조 미결 #4 예약내역→포인트내역 수정</td></tr>
           </tbody>
         </table>
       </div>
@@ -188,8 +185,8 @@ body{background:#f8fafc;margin:0}
           <thead><tr><th>#</th><th>1뎁스</th><th>MVP 포함</th><th>비고</th></tr></thead>
           <tbody>
             <tr><td>1</td><td>대시보드</td><td><span class="ok">✅ 낮은 우선순위</span></td><td>핵심 수치 요약. 우선순위 낮음 — 공수 확인 후 결정</td></tr>
-            <tr><td>2</td><td>회원관리</td><td><span class="ok">✅</span></td><td>회원 목록·상세 조회 + 수정. 탈퇴 회원 CS 조회 포함</td></tr>
-            <tr><td>3</td><td>예약내역</td><td><span class="ok">✅</span></td><td>KAYAK Reporting API 예약완료 기준</td></tr>
+            <tr><td>2</td><td>회원관리</td><td><span class="ok">✅</span></td><td>회원 목록·상세 조회 + 수정. 탈퇴 회원은 즉시 삭제(B안) — 어드민 조회 불가</td></tr>
+            <tr><td>3</td><td>예약내역</td><td><span class="no">❌ MVP 제외</span></td><td>KAYAK Reporting API 예약 데이터 조회 화면 — Phase 2 이후 추가 예정</td></tr>
             <tr><td>4</td><td>포인트관리</td><td><span class="ok">✅</span></td><td>MVP = 조회 전용. Phase 2 = 상태변경·지급·회수</td></tr>
             <tr><td>5</td><td>어드민 관리자 설정</td><td><span class="ok">✅</span></td><td>마스터 계정 관리. 서브아이디는 Phase 2</td></tr>
             <tr><td>6</td><td>이메일 템플릿 관리</td><td><span class="ok">✅</span></td><td>발송 템플릿 조회·편집. MVP 5종 + Phase 2 1종. 9절 참조</td></tr>
@@ -202,7 +199,7 @@ body{background:#f8fafc;margin:0}
         <table class="policy-table">
           <thead><tr><th>제외 항목</th><th>Phase 예정</th><th>비고</th></tr></thead>
           <tbody>
-            <tr><td>탈퇴 회원 CS 조회</td><td><span class="ok">✅ MVP 포함 확정</span></td><td>탈퇴 후에도 어드민 조회 유지. 정보 수정 불가, 읽기전용. 4-2절 참조</td></tr>
+            <tr><td>탈퇴 회원 CS 조회</td><td><span class="no">❌ MVP 제외 (B안)</span></td><td>탈퇴 즉시 식별정보 전부 파기 → 어드민 조회 불가. 이메일+탈퇴일만 30일 보관 후 자동 삭제. 4-3절 참조</td></tr>
             <tr><td>강제탈퇴 기능</td><td>추후 논의</td><td>CS 정책·개인정보 파기 프로세스 확정 후 추가</td></tr>
             <tr><td>서브 관리자 계정 (권한 설정)</td><td>Phase 2</td><td>권한 체계 별도 논의 필요</td></tr>
             <tr><td>포인트 수동 상태변경·지급·회수</td><td>Phase 2</td><td>1단계 조회 전용 → 2단계 관리 기능</td></tr>
@@ -285,7 +282,7 @@ body{background:#f8fafc;margin:0}
         </table>
       </div>
       <p class="policy-p"><strong>검색:</strong> 이름(영문)·이메일·회원ID 동시 검색. 이름 미입력 회원은 이메일·회원ID로만 검색 가능<br>
-      <strong>기본 표시:</strong> 활성 회원만. [탈퇴회원만 보기] 버튼 클릭 시 탈퇴 회원 단독 조회 (CS 대응 목적)<br>
+      <strong>기본 표시:</strong> 활성 회원만. 탈퇴 회원은 즉시 삭제(B안) — 어드민 조회 불가<br>
       <strong>정렬 기본값:</strong> 가입일 최신순</p>
 
       <div id="sec4-2" class="policy-h3">4-2. 회원 상세 조회 및 수정</div>
@@ -298,83 +295,26 @@ body{background:#f8fafc;margin:0}
             <tr><td>성 (영문)</td><td><span class="ok">✅</span></td><td></td></tr>
             <tr><td>국적</td><td><span class="ok">✅</span></td><td>국가 코드 목록 선택</td></tr>
             <tr><td>전화번호</td><td><span class="ok">✅</span></td><td>국가코드 + 번호</td></tr>
-            <tr><td>마케팅 수신 동의</td><td><span class="ok">✅</span></td><td>ON/OFF 토글</td></tr>
+            <tr><td>마케팅 수신 동의</td><td class="no">미수집</td><td>화면 미노출 — MVP에서 수집하지 않음</td></tr>
             <tr><td>가입일</td><td><span class="no">❌ 읽기전용</span></td><td></td></tr>
           </tbody>
         </table>
       </div>
       <p class="policy-p"><strong>수정 정책:</strong> 관리자가 직접 수정 가능 (CS 대응 목적). 수정 시 변경 일시 기록 (로그 저장)</p>
 
-      <div id="sec4-3" class="policy-h3">4-3. 탈퇴 회원 처리 (v0.3 신설)</div>
+      <div id="sec4-3" class="policy-h3">4-3. 탈퇴 회원 처리 — B안 (즉시 삭제)</div>
       <div class="policy-table-wrap">
         <table class="policy-table">
           <thead><tr><th>항목</th><th>탈퇴 후 정책</th></tr></thead>
           <tbody>
-            <tr><td>어드민 조회</td><td>유지 — [탈퇴회원만 보기] 버튼으로 탈퇴 회원 단독 조회 가능 (CS 대응 목적)</td></tr>
-            <tr><td>예약내역·포인트 탭</td><td>조회 가능 유지 — 이력 확인 필요 시</td></tr>
-            <tr><td>정보 수정</td><td>전체 읽기전용 전환. [저장] 버튼 비활성</td></tr>
-            <tr><td>배지</td><td>회원 상세 상단에 [탈퇴 회원] 빨간 배지 + 탈퇴일 표시</td></tr>
-            <tr><td>강제탈퇴 (어드민)</td><td>MVP 제외 — 추후 논의 예정</td></tr>
-            <tr><td>개인정보 파기</td><td>법무·컴플라이언스 정책에 따름. 어드민 표시 방식 미결</td></tr>
+            <tr><td>회원 데이터 파기</td><td>탈퇴 요청 즉시 이름·전화번호·국적 등 식별정보 전부 삭제</td></tr>
+            <tr><td>이메일 보관</td><td>파기 후 탈퇴 이력(이메일 + 탈퇴일)만 30일 보관 → 자동 삭제 (재가입 방지·최소 이력)</td></tr>
+            <tr><td>어드민 조회</td><td>탈퇴 완료 즉시 목록에서 제거 — 어드민에서 탈퇴 회원 조회 불가</td></tr>
+            <tr><td>포인트·예약 이력</td><td>회원 귀속 해제 — KAYAK 보고서 내 트랜잭션 데이터는 KAYAK 측 보관</td></tr>
+            <tr><td>강제탈퇴 (어드민)</td><td>MVP 제외 — Phase 2 논의 예정</td></tr>
           </tbody>
         </table>
       </div>
-
-      <div class="policy-h3">4-4. 회원별 예약내역 (연동)</div>
-      <p class="policy-p">위치: 회원 상세 화면 내 [예약내역] 탭<br>
-      연동 방식: <code>p=</code> 파라미터로 삽입한 회원 식별자 (<code>labels</code> 필터링) 기반 조회<br>
-      탈퇴 회원도 예약내역 탭 조회 가능 — CS 대응 목적<br>
-      상세 항목: 제5조 5-2절 예약내역 표시 항목과 동일</p>
-    </div>
-
-    <!-- ═══ 제5조 ═══ -->
-    <div id="sec5" class="policy-section">
-      <div class="policy-h2">제5조 <span class="policy-h2-badge" style="background:#3b82f6">예약내역</span></div>
-
-      <div class="policy-h3">5-1. 개요</div>
-      <div class="policy-table-wrap">
-        <table class="policy-table">
-          <thead><tr><th>항목</th><th>내용</th></tr></thead>
-          <tbody>
-            <tr><td>데이터 출처</td><td>KAYAK Reporting API (<code>/api/transactions/leads/Hotel</code>)</td></tr>
-            <tr><td>표시 기준</td><td><code>TransactionType = Booking</code> (예약완료)만 표시. Click 제외</td></tr>
-            <tr><td>연동 구조</td><td>회원별 조회: <code>labels</code> 파라미터로 회원 식별자 필터링</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div id="sec5-2" class="policy-h3">5-2. 예약내역 표시 항목</div>
-      <div class="policy-table-wrap">
-        <table class="policy-table">
-          <thead><tr><th>항목</th><th>API 필드</th><th>비고</th></tr></thead>
-          <tbody>
-            <tr><td>예약일</td><td><code>BookingDate</code></td><td></td></tr>
-            <tr><td>체크인</td><td><code>BookingStartDate</code></td><td></td></tr>
-            <tr><td>체크아웃</td><td><code>BookingEndDate</code></td><td></td></tr>
-            <tr><td>호텔명</td><td><code>HotelName</code></td><td></td></tr>
-            <tr><td>호텔 도시</td><td><code>HotelCity</code></td><td></td></tr>
-            <tr><td>호텔 국가</td><td><code>HotelCountry</code></td><td></td></tr>
-            <tr><td>예약 OTA</td><td><code>ProviderCode</code></td><td>공급사 코드</td></tr>
-            <tr><td>예약금액(상품가)</td><td><code>LocalisedBookingValue</code></td><td>현지화 통화 기준. "상품가" 라벨로 표기 통일</td></tr>
-            <tr><td>통화</td><td><code>LocalisedCurrencyCode</code></td><td></td></tr>
-            <tr><td>포인트 유형</td><td><code>CashbackType</code></td><td>PERCENTAGE / FLAT / NONE</td></tr>
-            <tr><td>포인트 금액</td><td><code>CashbackAmountLocalised</code></td><td>지급 포인트 금액. 소수점 이하 버림 (예: 7,659.42 → 7,659P)</td></tr>
-            <tr><td>상태</td><td><code>TransactionStatus</code></td><td>Active 등</td></tr>
-            <tr><td>지급월</td><td><code>PaymentMonth</code></td><td>참조용. 체크인 변경 시 갱신될 수 있음 (가변값). 실 지급 기준 아님 — 자사 체크아웃+7일 배치 기준 사용</td></tr>
-            <tr><td>회원 식별자</td><td><code>Label</code></td><td>p= 파라미터로 삽입된 값</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="policy-h3">5-3. 예약내역 목록 (전체)</div>
-      <p class="policy-p">진입: 좌측 메뉴 > [예약내역] → 전체 예약완료 목록<br>
-      <strong>검색·필터 기준:</strong> 기간 필터 (체크인 또는 예약일 기준) / 공급사 코드 필터 / 회원 이메일 검색 / 상태 필터<br>
-      <strong>정렬:</strong> 예약일 최신순 (기본)</p>
-
-      <div id="sec5-4" class="policy-h3">5-4. 데이터 내보내기 (Excel)</div>
-      <p class="policy-p">조회된 예약내역을 Excel 파일로 다운로드. 5-2절 전체 항목 포함.</p>
-      <div class="policy-blockquote">MVP 포함 여부: 개발 공수 확인 후 결정 — 공수 크면 Phase 2 이관 (8조 미결 4)</div>
-      <div class="policy-blockquote" style="background:#eff6ff;border-color:#93c5fd;color:#1e3a8a">Phase 2 안내: 자사 상품 연동 시 예약내역은 KAYAK 트랜잭션 + 자사 직접 예약을 통합 표시. MVP에서 KAYAK 기반 구조를 먼저 정립해 두는 것이 목표.</div>
     </div>
 
     <!-- ═══ 제6조 ═══ -->
@@ -423,14 +363,14 @@ body{background:#f8fafc;margin:0}
       <p class="policy-p"><strong>Cancelled(취소·만료) 주의사항 (2026-07-06 실데이터 확인):</strong><br>
       <code>TransactionStatus = Cancelled</code>. PERCENTAGE 타입이어도 포인트 금액 0원인 실데이터 케이스 존재. 타입만으로 금액 유추 불가.</p>
       <p class="policy-p"><strong>NONE/0원 건 미표시:</strong><br>
-      <code>CashbackType = NONE</code> 또는 포인트 금액 0원인 건은 포인트 내역 화면에 표시하지 않음. 예약내역(ADM-BOOK01)에서만 조회 가능.</p>
+      <code>CashbackType = NONE</code> 또는 포인트 금액 0원인 건은 포인트 내역 화면에 표시하지 않음. MVP에서 별도 조회 화면 없음 — Phase 2 예약내역 화면 추가 시 조회 가능.</p>
 
       <div class="policy-h3">6-3. 필터·검색</div>
       <p class="policy-p">기간 필터 (예약일 / 지급월 기준 선택) / 상태 필터 (적립예정 / 지급완료 / 취소·만료) / 공급사 필터 (<code>ProviderCode</code>) / 회원 이메일 검색</p>
 
       <div id="sec6-4" class="policy-h3">6-4. 공급사별 포인트 현황</div>
       <p class="policy-p">공급사 코드별 포인트 발생 건수·합계 금액 집계. 기간 필터 적용 가능.</p>
-      <div class="policy-blockquote">⚠️ CPC 예외 공급사: 일부 공급사는 CPA(예약 완료 시 수수료) 대신 CPC(클릭 시 수수료) 모델로 운영됨. CPC 건은 TransactionType=Click으로 분류되어 예약내역에 표시되지 않음. 공급사별 수익 분석 시 이 점 고려 필요.</div>
+      <div class="policy-blockquote">⚠️ CPC 예외 공급사: 일부 공급사는 CPA(예약 완료 시 수수료) 대신 CPC(클릭 시 수수료) 모델로 운영됨. CPC 건은 TransactionType=Click으로 분류되어 포인트 내역 집계에 포함되지 않음. 공급사별 수익 분석 시 이 점 고려 필요.</div>
     </div>
 
     <!-- ═══ 제7조 ═══ -->
@@ -442,8 +382,10 @@ body{background:#f8fafc;margin:0}
         <table class="policy-table">
           <thead><tr><th>기능</th><th>MVP</th><th>비고</th></tr></thead>
           <tbody>
-            <tr><td>계정 정보 조회</td><td><span class="ok">✅</span></td><td>이메일·등록일 표시</td></tr>
+            <tr><td>계정 정보 조회</td><td><span class="ok">✅</span></td><td>마지막 로그인·현재 세션 포함. 이메일·등록일 표시</td></tr>
             <tr><td>비밀번호 변경</td><td><span class="ok">✅</span></td><td>현재 비밀번호 확인 후 변경</td></tr>
+            <tr><td>상태 변경 (활성/비활성)</td><td><span class="ok">✅</span></td><td>셀렉트 박스 선택. 비활성 시 로그인 즉시 차단</td></tr>
+            <tr><td>계정 삭제</td><td><span class="ok">✅</span></td><td>화면 내 직접 삭제 로직 없음. 백엔드 API 요청 방식으로 처리</td></tr>
             <tr><td>아이디 변경</td><td><span class="no">❌</span></td><td>초기 발급 후 고정</td></tr>
           </tbody>
         </table>
@@ -485,18 +427,18 @@ body{background:#f8fafc;margin:0}
       <div class="unresolved-item">
         <div class="unresolved-num">#4</div>
         <div>
-          <div class="unresolved-content-title">Excel 다운로드 MVP 포함 여부</div>
-          <div class="unresolved-content-desc">예약내역·캐시백 다운로드 공수 확인 후 결정 (크면 Phase 2)</div>
+          <div class="unresolved-content-title">포인트 내역 Excel 다운로드 MVP 포함 여부</div>
+          <div class="unresolved-content-desc">포인트 내역(ADM-CB01) 다운로드 공수 확인 후 결정 (크면 Phase 2). 예약내역은 MVP 제외</div>
         </div>
         <div class="unresolved-owner"><strong>담당</strong>PO + 개발팀</div>
       </div>
       <div class="unresolved-item" style="opacity:0.55;border-style:dashed">
         <div class="unresolved-num" style="color:#059669">✅</div>
         <div>
-          <div class="unresolved-content-title" style="color:#059669">[해결] 탈퇴 회원 어드민 처리</div>
-          <div class="unresolved-content-desc">탈퇴 회원 CS 조회 유지로 결정. 읽기전용 전환 + [탈퇴 회원] 배지 표시 + 예약·포인트 탭 조회 유지. 강제탈퇴는 추후 논의. 4-3절 반영.</div>
+          <div class="unresolved-content-title" style="color:#059669">[변경] 탈퇴 회원 처리 — B안 (즉시 삭제) 확정</div>
+          <div class="unresolved-content-desc">탈퇴 요청 즉시 식별정보 전부 파기. 이메일+탈퇴일만 30일 보관 후 자동 삭제. 어드민 조회 불가. 4-3절 반영. (2026-07-30 변경)</div>
         </div>
-        <div class="unresolved-owner"><strong>해결일</strong>2026-07-06</div>
+        <div class="unresolved-owner"><strong>해결일</strong>2026-07-30</div>
       </div>
       <div class="unresolved-item">
         <div class="unresolved-num">#6</div>
