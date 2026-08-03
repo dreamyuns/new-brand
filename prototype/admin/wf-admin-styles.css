@@ -1,0 +1,275 @@
+/* allmytour 신규서비스 Admin Wireframe — 공유 스타일시트 v1.0 */
+/* PC 기준 (1280px+) · 어드민 전용 */
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Malgun Gothic","Segoe UI",Arial,sans-serif;background:#f0f2f5;color:#1a1a1a;font-size:14px}
+a{color:inherit;text-decoration:none}
+
+/* ══════════════════════════════════════════
+   Page Nav (상단 고정)
+══════════════════════════════════════════ */
+.page-nav{position:fixed;top:0;left:0;right:0;background:#1a1f2e;z-index:300;padding:0 24px;display:flex;align-items:center;height:44px;gap:14px}
+.page-nav-back{color:#4f7cff;font-size:12px;font-weight:700;padding:4px 12px;border:1px solid #4f7cff;border-radius:4px;white-space:nowrap}
+.page-nav-back:hover{background:#4f7cff;color:#fff}
+.page-nav-title{color:#fff;font-size:13px;font-weight:700}
+.page-nav-route{color:rgba(255,255,255,.4);font-size:11px;margin-left:4px}
+.page-nav-sep{color:rgba(255,255,255,.2)}
+.page-nav-nav{margin-left:auto;display:flex;gap:6px;align-items:center}
+.page-nav-pager{color:#4f7cff;font-size:12px;font-weight:700;padding:4px 10px;border:1px solid rgba(79,124,255,.5);border-radius:4px;white-space:nowrap}
+.page-nav-pager:hover{background:#4f7cff;color:#fff}
+.page-nav-pager-disabled{color:rgba(255,255,255,.2);font-size:12px;padding:4px 10px;border:1px solid rgba(255,255,255,.08);border-radius:4px;white-space:nowrap}
+
+/* ══════════════════════════════════════════
+   Admin Shell Layout
+══════════════════════════════════════════ */
+.adm-shell{display:flex;margin-top:44px;min-height:calc(100vh - 44px)}
+
+/* 사이드바 */
+.adm-sidebar{
+  width:160px;flex-shrink:0;
+  background:#1a1f2e;
+  position:sticky;top:44px;height:calc(100vh - 44px);
+  overflow-y:auto;
+  display:flex;flex-direction:column;
+}
+.adm-sidebar-logo{
+  padding:20px 20px 16px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.adm-sidebar-logo-name{font-size:14px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.adm-sidebar-logo-sub{font-size:10px;color:rgba(255,255,255,.35);margin-top:2px}
+
+.adm-sidebar-section{padding:12px 0 4px}
+.adm-sidebar-section-label{
+  font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,.25);padding:0 16px 6px;
+}
+.adm-nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 16px;font-size:13px;font-weight:600;
+  color:rgba(255,255,255,.45);
+  border-left:3px solid transparent;
+  transition:all .15s;cursor:pointer;
+}
+.adm-nav-item:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.75)}
+.adm-nav-item.active{
+  background:rgba(79,124,255,.15);color:#fff;
+  border-left-color:#4f7cff;
+}
+.adm-nav-icon{font-size:14px;width:16px;text-align:center;flex-shrink:0}
+.adm-nav-badge{margin-left:auto;font-size:9px;font-weight:700;background:#e53e3e;color:#fff;padding:1px 5px;border-radius:8px}
+
+.adm-sidebar-footer{
+  margin-top:auto;padding:14px 16px;
+  border-top:1px solid rgba(255,255,255,.07);
+}
+.adm-sidebar-user{font-size:11px;color:rgba(255,255,255,.35);line-height:1.6}
+.adm-sidebar-user strong{color:rgba(255,255,255,.6);display:block;font-size:12px}
+.adm-sidebar-logout{
+  margin-top:8px;font-size:11px;color:rgba(255,255,255,.3);
+  cursor:pointer;padding:4px 0;
+}
+.adm-sidebar-logout:hover{color:#e53e3e}
+
+/* 메인 콘텐츠 */
+.adm-main{flex:1;min-width:0;padding:28px 32px}
+
+/* ══════════════════════════════════════════
+   Page Header
+══════════════════════════════════════════ */
+.adm-page-hdr{margin-bottom:24px}
+.adm-page-title{font-size:22px;font-weight:800;color:#1a1f2e;margin-bottom:4px}
+.adm-page-sub{font-size:13px;color:#6b7280;line-height:1.6}
+.adm-page-actions{display:flex;gap:8px;margin-top:14px}
+
+/* ══════════════════════════════════════════
+   Section
+══════════════════════════════════════════ */
+.sec-title{
+  font-size:15px;font-weight:700;color:#1a1f2e;
+  padding-bottom:10px;border-bottom:2px solid #4f7cff;
+  margin-bottom:18px;display:flex;align-items:center;gap:10px;
+}
+.sec-badge{background:#4f7cff;color:#fff;font-size:11px;padding:3px 10px;border-radius:99px;font-weight:700}
+.sec-sub{font-size:12px;color:#888;margin-bottom:16px;line-height:1.6}
+.sec-divider{border:none;border-top:1px dashed #e0e0da;margin:28px 0}
+
+/* ══════════════════════════════════════════
+   Section Common Policy Block (WF-10)
+══════════════════════════════════════════ */
+.sec-policy{background:#f0fdf4;border:1px solid #bbf7d0;border-left:3px solid #16a34a;border-radius:6px;padding:12px 14px;margin:0 0 18px}
+.sec-policy-hdr{font-size:12px;font-weight:700;color:#166534;margin-bottom:8px;display:flex;align-items:center;gap:4px}
+.sec-policy-list{margin:0;padding:0;list-style:none}
+.sec-policy-list li{font-size:12px;color:#374151;padding-left:12px;position:relative;margin-bottom:4px;line-height:1.65}
+.sec-policy-list li::before{content:"·";position:absolute;left:0;color:#16a34a;font-weight:700}
+.sec-policy-list li:last-child{margin-bottom:0}
+.sec-policy-list code{font-family:'SFMono-Regular',Consolas,monospace;font-size:11px;background:#dcfce7;color:#14532d;padding:1px 4px;border-radius:3px}
+.sec-policy-list strong{color:#1a1f2e}
+.sec-policy-rule{margin-top:8px;font-size:11px;color:#166534;padding-top:6px;border-top:1px solid #bbf7d0}
+
+/* ══════════════════════════════════════════
+   Two Column (와이어프레임 + 주석)
+══════════════════════════════════════════ */
+.two-col{display:grid;grid-template-columns:3fr 2fr;gap:24px;align-items:start}
+.two-col-wide{display:grid;grid-template-columns:3fr 2fr;gap:24px;align-items:start}
+.two-col > *:first-child,.two-col-wide > *:first-child{min-width:0;overflow-x:auto}
+
+/* ══════════════════════════════════════════
+   PC Wireframe Shell
+══════════════════════════════════════════ */
+.wf{border:1px solid #d0d0c8;border-radius:8px;overflow:hidden;background:#fafaf8}
+.wf-pc{border:1px solid #d0d0c8;border-radius:8px;overflow:hidden;background:#fff;min-height:400px}
+
+/* ── 어드민 내부 공통 헤더 ── */
+.wf-adm-header{
+  background:#1a1f2e;padding:12px 20px;
+  display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.wf-adm-header-logo{font-size:13px;font-weight:800;color:#fff}
+.wf-adm-header-account{margin-left:auto;font-size:11px;color:rgba(255,255,255,.5)}
+
+/* ── 어드민 내부 사이드바 (와이어프레임 내) ── */
+.wf-adm-layout{display:flex;min-height:520px}
+.wf-adm-sidebar{width:160px;flex-shrink:0;background:#252b3b;padding:16px 0}
+.wf-adm-nav{font-size:11px;font-weight:600;color:rgba(255,255,255,.4);padding:8px 14px;cursor:pointer;border-left:3px solid transparent}
+.wf-adm-nav.active{color:#fff;background:rgba(79,124,255,.15);border-left-color:#4f7cff}
+.wf-adm-nav-section{font-size:9px;color:rgba(255,255,255,.2);padding:10px 14px 4px;letter-spacing:.1em;text-transform:uppercase}
+.wf-adm-content{flex:1;padding:20px;overflow:auto}
+
+/* ══════════════════════════════════════════
+   Filter / Search Bar
+══════════════════════════════════════════ */
+.filter-bar{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  background:#fff;border:1px solid #e5e7eb;border-radius:8px;
+  padding:12px 16px;margin-bottom:16px;
+}
+.filter-label{font-size:11px;font-weight:700;color:#6b7280;white-space:nowrap}
+.filter-sep{width:1px;height:20px;background:#e5e7eb;margin:0 4px}
+.filter-actions{margin-left:auto;display:flex;gap:6px}
+
+/* ══════════════════════════════════════════
+   Table
+══════════════════════════════════════════ */
+.adm-table-wrap{background:#fff;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden}
+.adm-table{width:100%;border-collapse:collapse;font-size:12px}
+.adm-table thead tr{background:#f8fafc;border-bottom:2px solid #e5e7eb}
+.adm-table th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:#374151;white-space:nowrap}
+.adm-table td{padding:10px 14px;color:#374151;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.adm-table tbody tr:last-child td{border-bottom:none}
+.adm-table tbody tr:hover{background:#f8fafc}
+.adm-table-empty{padding:40px;text-align:center;color:#9ca3af;font-size:13px}
+
+/* 테이블 페이지네이션 */
+.adm-pagination{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#fff;border-top:1px solid #e5e7eb;font-size:12px}
+.adm-pagination-info{color:#6b7280}
+.adm-pagination-btns{display:flex;gap:4px}
+.adm-pagination-btn{padding:4px 10px;border:1px solid #e5e7eb;border-radius:4px;font-size:11px;font-weight:600;color:#374151;background:#fff;cursor:pointer}
+.adm-pagination-btn.active{background:#4f7cff;border-color:#4f7cff;color:#fff}
+
+/* ══════════════════════════════════════════
+   Form
+══════════════════════════════════════════ */
+.adm-form{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:24px}
+.adm-form-section{margin-bottom:24px}
+.adm-form-section-title{font-size:13px;font-weight:700;color:#1a1f2e;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid #f1f5f9}
+.adm-form-row{display:grid;grid-template-columns:140px 1fr;align-items:center;gap:12px;margin-bottom:12px}
+.adm-form-label{font-size:12px;font-weight:700;color:#374151}
+.adm-form-label.required::after{content:" *";color:#e53e3e}
+.adm-form-value{font-size:12px;color:#1a1f2e}
+.adm-form-readonly{font-size:12px;color:#9ca3af;background:#f9fafb;border:1px solid #e5e7eb;padding:6px 10px;border-radius:4px}
+
+/* ══════════════════════════════════════════
+   Buttons
+══════════════════════════════════════════ */
+.wf-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 16px;border-radius:5px;font-size:12px;font-weight:700;border:1.5px solid #bbb;background:#fff;color:#444;cursor:pointer;white-space:nowrap}
+.wf-btn-primary{background:#4f7cff;color:#fff;border-color:#4f7cff}
+.wf-btn-sm{padding:4px 10px;font-size:11px}
+.wf-btn-outline{background:#fff;color:#4f7cff;border-color:#4f7cff}
+.wf-btn-ghost{background:#f5f5f5;color:#666;border-color:#ddd}
+.wf-btn-danger{background:#fff;color:#e53e3e;border-color:#e53e3e}
+.wf-btn-success{background:#10b981;color:#fff;border-color:#10b981}
+.wf-btn-download{background:#fff;color:#059669;border-color:#059669}
+
+/* ══════════════════════════════════════════
+   Input / Select
+══════════════════════════════════════════ */
+.wf-input{border:1px solid #d1d5db;border-radius:5px;padding:6px 10px;font-size:12px;background:#fff;color:#374151;width:100%}
+.wf-select{border:1px solid #d1d5db;border-radius:5px;padding:6px 10px;font-size:12px;background:#fff;color:#374151}
+.wf-hint{font-size:10px;color:#9ca3af;margin-top:3px;line-height:1.5}
+.wf-toggle{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#374151}
+.wf-toggle-track{width:32px;height:18px;background:#10b981;border-radius:99px;position:relative;flex-shrink:0}
+.wf-toggle-track.off{background:#e5e7eb}
+.wf-toggle-thumb{position:absolute;top:2px;right:2px;width:14px;height:14px;background:#fff;border-radius:50%}
+.wf-toggle-track.off .wf-toggle-thumb{right:auto;left:2px}
+
+/* ══════════════════════════════════════════
+   Badge / Status
+══════════════════════════════════════════ */
+.wf-badge{display:inline-block;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:700}
+.badge-waiting{background:#fff3cd;color:#856404}
+.badge-approved{background:#d1fae5;color:#065f46}
+.badge-cancelled{background:#fee2e2;color:#991b1b}
+.badge-active{background:#dbeafe;color:#1e3a8a}
+.badge-inactive{background:#f1f5f9;color:#64748b}
+
+/* Callout number */
+.wf-cn{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;min-width:17px;background:#e53e3e;color:#fff;border-radius:50%;font-size:9px;font-weight:700;margin-left:4px;vertical-align:middle;position:relative;top:-1px}
+
+/* ══════════════════════════════════════════
+   Annotation Panel
+══════════════════════════════════════════ */
+.ann{background:#fff;border-radius:8px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.ann h3{font-size:15px;font-weight:700;color:#1a1f2e;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid #e8e8e2}
+.ann-item{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #f0f0eb;display:flex;gap:10px;align-items:flex-start}
+.ann-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.cn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;min-width:22px;background:#e53e3e;color:#fff;border-radius:50%;font-size:11px;font-weight:700;margin-top:1px}
+.ann-body{flex:1}
+.ann-title{font-size:13px;font-weight:700;color:#1a1f2e;margin-bottom:4px}
+.ann-desc{font-size:12px;color:#444;line-height:1.65}
+.ann-desc ul{margin:4px 0 0;padding-left:0;list-style:none}
+.ann-desc ul li{position:relative;padding-left:12px;margin-bottom:4px;font-size:12px;color:#444;line-height:1.65}
+.ann-desc ul li::before{content:"·";position:absolute;left:0;color:#9ca3af;font-weight:700}
+.ann-desc ul li:last-child{margin-bottom:0}
+.ann-desc code{font-family:'SFMono-Regular',Consolas,monospace;font-size:11px;background:#f1f5f9;color:#0f172a;padding:1px 5px;border-radius:3px;border:1px solid #e2e8f0}
+.ann-front{margin-top:5px;font-size:11px;color:#0e7490;background:#ecfeff;padding:4px 8px;border-radius:3px;border-left:2px solid #0e7490;line-height:1.6}
+.ann-rule{margin-top:5px;font-size:11px;color:#92400e;background:#fefce8;padding:4px 8px;border-radius:3px;border-left:2px solid #fde68a;line-height:1.6}
+.ann-case{margin-top:5px;font-size:11px;color:#1e3a8a;background:#eff6ff;padding:4px 8px;border-radius:3px;border-left:2px solid #93c5fd;line-height:1.6}
+
+/* ══════════════════════════════════════════
+   Dashboard Cards
+══════════════════════════════════════════ */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:24px}
+.stat-card{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:16px 18px}
+.stat-card-label{font-size:11px;color:#6b7280;font-weight:600;margin-bottom:6px}
+.stat-card-value{font-size:24px;font-weight:800;color:#1a1f2e;line-height:1}
+.stat-card-sub{font-size:11px;color:#9ca3af;margin-top:4px}
+.stat-card.blue{border-top:3px solid #4f7cff}
+.stat-card.green{border-top:3px solid #10b981}
+.stat-card.amber{border-top:3px solid #f59e0b}
+.stat-card.purple{border-top:3px solid #8b5cf6}
+.stat-card.gray{border-top:3px solid #6b7280}
+
+/* ══════════════════════════════════════════
+   Tabs (화면 내 탭)
+══════════════════════════════════════════ */
+.adm-tabs{display:flex;gap:0;border-bottom:2px solid #e5e7eb;margin-bottom:20px}
+.adm-tab{padding:8px 20px;font-size:13px;font-weight:700;color:#9ca3af;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px}
+.adm-tab.active{color:#4f7cff;border-bottom-color:#4f7cff}
+.case-tab-bar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;padding:12px 0;border-bottom:1px solid #e5e7eb}
+button.case-tab-btn{border:1px solid #d1d5db;background:#fff;font-family:inherit;font-size:13px;font-weight:600;color:#6b7280;padding:7px 14px;border-radius:20px;cursor:pointer;transition:background .12s,color .12s,border-color .12s}
+button.case-tab-btn:hover{background:#f1f5f9;color:#374151;border-color:#9ca3af}
+button.case-tab-btn.active{background:#1a1f2e;color:#fff;border-color:#1a1f2e}
+
+/* ══════════════════════════════════════════
+   Misc
+══════════════════════════════════════════ */
+.text-muted{color:#9ca3af;font-size:12px}
+.text-danger{color:#e53e3e}
+.divider{border:none;border-top:1px solid #f1f5f9;margin:16px 0}
+.empty-state{text-align:center;padding:48px 24px;color:#9ca3af}
+.empty-state-icon{font-size:36px;margin-bottom:12px}
+.empty-state-text{font-size:14px;font-weight:600;color:#6b7280;margin-bottom:4px}
+.empty-state-sub{font-size:12px}

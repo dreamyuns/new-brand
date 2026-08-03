@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>어드민 프로토타입 — allmytour admin</title>
+<link rel="stylesheet" href="wf-admin-styles.css">
+<style>
+  /* ── 프로토타입 전용 보강 스타일 ── */
+
+  /* 상단 데모 안내바 */
+  .proto-bar{position:fixed;top:0;left:0;right:0;height:34px;z-index:400;background:#4f7cff;color:#fff;
+    display:flex;align-items:center;gap:14px;padding:0 18px;font-size:12px;font-weight:600}
+  .proto-bar b{font-weight:800}
+  .proto-bar .proto-tag{background:rgba(255,255,255,.2);border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700}
+  .proto-bar .proto-right{margin-left:auto;font-size:11px;opacity:.85;font-weight:500}
+
+  /* 로그인 화면 */
+  .login-wrap{min-height:100vh;padding-top:34px;display:flex;align-items:center;justify-content:center;background:#f0f2f5}
+  .login-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:38px 42px;width:100%;max-width:400px;box-shadow:0 4px 24px rgba(0,0,0,.08)}
+  .login-logo{text-align:center;margin-bottom:26px}
+  .login-logo-name{font-size:18px;font-weight:800;color:#1a1f2e}
+  .login-logo-sub{font-size:11px;color:#9ca3af;margin-top:3px}
+  .login-field{margin-bottom:14px}
+  .login-field label{display:block;font-size:12px;font-weight:700;color:#374151;margin-bottom:5px}
+  .login-field input{width:100%;border:1px solid #d1d5db;border-radius:6px;padding:10px 12px;font-size:13px;color:#1a1f2e;background:#fff}
+  .login-field input:focus{outline:none;border-color:#4f7cff;box-shadow:0 0 0 3px rgba(79,124,255,.12)}
+  .login-field input.err{border-color:#e53e3e}
+  .login-btn{width:100%;background:#1a1f2e;color:#fff;border:none;border-radius:6px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;margin-top:8px}
+  .login-btn:hover{background:#2a3350}
+  .login-error{background:#fee2e2;border:1px solid #fca5a5;border-radius:6px;padding:10px 14px;font-size:12px;color:#991b1b;margin-top:12px;display:none}
+  .login-error.show{display:block}
+  .login-hint{background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;padding:9px 12px;font-size:11px;color:#1d4ed8;margin-top:16px;line-height:1.6}
+  .login-footer{text-align:center;margin-top:20px;font-size:11px;color:#9ca3af}
+
+  /* 앱 셸 (로그인 후) — proto-bar 만큼 아래로 */
+  #app-shell{display:none}
+  #app-shell .page-nav{top:34px}
+  #app-shell .adm-shell{margin-top:calc(34px + 44px)}
+  #app-shell .adm-sidebar{top:calc(34px + 44px);height:calc(100vh - 34px - 44px)}
+
+  .adm-nav-item{ text-decoration:none }
+
+  /* 정렬 가능한 테이블 헤더 */
+  th.sortable{cursor:pointer;user-select:none;white-space:nowrap}
+  th.sortable:hover{color:#4f7cff}
+  th.sortable .sort-ind{color:#4f7cff;font-size:10px;margin-left:2px}
+
+  /* 클릭 가능한 행 */
+  tr.row-click{cursor:pointer}
+
+  /* 토스트 */
+  #toast{position:fixed;top:48px;left:50%;transform:translateX(-50%) translateY(-12px);
+    background:#1a1f2e;color:#fff;padding:11px 22px;border-radius:8px;font-size:13px;font-weight:600;
+    z-index:500;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  #toast.ok{background:#10b981}
+  #toast.warn{background:#f59e0b}
+  #toast.err{background:#e53e3e}
+
+  /* 인라인 필드 오류 */
+  .field-err{color:#e53e3e;font-size:11px;margin-top:4px;display:none}
+  .field-err.show{display:block}
+  .wf-input.err,.wf-select.err{border-color:#e53e3e}
+
+  /* 바텀시트(국적 선택) — 데모용 중앙 모달 */
+  .modal-dim{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:450;display:none;align-items:center;justify-content:center;padding:24px}
+  .modal-dim.show{display:flex}
+  .modal-box{background:#fff;border-radius:12px;width:100%;max-width:420px;max-height:70vh;overflow:hidden;display:flex;flex-direction:column}
+  .modal-hdr{padding:16px 20px;border-bottom:1px solid #f1f5f9;font-size:14px;font-weight:800;color:#1a1f2e;display:flex;align-items:center;justify-content:space-between}
+  .modal-close{cursor:pointer;color:#9ca3af;font-size:18px;font-weight:400;line-height:1}
+  .modal-body{overflow-y:auto;padding:8px 0}
+  .nat-item{padding:11px 20px;font-size:13px;color:#374151;cursor:pointer;display:flex;align-items:center;gap:10px}
+  .nat-item:hover{background:#f8fafc}
+  .nat-item.sel{background:#eff6ff;color:#1d4ed8;font-weight:700}
+
+  /* 확인 다이얼로그 */
+  .confirm-box{background:#fff;border-radius:12px;width:100%;max-width:380px;padding:24px;text-align:center}
+  .confirm-box .cf-title{font-size:15px;font-weight:800;color:#1a1f2e;margin-bottom:8px}
+  .confirm-box .cf-msg{font-size:13px;color:#6b7280;line-height:1.6;margin-bottom:20px}
+  .confirm-box .cf-actions{display:flex;gap:8px;justify-content:center}
+
+  .pt-summary{font-size:12px;color:#6b7280;margin-bottom:8px}
+  .pt-summary strong{color:#f59e0b;font-size:14px}
+</style>
+</head>
+<body>
+
+<!-- 데모 안내바 -->
+<div class="proto-bar">
+  <b>어드민 프로토타입</b>
+  <span class="proto-tag">DEMO</span>
+  <span>실제 동작 · 더미데이터 · 기준 어드민 v0.5 / Phase1 v0.44 / 포인트 v0.1</span>
+  <span class="proto-right" id="proto-session"></span>
+</div>
+
+<!-- ════════ 로그인 화면 ════════ -->
+<div class="login-wrap" id="login-view">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-name">allmytour admin</div>
+      <div class="login-logo-sub">관리자 전용 시스템</div>
+    </div>
+    <div class="login-field">
+      <label>아이디</label>
+      <input type="text" id="login-id" placeholder="관리자 아이디 입력" autocomplete="off">
+    </div>
+    <div class="login-field">
+      <label>비밀번호</label>
+      <input type="password" id="login-pw" placeholder="비밀번호 입력">
+    </div>
+    <button class="login-btn" id="login-btn">로그인</button>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-hint">
+      <b>데모 계정</b> — 아이디 <code>admin01</code> / 비밀번호 <code>admin1234!</code><br>
+      (틀리면 오류 케이스, 빈칸이면 세션 만료 케이스가 재현됩니다)
+    </div>
+    <div class="login-footer">문의: 기술연구소 관리자에게 연락해 주세요</div>
+  </div>
+</div>
+
+<!-- ════════ 앱 셸 (로그인 후) ════════ -->
+<div id="app-shell">
+  <nav class="page-nav">
+    <span class="page-nav-title">allmytour admin</span>
+    <span class="page-nav-route" id="nav-route">— 대시보드</span>
+    <div class="page-nav-nav">
+      <span class="page-nav-pager" id="nav-logout" style="cursor:pointer">로그아웃</span>
+    </div>
+  </nav>
+
+  <div class="adm-shell">
+    <!-- 사이드바 LNB -->
+    <aside class="adm-sidebar">
+      <div class="adm-sidebar-logo">
+        <div class="adm-sidebar-logo-name">allmytour admin</div>
+        <div class="adm-sidebar-logo-sub">관리자 전용 시스템</div>
+      </div>
+      <div class="adm-sidebar-section">
+        <div class="adm-sidebar-section-label">Overview</div>
+        <div class="adm-nav-item" data-route="dashboard"><span class="adm-nav-icon">📊</span>대시보드</div>
+      </div>
+      <div class="adm-sidebar-section">
+        <div class="adm-sidebar-section-label">회원관리</div>
+        <div class="adm-nav-item" data-route="mem"><span class="adm-nav-icon">👥</span>회원 목록</div>
+      </div>
+      <div class="adm-sidebar-section">
+        <div class="adm-sidebar-section-label">포인트관리</div>
+        <div class="adm-nav-item" data-route="cb01"><span class="adm-nav-icon">💰</span>포인트 내역</div>
+        <div class="adm-nav-item" data-route="cb02"><span class="adm-nav-icon">📈</span>공급사별 현황</div>
+      </div>
+      <div class="adm-sidebar-section">
+        <div class="adm-sidebar-section-label">설정</div>
+        <div class="adm-nav-item" data-route="set"><span class="adm-nav-icon">⚙️</span>관리자 설정</div>
+      </div>
+      <div class="adm-sidebar-footer">
+        <div class="adm-sidebar-user"><strong>마스터 관리자</strong>admin@allmytour.com</div>
+        <div class="adm-sidebar-logout" id="side-logout">로그아웃</div>
+      </div>
+    </aside>
+
+    <!-- 메인 콘텐츠 (JS 라우팅으로 교체) -->
+    <main class="adm-main" id="view"></main>
+  </div>
+</div>
+
+<!-- 토스트 -->
+<div id="toast"></div>
+
+<!-- 모달 컨테이너 -->
+<div class="modal-dim" id="modal"><div id="modal-inner"></div></div>
+
+<script src="app-data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
