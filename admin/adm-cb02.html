@@ -69,7 +69,6 @@
         </select><span class="wf-cn">1</span>
         <div class="filter-actions">
           <button class="wf-btn wf-btn-primary wf-btn-sm">조회</button>
-          <button class="wf-btn wf-btn-download wf-btn-sm">Excel 다운로드</button>
         </div>
       </div>
 
@@ -82,7 +81,7 @@
               <th>공급사 (OTA)</th>
               <th>예약 건수</th>
               <th>Active</th>
-              <th>Approved</th>
+              <th>지급완료</th>
               <th>Cancelled</th>
               <th>포인트 합계 <span class="wf-cn">4</span></th>
               <th>포인트율/금액 <span class="wf-cn">3</span></th>
@@ -148,7 +147,7 @@
               <td style="text-align:center"><span class="wf-badge badge-cancelled">0</span></td>
               <td style="color:#9ca3af;font-size:11px">—</td>
               <td>—</td>
-              <td><span class="wf-badge badge-inactive" style="font-size:9px">NONE</span></td>
+              <td><span class="wf-badge badge-inactive" style="font-size:9px">미설정</span></td>
             </tr>
             <tr>
               <td colspan="8" style="text-align:center;color:#9ca3af;font-size:11px;padding:14px">
@@ -167,7 +166,7 @@
       <div class="sec-policy">
         <div class="sec-policy-hdr">⚙ 공통 정책 — 공급사별 포인트 현황</div>
         <ul class="sec-policy-list">
-          <li><strong>데이터 소스:</strong> KAYAK Reporting API — <code>providers</code> 기준으로 OTA별로 집계 (6조)</li>
+          <li><strong>데이터 소스:</strong> KAYAK Reporting API — <code>ProviderCode</code> 기준으로 OTA별로 집계 (6조)</li>
           <li><strong>집계 기준:</strong> 지급완료(Approved) 건 기준. 적립예정(Active)·취소·만료(Cancelled) 건은 별도 표시 (6-2절)</li>
           <li><strong>포인트 단위:</strong> P (포인트), 1P = 1원. KAYAK 정산 기준 KRW로 통일 (6-4절)</li>
           <li><strong>MVP 조회전용:</strong> 포인트율 수동 조정 기능 없음 (Phase 2 후 논의)</li>
@@ -197,8 +196,8 @@
             <ul>
               <li>각 OTA(타사 예약 사이트)별로 예약 건수와 포인트 합계를 한 눈에 볼 수 있음</li>
               <li>포인트 합계는 P(포인트) 단위로 표시. 1P = 1원 기준</li>
-              <li>포인트율 평균: PERCENTAGE 타입 OTA에만 계산. FLAT·NONE 타입은 "—"으로 표시</li>
-              <li>NONE 타입 OTA: 포인트가 없어도 예약 건수는 집계됨</li>
+              <li>포인트율 평균: PERCENTAGE 타입 OTA에만 계산. FLAT 타입 또는 CashbackType이 null인 OTA는 "—"으로 표시</li>
+              <li>CashbackType이 null인 OTA: 포인트가 없어도 예약 건수는 집계됨</li>
             </ul>
           </div>
           <div class="ann-rule">어드민 v0.3 6-4절 — 포인트 단위 P, 1P=1원</div>
@@ -212,7 +211,7 @@
             <li>KAYAK API에서 받아오는 값을 그대로 표시. 자사에서 별도 계산하지 않음 (현재 적용 기준 따름)</li>
             <li><strong>PERCENTAGE 타입:</strong> 포인트율(%)만 표시 — 예: 3.2% (예약금액의 3.2%를 포인트로 줌)</li>
             <li><strong>FLAT 타입:</strong> 고정 포인트 금액만 표시 — 예: 240,000P (예약금액과 무관하게 항상 이 금액을 줌)</li>
-            <li><strong>NONE 타입:</strong> "—" 표시 — 포인트 없는 OTA</li>
+            <li><strong>미설정 (null):</strong> "—" 표시 — 포인트가 없는 OTA</li>
             <li>두 값(% + 금액)을 한 행에 같이 표시하지 않음. 타입에 따라 하나만 표시</li>
           </ul></div>
           <div class="ann-rule">어드민 v0.3 6-4절 — KAYAK 포인트 타입 구분. 자사 재계산 없음</div>
