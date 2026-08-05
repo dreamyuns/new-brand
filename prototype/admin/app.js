@@ -354,9 +354,9 @@ function renderMemTab(){
     const cum=memberCumulativePoints(m.email);
     body.innerHTML=`
       <div class="sec-sub">${esc((m.firstName+' '+m.lastName).trim()||m.email)} 기준 · ADM-CB01과 동일 규칙 · MVP 조회전용 · NONE·0P 건 미표시 (6조)</div>
-      <div class="pt-summary">지급완료(Approved) 누적 포인트: <strong>${cum>0?fmtP(cum):'0P'}</strong></div>
+      <div class="pt-summary">적립완료(Approved) 누적 포인트: <strong>${cum>0?fmtP(cum):'0P'}</strong></div>
       <div class="adm-table-wrap"><table class="adm-table">
-        <thead><tr><th>예약 ID</th><th>호텔명</th><th>체크인</th><th>체크아웃</th><th>공급사(OTA)</th><th>포인트 금액</th><th>타입</th><th>상태</th><th>지급일</th></tr></thead>
+        <thead><tr><th>예약 ID</th><th>호텔명</th><th>체크인</th><th>체크아웃</th><th>공급사(OTA)</th><th>포인트 금액</th><th>타입</th><th>상태</th><th>적립일</th></tr></thead>
         <tbody>${rows.length? rows.map(r=>`<tr>
           <td style="font-family:monospace;font-size:11px">${r.resId}</td>
           <td>${esc(r.hotel)}</td><td>${r.checkIn}</td><td>${r.checkOut}</td><td>${esc(r.ota)}</td>
@@ -445,7 +445,7 @@ function renderCB01(){
         <option value="Cancelled" ${s.status==='Cancelled'?'selected':''}>취소·만료 (Cancelled)</option>
       </select>
       <span class="filter-sep"></span>
-      <span class="filter-label">지급월</span>
+      <span class="filter-label">적립월</span>
       <label class="radio-opt"><input type="radio" name="cb-mode" value="all" ${s.mode==='all'?'checked':''} onclick="cb01Mode('all')"> 전체</label>
       <label class="radio-opt"><input type="radio" name="cb-mode" value="range" ${s.mode==='range'?'checked':''} onclick="cb01Mode('range')"> 기간 선택</label>
       <input class="wf-input" id="cb-from" style="width:130px" type="month" value="${s.fromMonth}" ${s.mode==='all'?'disabled':''} onchange="cb01FromInput()">
@@ -457,14 +457,14 @@ function renderCB01(){
         <button class="wf-btn wf-btn-download wf-btn-sm" onclick="toast('포인트 내역을 Excel로 내려받습니다 (데모)')">Excel 다운로드</button>
       </div>
     </div>
-    <div class="wf-hint" style="margin:-8px 0 14px">지급월: <strong>전체</strong>(기본) 또는 <strong>기간 선택</strong> · 시작월만 입력하면 그 달만 조회(종료월=시작월) · 종료월은 시작월 입력 후 활성화 · 형식 YYYY-MM</div>
+    <div class="wf-hint" style="margin:-8px 0 14px">적립월: <strong>전체</strong>(기본) 또는 <strong>기간 선택</strong> · 시작월만 입력하면 그 달만 조회(종료월=시작월) · 종료월은 시작월 입력 후 활성화 · 형식 YYYY-MM</div>
 
     <div class="adm-table-wrap"><table class="adm-table">
       <thead><tr>
         <th>회원</th><th>호텔명</th><th>체크인</th><th>체크아웃</th><th>공급사(OTA)</th>
         <th class="sortable" onclick="cb01Sort('point')">포인트 금액${sortInd('cb01','point')}</th>
         <th>포인트 타입</th><th>상태</th>
-        <th class="sortable" onclick="cb01Sort('payMonth')">지급일${sortInd('cb01','payMonth')}</th>
+        <th class="sortable" onclick="cb01Sort('payMonth')">적립일${sortInd('cb01','payMonth')}</th>
       </tr></thead>
       <tbody>${rows.length? rows.map(r=>`<tr>
         <td style="font-size:12px">${r.memberEmail? esc(r.memberEmail):GUEST_LABEL}</td>
