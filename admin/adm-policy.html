@@ -352,7 +352,7 @@ body{background:#f8fafc;margin:0}
             <tr><td>예약 OTA</td><td><code>ProviderCode</code></td><td></td></tr>
             <tr><td>포인트 유형</td><td><code>CashbackType</code></td><td>PERCENTAGE / FLAT / null (미설정)</td></tr>
             <tr><td>포인트 금액</td><td><code>CashbackAmountLocalised</code></td><td>KAYAK 환율 환산 완료 후 반환. 단위: P</td></tr>
-            <tr><td>지급월</td><td><code>PaymentMonth</code></td><td>EST(미국 동부 시간) 기준. 한국 시간과 최대 13~14시간 차이</td></tr>
+            <tr><td>적립월</td><td><code>PaymentMonth</code></td><td>EST(미국 동부 시간) 기준. 한국 시간과 최대 13~14시간 차이</td></tr>
             <tr><td>상태 배지</td><td>내부 정의</td><td><code>적립예정</code> / <code>지급완료</code> / <code>취소·만료</code></td></tr>
           </tbody>
         </table>
@@ -366,7 +366,7 @@ body{background:#f8fafc;margin:0}
       <code>CashbackType이 null</code>(미설정) 또는 포인트 금액 0원인 건은 포인트 내역 화면에 표시하지 않음. MVP에서 별도 조회 화면 없음 — Phase 2 예약내역 화면 추가 시 조회 가능.</p>
 
       <div class="policy-h3">6-3. 필터·검색</div>
-      <p class="policy-p">기간 필터 (예약일 / 지급월 기준 선택) / 상태 필터 (적립예정 / 지급완료 / 취소·만료) / 공급사 필터 (<code>ProviderCode</code>) / 회원 이메일 검색</p>
+      <p class="policy-p">기간 필터 (예약일 / 적립월 기준 선택) / 상태 필터 (적립예정 / 지급완료 / 취소·만료) / 공급사 필터 (<code>ProviderCode</code>) / 회원 이메일 검색</p>
 
       <div id="sec6-4" class="policy-h3">6-4. 공급사별 포인트 현황</div>
       <p class="policy-p">공급사 코드별 포인트 발생 건수·합계 금액 집계. 기간 필터 적용 가능.</p>

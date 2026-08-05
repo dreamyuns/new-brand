@@ -70,7 +70,7 @@
           <option>적립완료 (자사 확정)</option>
           <option>취소·만료 (Cancelled)</option>
         </select><span class="wf-cn">2</span>
-        <span class="filter-label">지급월</span>
+        <span class="filter-label">적립월</span>
         <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:13px;color:#374151;white-space:nowrap"><input type="radio" name="period-cb01" value="all" checked style="cursor:pointer"> 전체</label>
         <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:13px;color:#374151;white-space:nowrap"><input type="radio" name="period-cb01" value="range" style="cursor:pointer"> 기간 선택</label>
         <input class="wf-input" style="width:110px;opacity:0.45;cursor:not-allowed" placeholder="시작월 (YYYY-MM)" disabled id="cb01-start">
@@ -95,7 +95,7 @@
               <th>포인트 금액 <span class="wf-cn">9</span></th>
               <th>포인트 타입 <span class="wf-cn">4</span></th>
               <th>상태 <span class="wf-cn">10</span></th>
-              <th>지급일 <span class="wf-cn">11</span></th>
+              <th>적립일 <span class="wf-cn">11</span></th>
             </tr>
           </thead>
           <tbody>
@@ -203,7 +203,7 @@
       <div class="ann-item">
         <span class="cn">3</span>
         <div class="ann-body">
-          <div class="ann-title">지급월 범위 필터</div>
+          <div class="ann-title">적립월 범위 필터</div>
           <div class="ann-desc">
             <ul>
               <li><strong>전체 (디폴트):</strong> 라디오에서 "전체" 선택 시 날짜 입력창 비활성(흐림). 전체 기간 포인트 내역 조회</li>
@@ -314,7 +314,7 @@
       <div class="ann-item">
         <span class="cn">11</span>
         <div class="ann-body">
-          <div class="ann-title">지급일</div>
+          <div class="ann-title">적립일</div>
           <div class="ann-desc"><ul>
             <li>포인트가 적립완료(Approved)로 확정된 날짜. API 파라미터명: <code>PaymentMonth</code></li>
             <li>적립예정(Active)·취소(Cancelled) 상태이면 "—"으로 표시</li>
