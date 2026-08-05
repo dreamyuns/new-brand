@@ -120,7 +120,7 @@
             <input type="password" placeholder="비밀번호 입력">
           </div>
           <button class="login-btn">로그인</button>
-          <div class="login-error show" style="background:#fefce8;border-color:#fde68a;color:#92400e"><span class="wf-cn">5</span> 세션이 만료되었습니다. 다시 로그인해 주세요.</div>
+          <div class="login-error show" style="background:#fefce8;border-color:#fde68a;color:#92400e"><span class="wf-cn">5</span> 2시간 동안 활동이 없어 자동 로그아웃되었습니다. 다시 로그인해 주세요.</div>
           <div class="login-footer">문의: 기술연구소 관리자에게 연락해 주세요</div>
         </div>
       </div>
@@ -129,6 +129,18 @@
 
     <!-- 주석 -->
     <div class="ann">
+      <!-- 공통정책 블록 -->
+      <div class="sec-policy">
+        <div class="sec-policy-hdr">⚙ 공통 정책 — 어드민 로그인</div>
+        <ul class="sec-policy-list">
+          <li><strong>인증 방식:</strong> 아이디(admin01 등) + 비밀번호 조합. B2C 이메일 인증코드 방식이 아님 (2조)</li>
+          <li><strong>비밀번호 규칙 (정책):</strong> 영문+숫자+특수문자 조합, 8자 이상 — ADM-SET02에서 변경 가능</li>
+          <li><strong>세션:</strong> 비활동 2시간 후 자동 로그아웃. 선정 근거: OWASP 권장 어드민 범위(15분~2시간) 내 보안·편의 균형점. 금융(15분)보다 유연하고, 개인정보(이메일·포인트) 취급 내부 어드민 기준에 적합. 절대 만료 없이 비활동 단일 규칙으로 구현 단순</li>
+          <li><strong>로그인 실패 잠금:</strong> 5회 초과 잠금 여부 미확정 (8조 미결)</li>
+        </ul>
+        <div class="sec-policy-rule">기준: 어드민 v0.5 2조</div>
+      </div>
+
       <h3>주석 — ADM-LOGIN</h3>
 
       <div class="ann-item">
@@ -195,12 +207,14 @@
           <div class="ann-title">세션 만료 안내 (케이스 C)</div>
           <div class="ann-desc">
             <ul>
-              <li>문구: "세션이 만료되었습니다. 다시 로그인해 주세요."</li>
-              <li>노란색 경고 배경으로 오류와 구분</li>
-              <li>세션 없이 어드민 URL 직접 접근 시 이 케이스로 리다이렉트</li>
+              <li>문구: "2시간 동안 활동이 없어 자동 로그아웃되었습니다. 다시 로그인해 주세요."</li>
+              <li>노란색 경고 배경으로 일반 오류(케이스 B 빨간색)와 구분</li>
+              <li>세션 없이 어드민 URL 직접 접근 시(예: 북마크 직접 열기, 다른 기기에서 동일 URL 접근) 이 케이스로 리다이렉트됨</li>
+              <li><strong>세션 만료 기준: 비활동 2시간 (2026-08-05 확정)</strong></li>
+              <li>선정 근거: OWASP 권장 어드민 범위(15분~2시간) 내 보안·편의 균형점. 금융 수준(15분)보다 유연하고, 개인정보(이메일·포인트) 취급 내부 어드민 기준에 적합. 절대 만료 없이 비활동 단일 규칙으로 구현 단순</li>
             </ul>
           </div>
-          <div class="ann-rule">세션 만료 시간 — 어드민 v0.1 8조 미결 2 (추후 확정)</div>
+          <div class="ann-rule">어드민 v0.5 — 세션 비활동 2시간 확정 (2026-08-05)</div>
         </div>
       </div>
 
@@ -209,7 +223,6 @@
         <strong style="color:#374151;display:block;margin-bottom:4px">미결 사항</strong>
         · 비밀번호 찾기/초기화 프로세스 미설계 (8조 미결)<br>
         · 로그인 실패 횟수 제한·잠금 정책 미확정<br>
-        · 세션 만료 시간 미확정<br>
         · 2FA·IP 접근 제한 Phase 2 논의 예정
       </div>
     </div>

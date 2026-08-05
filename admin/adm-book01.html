@@ -68,7 +68,7 @@
         <ul class="sec-policy-list">
           <li><strong>데이터 소스:</strong> KAYAK Reporting API — TypeCode=10(예약 완료 건)만 표시. TypeCode=1(클릭 건)은 표시하지 않음 (5조)</li>
           <li><strong>회원 식별:</strong> 아웃링크 URL에 포함된 <code>p=</code> 파라미터(회원 ID)를 Reporting API의 <code>labels</code> 필드와 연결해 회원별로 구분 (정책서 v0.30 9절)</li>
-          <li><strong>포인트 지급완료(Approved) 판단:</strong> 자사 내부 기준 적용 — 체크아웃 후 일정 기간 경과 시 자동으로 지급완료 처리. KAYAK <code>paymentMonth</code> 값 단독 기준 아님 (5조 v0.42)</li>
+          <li><strong>포인트 적립완료(Approved) 판단:</strong> 자사 내부 기준 적용 — 체크아웃 후 일정 기간 경과 시 자동으로 적립완료 처리. KAYAK <code>paymentMonth</code> 값 단독 기준 아님 (5조 v0.42)</li>
           <li><strong>MVP 조회전용:</strong> 상태 변경·환불 처리 기능 없음. Phase 2에서 추가 예정 (5조)</li>
         </ul>
         <div class="sec-policy-rule">기준: 어드민 v0.3 5조</div>
@@ -80,7 +80,7 @@
         <input class="wf-input" style="width:180px" placeholder="예약ID·이메일·호텔명"><span class="wf-cn">1</span>
         <span class="filter-sep"></span>
         <span class="filter-label">상태</span>
-        <select class="wf-select"><option>전체</option><option>적립예정 (Active)</option><option>지급완료 (Approved)</option><option>취소·만료 (Cancelled)</option></select><span class="wf-cn">2</span>
+        <select class="wf-select"><option>전체</option><option>적립예정 (Active)</option><option>적립완료 (Approved)</option><option>취소·만료 (Cancelled)</option></select><span class="wf-cn">2</span>
         <span class="filter-label">공급사(OTA)</span>
         <select class="wf-select"><option>전체</option><option>Agoda</option><option>Booking.com</option><option>Hotels.com</option></select><span class="wf-cn">3</span>
         <span class="filter-label">체크인</span>
@@ -107,7 +107,7 @@
           <div class="stat-card-sub">Active</div>
         </div>
         <div class="stat-card green">
-          <div class="stat-card-label">지급완료</div>
+          <div class="stat-card-label">적립완료</div>
           <div class="stat-card-value">891</div>
           <div class="stat-card-sub">Approved</div>
         </div>
@@ -151,7 +151,7 @@
               <td>2026-07-03</td>
               <td style="font-weight:600">₩320,000</td>
               <td style="color:#f59e0b;font-weight:600">9,600P</td>
-              <td><span class="wf-badge badge-approved">지급완료</span></td>
+              <td><span class="wf-badge badge-approved">적립완료</span></td>
             </tr>
             <tr>
               <td style="font-family:monospace;font-size:11px">RES-19998</td>
@@ -202,7 +202,7 @@
               <td>2026-07-23</td>
               <td style="font-weight:600">THB 12,000</td>
               <td style="color:#9ca3af;font-size:11px">미귀속 <span class="wf-cn">5</span></td>
-              <td><span class="wf-badge badge-approved">지급완료</span></td>
+              <td><span class="wf-badge badge-approved">적립완료</span></td>
             </tr>
           </tbody>
         </table>
@@ -243,7 +243,7 @@
             <ul>
               <li>예약 건의 포인트 상태를 세 가지로 구분해 필터링할 수 있음</li>
               <li><strong>적립예정 (Active):</strong> 아직 체크아웃 전이거나 포인트 지급이 확정되지 않은 상태. KAYAK 시스템 상태값은 <code>Active</code></li>
-              <li><strong>지급완료 (Approved):</strong> 자사 내부 기준(체크아웃 후 일정 기간 경과)에 따라 포인트 지급이 확정된 상태</li>
+              <li><strong>적립완료 (Approved):</strong> 자사 내부 기준(체크아웃 후 일정 기간 경과)에 따라 포인트 지급이 확정된 상태</li>
               <li><strong>취소·만료 (Cancelled):</strong> 예약이 취소됐거나 포인트가 만료된 상태</li>
             </ul>
           </div>
@@ -284,7 +284,7 @@
             <ul>
               <li><strong>전체 예약(1,203건):</strong> KAYAK Reporting API에서 가져온 예약 완료 건(TypeCode=10)의 전체 개수</li>
               <li><strong>적립예정(287건):</strong> KAYAK 상태값 <code>Active</code> — 아직 체크아웃 전이거나 포인트 미확정 건</li>
-              <li><strong>지급완료(891건):</strong> 자사 기준으로 포인트 지급이 확정된 건 (<code>Approved</code>)</li>
+              <li><strong>적립완료(891건):</strong> 자사 기준으로 포인트 지급이 확정된 건 (<code>Approved</code>)</li>
               <li><strong>취소·만료(25건):</strong> 취소 또는 만료된 건 (<code>Cancelled</code>)</li>
               <li>검산: 1,203 = 287 + 891 + 25 ✓</li>
             </ul>

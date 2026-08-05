@@ -64,10 +64,12 @@ const RESERVATIONS = [
   { resId:'RES-19620', memberEmail:'mlee@example.com',   hotel:'Hotel Naru Seoul',         city:'서울',   checkIn:'2026-02-11', checkOut:'2026-02-12', ota:'Hotels.com',  amount:150000,  pointAmount:13200,    pointType:'FLAT',       rate:null,status:'Approved',  payMonth:'2026-03' },
   { resId:'RES-19540', memberEmail:'mlee@example.com',   hotel:'Conrad Osaka',             city:'오사카', checkIn:'2026-01-18', checkOut:'2026-01-20', ota:'Trip.com',    amount:690000,  pointAmount:17940.62, pointType:'PERCENTAGE', rate:2.6, status:'Approved',  payMonth:'2026-02' },
 
-  { resId:'RES-20000', memberEmail:'jkim@example.com',   hotel:'Four Seasons Seoul',       city:'서울',   checkIn:'2026-07-05', checkOut:'2026-07-06', ota:'Agoda',       amount:450000,  pointAmount:21600,    pointType:'PERCENTAGE', rate:4.8, status:'Active',    payMonth:null },
+  { resId:'RES-20000', memberEmail:'jkim@example.com',   hotel:'Four Seasons Seoul',       city:'서울',   checkIn:'2026-08-25', checkOut:'2026-08-27', ota:'Agoda',       amount:450000,  pointAmount:21600,    pointType:'PERCENTAGE', rate:4.8, status:'Active',    payMonth:null },
   { resId:'RES-19870', memberEmail:'jkim@example.com',   hotel:'The Shilla Seoul',         city:'서울',   checkIn:'2026-03-22', checkOut:'2026-03-23', ota:'Booking.com', amount:380000,  pointAmount:12160,    pointType:'PERCENTAGE', rate:3.2, status:'Approved',  payMonth:'2026-04' },
 
-  { resId:'RES-19998', memberEmail:null,                 hotel:'Novotel Ambassador',       city:'서울',   checkIn:'2026-06-30', checkOut:'2026-07-01', ota:'Agoda',       amount:210000,  pointAmount:10080,    pointType:'PERCENTAGE', rate:4.8, status:'Approved',  payMonth:'2026-08' },
+  // 비회원(labels 없는 건) — KAYAK 정산 대사 목적으로 포인트 내역에 포함 (포인트_정책서 v0.1)
+  { resId:'RES-19998', memberEmail:null,                 hotel:'Novotel Ambassador',       city:'서울',   checkIn:'2026-06-30', checkOut:'2026-07-01', ota:'Agoda',       amount:210000,  pointAmount:10080,    pointType:'PERCENTAGE', rate:4.8, status:'Approved',  payMonth:'2026-07' },
+  { resId:'RES-19999', memberEmail:null,                 hotel:'Ibis Ambassador Seoul',    city:'서울',   checkIn:'2026-08-22', checkOut:'2026-08-24', ota:'Booking.com', amount:160000,  pointAmount:5120,     pointType:'PERCENTAGE', rate:3.2, status:'Active',    payMonth:null },
 
   { resId:'RES-19960', memberEmail:'tpark@example.com',  hotel:'Hilton Nagoya',            city:'나고야', checkIn:'2026-06-12', checkOut:'2026-06-14', ota:'Trip.com',    amount:520000,  pointAmount:13520,    pointType:'PERCENTAGE', rate:2.6, status:'Approved',  payMonth:'2026-07' },
   { resId:'RES-19930', memberEmail:'tpark@example.com',  hotel:'Kayak Test Resort',        city:'세부',   checkIn:'2026-05-05', checkOut:'2026-05-09', ota:'Kayak.com',   amount:980000,  pointAmount:29400,    pointType:'PERCENTAGE', rate:3.0, status:'Approved',  payMonth:'2026-06' },

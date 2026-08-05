@@ -167,7 +167,7 @@
 <!-- ════ A: 내역 있음 ════ -->
 <div id="a" class="sec-title">
   <span class="sec-badge">MY02-A</span>포인트 내역 — 내역 있음
-  <span style="font-size:12px;font-weight:400;color:#888">— 3개 상태 배지 샘플 (적립예정·지급완료·취소·만료)</span>
+  <span style="font-size:12px;font-weight:400;color:#888">— 3개 상태 배지 샘플 (적립예정·적립완료·취소·만료)</span>
 </div>
 
 <div class="sec-policy">
@@ -175,9 +175,9 @@
   <ul class="sec-policy-list">
     <li><strong>데이터 출처</strong>: KAYAK Reporting API v2 Transaction Report + 자사 포인트 DB (포인트_정책서 v0.1 / 12-1절)</li>
     <li><strong>API Base URL</strong>: <code>https://api.affiliates.hotelscombined.com/api</code> (다른 API와 다름) (12-5절)</li>
-    <li><strong>상단 고정</strong>: 총 적립 포인트 (자사 배치 기준 지급완료 누적 합계) (포인트_정책서 v0.1 5-1절)</li>
-    <li><strong>정렬</strong>: 지급완료일 최신순. 미지급 건(적립예정)은 목록 하단 배치 (10-2절)</li>
-    <li><strong>상태 배지</strong>: 자사 배치 기준 — 체크아웃+7일 미도래(KAYAK Active)=<code>적립예정</code> / 자사 배치 완료=<code>지급완료</code> / KAYAK Cancelled 또는 회수 처리=<code>취소·만료</code> (포인트_정책서 v0.1 2-4절)</li>
+    <li><strong>상단 고정</strong>: 총 적립 포인트 (자사 배치 기준 적립완료 누적 합계) (포인트_정책서 v0.1 5-1절)</li>
+    <li><strong>정렬</strong>: 적립완료일 최신순. 미지급 건(적립예정)은 목록 하단 배치 (10-2절)</li>
+    <li><strong>상태 배지</strong>: 자사 배치 기준 — 체크아웃+7일 미도래(KAYAK Active)=<code>적립예정</code> / 자사 배치 완료=<code>적립완료</code> / KAYAK Cancelled 또는 회수 처리=<code>취소·만료</code> (포인트_정책서 v0.1 2-4절)</li>
     <li><strong>예약금액</strong>: <code>localisedBookingValue</code> 직접 사용. null·0·cashbackType=NONE 건 미표시 (10-2절). 단, Cancelled 건은 금액 0이어도 취소선 표시 우선</li>
     <li><strong>적립금액</strong>: <code>cashbackAmountLocalised</code> 직접 사용. <strong>소수점 이하 버림</strong> (예: 7,659.42 → 7,659P). null·0·cashbackType=NONE 건 미표시. Cancelled 건은 금액 0이어도 취소선 표시 우선 (포인트_정책서 v0.1 2-2절)</li>
     <li><strong>포인트 귀속</strong>: Label 필드 연계(회원ID ↔ <code>userTrackId</code> 연결) (9-5절)</li>
@@ -201,7 +201,7 @@
 
         <!-- 총 적립금액 패널 -->
         <div class="cb-total-panel">
-          <div class="cb-total-label">지급완료 누적 포인트 <span class="wf-cn">2</span></div>
+          <div class="cb-total-label">적립완료 누적 포인트 <span class="wf-cn">2</span></div>
           <div class="cb-total-amount">12,400P</div>
           <div class="cb-total-sub">체크아웃+7일 배치 처리 완료 기준</div>
         </div>
@@ -210,11 +210,11 @@
         <div class="my-scroll">
           <div class="cb-section-label">전체 내역 3건 <span class="wf-cn">3</span></div>
 
-          <!-- 카드 1: 지급완료 (Approved) -->
+          <!-- 카드 1: 적립완료 (Approved) -->
           <div class="cb-card">
             <div class="cb-card-header">
               <span class="cb-hotel-name">포시즌스 호텔 서울 <span class="wf-cn">4</span></span>
-              <span class="cb-badge cb-badge-approved">지급완료 <span class="wf-cn">5</span></span>
+              <span class="cb-badge cb-badge-approved">적립완료 <span class="wf-cn">5</span></span>
             </div>
             <div class="cb-card-meta">
               <span class="cb-meta-chip">📍 서울</span>
@@ -363,14 +363,14 @@
         <div class="ann-title">총 적립 포인트 패널 ★ (상단 고정)</div>
         <div class="ann-desc">
           <ul>
-            <li><b>지급완료</b> 상태 건(자사 체크아웃+7일 배치 처리 완료)의 포인트만 누적 합산해 표시.</li>
+            <li><b>적립완료</b> 상태 건(자사 체크아웃+7일 배치 처리 완료)의 포인트만 누적 합산해 표시.</li>
             <li><b>적립예정</b>·<b>취소·만료</b> 건은 합산에서 제외.</li>
-            <li>내역이 없거나 지급완료 건이 없으면 0P 표시 (패널 자체는 항상 노출).</li>
+            <li>내역이 없거나 적립완료 건이 없으면 0P 표시 (패널 자체는 항상 노출).</li>
             <li>금액 단위: P (포인트). 소수점 이하 버림 값으로 표시.</li>
           </ul>
         </div>
         <div class="ann-front">← 자사 포인트 DB에서 event_type=booking_earn 처리 완료 건의 point_delta 합산 (cashbackAmountLocalised 소수점 버림 적용 후 값).</div>
-        <div class="ann-rule">포인트_정책서 v0.1 5-1절 / 정책서 10-2절 (상단 고정 총 적립 포인트 — 지급완료 기준).</div>
+        <div class="ann-rule">포인트_정책서 v0.1 5-1절 / 정책서 10-2절 (상단 고정 총 적립 포인트 — 적립완료 기준).</div>
       </div>
     </div>
     <div class="ann-item">
@@ -379,11 +379,11 @@
         <div class="ann-title">전체 내역 건수</div>
         <div class="ann-desc">
           <ul>
-            <li>적립예정·지급완료·취소·만료 모든 상태 건수를 합산해 표시 (예: "전체 내역 3건").</li>
-            <li>정렬 기준: 지급완료일(자사 배치 처리 완료일) 최신순. 적립예정 건(미지급)은 목록 하단 배치.</li>
+            <li>적립예정·적립완료·취소·만료 모든 상태 건수를 합산해 표시 (예: "전체 내역 3건").</li>
+            <li>정렬 기준: 적립완료일(자사 배치 처리 완료일) 최신순. 적립예정 건(미지급)은 목록 하단 배치.</li>
           </ul>
         </div>
-        <div class="ann-rule">정책서 10-2절 (지급완료일 최신순, 페이지네이션 없음).</div>
+        <div class="ann-rule">정책서 10-2절 (적립완료일 최신순, 페이지네이션 없음).</div>
       </div>
     </div>
     <div class="ann-item">
@@ -402,15 +402,15 @@
     <div class="ann-item">
       <div class="cn">5</div>
       <div class="ann-body">
-        <div class="ann-title">상태 배지 — 지급완료</div>
+        <div class="ann-title">상태 배지 — 적립완료</div>
         <div class="ann-desc">
           <ul>
             <li>자사 체크아웃+7일 배치 처리가 완료된 건. 초록 배지.</li>
-            <li>배지 표기: "지급완료" (초록 배경 #d1fae5, 텍스트 #065f46).</li>
+            <li>배지 표기: "적립완료" (초록 배경 #d1fae5, 텍스트 #065f46).</li>
           </ul>
         </div>
         <div class="ann-front">← 자사 포인트 DB event_type=booking_earn 처리 완료 건 (KAYAK Reporting API 기반 체크아웃+7일 배치).</div>
-        <div class="ann-rule">배지 3종: 적립예정(노랑)·지급완료(초록)·취소·만료(회색). 포인트_정책서 v0.1 2-4절 / 정책서 10-2절.</div>
+        <div class="ann-rule">배지 3종: 적립예정(노랑)·적립완료(초록)·취소·만료(회색). 포인트_정책서 v0.1 2-4절 / 정책서 10-2절.</div>
       </div>
     </div>
     <div class="ann-item">
@@ -421,7 +421,7 @@
           <ul>
             <li>KAYAK Reporting API <code>cashbackAmountLocalised</code> 값을 그대로 사용. 자사에서 재계산하지 않음.</li>
             <li><strong>소수점 이하 버림</strong> 처리 후 표시 (예: 7,659.42 → 7,659P). DB 저장 시도 버림 적용.</li>
-            <li><b>지급완료·적립예정</b> 건: 인디고(#4f46e5) 색상 강조 + "+" 접두사 표시 (예: +7,659P).</li>
+            <li><b>적립완료·적립예정</b> 건: 인디고(#4f46e5) 색상 강조 + "+" 접두사 표시 (예: +7,659P).</li>
             <li><b>취소·만료</b> 건: 금액에 취소선(line-through) + 회색 처리.</li>
           </ul>
         </div>
@@ -436,7 +436,7 @@
         <div class="ann-desc">
           <ul>
             <li>체크아웃+7일 미도래인 건 (KAYAK TransactionStatus = Active). 노란 배지.</li>
-            <li>카드 footer 우측 레이블: "예상 포인트" (지급완료 건의 "적립 포인트"와 구분).</li>
+            <li>카드 footer 우측 레이블: "예상 포인트" (적립완료 건의 "적립 포인트"와 구분).</li>
           </ul>
         </div>
         <div class="ann-front">← KAYAK Reporting API TransactionStatus = Active (체크아웃+7일 미도래 상태)</div>
@@ -531,7 +531,7 @@
 
         <!-- 총 적립금액 패널 — 빈 상태에도 표시 -->
         <div class="cb-total-panel">
-          <div class="cb-total-label">지급완료 누적 포인트 <span class="wf-cn">1</span></div>
+          <div class="cb-total-label">적립완료 누적 포인트 <span class="wf-cn">1</span></div>
           <div class="cb-total-amount">0P</div>
           <div class="cb-total-sub">체크아웃+7일 배치 처리 완료 기준</div>
         </div>
@@ -559,7 +559,7 @@
         <div class="ann-title">총 적립 포인트 — 0P 표시</div>
         <div class="ann-desc">
           <ul>
-            <li>지급완료 건이 없거나 내역 자체가 없을 때 0P 표시.</li>
+            <li>적립완료 건이 없거나 내역 자체가 없을 때 0P 표시.</li>
             <li>빈 상태에도 총 적립 포인트 패널은 항상 상단에 동일하게 노출 (패널 제거 없음).</li>
           </ul>
         </div>

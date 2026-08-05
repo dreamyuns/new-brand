@@ -9,10 +9,12 @@ const state = {
   memberId: null,          // 회원 상세 대상
   memTab: 'info',          // info | points
   set: { role:'master', status:'active' },
-  // 목록 화면 검색·필터·정렬 상태
-  mem:  { q:'', from:'', to:'', sort:'joinDate', dir:'desc', page:1 },
-  cb01: { q:'', status:'all', payMonth:'', sort:'default', dir:'desc' },
-  cb02: { month:'all' },
+  setSelId: null,          // 관리자 상세 대상 계정 ID
+  adminList: [],           // 관리자 계정 목록 (등록 시 누적)
+  // 목록 화면 검색·필터·정렬 상태 (기간필터: mode = all | range)
+  mem:  { q:'', mode:'all', from:'', to:'', sort:'joinDate', dir:'desc', page:1 },
+  cb01: { q:'', status:'all', mode:'all', fromMonth:'', toMonth:'', sort:'default', dir:'desc' },
+  cb02: { mode:'all', fromMonth:'', toMonth:'' },
 };
 const PAGE_SIZE = 50;
 
@@ -28,9 +30,10 @@ const MUTED_GUEST = '<span style="color:#9ca3af">(비로그인)</span>';
 // 상태 배지 (9-4절)
 const STATUS_BADGE = {
   Active:    ['badge-waiting',  '적립예정'],
-  Approved:  ['badge-approved', '지급완료'],
+  Approved:  ['badge-approved', '적립완료'],   // (변경) 지급완료 → 적립완료 · 용어 통일
   Cancelled: ['badge-cancelled','취소·만료'],
 };
+const GUEST_LABEL = '<span style="color:#6b7280">비회원</span>';   // 비회원(labels 없는 건)
 function statusBadge(s){ const [c,t]=STATUS_BADGE[s]||['badge-inactive',s]; return `<span class="wf-badge ${c}">${t}</span>`; }
 function typeBadge(t){
   const c = t==='PERCENTAGE' ? 'badge-active' : (t==='FLAT' ? 'badge-inactive' : 'badge-inactive');
@@ -108,7 +111,7 @@ const ROUTE_META = {
   dashboard:['대시보드','dashboard'],
   mem:['회원 목록','mem'], memDetail:['회원 상세·수정','mem'],
   cb01:['포인트 내역','cb01'], cb02:['공급사별 현황','cb02'],
-  set:['관리자 설정','set'], setDetail:['관리자 계정 상세','set'],
+  set:['관리자 설정','set'], setDetail:['관리자 계정 상세','set'], setNew:['관리자 계정 등록','set'],
 };
 function go(route){
   state.route=route;
@@ -119,7 +122,7 @@ function go(route){
   });
   window.scrollTo(0,0);
   ({dashboard:renderDashboard, mem:renderMemList, memDetail:renderMemDetail,
-    cb01:renderCB01, cb02:renderCB02, set:renderSet, setDetail:renderSetDetail}[route])();
+    cb01:renderCB01, cb02:renderCB02, set:renderSet, setDetail:renderSetDetail, setNew:renderSetNew}[route])();
 }
 
 /* ════════ 대시보드 ════════ */
@@ -145,9 +148,9 @@ function renderDashboard(){
     <div class="sec-title">핵심 지표</div>
     <div class="stat-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:28px">
       <div class="stat-card blue"><div class="stat-card-label">전체 회원</div><div class="stat-card-value">${totalMembers.toLocaleString()}</div><div class="stat-card-sub">활성 회원 기준</div></div>
-      <div class="stat-card green"><div class="stat-card-label">지급완료 예약</div><div class="stat-card-value">${approved.length}</div><div class="stat-card-sub">Approved 건수</div></div>
+      <div class="stat-card green"><div class="stat-card-label">총 적립완료 건수</div><div class="stat-card-value">${approved.length}건</div><div class="stat-card-sub">예약(Booking) + Approved · 총 ${fmtP(approvedPts)} 적립</div></div>
+      <div class="stat-card amber"><div class="stat-card-label">적립완료 포인트</div><div class="stat-card-value" style="font-size:20px">${fmtP(approvedPts)}</div><div class="stat-card-sub">${approved.length}건 완료 · Approved 누적합계</div></div>
       <div class="stat-card gray"><div class="stat-card-label">적립예정 예약</div><div class="stat-card-value">${active.length}</div><div class="stat-card-sub">Active 건수</div></div>
-      <div class="stat-card amber"><div class="stat-card-label">지급완료 포인트</div><div class="stat-card-value" style="font-size:20px">${fmtP(approvedPts)}</div><div class="stat-card-sub">Approved 누적합계</div></div>
       <div class="stat-card amber"><div class="stat-card-label">적립예정 포인트</div><div class="stat-card-value" style="font-size:20px">${fmtP(activePts)}</div><div class="stat-card-sub">Active</div></div>
       <div class="stat-card purple"><div class="stat-card-label">취소·만료</div><div class="stat-card-value">${cancelled.length}</div><div class="stat-card-sub">Cancelled 건수</div></div>
     </div>
@@ -159,7 +162,7 @@ function renderDashboard(){
           <thead><tr><th>예약ID</th><th>회원</th><th>OTA</th><th>상태</th></tr></thead>
           <tbody>${recentRes.map(r=>{
             const m=MEMBERS.find(x=>x.email===r.memberEmail);
-            const who=r.memberEmail? (m? esc((m.firstName+' '+m.lastName).trim()||m.email):esc(r.memberEmail)) : '<span style="color:#9ca3af">(비로그인)</span>';
+            const who=r.memberEmail? (m? esc((m.firstName+' '+m.lastName).trim()||m.email):esc(r.memberEmail)) : GUEST_LABEL;
             return `<tr><td style="font-family:monospace;font-size:11px">${r.resId}</td><td>${who}</td><td>${esc(r.ota)}</td><td>${statusBadge(r.status)}</td></tr>`;
           }).join('')}</tbody>
         </table></div>
@@ -184,8 +187,7 @@ function memFiltered(){
   const s=state.mem;
   let rows=MEMBERS.filter(m=>{
     if(s.q){ const q=s.q.toLowerCase(); if(!(m.email.toLowerCase().includes(q)||m.id.toLowerCase().includes(q))) return false; }
-    if(s.from && m.joinDate < s.from) return false;
-    if(s.to   && m.joinDate > s.to)   return false;
+    if(s.mode==='range' && s.from){ const t=s.to||s.from; if(m.joinDate < s.from || m.joinDate > t) return false; }
     return true;
   });
   const dir=s.dir==='asc'?1:-1;
@@ -214,17 +216,21 @@ function renderMemList(){
 
     <div class="filter-bar">
       <span class="filter-label">검색</span>
-      <input class="wf-input" id="mem-q" style="width:220px" placeholder="이메일·회원ID 검색" value="${esc(s.q)}">
+      <input class="wf-input" id="mem-q" style="width:200px" placeholder="이메일·회원ID 검색" value="${esc(s.q)}">
+      <span class="filter-sep"></span>
       <span class="filter-label">가입기간</span>
-      <input class="wf-input" id="mem-from" style="width:130px" type="date" value="${s.from}">
+      <label class="radio-opt"><input type="radio" name="mem-mode" value="all" ${s.mode==='all'?'checked':''} onclick="memMode('all')"> 전체</label>
+      <label class="radio-opt"><input type="radio" name="mem-mode" value="range" ${s.mode==='range'?'checked':''} onclick="memMode('range')"> 기간 선택</label>
+      <input class="wf-input" id="mem-from" style="width:150px" type="date" value="${s.from}" ${s.mode==='all'?'disabled':''} onchange="memFromInput()">
       <span>~</span>
-      <input class="wf-input" id="mem-to" style="width:130px" type="date" value="${s.to}">
+      <input class="wf-input" id="mem-to" style="width:150px" type="date" value="${s.to}" ${(s.mode==='all'||!s.from)?'disabled':''}>
       <div class="filter-actions">
         <button class="wf-btn wf-btn-primary wf-btn-sm" onclick="memSearch()">검색</button>
         <button class="wf-btn wf-btn-ghost wf-btn-sm" onclick="memReset()">초기화</button>
         <button class="wf-btn wf-btn-download wf-btn-sm" onclick="toast('전체 활성 회원 데이터를 Excel로 내려받습니다 (데모)')">Excel 다운로드</button>
       </div>
     </div>
+    <div class="wf-hint" style="margin:-8px 0 14px">가입기간: <strong>전체</strong>(기본) 또는 <strong>기간 선택</strong> · 시작일만 입력하면 그 날 하루만 조회(종료일=시작일) · 종료일은 시작일 입력 후 활성화 · 형식 YYYY-MM-DD</div>
 
     <div class="adm-table-wrap">
       <table class="adm-table">
@@ -265,8 +271,20 @@ function memPager(total){
   btns+='<span class="adm-pagination-btn" onclick="memPage('+Math.min(pages,cur+1)+')">»</span>';
   return '<div class="adm-pagination-btns">'+btns+'</div>';
 }
-function memSearch(){ state.mem.q=$('mem-q').value.trim(); state.mem.from=$('mem-from').value; state.mem.to=$('mem-to').value; state.mem.page=1; renderMemList(); }
-function memReset(){ state.mem={q:'',from:'',to:'',sort:'joinDate',dir:'desc',page:1}; renderMemList(); }
+function memMode(m){
+  const from=$('mem-from'), to=$('mem-to');
+  if(m==='all'){ from.value=''; to.value=''; from.disabled=true; to.disabled=true; }
+  else { from.disabled=false; to.disabled=!from.value; }
+}
+function memFromInput(){ const from=$('mem-from'), to=$('mem-to'); to.disabled=!from.value; if(!from.value){to.value='';} else if(to.value && to.value<from.value){to.value=from.value;} }
+function memSearch(){
+  const mode=document.querySelector('input[name=mem-mode]:checked').value;
+  state.mem.mode=mode;
+  if(mode==='all'){ state.mem.from=''; state.mem.to=''; }
+  else { const f=$('mem-from').value; state.mem.from=f; state.mem.to = f ? ($('mem-to').value||f) : ''; }
+  state.mem.q=$('mem-q').value.trim(); state.mem.page=1; renderMemList();
+}
+function memReset(){ state.mem={q:'',mode:'all',from:'',to:'',sort:'joinDate',dir:'desc',page:1}; renderMemList(); }
 function memSort(k){ const s=state.mem; if(s.sort===k) s.dir=s.dir==='asc'?'desc':'asc'; else {s.sort=k;s.dir='desc';} renderMemList(); }
 function memPage(p){ state.mem.page=p; renderMemList(); }
 function openMember(id){ state.memberId=id; state.memTab='info'; go('memDetail'); }
@@ -399,7 +417,7 @@ function cb01Filtered(){
   rows=rows.filter(r=>{
     if(s.q){ const q=s.q.toLowerCase(); if(!((r.memberEmail||'').toLowerCase().includes(q)||r.resId.toLowerCase().includes(q))) return false; }
     if(s.status!=='all' && r.status!==s.status) return false;
-    if(s.payMonth && r.payMonth!==s.payMonth) return false;
+    if(s.mode==='range' && s.fromMonth){ const t=s.toMonth||s.fromMonth; if(!(r.payMonth && r.payMonth>=s.fromMonth && r.payMonth<=t)) return false; }
     return true;
   });
   if(s.sort==='point'){ const d=s.dir==='asc'?1:-1; rows.sort((a,b)=>(floorP(a.pointAmount)-floorP(b.pointAmount))*d); }
@@ -412,31 +430,34 @@ function renderCB01(){
   $('view').innerHTML=`
     <div class="adm-page-hdr">
       <div class="adm-page-title">포인트 내역</div>
-      <div class="adm-page-sub">회원별 포인트 적립 현황 · KAYAK Reporting API 기반 · MVP 조회전용 · NONE·0P 미표시 (v0.5 6조)</div>
+      <div class="adm-page-sub">회원별 포인트 적립 현황 · KAYAK Reporting API 기반 · MVP 조회전용 · 비회원 건 포함 · NONE·0P 미표시 (v0.5 6조)</div>
     </div>
 
     <div class="filter-bar">
       <span class="filter-label">검색</span>
-      <input class="wf-input" id="cb-q" style="width:180px" placeholder="이메일·예약ID 검색" value="${esc(s.q)}">
+      <input class="wf-input" id="cb-q" style="width:170px" placeholder="이메일·예약ID 검색" value="${esc(s.q)}">
       <span class="filter-sep"></span>
       <span class="filter-label">상태</span>
       <select class="wf-select" id="cb-status">
         <option value="all" ${s.status==='all'?'selected':''}>전체</option>
         <option value="Active" ${s.status==='Active'?'selected':''}>적립예정 (Active)</option>
-        <option value="Approved" ${s.status==='Approved'?'selected':''}>지급완료 (Approved)</option>
+        <option value="Approved" ${s.status==='Approved'?'selected':''}>적립완료 (Approved)</option>
         <option value="Cancelled" ${s.status==='Cancelled'?'selected':''}>취소·만료 (Cancelled)</option>
       </select>
+      <span class="filter-sep"></span>
       <span class="filter-label">지급월</span>
-      <select class="wf-select" id="cb-month">
-        <option value="">전체</option>
-        ${payMonthOptions(s.payMonth)}
-      </select>
+      <label class="radio-opt"><input type="radio" name="cb-mode" value="all" ${s.mode==='all'?'checked':''} onclick="cb01Mode('all')"> 전체</label>
+      <label class="radio-opt"><input type="radio" name="cb-mode" value="range" ${s.mode==='range'?'checked':''} onclick="cb01Mode('range')"> 기간 선택</label>
+      <input class="wf-input" id="cb-from" style="width:130px" type="month" value="${s.fromMonth}" ${s.mode==='all'?'disabled':''} onchange="cb01FromInput()">
+      <span>~</span>
+      <input class="wf-input" id="cb-to" style="width:130px" type="month" value="${s.toMonth}" ${(s.mode==='all'||!s.fromMonth)?'disabled':''}>
       <div class="filter-actions">
         <button class="wf-btn wf-btn-primary wf-btn-sm" onclick="cb01Search()">검색</button>
         <button class="wf-btn wf-btn-ghost wf-btn-sm" onclick="cb01Reset()">초기화</button>
         <button class="wf-btn wf-btn-download wf-btn-sm" onclick="toast('포인트 내역을 Excel로 내려받습니다 (데모)')">Excel 다운로드</button>
       </div>
     </div>
+    <div class="wf-hint" style="margin:-8px 0 14px">지급월: <strong>전체</strong>(기본) 또는 <strong>기간 선택</strong> · 시작월만 입력하면 그 달만 조회(종료월=시작월) · 종료월은 시작월 입력 후 활성화 · 형식 YYYY-MM</div>
 
     <div class="adm-table-wrap"><table class="adm-table">
       <thead><tr>
@@ -446,7 +467,7 @@ function renderCB01(){
         <th class="sortable" onclick="cb01Sort('payMonth')">지급일${sortInd('cb01','payMonth')}</th>
       </tr></thead>
       <tbody>${rows.length? rows.map(r=>`<tr>
-        <td style="font-size:12px">${r.memberEmail? esc(r.memberEmail):MUTED_GUEST}</td>
+        <td style="font-size:12px">${r.memberEmail? esc(r.memberEmail):GUEST_LABEL}</td>
         <td>${esc(r.hotel)}</td><td>${r.checkIn}</td><td>${r.checkOut}</td><td>${esc(r.ota)}</td>
         <td>${pointCell(r)}</td><td>${typeBadge(r.pointType)}</td><td>${statusBadge(r.status)}</td>
         <td>${r.payMonth? r.payMonth+'-01':'—'}</td>
@@ -455,22 +476,34 @@ function renderCB01(){
       <div class="adm-pagination"><div class="adm-pagination-info">총 ${rows.length}건 · 전체 표시</div></div>
     </div>
     <div style="margin-top:14px;background:#fef3c7;border:1px solid #fde68a;border-left:3px solid #f59e0b;border-radius:6px;padding:10px 14px;font-size:12px;color:#92400e">
-      <strong>Phase 2 예정:</strong> 포인트 수동 지급·삭제·회수 기능. MVP에서는 조회만 가능. · 지급완료(Approved) 판단은 자사 내부 기준(체크아웃 후 자사 배치) — KAYAK paymentMonth 단독 아님 (6-2절)
+      <strong>Phase 2 예정:</strong> 포인트 수동 지급·삭제·회수 기능. MVP에서는 조회만 가능. · <strong>비회원(labels 없는 건)도 포함</strong> 표시(KAYAK 정산 대사 목적) · 적립완료(Approved) 전환은 <strong>체크아웃+7일 자사 배치</strong> 기준 — KAYAK paymentMonth 단독 아님 (포인트_정책서 v0.1 2-1절)
     </div>`;
   $('cb-q').addEventListener('keydown', e=>{ if(e.key==='Enter') cb01Search(); });
 }
-function payMonthOptions(sel){
-  const months=[...new Set(RESERVATIONS.filter(r=>r.payMonth).map(r=>r.payMonth))].sort().reverse();
-  return months.map(mn=>`<option value="${mn}" ${sel===mn?'selected':''}>${mn}</option>`).join('');
+function cb01Mode(m){
+  const from=$('cb-from'), to=$('cb-to');
+  if(m==='all'){ from.value=''; to.value=''; from.disabled=true; to.disabled=true; }
+  else { from.disabled=false; to.disabled=!from.value; }
 }
-function cb01Search(){ state.cb01.q=$('cb-q').value.trim(); state.cb01.status=$('cb-status').value; state.cb01.payMonth=$('cb-month').value; renderCB01(); }
-function cb01Reset(){ state.cb01={q:'',status:'all',payMonth:'',sort:'default',dir:'desc'}; renderCB01(); }
+function cb01FromInput(){ const from=$('cb-from'), to=$('cb-to'); to.disabled=!from.value; if(!from.value){to.value='';} else if(to.value && to.value<from.value){to.value=from.value;} }
+function cb01Search(){
+  const mode=document.querySelector('input[name=cb-mode]:checked').value;
+  state.cb01.mode=mode;
+  if(mode==='all'){ state.cb01.fromMonth=''; state.cb01.toMonth=''; }
+  else { const f=$('cb-from').value; state.cb01.fromMonth=f; state.cb01.toMonth = f ? ($('cb-to').value||f) : ''; }
+  state.cb01.q=$('cb-q').value.trim(); state.cb01.status=$('cb-status').value; renderCB01();
+}
+function cb01Reset(){ state.cb01={q:'',status:'all',mode:'all',fromMonth:'',toMonth:'',sort:'default',dir:'desc'}; renderCB01(); }
 function cb01Sort(k){ const s=state.cb01; if(s.sort===k) s.dir=s.dir==='asc'?'desc':'asc'; else{s.sort=k;s.dir='desc';} renderCB01(); }
 
 /* ════════ 공급사별 현황 (ADM-CB02) ════════ */
 function renderCB02(){
-  const month=state.cb02.month;
-  const inMonth = r => month==='all' ? true : resMonth(r)===month;
+  const s=state.cb02;
+  const inMonth = r => {
+    if(s.mode!=='range' || !s.fromMonth) return true;
+    const t=s.toMonth||s.fromMonth, rm=resMonth(r);
+    return rm>=s.fromMonth && rm<=t;
+  };
   const providers=Object.keys(PROVIDERS).map(name=>{
     const rs=RESERVATIONS.filter(r=>r.ota===name && inMonth(r));
     const active=rs.filter(r=>r.status==='Active').length;
@@ -480,24 +513,26 @@ function renderCB02(){
     return {name, meta:PROVIDERS[name], count:rs.length, active, approved:approved.length, cancelled, sum};
   }).filter(p=>p.count>0);
 
-  const months=[...new Set(RESERVATIONS.map(resMonth))].sort().reverse();
-
   $('view').innerHTML=`
     <div class="adm-page-hdr">
       <div class="adm-page-title">공급사별 포인트 현황</div>
-      <div class="adm-page-sub">OTA 공급사별 포인트 발생·집계 현황 · 포인트 합계 = 지급완료(Approved) 누적합계 (v0.5 6-2·6-4절)</div>
+      <div class="adm-page-sub">OTA 공급사별 포인트 발생·집계 현황 · 포인트 합계 = 적립완료(Approved) 누적합계 (v0.5 6-2·6-4절)</div>
     </div>
 
-    <div class="filter-bar" style="margin-bottom:20px">
+    <div class="filter-bar" style="margin-bottom:8px">
       <span class="filter-label">기준 월</span>
-      <select class="wf-select" id="cb2-month" onchange="cb02Month(this.value)">
-        <option value="all" ${month==='all'?'selected':''}>전체 기간</option>
-        ${months.map(mn=>`<option value="${mn}" ${month===mn?'selected':''}>${mn}</option>`).join('')}
-      </select>
+      <label class="radio-opt"><input type="radio" name="cb2-mode" value="all" ${s.mode==='all'?'checked':''} onclick="cb02Mode('all')"> 전체</label>
+      <label class="radio-opt"><input type="radio" name="cb2-mode" value="range" ${s.mode==='range'?'checked':''} onclick="cb02Mode('range')"> 기간 선택</label>
+      <input class="wf-input" id="cb2-from" style="width:130px" type="month" value="${s.fromMonth}" ${s.mode==='all'?'disabled':''} onchange="cb02FromInput()">
+      <span>~</span>
+      <input class="wf-input" id="cb2-to" style="width:130px" type="month" value="${s.toMonth}" ${(s.mode==='all'||!s.fromMonth)?'disabled':''}>
       <div class="filter-actions">
+        <button class="wf-btn wf-btn-primary wf-btn-sm" onclick="cb02Search()">조회</button>
+        <button class="wf-btn wf-btn-ghost wf-btn-sm" onclick="cb02Reset()">초기화</button>
         <button class="wf-btn wf-btn-download wf-btn-sm" onclick="toast('공급사별 현황을 Excel로 내려받습니다 (데모)')">Excel 다운로드</button>
       </div>
     </div>
+    <div class="wf-hint" style="margin:0 0 16px">기준 월: <strong>전체</strong>(기본) 또는 <strong>기간 선택</strong> · 시작월만 입력하면 그 달만 조회(종료월=시작월) · 종료월은 시작월 입력 후 활성화 · 형식 YYYY-MM</div>
 
     <div class="sec-title">공급사별 상세</div>
     <div class="adm-table-wrap"><table class="adm-table">
@@ -524,40 +559,59 @@ function renderCB02(){
       포인트 합계 = Approved 누적합계(1P=1원, 소수점 버림). 포인트율·타입은 KAYAK 기준 그대로 표시하며 자사 재계산 없음. 포인트율 조정은 KAYAK 담당자 양식 제출 방식 (6-4절)
     </div>`;
 }
-function cb02Month(v){ state.cb02.month=v; renderCB02(); }
+function cb02Mode(m){
+  const from=$('cb2-from'), to=$('cb2-to');
+  if(m==='all'){ from.value=''; to.value=''; from.disabled=true; to.disabled=true; }
+  else { from.disabled=false; to.disabled=!from.value; }
+}
+function cb02FromInput(){ const from=$('cb2-from'), to=$('cb2-to'); to.disabled=!from.value; if(!from.value){to.value='';} else if(to.value && to.value<from.value){to.value=from.value;} }
+function cb02Search(){
+  const mode=document.querySelector('input[name=cb2-mode]:checked').value;
+  state.cb02.mode=mode;
+  if(mode==='all'){ state.cb02.fromMonth=''; state.cb02.toMonth=''; }
+  else { const f=$('cb2-from').value; state.cb02.fromMonth=f; state.cb02.toMonth = f ? ($('cb2-to').value||f) : ''; }
+  renderCB02();
+}
+function cb02Reset(){ state.cb02={mode:'all',fromMonth:'',toMonth:''}; renderCB02(); }
 
 /* ════════ 관리자 설정 목록 (ADM-SET01) ════════ */
 function renderSet(){
+  const list=state.adminList;
   $('view').innerHTML=`
     <div class="adm-page-hdr">
       <div class="adm-page-title">관리자 계정 목록</div>
-      <div class="adm-page-sub">어드민 접근 계정 관리 · MVP = 마스터 단일 계정 (v0.5 7-1절)</div>
+      <div class="adm-page-sub">어드민 접근 계정 관리 · 마스터 권한 계정 (서브 권한 분리는 Phase 2)</div>
+      <div class="adm-page-actions">
+        <button class="wf-btn wf-btn-primary" onclick="go('setNew')">+ 관리자 추가</button>
+      </div>
     </div>
     <div class="adm-table-wrap"><table class="adm-table">
       <thead><tr><th>계정 ID</th><th>이름</th><th>이메일</th><th>권한</th><th>마지막 로그인</th><th>상태</th><th>관리</th></tr></thead>
-      <tbody><tr class="row-click" onclick="go('setDetail')">
-        <td style="font-family:monospace;font-size:11px">${ADMIN_ACCOUNT.accountId}</td>
-        <td>${esc(ADMIN_ACCOUNT.name)}</td>
-        <td>${esc(ADMIN_ACCOUNT.email)}</td>
+      <tbody>${list.map(a=>`<tr class="row-click" onclick="openAdmin('${a.accountId}')">
+        <td style="font-family:monospace;font-size:11px">${a.accountId}</td>
+        <td>${a.name? esc(a.name):MUTED_DASH2}</td>
+        <td>${esc(a.email)}</td>
         <td><span class="wf-badge badge-active">마스터</span></td>
-        <td>${ADMIN_ACCOUNT.lastLogin}</td>
-        <td>${state.set.status==='active'? '<span class="wf-badge badge-approved">활성</span>':'<span class="wf-badge badge-cancelled">비활성</span>'}</td>
-        <td><span class="wf-btn wf-btn-outline wf-btn-sm" onclick="event.stopPropagation();go('setDetail')">상세</span></td>
-      </tr></tbody>
+        <td>${a.lastLogin||'—'}</td>
+        <td>${a.status==='active'? '<span class="wf-badge badge-approved">활성</span>':'<span class="wf-badge badge-cancelled">비활성</span>'}</td>
+        <td><span class="wf-btn wf-btn-outline wf-btn-sm" onclick="event.stopPropagation();openAdmin('${a.accountId}')">상세</span></td>
+      </tr>`).join('')}</tbody>
     </table>
-      <div class="adm-pagination"><div class="adm-pagination-info">총 1개 계정 (MVP: 마스터 단일)</div></div>
+      <div class="adm-pagination"><div class="adm-pagination-info">총 ${list.length}개 계정</div></div>
     </div>
     <div style="margin-top:16px;background:#eff6ff;border:1px solid #bfdbfe;border-left:3px solid #3b82f6;border-radius:6px;padding:12px 16px;font-size:12px;color:#1d4ed8">
-      <strong>Phase 2 예정:</strong> 서브 관리자 계정 추가 및 기능별 권한 설정. 권한 체계는 운영팀·개발팀 협의 후 별도 정의 예정.
+      <strong>[+ 관리자 추가]</strong>로 마스터 권한 계정을 등록할 수 있습니다. · <strong>Phase 2 예정:</strong> 서브 관리자 권한(기능별 접근 제어) 분리.
     </div>`;
 }
+function openAdmin(id){ state.setSelId=id; go('setDetail'); }
 
 /* ════════ 관리자 계정 상세·수정 (ADM-SET02) ════════ */
 function renderSetDetail(){
-  const a=ADMIN_ACCOUNT;
+  const a=state.adminList.find(x=>x.accountId===state.setSelId) || state.adminList[0];
+  const isMaster = a.accountId===ADMIN_ACCOUNT.accountId;
   $('view').innerHTML=`
     <div class="adm-page-hdr">
-      <div class="adm-page-title">계정 상세 — ${esc(a.name)}</div>
+      <div class="adm-page-title">계정 상세 — ${esc(a.name||a.loginId)}</div>
       <div class="adm-page-sub">계정 상태 조회 및 비밀번호 변경</div>
       <div class="adm-page-actions"><span class="wf-btn wf-btn-ghost" onclick="go('set')">← 목록으로</span></div>
     </div>
@@ -568,8 +622,7 @@ function renderSetDetail(){
         <div class="adm-form-row"><div class="adm-form-label">마지막 로그인</div><div class="adm-form-readonly">${a.lastLogin}</div></div>
         <div class="adm-form-row"><div class="adm-form-label">현재 세션</div>
           <div class="adm-form-readonly" style="display:flex;align-items:center;gap:8px">
-            <span class="wf-badge badge-approved">활성</span>
-            <span style="font-size:11px;color:#6b7280">09:15 시작 · 만료 미설정 (8조 미결 1)</span></div></div>
+            ${isMaster? '<span class="wf-badge badge-approved">활성</span><span style="font-size:11px;color:#6b7280">09:15 시작 · 만료 미설정 (8조 미결 1)</span>' : '<span style="font-size:11px;color:#9ca3af">현재 접속 중 아님</span>'}</div></div>
         <hr class="divider" style="margin:12px 0">
         <div class="adm-form-row"><div class="adm-form-label">아이디</div>
           <div class="adm-form-readonly" style="display:flex;align-items:center;gap:8px">${a.loginId}
@@ -578,13 +631,13 @@ function renderSetDetail(){
         <div class="adm-form-row"><div class="adm-form-label">계정 생성일</div><div class="adm-form-readonly">${a.createdAt}</div></div>
         <div class="adm-form-row"><div class="adm-form-label">권한</div>
           <div><select class="wf-select" id="set-role" style="width:220px">
-            <option value="master" ${state.set.role==='master'?'selected':''}>마스터</option>
+            <option value="master" selected>마스터</option>
             <option value="sub" disabled>서브 (Phase 2 — 사용 불가)</option>
           </select><div class="wf-hint">서브 권한은 Phase 2에서 활성화 예정</div></div></div>
         <div class="adm-form-row"><div class="adm-form-label">상태</div>
           <div><select class="wf-select" id="set-status" style="width:180px">
-            <option value="active" ${state.set.status==='active'?'selected':''}>활성</option>
-            <option value="inactive" ${state.set.status==='inactive'?'selected':''}>비활성</option>
+            <option value="active" ${a.status==='active'?'selected':''}>활성</option>
+            <option value="inactive" ${a.status==='inactive'?'selected':''}>비활성</option>
           </select><div class="wf-hint">비활성 선택 시 해당 계정 로그인이 즉시 차단됩니다</div></div></div>
         <div style="text-align:right;margin-top:8px"><button class="wf-btn wf-btn-primary" onclick="saveSetStatus()">저장</button></div>
       </div>
@@ -621,8 +674,9 @@ function renderSetDetail(){
     </div>`;
 }
 function saveSetStatus(){
-  state.set.status=$('set-status').value;
-  toast(state.set.status==='inactive'? '비활성으로 저장되었습니다 (로그인 차단)':'저장되었습니다','ok');
+  const a=state.adminList.find(x=>x.accountId===state.setSelId)||state.adminList[0];
+  a.status=$('set-status').value;
+  toast(a.status==='inactive'? '비활성으로 저장되었습니다 (로그인 차단)':'저장되었습니다','ok');
 }
 function changePw(){
   const cur=$('pw-cur').value, nw=$('pw-new').value, cf=$('pw-conf').value;
@@ -650,7 +704,79 @@ function confirmDelete(){
   </div>`);
 }
 
+/* ════════ 관리자 계정 등록 (ADM-SET02 케이스 B) ════════ */
+function renderSetNew(){
+  $('view').innerHTML=`
+    <div class="adm-page-hdr">
+      <div class="adm-page-title">관리자 계정 등록</div>
+      <div class="adm-page-sub">신규 관리자(마스터 권한) 등록 · 케이스 B</div>
+      <div class="adm-page-actions"><span class="wf-btn wf-btn-ghost" onclick="go('set')">← 목록으로</span></div>
+    </div>
+
+    <div style="max-width:640px">
+      <div class="sec-title">신규 관리자 정보</div>
+      <div class="adm-form" style="margin-bottom:20px">
+        <div class="adm-form-row" style="margin-bottom:14px"><div class="adm-form-label required">아이디</div>
+          <div><input class="wf-input" id="na-id" placeholder="영문·숫자 4자 이상">
+          <div class="wf-hint">영문·숫자 조합 4자 이상</div>
+          <div class="field-err" id="err-na-id">아이디는 영문·숫자 4자 이상이어야 합니다.</div></div></div>
+        <div class="adm-form-row" style="margin-bottom:14px"><div class="adm-form-label required">이메일</div>
+          <div><input class="wf-input" id="na-email" placeholder="admin@example.com">
+          <div class="field-err" id="err-na-email">올바른 이메일 형식이 아닙니다.</div></div></div>
+        <div class="adm-form-row" style="margin-bottom:14px"><div class="adm-form-label">이름</div>
+          <div><input class="wf-input" id="na-name" placeholder="선택 입력"></div></div>
+        <div class="adm-form-row" style="margin-bottom:14px"><div class="adm-form-label required">초기 비밀번호</div>
+          <div><input class="wf-input" type="password" id="na-pw" placeholder="영문+숫자+특수문자 8자 이상">
+          <div class="wf-hint">영문+숫자+특수문자 조합, 8자 이상</div>
+          <div class="field-err" id="err-na-pw">비밀번호 규칙(영문+숫자+특수문자, 8자 이상)에 맞지 않습니다.</div></div></div>
+        <div class="adm-form-row" style="margin-bottom:14px"><div class="adm-form-label required">비밀번호 확인</div>
+          <div><input class="wf-input" type="password" id="na-pw2" placeholder="비밀번호 다시 입력">
+          <div class="field-err" id="err-na-pw2">비밀번호가 일치하지 않습니다.</div></div></div>
+        <div class="adm-form-row"><div class="adm-form-label">권한</div>
+          <div><select class="wf-select" style="width:220px" disabled>
+            <option>마스터 (고정)</option>
+          </select><div class="wf-hint">MVP 권한은 마스터 고정 · 서브 권한은 Phase 2</div></div></div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button class="wf-btn wf-btn-ghost" onclick="go('set')">취소</button>
+        <button class="wf-btn wf-btn-primary" onclick="registerAdmin()">등록</button>
+      </div>
+    </div>`;
+}
+function registerAdmin(){
+  const id=$('na-id').value.trim(), email=$('na-email').value.trim(), name=$('na-name').value.trim();
+  const pw=$('na-pw').value, pw2=$('na-pw2').value;
+  const idOk=/^[A-Za-z0-9]{4,}$/.test(id);
+  const emailOk=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const pwRule=/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+  const pwOk=pwRule.test(pw);
+  const pw2Ok=pw!=='' && pw===pw2;
+  let ok=true;
+  toggleErr('na-id','err-na-id',idOk); if(!idOk) ok=false;
+  toggleErr('na-email','err-na-email',emailOk); if(!emailOk) ok=false;
+  toggleErr('na-pw','err-na-pw',pwOk); if(!pwOk) ok=false;
+  toggleErr('na-pw2','err-na-pw2',pw2Ok); if(!pw2Ok) ok=false;
+  // 아이디 중복 체크
+  if(idOk && state.adminList.some(a=>a.loginId===id)){ toggleErr('na-id','err-na-id',false); $('err-na-id').textContent='이미 사용 중인 아이디입니다.'; ok=false; }
+  if(!ok){ toast('입력값을 확인해 주세요','err'); return; }
+  const num=state.adminList.length+1;
+  state.adminList.push({
+    accountId:'ADM-'+String(num).padStart(3,'0'), loginId:id, name, email,
+    role:'master', status:'active', lastLogin:'—', createdAt:'2026-08-05',
+  });
+  toast('관리자 계정이 등록되었습니다.','ok');
+  go('set');
+}
+
 /* ════════ 이벤트 바인딩 ════════ */
+// 관리자 계정 목록 초기화 (마스터 계정 1개로 시작)
+state.adminList=[{
+  accountId:ADMIN_ACCOUNT.accountId, loginId:ADMIN_ACCOUNT.loginId, name:ADMIN_ACCOUNT.name,
+  email:ADMIN_ACCOUNT.email, role:'master', status:'active',
+  lastLogin:ADMIN_ACCOUNT.lastLogin, createdAt:ADMIN_ACCOUNT.createdAt,
+}];
+state.setSelId=ADMIN_ACCOUNT.accountId;
+
 $('login-btn').addEventListener('click', doLogin);
 $('login-pw').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
 $('login-id').addEventListener('keydown', e=>{ if(e.key==='Enter') $('login-pw').focus(); });

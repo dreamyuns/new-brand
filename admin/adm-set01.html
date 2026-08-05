@@ -49,8 +49,13 @@
   <main class="adm-main">
 
     <div class="adm-page-hdr">
-      <div class="adm-page-title">관리자 계정 목록</div>
-      <div class="adm-page-sub">어드민 접근 계정 관리 · MVP = 마스터 단일 계정</div>
+      <div>
+        <div class="adm-page-title">관리자 계정 목록</div>
+        <div class="adm-page-sub">어드민 접근 계정 관리 · MVP = 마스터 단일 계정</div>
+      </div>
+      <div class="adm-page-actions">
+        <a href="adm-set02.html" class="wf-btn wf-btn-primary wf-btn-sm">+ 관리자 추가 <span class="wf-cn">5</span></a>
+      </div>
     </div>
 
     <div class="two-col" style="align-items:start">
@@ -101,7 +106,7 @@
         <div class="sec-policy-hdr">⚙ 공통 정책 — 관리자 설정</div>
         <ul class="sec-policy-list">
           <li><strong>MVP 범위:</strong> 마스터 단일 계정만 운영. 서브계정은 Phase 2 (7-1절)</li>
-          <li><strong>[+ 계정 추가] 버튼:</strong> MVP에서 생략. Phase 2 추가 시 목록 화면에 배치 예정 (7-3절)</li>
+          <li><strong>[+ 관리자 추가] 버튼:</strong> 목록 오른쪽 상단 배치. 클릭 시 신규 등록 양식(SET02 케이스 B)으로 이동 (7-3절)</li>
           <li><strong>계정 비활성화:</strong> 삭제 대신 비활성 처리. 비활성 계정은 로그인 차단 (7-2절)</li>
         </ul>
         <div class="sec-policy-rule">기준: 어드민 v0.5 7조</div>
@@ -151,9 +156,21 @@
         <div class="ann-body">
           <div class="ann-title">[상세] 버튼</div>
           <div class="ann-desc"><ul>
-            <li>클릭 시 ADM-SET02 계정 상세·수정 화면으로 이동</li>
+            <li>클릭 시 ADM-SET02 케이스 A(계정 상세·수정) 화면으로 이동</li>
             <li>URL: <code>/admin/settings/:accountId</code></li>
           </ul></div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">5</span>
+        <div class="ann-body">
+          <div class="ann-title">[+ 관리자 추가] 버튼</div>
+          <div class="ann-desc"><ul>
+            <li>목록 오른쪽 상단에 고정 배치. 클릭하면 ADM-SET02 케이스 B(신규 등록 양식) 화면으로 이동</li>
+            <li>MVP는 마스터 단일 계정이라 실제 추가 상황은 없음. Phase 2에서 서브계정 추가 시 사용</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.2 7-3절</div>
         </div>
       </div>
 

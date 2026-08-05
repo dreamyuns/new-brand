@@ -58,15 +58,14 @@
     <div class="two-col" style="align-items:start">
     <div>
 
-      <!-- 월 선택 필터 -->
+      <!-- 월 범위 필터 -->
       <div class="filter-bar" style="margin-bottom:20px">
         <span class="filter-label">기준 월</span>
-        <select class="wf-select">
-          <option>2026-06 (이번 달)</option>
-          <option>2026-05</option>
-          <option>2026-04</option>
-          <option>2026-03</option>
-        </select><span class="wf-cn">1</span>
+        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:13px;color:#374151;white-space:nowrap"><input type="radio" name="period-cb02" value="all" checked style="cursor:pointer"> 전체</label>
+        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:13px;color:#374151;white-space:nowrap"><input type="radio" name="period-cb02" value="range" style="cursor:pointer"> 기간 선택</label>
+        <input class="wf-input" style="width:110px;opacity:0.45;cursor:not-allowed" placeholder="시작월 (YYYY-MM)" disabled id="cb02-start">
+        <span>~</span>
+        <input class="wf-input" style="width:110px;opacity:0.45;cursor:not-allowed" placeholder="종료월 (YYYY-MM)" disabled id="cb02-end"><span class="wf-cn">1</span>
         <div class="filter-actions">
           <button class="wf-btn wf-btn-primary wf-btn-sm">조회</button>
         </div>
@@ -80,8 +79,8 @@
             <tr>
               <th>공급사 (OTA)</th>
               <th>예약 건수</th>
-              <th>Active</th>
-              <th>지급완료</th>
+              <th>적립예정 <span class="wf-cn">5</span></th>
+              <th>적립완료</th>
               <th>Cancelled</th>
               <th>포인트 합계 <span class="wf-cn">4</span></th>
               <th>포인트율/금액 <span class="wf-cn">3</span></th>
@@ -167,7 +166,7 @@
         <div class="sec-policy-hdr">⚙ 공통 정책 — 공급사별 포인트 현황</div>
         <ul class="sec-policy-list">
           <li><strong>데이터 소스:</strong> KAYAK Reporting API — <code>ProviderCode</code> 기준으로 OTA별로 집계 (6조)</li>
-          <li><strong>집계 기준:</strong> 지급완료(Approved) 건 기준. 적립예정(Active)·취소·만료(Cancelled) 건은 별도 표시 (6-2절)</li>
+          <li><strong>집계 기준:</strong> 적립완료(Approved) 건 기준. 적립예정(Active)·취소·만료(Cancelled) 건은 별도 표시 (6-2절)</li>
           <li><strong>포인트 단위:</strong> P (포인트), 1P = 1원. KAYAK 정산 기준 KRW로 통일 (6-4절)</li>
           <li><strong>MVP 조회전용:</strong> 포인트율 수동 조정 기능 없음 (Phase 2 후 논의)</li>
         </ul>
@@ -178,12 +177,15 @@
       <div class="ann-item">
         <span class="cn">1</span>
         <div class="ann-body">
-          <div class="ann-title">기준 월 선택</div>
+          <div class="ann-title">기준 월 범위 선택</div>
           <div class="ann-desc">
             <ul>
-              <li>조회하고 싶은 월을 선택. 형식: 연도-월 (예: 2026-06). 최근 12개월 제공</li>
-              <li>기본값은 오늘 날짜가 속한 이번 달</li>
-              <li>지급완료(Approved) 기준으로 집계 → 체크아웃 후 자사 내부 기준을 통과한 건만 포함</li>
+              <li><strong>전체 (디폴트):</strong> 라디오에서 "전체" 선택 시 날짜 입력창 비활성(흐림). 서비스 시작일~오늘까지 전체 누적 집계</li>
+              <li><strong>기간 선택:</strong> 라디오에서 "기간 선택" 클릭 시 시작월 입력창 활성화</li>
+              <li>시작월만 입력 → 그 달 1개월만 집계 (종료월 = 시작월 자동 적용)</li>
+              <li>시작월·종료월 모두 입력 → 그 범위 내 집계 (예: 2026-05 ~ 2026-07 = 3개월)</li>
+              <li>종료월 입력창은 시작월 입력 후 활성화됨. 종료월만 단독 입력 불가</li>
+              <li>날짜 형식: YYYY-MM (예: 2026-06)</li>
             </ul>
           </div>
         </div>
@@ -222,11 +224,26 @@
         <div class="ann-body">
           <div class="ann-title">포인트 합계 컬럼</div>
           <div class="ann-desc"><ul>
-            <li>지급완료(Approved) 상태인 건들의 포인트 누적 합계만 표시</li>
+            <li>적립완료(Approved) 상태인 건들의 포인트 누적 합계만 표시</li>
             <li>적립예정(Active)·취소·만료(Cancelled) 건의 포인트는 이 합계에 포함되지 않음. 각각 Active·Cancelled 카운트 컬럼에서 별도 확인</li>
             <li>단위는 P(포인트). 1P = 1원 기준. 소수점 이하 버림</li>
           </ul></div>
           <div class="ann-rule">어드민 v0.3 6-2절·6-4절 — Approved 누적합계 기준</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">5</span>
+        <div class="ann-body">
+          <div class="ann-title">적립예정 · 적립완료 · Cancelled 카운트 컬럼</div>
+          <div class="ann-desc"><ul>
+            <li>세 컬럼 모두 <code>TransactionType="Booking"</code>인 건만 집계. Click 건은 포함하지 않음</li>
+            <li><strong>적립예정</strong> (TransactionType="Booking" + TransactionStatus="Active"): 체크아웃 전이거나 자사 기준 통과 전인 예약 건 수</li>
+            <li><strong>적립완료</strong> (자사 내부 Approved 판정): 체크아웃+7일 후 자사 배치 처리로 포인트가 확정된 예약 건 수. KAYAK API의 TransactionStatus와 직접 대응하지 않음 (포인트_정책서 v0.1 2-1절)</li>
+            <li><strong>Cancelled</strong> (TransactionType="Booking" + TransactionStatus="Cancelled"): 예약이 취소됐거나 포인트가 만료된 건 수. PERCENTAGE 타입이어도 포인트가 0인 실데이터 존재</li>
+            <li>예약 건수 컬럼 = 적립예정 + 적립완료 + Cancelled 합계</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.5 6-2절 — TransactionType/TransactionStatus 정의</div>
         </div>
       </div>
       <hr class="divider">

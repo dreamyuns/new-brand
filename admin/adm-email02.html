@@ -102,7 +102,7 @@
       <button class="case-tab-btn active" onclick="goCase('case-a')">케이스 A — 이메일 인증코드</button>
       <button class="case-tab-btn" onclick="goCase('case-b')">케이스 B — 환영 이메일</button>
       <button class="case-tab-btn" onclick="goCase('case-c')">케이스 C — 포인트 적립예정</button>
-      <button class="case-tab-btn" onclick="goCase('case-d')">케이스 D — 포인트 지급완료</button>
+      <button class="case-tab-btn" onclick="goCase('case-d')">케이스 D — 포인트 적립완료</button>
       <button class="case-tab-btn" onclick="goCase('case-e')">케이스 E — 포인트 취소·만료</button>
       <button class="case-tab-btn" onclick="goCase('case-f')" style="color:#9ca3af">케이스 F — 예약상태알림 (Phase 2)</button>
     </div>
@@ -383,7 +383,7 @@
 ■ 체크아웃 예정일: {{checkout_date}}
 ■ 적립 예정 포인트: {{point_amount}}
 
-체크아웃 후 예약이 확인되면 지급완료 안내를 드립니다.
+체크아웃 후 예약이 확인되면 적립완료 안내를 드립니다.
 
 올마이투어 드림</textarea>
               <div class="var-guide">
@@ -420,7 +420,7 @@
 ■ 체크아웃 예정일: 2026-08-15
 ■ 적립 예정 포인트: 12,000P
 
-체크아웃 후 예약이 확인되면 지급완료 안내를 드립니다.
+체크아웃 후 예약이 확인되면 적립완료 안내를 드립니다.
 
 올마이투어 드림</div>
               <div class="email-preview-footer">이 이메일은 발송 전용입니다.</div>
@@ -446,10 +446,10 @@
       </div>
     </div><!-- /case-c -->
 
-    <!-- ===== 케이스 D: 포인트 지급완료 안내 ===== -->
+    <!-- ===== 케이스 D: 포인트 적립완료 안내 ===== -->
     <div id="case-d" style="display:none">
       <div class="adm-page-hdr" style="margin-top:0;padding-top:0;border-top:none">
-        <div class="adm-page-title" style="font-size:15px;color:#374151">템플릿 #4 — 포인트 지급완료 안내</div>
+        <div class="adm-page-title" style="font-size:15px;color:#374151">템플릿 #4 — 포인트 적립완료 안내</div>
         <div class="adm-page-actions"><button class="wf-btn wf-btn-primary">저장</button></div>
       </div>
       <div class="email-edit-wrap">
@@ -526,7 +526,7 @@
             <div class="ann-item">
               <span class="cn">D</span>
               <div class="ann-body">
-                <div class="ann-title">포인트 지급완료 안내 특이사항</div>
+                <div class="ann-title">포인트 적립완료 안내 특이사항</div>
                 <div class="ann-desc"><ul>
                   <li>자사 내부 기준(체크아웃+n일 경과) Approved 확정 시 자동 발송</li>
                   <li><code>{{payment_month}}</code>는 KAYAK EST(미국 동부 시간) 기준 지급월</li>

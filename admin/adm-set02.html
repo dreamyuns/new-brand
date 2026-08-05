@@ -10,7 +10,7 @@
 <nav class="page-nav">
   <a class="page-nav-back" href="admin-index.html">← 목차</a>
   <span class="page-nav-title">ADM-SET02</span>
-  <span class="page-nav-route">관리자 설정 · 계정 상세·수정</span>
+  <span class="page-nav-route">관리자 설정 · 케이스 A: 계정 상세·수정 / 케이스 B: 신규 등록</span>
   <div class="page-nav-nav">
     <a class="page-nav-pager" href="adm-set01.html">← SET01</a>
     <a class="page-nav-pager" href="adm-dashboard.html">다음: DASH →</a>
@@ -49,17 +49,25 @@
   <main class="adm-main">
 
     <div class="adm-page-hdr">
-      <div class="adm-page-title">계정 상세 — 마스터 관리자</div>
-      <div class="adm-page-sub">계정 상태 조회 및 비밀번호 변경</div>
+      <div>
+        <div class="adm-page-title">관리자 계정 관리</div>
+        <div class="adm-page-sub">케이스 A: 계정 상세·수정 · 케이스 B: 신규 관리자 등록</div>
+      </div>
       <div class="adm-page-actions">
         <a href="adm-set01.html" class="wf-btn wf-btn-ghost">← 목록으로</a>
       </div>
     </div>
 
+    <!-- 케이스 A 구분 헤더 -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #e5e7eb">
+      <span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:4px;background:#dbeafe;color:#1e40af">케이스 A</span>
+      <span style="font-size:14px;font-weight:600;color:#374151">기존 계정 상세·수정 — 마스터 관리자</span>
+    </div>
+
     <div class="two-col" style="align-items:start">
       <div>
 
-        <!-- 현재 계정 정보 -->
+        <!-- 계정 정보 -->
         <div class="sec-title">계정 정보</div>
         <div class="adm-form" style="margin-bottom:24px">
 
@@ -67,15 +75,6 @@
           <div class="adm-form-row">
             <div class="adm-form-label">마지막 로그인 <span class="wf-cn">1</span></div>
             <div class="adm-form-readonly">2026-06-22 09:15</div>
-          </div>
-
-          <!-- 현재 세션 (읽기전용) -->
-          <div class="adm-form-row">
-            <div class="adm-form-label">현재 세션 <span class="wf-cn">2</span></div>
-            <div class="adm-form-readonly" style="display:flex;align-items:center;gap:8px">
-              <span class="wf-badge badge-approved">활성</span>
-              <span style="font-size:11px;color:#6b7280">09:15 시작 · 만료 미설정 (8조 미결 1)</span>
-            </div>
           </div>
 
           <hr class="divider" style="margin:12px 0">
@@ -131,39 +130,37 @@
         </div>
 
         <!-- 비밀번호 변경 -->
-        <div class="sec-title">비밀번호 변경 <span class="wf-cn">6</span></div>
-        <div class="adm-form" style="margin-bottom:24px">
-          <div class="adm-form-row" style="margin-bottom:14px">
-            <div class="adm-form-label required">현재 비밀번호</div>
-            <input class="wf-input" type="password" placeholder="현재 비밀번호 입력">
-          </div>
-          <div class="adm-form-row" style="margin-bottom:14px">
-            <div class="adm-form-label required">새 비밀번호</div>
-            <div>
-              <input class="wf-input" type="password" placeholder="새 비밀번호 입력">
-              <div class="wf-hint">영문+숫자+특수문자 조합, 8자 이상</div>
-            </div>
-          </div>
-          <div class="adm-form-row" style="margin-bottom:14px">
-            <div class="adm-form-label required">새 비밀번호 확인</div>
-            <input class="wf-input" type="password" placeholder="새 비밀번호 다시 입력">
-          </div>
-          <div style="text-align:right;margin-top:8px">
-            <button class="wf-btn wf-btn-primary">비밀번호 변경 <span class="wf-cn">7</span></button>
-          </div>
+        <div class="sec-title">비밀번호 변경</div>
+        <div style="margin-bottom:16px">
+          <p style="font-size:13px;color:#374151;margin-bottom:12px">비밀번호를 변경하려면 아래 버튼을 클릭하세요.</p>
+          <button class="wf-btn wf-btn-outline">비밀번호 변경 <span class="wf-cn">6</span></button>
         </div>
 
-        <!-- 위험 영역 — 계정 삭제 -->
-        <div class="sec-title" style="color:#dc2626;border-bottom-color:#fca5a5">
-          계정 삭제
-        </div>
-        <div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:16px 20px;margin-bottom:24px">
-          <p style="font-size:13px;color:#374151;margin-bottom:12px">
-            계정을 삭제하면 어드민 로그인이 불가능해집니다. 삭제 요청은 백엔드 API를 통해 처리되며, 즉시 적용됩니다.
-          </p>
-          <button class="wf-btn" style="background:#dc2626;color:#fff;border:none">
-            삭제 요청 <span class="wf-cn">8</span>
-          </button>
+        <!-- 비밀번호 변경 팝업 — 버튼 클릭 후 상태 표현 -->
+        <div class="sec-sub" style="color:#4f7cff;margin-bottom:10px">▼ [비밀번호 변경] 클릭 시 팝업 열림</div>
+        <div style="position:relative;border:2px dashed #4f7cff;border-radius:8px;padding:24px;background:#f8faff;margin-bottom:28px">
+          <div style="position:absolute;top:-10px;left:16px;background:#f8faff;padding:0 6px;font-size:11px;font-weight:700;color:#4f7cff">팝업 — 비밀번호 변경</div>
+          <div class="adm-form">
+            <div class="adm-form-row" style="margin-bottom:14px">
+              <div class="adm-form-label required">현재 비밀번호</div>
+              <input class="wf-input" type="password" placeholder="현재 비밀번호 입력">
+            </div>
+            <div class="adm-form-row" style="margin-bottom:14px">
+              <div class="adm-form-label required">새 비밀번호</div>
+              <div>
+                <input class="wf-input" type="password" placeholder="새 비밀번호 입력">
+                <div class="wf-hint">영문+숫자+특수문자 조합, 8자 이상</div>
+              </div>
+            </div>
+            <div class="adm-form-row" style="margin-bottom:14px">
+              <div class="adm-form-label required">새 비밀번호 확인</div>
+              <input class="wf-input" type="password" placeholder="새 비밀번호 다시 입력">
+            </div>
+            <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:4px">
+              <button class="wf-btn wf-btn-ghost">취소</button>
+              <button class="wf-btn wf-btn-primary">변경 <span class="wf-cn">7</span></button>
+            </div>
+          </div>
         </div>
 
         <!-- 서브계정 (Phase 2) -->
@@ -183,14 +180,15 @@
 
       <!-- 주석 -->
       <div class="ann">
-        <!-- 공통정책 블록 (주석 패널 최상단) -->
+        <!-- 공통정책 블록 -->
         <div class="sec-policy">
           <div class="sec-policy-hdr">⚙ 공통 정책 — 관리자 계정 상세·수정</div>
           <ul class="sec-policy-list">
             <li><strong>MVP 범위:</strong> 마스터 단일 계정 정보 조회·비밀번호 변경·상태 변경만 제공 (7-2절)</li>
             <li><strong>아이디 변경:</strong> 불가. 초기 발급 후 고정 (7-2절)</li>
-            <li><strong>계정 삭제:</strong> 어드민 화면에서 직접 삭제 로직 없음. 백엔드 API 요청 방식으로 처리 (7-2절)</li>
-            <li><strong>보안 정책:</strong> 세션 만료 시간·2FA·IP 제한 — 미결 (8조 미결 1)</li>
+            <li><strong>비밀번호 규칙 (정책):</strong> 영문+숫자+특수문자 조합, 8자 이상. 비밀번호 변경 팝업 및 로그인 화면(ADM-LOGIN) 공통 적용</li>
+            <li><strong>계정 삭제:</strong> 어드민 화면에서 직접 삭제 불가. 삭제가 필요하면 백엔드 API 요청으로 처리 (7-2절)</li>
+            <li><strong>세션 만료:</strong> 비활동 2시간 자동 로그아웃 — ADM-LOGIN 케이스 C 참조</li>
           </ul>
           <div class="sec-policy-rule">기준: 어드민 v0.5 7-2절</div>
         </div>
@@ -205,19 +203,6 @@
               <li>자사 DB 로그인 이력 테이블에서 가장 최근 기록을 가져와서 보여줌</li>
               <li>수정 불가. 시스템이 자동으로 기록하는 값</li>
             </ul></div>
-          </div>
-        </div>
-
-        <div class="ann-item">
-          <span class="cn">2</span>
-          <div class="ann-body">
-            <div class="ann-title">현재 세션 (읽기전용)</div>
-            <div class="ann-desc"><ul>
-              <li>지금 이 계정이 어드민에 로그인 되어있는지 여부. 활성 = 현재 사용 중</li>
-              <li>세션 만료 시간은 아직 정해지지 않은 상태 — 나중에 보안 정책이 확정되면 반영 (8조 미결 1)</li>
-              <li>수정 불가. 시스템이 자동으로 관리하는 값</li>
-            </ul></div>
-            <div class="ann-rule">세션 만료 시간 미확정 — 보안 정책 확정 필요 (8조 미결 1)</div>
           </div>
         </div>
 
@@ -262,41 +247,33 @@
         <div class="ann-item">
           <span class="cn">6</span>
           <div class="ann-body">
-            <div class="ann-title">비밀번호 변경 폼</div>
+            <div class="ann-title">[비밀번호 변경] 버튼</div>
             <div class="ann-desc"><ul>
-              <li>지금 쓰고 있는 비밀번호를 먼저 입력해서 본인 확인 후 변경 허용</li>
-              <li>새 비밀번호 규칙: 영문+숫자+특수문자 조합, 8자 이상</li>
-              <li>새 비밀번호는 현재 비밀번호와 달라야 함</li>
+              <li>클릭 시 비밀번호 변경 팝업(모달)이 화면 위에 열림</li>
+              <li>팝업 구성: 현재 비밀번호 / 새 비밀번호 / 새 비밀번호 확인 3개 입력 칸 + [취소] [변경] 버튼</li>
+              <li>[취소] 버튼 클릭 또는 팝업 바깥 영역 클릭 → 팝업 닫힘, 입력값 초기화</li>
             </ul></div>
-            <div class="ann-rule">비밀번호 복잡도 기준 — 보안 정책 확정 후 반영 (8조 미결 1)</div>
           </div>
         </div>
 
         <div class="ann-item">
           <span class="cn">7</span>
           <div class="ann-body">
-            <div class="ann-title">[비밀번호 변경] 버튼</div>
+            <div class="ann-title">팝업 [변경] 버튼 — 유효성 검사</div>
             <div class="ann-desc"><ul>
-              <li>3개 필드 모두 입력하고 규칙을 통과해야 버튼이 활성화됨</li>
-              <li>변경 성공 시: "비밀번호가 변경되었습니다" 메시지 표시 후 자동 로그아웃 → 재로그인 유도</li>
-              <li>현재 비밀번호 틀림: "현재 비밀번호가 올바르지 않습니다" 오류 표시</li>
-              <li>새 비밀번호 두 칸이 다름: "비밀번호가 일치하지 않습니다" 오류 표시</li>
+              <li><strong>비밀번호 규칙 (정책):</strong> 영문+숫자+특수문자 조합, 8자 이상</li>
+              <li>3개 입력 칸이 모두 채워져야 [변경] 버튼 활성화. 하나라도 비어 있으면 버튼 비활성(회색)</li>
+              <li>유효성 검사 실패 케이스 (각 실패 시 해당 칸 테두리 빨간색 강조 + 칸 아래 오류 메시지 표시):
+                <ul>
+                  <li>① 현재 비밀번호 틀림 → "현재 비밀번호가 올바르지 않습니다"</li>
+                  <li>② 새 비밀번호 규칙 미충족 (8자 미만, 또는 영문·숫자·특수문자 중 하나 이상 없음) → "영문·숫자·특수문자를 모두 포함해야 합니다 (8자 이상)"</li>
+                  <li>③ 새 비밀번호가 현재 비밀번호와 동일 → "현재 비밀번호와 다른 비밀번호를 입력해 주세요"</li>
+                  <li>④ 새 비밀번호 확인 칸 불일치 → "비밀번호가 일치하지 않습니다"</li>
+                </ul>
+              </li>
+              <li>변경 성공 시: 팝업 닫힘 + "비밀번호가 변경되었습니다" 토스트 메시지 표시. 자동 로그아웃 여부는 보안 정책 확정 후 결정</li>
             </ul></div>
-            <div class="ann-front">프론트: 변경 성공 후 자동 로그아웃 처리 — 보안 정책 확정 후 최종 결정</div>
-          </div>
-        </div>
-
-        <div class="ann-item">
-          <span class="cn">8</span>
-          <div class="ann-body">
-            <div class="ann-title">[삭제 요청] 버튼</div>
-            <div class="ann-desc"><ul>
-              <li>버튼을 누르면 "정말 삭제하시겠습니까?" 확인 창이 나타남</li>
-              <li>확인 시 백엔드 API에 삭제 요청을 보냄. 어드민 화면에서 직접 DB를 삭제하지 않음</li>
-              <li>삭제 완료 시 해당 계정으로 로그인 불가. 어드민 접근 차단</li>
-              <li>실수 방지를 위해 버튼 색을 빨간색으로 표시 (위험 영역)</li>
-            </ul></div>
-            <div class="ann-rule">어드민 v0.5 7-2절 — 삭제는 백엔드 API 요청 방식</div>
+            <div class="ann-rule">비밀번호 복잡도 기준 정책 — 영문+숫자+특수문자, 8자 이상</div>
           </div>
         </div>
 
@@ -304,13 +281,197 @@
         <div class="text-muted">
           <strong style="color:#374151;display:block;margin-bottom:4px">미결 사항</strong>
           · 비밀번호 찾기/초기화 프로세스 미설계<br>
-          · 세션 만료 시간 미확정<br>
+          · 로그인 실패 횟수 제한·잠금 정책 미확정<br>
+          · 비밀번호 변경 성공 시 자동 로그아웃 여부<br>
           · 2FA(2단계 인증) Phase 2 논의<br>
           · IP 접근 제한 Phase 2 논의<br>
           · 서브계정 권한 설계 Phase 2
         </div>
       </div>
     </div>
+
+    <!-- ====== 케이스 B — 신규 관리자 등록 ====== -->
+    <div style="display:flex;align-items:center;gap:8px;margin:36px 0 14px;padding-bottom:10px;border-bottom:2px solid #e5e7eb">
+      <span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:4px;background:#d1fae5;color:#065f46">케이스 B</span>
+      <span style="font-size:14px;font-weight:600;color:#374151">신규 관리자 등록 양식</span>
+      <span style="font-size:12px;color:#6b7280">— SET01 [+ 관리자 추가] 버튼 클릭 시 진입</span>
+    </div>
+
+    <div class="two-col" style="align-items:start">
+      <div>
+
+        <!-- 신규 등록 폼 -->
+        <div class="adm-form" style="margin-bottom:20px">
+
+          <!-- 아이디 -->
+          <div class="adm-form-row">
+            <div class="adm-form-label required">아이디 <span class="wf-cn">8</span></div>
+            <div>
+              <input class="wf-input" placeholder="아이디 입력 (영문·숫자, 4자 이상)" style="width:240px">
+              <div class="wf-hint">영문·숫자 조합 4자 이상. 등록 후 변경 불가</div>
+            </div>
+          </div>
+
+          <!-- 이메일 -->
+          <div class="adm-form-row">
+            <div class="adm-form-label required">이메일 <span class="wf-cn">9</span></div>
+            <div>
+              <input class="wf-input" type="email" placeholder="이메일 주소 입력" style="width:240px">
+              <div class="wf-hint">로그인 및 비밀번호 찾기에 사용</div>
+            </div>
+          </div>
+
+          <!-- 이름 -->
+          <div class="adm-form-row">
+            <div class="adm-form-label">이름 <span class="wf-cn">10</span></div>
+            <input class="wf-input" placeholder="이름 입력 (선택)" style="width:200px">
+          </div>
+
+          <!-- 초기 비밀번호 -->
+          <div class="adm-form-row">
+            <div class="adm-form-label required">초기 비밀번호 <span class="wf-cn">11</span></div>
+            <div>
+              <input class="wf-input" type="password" placeholder="초기 비밀번호 입력" style="width:240px">
+              <div class="wf-hint">영문+숫자+특수문자 조합, 8자 이상</div>
+            </div>
+          </div>
+
+          <!-- 비밀번호 확인 -->
+          <div class="adm-form-row">
+            <div class="adm-form-label required">비밀번호 확인</div>
+            <input class="wf-input" type="password" placeholder="비밀번호 다시 입력" style="width:240px">
+          </div>
+
+          <!-- 권한 (마스터 고정) -->
+          <div class="adm-form-row">
+            <div class="adm-form-label required">권한 <span class="wf-cn">12</span></div>
+            <div>
+              <select class="wf-select" style="width:180px" disabled>
+                <option value="master" selected>마스터</option>
+              </select>
+              <div class="wf-hint">MVP: 마스터 권한만 지원. Phase 2에서 서브 추가 예정</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 버튼 -->
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:20px">
+          <a href="adm-set01.html" class="wf-btn wf-btn-ghost">취소</a>
+          <button class="wf-btn wf-btn-primary">등록 <span class="wf-cn">13</span></button>
+        </div>
+
+        <!-- 성공 토스트 표현 -->
+        <div class="sec-sub" style="color:#059669;margin-top:24px;margin-bottom:10px">▼ [등록] 클릭 성공 시 — 화면 전환 + 토스트 메시지</div>
+        <div style="position:relative;border:2px dashed #059669;border-radius:8px;padding:14px 16px;background:#f0fdf4">
+          <div style="position:absolute;top:-10px;left:16px;background:#f0fdf4;padding:0 6px;font-size:11px;font-weight:700;color:#059669">성공 토스트</div>
+          <div style="font-size:13px;color:#065f46">"관리자 계정이 등록되었습니다." — 화면은 ADM-SET01(계정 목록)으로 자동 이동</div>
+        </div>
+
+      </div><!-- /케이스 B 폼 영역 -->
+
+      <!-- 주석 패널 — 케이스 B -->
+      <div class="ann">
+
+        <div class="sec-policy">
+          <div class="sec-policy-hdr">⚙ 공통 정책 — 신규 관리자 등록</div>
+          <ul class="sec-policy-list">
+            <li><strong>MVP 권한:</strong> 마스터 1종만 등록 가능. 서브 권한은 Phase 2 (7-3절)</li>
+            <li><strong>아이디 고정:</strong> 등록 이후 변경 불가. 신중하게 입력 (7-2절)</li>
+            <li><strong>등록 성공 후 이동:</strong> ADM-SET01 목록 화면으로 자동 이동 + 토스트 표시</li>
+            <li><strong>필수(*) 미입력 시:</strong> [등록] 버튼 비활성. 모든 필수 항목이 채워져야 활성화</li>
+          </ul>
+          <div class="sec-policy-rule">기준: 어드민 v0.2 7-3절</div>
+        </div>
+
+        <h3>주석 — ADM-SET02 케이스 B</h3>
+
+        <div class="ann-item">
+          <span class="cn">8</span>
+          <div class="ann-body">
+            <div class="ann-title">아이디 입력 (필수)</div>
+            <div class="ann-desc"><ul>
+              <li>영문·숫자 조합 4자 이상. 특수문자·공백 사용 불가</li>
+              <li>이미 사용 중인 아이디 입력 시 → "이미 사용 중인 아이디입니다" 오류 메시지</li>
+              <li>등록 이후에는 변경 불가하므로 신중하게 입력</li>
+            </ul></div>
+            <div class="ann-rule">어드민 v0.2 7-2절 — 아이디 고정 정책</div>
+          </div>
+        </div>
+
+        <div class="ann-item">
+          <span class="cn">9</span>
+          <div class="ann-body">
+            <div class="ann-title">이메일 입력 (필수)</div>
+            <div class="ann-desc"><ul>
+              <li>이메일 형식(예: name@company.com) 맞지 않으면 → "올바른 이메일 형식을 입력해 주세요" 오류 표시</li>
+              <li>이미 사용 중인 이메일 입력 시 → "이미 사용 중인 이메일입니다" 오류 메시지</li>
+              <li>비밀번호 찾기·로그인 알림 등에 사용됨</li>
+            </ul></div>
+          </div>
+        </div>
+
+        <div class="ann-item">
+          <span class="cn">10</span>
+          <div class="ann-body">
+            <div class="ann-title">이름 입력 (선택)</div>
+            <div class="ann-desc"><ul>
+              <li>선택 항목. 비워둬도 등록 가능</li>
+              <li>관리자 목록에서 해당 계정을 쉽게 구분하는 용도</li>
+            </ul></div>
+          </div>
+        </div>
+
+        <div class="ann-item">
+          <span class="cn">11</span>
+          <div class="ann-body">
+            <div class="ann-title">초기 비밀번호 입력 (필수)</div>
+            <div class="ann-desc"><ul>
+              <li>영문+숫자+특수문자 조합, 8자 이상</li>
+              <li>비밀번호 확인 칸과 일치하지 않으면 → "비밀번호가 일치하지 않습니다" 오류</li>
+              <li>규칙 미충족 시 → "영문·숫자·특수문자를 모두 포함해야 합니다 (8자 이상)" 오류</li>
+              <li>등록 후 해당 관리자에게 초기 비밀번호를 직접 전달. 첫 로그인 후 변경 권장 (정책 미결)</li>
+            </ul></div>
+            <div class="ann-rule">비밀번호 복잡도 기준 — 영문+숫자+특수문자, 8자 이상</div>
+          </div>
+        </div>
+
+        <div class="ann-item">
+          <span class="cn">12</span>
+          <div class="ann-body">
+            <div class="ann-title">권한 선택 (마스터 고정)</div>
+            <div class="ann-desc"><ul>
+              <li>MVP에서는 마스터 권한만 등록 가능. 선택창이 비활성(흐림) 상태로 표시됨</li>
+              <li>Phase 2에서 서브 권한 추가 및 권한 범위 설계 예정</li>
+            </ul></div>
+            <div class="ann-rule">어드민 v0.2 7-3절 — Phase 2 서브 권한 예정</div>
+          </div>
+        </div>
+
+        <div class="ann-item">
+          <span class="cn">13</span>
+          <div class="ann-body">
+            <div class="ann-title">[등록] / [취소] 버튼</div>
+            <div class="ann-desc"><ul>
+              <li><strong>[등록]:</strong> 필수 항목(*)이 모두 채워져야 활성화. 하나라도 비어있거나 유효성 오류가 있으면 버튼 비활성(회색)</li>
+              <li>등록 성공 시: ADM-SET01 계정 목록으로 이동 + "관리자 계정이 등록되었습니다." 토스트 메시지</li>
+              <li><strong>[취소]:</strong> 입력값을 초기화하지 않고 바로 ADM-SET01으로 이동</li>
+            </ul></div>
+            <div class="ann-rule">어드민 v0.2 7-3절</div>
+          </div>
+        </div>
+
+        <hr class="divider">
+        <div class="text-muted">
+          <strong style="color:#374151;display:block;margin-bottom:4px">미결 사항</strong>
+          · 첫 로그인 후 비밀번호 강제 변경 여부 (정책 미결)<br>
+          · 신규 등록 시 이메일 자동 발송 여부<br>
+          · 서브 권한 권한 범위 — Phase 2 설계 필요
+        </div>
+
+      </div><!-- /ann 케이스 B -->
+
+    </div><!-- /two-col 케이스 B -->
 
   </main>
 </div>
