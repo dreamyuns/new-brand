@@ -36,8 +36,9 @@ const STATUS_BADGE = {
 const GUEST_LABEL = '<span style="color:#6b7280">비회원</span>';   // 비회원(labels 없는 건)
 function statusBadge(s){ const [c,t]=STATUS_BADGE[s]||['badge-inactive',s]; return `<span class="wf-badge ${c}">${t}</span>`; }
 function typeBadge(t){
-  const c = t==='PERCENTAGE' ? 'badge-active' : (t==='FLAT' ? 'badge-inactive' : 'badge-inactive');
-  return `<span class="wf-badge ${c}" style="font-size:9px">${t}</span>`;
+  const label = t==='NONE' ? '미설정' : t;   // CashbackType null = 미설정 (화면기획서 반영)
+  const c = t==='PERCENTAGE' ? 'badge-active' : 'badge-inactive';
+  return `<span class="wf-badge ${c}" style="font-size:9px">${label}</span>`;
 }
 // 포인트 금액 셀 표기 (타입 힌트 포함)
 function pointCell(r){
@@ -146,36 +147,31 @@ function renderDashboard(){
     </div>
 
     <div class="sec-title">핵심 지표</div>
-    <div class="stat-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:28px">
+    <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:28px">
       <div class="stat-card blue"><div class="stat-card-label">전체 회원</div><div class="stat-card-value">${totalMembers.toLocaleString()}</div><div class="stat-card-sub">활성 회원 기준</div></div>
-      <div class="stat-card green"><div class="stat-card-label">총 적립완료 건수</div><div class="stat-card-value">${approved.length}건</div><div class="stat-card-sub">예약(Booking) + Approved · 총 ${fmtP(approvedPts)} 적립</div></div>
-      <div class="stat-card amber"><div class="stat-card-label">적립완료 포인트</div><div class="stat-card-value" style="font-size:20px">${fmtP(approvedPts)}</div><div class="stat-card-sub">${approved.length}건 완료 · Approved 누적합계</div></div>
-      <div class="stat-card gray"><div class="stat-card-label">적립예정 예약</div><div class="stat-card-value">${active.length}</div><div class="stat-card-sub">Active 건수</div></div>
+      <div class="stat-card blue"><div class="stat-card-label">총 적립완료 건수</div><div class="stat-card-value">${approved.length.toLocaleString()}</div><div class="stat-card-sub">Approved 누적 건수</div></div>
+      <div class="stat-card amber"><div class="stat-card-label">총 적립완료 포인트</div><div class="stat-card-value" style="font-size:20px">${fmtP(approvedPts)}</div><div class="stat-card-sub">Approved 누적 합계</div></div>
       <div class="stat-card amber"><div class="stat-card-label">적립예정 포인트</div><div class="stat-card-value" style="font-size:20px">${fmtP(activePts)}</div><div class="stat-card-sub">Active</div></div>
-      <div class="stat-card purple"><div class="stat-card-label">취소·만료</div><div class="stat-card-value">${cancelled.length}</div><div class="stat-card-sub">Cancelled 건수</div></div>
     </div>
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
       <div>
-        <div class="sec-title">최근 예약 <span class="sec-badge" style="font-size:10px">최신 5건</span></div>
+        <div class="sec-title">포인트 적립 현황 <span class="sec-badge" style="font-size:10px">최신 5건</span></div>
         <div class="adm-table-wrap"><table class="adm-table">
-          <thead><tr><th>예약ID</th><th>회원</th><th>OTA</th><th>상태</th></tr></thead>
+          <thead><tr><th>회원 이메일</th><th>OTA</th><th>포인트 금액</th><th>상태</th></tr></thead>
           <tbody>${recentRes.map(r=>{
-            const m=MEMBERS.find(x=>x.email===r.memberEmail);
-            const who=r.memberEmail? (m? esc((m.firstName+' '+m.lastName).trim()||m.email):esc(r.memberEmail)) : GUEST_LABEL;
-            return `<tr><td style="font-family:monospace;font-size:11px">${r.resId}</td><td>${who}</td><td>${esc(r.ota)}</td><td>${statusBadge(r.status)}</td></tr>`;
+            const who=r.memberEmail? esc(r.memberEmail) : GUEST_LABEL;
+            const amt=r.status==='Cancelled' ? MUTED_DASH2 : pointCell(r);
+            return `<tr><td style="font-size:11px">${who}</td><td>${esc(r.ota)}</td><td>${amt}</td><td>${statusBadge(r.status)}</td></tr>`;
           }).join('')}</tbody>
         </table></div>
-        <div style="text-align:right;margin-top:8px"><span class="wf-btn wf-btn-outline wf-btn-sm" onclick="go('cb01')">전체 포인트 내역 →</span></div>
+        <div style="text-align:right;margin-top:8px"><span class="wf-btn wf-btn-outline wf-btn-sm" onclick="go('cb01')">전체 포인트 보기 →</span></div>
       </div>
       <div>
         <div class="sec-title">최근 가입 회원 <span class="sec-badge" style="font-size:10px">최신 5명</span></div>
         <div class="adm-table-wrap"><table class="adm-table">
-          <thead><tr><th>회원</th><th>이메일</th><th>가입일</th></tr></thead>
-          <tbody>${recentMem.map(m=>{
-            const nm=(m.firstName+' '+m.lastName).trim();
-            return `<tr class="row-click" onclick="openMember('${m.id}')"><td>${nm?esc(nm):MUTED_DASH2}</td><td style="font-size:11px">${esc(m.email)}</td><td style="font-size:11px">${m.joinDate.slice(5)}</td></tr>`;
-          }).join('')}</tbody>
+          <thead><tr><th>회원번호</th><th>이메일</th><th>가입일</th></tr></thead>
+          <tbody>${recentMem.map(m=>`<tr class="row-click" onclick="openMember('${m.id}')"><td style="font-family:monospace;font-size:11px">${m.id}</td><td style="font-size:11px">${esc(m.email)}</td><td style="font-size:11px">${m.joinDate.slice(5)}</td></tr>`).join('')}</tbody>
         </table></div>
         <div style="text-align:right;margin-top:8px"><span class="wf-btn wf-btn-outline wf-btn-sm" onclick="go('mem')">전체 회원 보기 →</span></div>
       </div>
@@ -227,7 +223,6 @@ function renderMemList(){
       <div class="filter-actions">
         <button class="wf-btn wf-btn-primary wf-btn-sm" onclick="memSearch()">검색</button>
         <button class="wf-btn wf-btn-ghost wf-btn-sm" onclick="memReset()">초기화</button>
-        <button class="wf-btn wf-btn-download wf-btn-sm" onclick="toast('전체 활성 회원 데이터를 Excel로 내려받습니다 (데모)')">Excel 다운로드</button>
       </div>
     </div>
     <div class="wf-hint" style="margin:-8px 0 14px">가입기간: <strong>전체</strong>(기본) 또는 <strong>기간 선택</strong> · 시작일만 입력하면 그 날 하루만 조회(종료일=시작일) · 종료일은 시작일 입력 후 활성화 · 형식 YYYY-MM-DD</div>
@@ -353,7 +348,7 @@ function renderMemTab(){
     const rows=memberPointRows(m.email);
     const cum=memberCumulativePoints(m.email);
     body.innerHTML=`
-      <div class="sec-sub">${esc((m.firstName+' '+m.lastName).trim()||m.email)} 기준 · ADM-CB01과 동일 규칙 · MVP 조회전용 · NONE·0P 건 미표시 (6조)</div>
+      <div class="sec-sub">${esc((m.firstName+' '+m.lastName).trim()||m.email)} 기준 · ADM-CB01과 동일 규칙 · MVP 조회전용 · 미설정(CashbackType null)·0P 건 미표시 (6조)</div>
       <div class="pt-summary">적립완료(Approved) 누적 포인트: <strong>${cum>0?fmtP(cum):'0P'}</strong></div>
       <div class="adm-table-wrap"><table class="adm-table">
         <thead><tr><th>예약 ID</th><th>호텔명</th><th>체크인</th><th>체크아웃</th><th>공급사(OTA)</th><th>포인트 금액</th><th>타입</th><th>상태</th><th>적립일</th></tr></thead>
@@ -430,7 +425,7 @@ function renderCB01(){
   $('view').innerHTML=`
     <div class="adm-page-hdr">
       <div class="adm-page-title">포인트 내역</div>
-      <div class="adm-page-sub">회원별 포인트 적립 현황 · KAYAK Reporting API 기반 · MVP 조회전용 · 비회원 건 포함 · NONE·0P 미표시 (v0.5 6조)</div>
+      <div class="adm-page-sub">회원별 포인트 적립 현황 · KAYAK Reporting API 기반 · MVP 조회전용 · 비회원 건 포함 · 미설정(CashbackType null)·0P 미표시 (v0.5 6조)</div>
     </div>
 
     <div class="filter-bar">
@@ -441,7 +436,7 @@ function renderCB01(){
       <select class="wf-select" id="cb-status">
         <option value="all" ${s.status==='all'?'selected':''}>전체</option>
         <option value="Active" ${s.status==='Active'?'selected':''}>적립예정 (Active)</option>
-        <option value="Approved" ${s.status==='Approved'?'selected':''}>적립완료 (Approved)</option>
+        <option value="Approved" ${s.status==='Approved'?'selected':''}>적립완료 (자사 확정)</option>
         <option value="Cancelled" ${s.status==='Cancelled'?'selected':''}>취소·만료 (Cancelled)</option>
       </select>
       <span class="filter-sep"></span>
@@ -454,7 +449,6 @@ function renderCB01(){
       <div class="filter-actions">
         <button class="wf-btn wf-btn-primary wf-btn-sm" onclick="cb01Search()">검색</button>
         <button class="wf-btn wf-btn-ghost wf-btn-sm" onclick="cb01Reset()">초기화</button>
-        <button class="wf-btn wf-btn-download wf-btn-sm" onclick="toast('포인트 내역을 Excel로 내려받습니다 (데모)')">Excel 다운로드</button>
       </div>
     </div>
     <div class="wf-hint" style="margin:-8px 0 14px">적립월: <strong>전체</strong>(기본) 또는 <strong>기간 선택</strong> · 시작월만 입력하면 그 달만 조회(종료월=시작월) · 종료월은 시작월 입력 후 활성화 · 형식 YYYY-MM</div>
@@ -528,15 +522,13 @@ function renderCB02(){
       <input class="wf-input" id="cb2-to" style="width:130px" type="month" value="${s.toMonth}" ${(s.mode==='all'||!s.fromMonth)?'disabled':''}>
       <div class="filter-actions">
         <button class="wf-btn wf-btn-primary wf-btn-sm" onclick="cb02Search()">조회</button>
-        <button class="wf-btn wf-btn-ghost wf-btn-sm" onclick="cb02Reset()">초기화</button>
-        <button class="wf-btn wf-btn-download wf-btn-sm" onclick="toast('공급사별 현황을 Excel로 내려받습니다 (데모)')">Excel 다운로드</button>
       </div>
     </div>
     <div class="wf-hint" style="margin:0 0 16px">기준 월: <strong>전체</strong>(기본) 또는 <strong>기간 선택</strong> · 시작월만 입력하면 그 달만 조회(종료월=시작월) · 종료월은 시작월 입력 후 활성화 · 형식 YYYY-MM</div>
 
     <div class="sec-title">공급사별 상세</div>
     <div class="adm-table-wrap"><table class="adm-table">
-      <thead><tr><th>공급사 (OTA)</th><th style="text-align:center">예약 건수</th><th style="text-align:center">Active</th><th style="text-align:center">Approved</th><th style="text-align:center">Cancelled</th><th style="text-align:right">포인트 합계</th><th>포인트율/금액</th><th>타입</th></tr></thead>
+      <thead><tr><th>공급사 (OTA)</th><th style="text-align:center">예약 건수</th><th style="text-align:center">적립예정</th><th style="text-align:center">적립완료</th><th style="text-align:center">Cancelled</th><th style="text-align:right">포인트 합계</th><th>포인트율/금액</th><th>타입</th></tr></thead>
       <tbody>${providers.length? providers.map(p=>{
         const rateCell = p.meta.type==='PERCENTAGE' ? p.meta.rate+'%'
           : p.meta.type==='FLAT' ? fmtP(p.meta.flat)
@@ -580,9 +572,9 @@ function renderSet(){
   $('view').innerHTML=`
     <div class="adm-page-hdr">
       <div class="adm-page-title">관리자 계정 목록</div>
-      <div class="adm-page-sub">어드민 접근 계정 관리 · 마스터 권한 계정 (서브 권한 분리는 Phase 2)</div>
+      <div class="adm-page-sub">어드민 접근 계정 관리 · MVP = 마스터 단일 계정</div>
       <div class="adm-page-actions">
-        <button class="wf-btn wf-btn-primary" onclick="go('setNew')">+ 관리자 추가</button>
+        <button class="wf-btn wf-btn-primary wf-btn-sm" onclick="go('setNew')">+ 관리자 추가</button>
       </div>
     </div>
     <div class="adm-table-wrap"><table class="adm-table">
@@ -600,7 +592,7 @@ function renderSet(){
       <div class="adm-pagination"><div class="adm-pagination-info">총 ${list.length}개 계정</div></div>
     </div>
     <div style="margin-top:16px;background:#eff6ff;border:1px solid #bfdbfe;border-left:3px solid #3b82f6;border-radius:6px;padding:12px 16px;font-size:12px;color:#1d4ed8">
-      <strong>[+ 관리자 추가]</strong>로 마스터 권한 계정을 등록할 수 있습니다. · <strong>Phase 2 예정:</strong> 서브 관리자 권한(기능별 접근 제어) 분리.
+      <strong>Phase 2 예정:</strong> 서브 관리자 계정 추가 및 기능별 권한 설정. 권한 체계는 운영팀·개발팀 협의 후 별도 정의 예정.
     </div>`;
 }
 function openAdmin(id){ state.setSelId=id; go('setDetail'); }
@@ -620,9 +612,6 @@ function renderSetDetail(){
       <div class="sec-title">계정 정보</div>
       <div class="adm-form" style="margin-bottom:24px">
         <div class="adm-form-row"><div class="adm-form-label">마지막 로그인</div><div class="adm-form-readonly">${a.lastLogin}</div></div>
-        <div class="adm-form-row"><div class="adm-form-label">현재 세션</div>
-          <div class="adm-form-readonly" style="display:flex;align-items:center;gap:8px">
-            ${isMaster? '<span class="wf-badge badge-approved">활성</span><span style="font-size:11px;color:#6b7280">09:15 시작 · 만료 미설정 (8조 미결 1)</span>' : '<span style="font-size:11px;color:#9ca3af">현재 접속 중 아님</span>'}</div></div>
         <hr class="divider" style="margin:12px 0">
         <div class="adm-form-row"><div class="adm-form-label">아이디</div>
           <div class="adm-form-readonly" style="display:flex;align-items:center;gap:8px">${a.loginId}
@@ -643,24 +632,9 @@ function renderSetDetail(){
       </div>
 
       <div class="sec-title">비밀번호 변경</div>
-      <div class="adm-form" style="margin-bottom:24px">
-        <div class="adm-form-row" style="margin-bottom:14px"><div class="adm-form-label required">현재 비밀번호</div>
-          <div><input class="wf-input" type="password" id="pw-cur" placeholder="현재 비밀번호 입력">
-          <div class="field-err" id="err-cur">현재 비밀번호가 올바르지 않습니다.</div></div></div>
-        <div class="adm-form-row" style="margin-bottom:14px"><div class="adm-form-label required">새 비밀번호</div>
-          <div><input class="wf-input" type="password" id="pw-new" placeholder="새 비밀번호 입력">
-          <div class="wf-hint">영문+숫자+특수문자 조합, 8자 이상</div>
-          <div class="field-err" id="err-new">비밀번호 규칙(영문+숫자+특수문자, 8자 이상)에 맞지 않습니다.</div></div></div>
-        <div class="adm-form-row" style="margin-bottom:14px"><div class="adm-form-label required">새 비밀번호 확인</div>
-          <div><input class="wf-input" type="password" id="pw-conf" placeholder="새 비밀번호 다시 입력">
-          <div class="field-err" id="err-conf">비밀번호가 일치하지 않습니다.</div></div></div>
-        <div style="text-align:right;margin-top:8px"><button class="wf-btn wf-btn-primary" onclick="changePw()">비밀번호 변경</button></div>
-      </div>
-
-      <div class="sec-title" style="color:#dc2626;border-bottom-color:#fca5a5">계정 삭제</div>
-      <div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:16px 20px;margin-bottom:24px">
-        <p style="font-size:13px;color:#374151;margin-bottom:12px">계정을 삭제하면 어드민 로그인이 불가능해집니다. 삭제 요청은 백엔드 API를 통해 처리됩니다.</p>
-        <button class="wf-btn" style="background:#dc2626;color:#fff;border:none" onclick="confirmDelete()">삭제 요청</button>
+      <div style="margin-bottom:24px">
+        <p style="font-size:13px;color:#374151;margin-bottom:12px">비밀번호를 변경하려면 아래 버튼을 클릭하세요.</p>
+        <button class="wf-btn wf-btn-outline" onclick="openPwModal()">비밀번호 변경</button>
       </div>
 
       <div class="sec-title" style="color:#9ca3af;border-bottom-color:#e5e7eb">서브계정 관리 <span class="wf-badge" style="background:#fef3c7;color:#92400e">Phase 2</span></div>
@@ -678,30 +652,52 @@ function saveSetStatus(){
   a.status=$('set-status').value;
   toast(a.status==='inactive'? '비활성으로 저장되었습니다 (로그인 차단)':'저장되었습니다','ok');
 }
+// 비밀번호 변경 팝업 (SET02 케이스 A — CN6·CN7)
+function openPwModal(){
+  openModal(`<div class="modal-box" style="max-width:440px">
+    <div class="modal-hdr">비밀번호 변경<span class="modal-close" onclick="closeModal()">✕</span></div>
+    <div style="padding:20px">
+      <div style="margin-bottom:12px">
+        <div class="adm-form-label required" style="margin-bottom:5px">현재 비밀번호</div>
+        <input class="wf-input" type="password" id="pw-cur" placeholder="현재 비밀번호 입력">
+        <div class="field-err" id="err-cur">현재 비밀번호가 올바르지 않습니다.</div>
+      </div>
+      <div style="margin-bottom:12px">
+        <div class="adm-form-label required" style="margin-bottom:5px">새 비밀번호</div>
+        <input class="wf-input" type="password" id="pw-new" placeholder="새 비밀번호 입력">
+        <div class="wf-hint">영문+숫자+특수문자 조합, 8자 이상</div>
+        <div class="field-err" id="err-new">영문·숫자·특수문자를 모두 포함해야 합니다 (8자 이상)</div>
+      </div>
+      <div style="margin-bottom:12px">
+        <div class="adm-form-label required" style="margin-bottom:5px">새 비밀번호 확인</div>
+        <input class="wf-input" type="password" id="pw-conf" placeholder="새 비밀번호 다시 입력">
+        <div class="field-err" id="err-conf">비밀번호가 일치하지 않습니다.</div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px">
+        <button class="wf-btn wf-btn-ghost" onclick="closeModal()">취소</button>
+        <button class="wf-btn wf-btn-primary" onclick="changePw()">변경</button>
+      </div>
+    </div>
+  </div>`);
+}
 function changePw(){
+  const a=state.adminList.find(x=>x.accountId===state.setSelId)||state.adminList[0];
   const cur=$('pw-cur').value, nw=$('pw-new').value, cf=$('pw-conf').value;
   const rule=/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
   let ok=true;
-  const curOk = cur===ADMIN_ACCOUNT.password;
+  const curOk = cur===a.password;
   toggleErr('pw-cur','err-cur',curOk); if(!curOk) ok=false;
-  const newOk = rule.test(nw) && nw!==cur;
-  toggleErr('pw-new','err-new',newOk); if(!newOk) ok=false;
+  const ruleOk=rule.test(nw), diffOk=nw!==cur;
+  if(!ruleOk) $('err-new').textContent='영문·숫자·특수문자를 모두 포함해야 합니다 (8자 이상)';
+  else if(!diffOk) $('err-new').textContent='현재 비밀번호와 다른 비밀번호를 입력해 주세요';
+  toggleErr('pw-new','err-new', ruleOk&&diffOk); if(!(ruleOk&&diffOk)) ok=false;
   const confOk = nw!=='' && nw===cf;
   toggleErr('pw-conf','err-conf',confOk); if(!confOk) ok=false;
-  if(!ok){ toast('입력값을 확인해 주세요','err'); return; }
-  ADMIN_ACCOUNT.password=nw;
-  toast('비밀번호가 변경되었습니다. 다시 로그인해 주세요','ok');
-  setTimeout(doLogout, 1200);
-}
-function confirmDelete(){
-  openModal(`<div class="confirm-box">
-    <div class="cf-title">정말 삭제하시겠습니까?</div>
-    <div class="cf-msg">확인 시 백엔드 API에 삭제 <b>요청</b>을 보냅니다.<br>(데모에서는 실제 삭제하지 않습니다)</div>
-    <div class="cf-actions">
-      <button class="wf-btn wf-btn-ghost" onclick="closeModal()">취소</button>
-      <button class="wf-btn" style="background:#dc2626;color:#fff;border:none" onclick="closeModal();toast('삭제 요청이 접수되었습니다 (데모)','warn')">삭제 요청</button>
-    </div>
-  </div>`);
+  if(!ok) return;
+  a.password=nw;
+  if(a.accountId===ADMIN_ACCOUNT.accountId) ADMIN_ACCOUNT.password=nw;  // 로그인 계정 동기화
+  closeModal();
+  toast('비밀번호가 변경되었습니다','ok');
 }
 
 /* ════════ 관리자 계정 등록 (ADM-SET02 케이스 B) ════════ */
@@ -762,7 +758,7 @@ function registerAdmin(){
   const num=state.adminList.length+1;
   state.adminList.push({
     accountId:'ADM-'+String(num).padStart(3,'0'), loginId:id, name, email,
-    role:'master', status:'active', lastLogin:'—', createdAt:'2026-08-05',
+    role:'master', status:'active', password:pw, lastLogin:'—', createdAt:'2026-08-05',
   });
   toast('관리자 계정이 등록되었습니다.','ok');
   go('set');
@@ -772,7 +768,7 @@ function registerAdmin(){
 // 관리자 계정 목록 초기화 (마스터 계정 1개로 시작)
 state.adminList=[{
   accountId:ADMIN_ACCOUNT.accountId, loginId:ADMIN_ACCOUNT.loginId, name:ADMIN_ACCOUNT.name,
-  email:ADMIN_ACCOUNT.email, role:'master', status:'active',
+  email:ADMIN_ACCOUNT.email, role:'master', status:'active', password:ADMIN_ACCOUNT.password,
   lastLogin:ADMIN_ACCOUNT.lastLogin, createdAt:ADMIN_ACCOUNT.createdAt,
 }];
 state.setSelId=ADMIN_ACCOUNT.accountId;
