@@ -161,7 +161,7 @@
 .trip-date { font-size: 10px; color: #9ca3af; margin-bottom: 5px; }
 .trip-bottom { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
 
-/* +4일 이전 카드 확인하기 버튼 영역 */
+/* OTA 바로가기 버튼 영역 */
 .trip-confirm-area {
   border-top: 1px dashed #e5e7eb;
   padding-top: 6px; margin-top: 4px;
@@ -404,9 +404,7 @@
     <span class="toc-sep"></span>
     <a href="#b" class="toc-link">B — 로그인 후 내역 있음</a>
     <span class="toc-sep"></span>
-    <a href="#b1a" class="toc-link">B1-α — 상세 모달 (+4일 이전)</a>
-    <span class="toc-sep"></span>
-    <a href="#b1b" class="toc-link">B1-β — 상세 모달 (+4일 이후)</a>
+    <a href="#b1b" class="toc-link">B1 — 상세 모달</a>
     <span class="toc-sep"></span>
     <a href="#c" class="toc-link">C — 로그인 후 빈 상태</a>
   </div>
@@ -428,8 +426,9 @@
     <li><strong>탭바 노출 범위</strong>: 메인(M01) + 이 화면(MY02-D1)에만 탭바 표시. 검색결과(S01)·숙소상세(S02)에서는 미노출.</li>
     <li><strong>데이터 출처</strong>: KAYAK Reporting API v2 Transaction Report. 자사 포인트 DB 병행 사용 (포인트_정책서 v0.1 4절)</li>
     <li><strong>카드 표시 범위</strong>: <code>transactionType = 10 (Booking)</code> 건만 표시. Lead(TypeCode=1) 건은 제외 (포인트_정책서 v0.1 2-3절)</li>
+    <li><strong>비로그인 예약 미노출</strong>: 딥링크 <code>p=</code> 파라미터에 회원 ID가 없어 label이 비어있거나 <code>[truncated-url]</code>로 기록된 건 → 어느 회원인지 알 수 없으므로 <b>MY02에 표시하지 않음</b>. (신규_mvp_메타서치 v0.45 9-4절)</li>
+    <li><strong>캐시백 미지원 공급사</strong>: <code>cashbackType = null 또는 NONE</code>인 예약은 카드 자체는 표시하되, 포인트 금액 행(<code>cashbackAmountLocalised</code>)만 표시하지 않음. (신규_mvp_메타서치 v0.45 9-4절, 2026-08-05 확정)</li>
     <li><strong>포인트 상태 기준</strong>: 자사 배치 처리 기준으로 결정. KAYAK TransactionStatus는 취소 감지용으로만 참조. (포인트_정책서 v0.1 2-4절)</li>
-    <li><strong>+4일 분기</strong>: <code>bookingDate</code> 기준으로 예약 후 +4일 이전/이후를 구분하여 카드 표시 항목 분기. (포인트_정책서 v0.1 2-5절)</li>
     <li><strong>상단 잔액</strong>: 자사 이벤트 타입 <code>booking_earn</code> 처리 완료 건의 누적 합계 (회수·소멸 차감 후 잔액). 표시 형식: 총 N P (포인트_정책서 v0.1 5-1절)</li>
     <li><strong>로그인 전 화면</strong>: 문구·이미지 하드코딩. API 호출 없음.</li>
   </ul>
@@ -603,7 +602,7 @@
 <!-- ════ B: 로그인 후 내역 있음 ════ -->
 <div id="b" class="sec-title">
   <span class="sec-badge">MY02-D1-B</span>포인트 — 로그인 후 내역 있음
-  <span style="font-size:12px;font-weight:400;color:#888">— +4일 이전 카드(카드 2)와 +4일 이후 카드(카드 1·3·4) 혼합 표시</span>
+  <span style="font-size:12px;font-weight:400;color:#888">— 내역 있음 (카드 목록 + 상세 모달)</span>
 </div>
 
 <div class="two-col">
@@ -648,12 +647,9 @@
             </div>
           </div>
 
-          <!-- 주의문구 -->
-          <div class="earn-warn"><span class="wf-cn">9</span> ⚠ 예약 직후 포인트 내역은 최대 4일 이내 반영됩니다</div>
-
           <div class="earn-scroll">
 
-            <!-- 카드 1: 투숙중 + 적립예정 (+4일 이후) -->
+            <!-- 카드 1: 투숙중 + 적립예정 -->
             <div class="trip-card">
               <div class="trip-img" style="position:relative;">🏨<span class="wf-cn" style="position:absolute;top:3px;right:3px;">16</span></div>
               <div class="trip-content">
@@ -668,32 +664,14 @@
                   <span class="earn-badge eb-pending">적립예정</span><span class="wf-cn">13</span>
                   <span class="trip-amount ta-pending">84,000 P <span class="wf-cn">14</span></span>
                 </div>
-              </div>
-            </div>
-
-            <!-- 카드 2: +4일 이전 케이스 (배지·날짜 없음 + [예약확인하기]) -->
-            <div class="trip-card" style="cursor:pointer;">
-              <div class="trip-img">🌆</div>
-              <div class="trip-content">
-                <div>
-                  <div class="trip-top">
-                    <!-- 여행상태 배지 없음 (+4일 이전) -->
-                    <span class="trip-hotel-name">포시즌스 호텔 서울</span>
-                  </div>
-                  <!-- 체크인·체크아웃 날짜 없음 (+4일 이전) -->
-                </div>
-                <div class="trip-bottom">
-                  <span class="earn-badge eb-pending">적립예정</span>
-                  <span class="trip-amount ta-pending">154,000 P</span>
-                </div>
-                <!-- [예약확인하기] 버튼 — 금액 하단 별도 탭 영역 -->
+                <!-- [OTA 바로가기] 버튼 — 모든 카드 공통 -->
                 <div class="trip-confirm-area">
-                  <button class="trip-confirm-btn">예약확인하기 → <span class="wf-cn">15</span></button>
+                  <button class="trip-confirm-btn">OTA 바로가기 → <span class="wf-cn">15</span></button>
                 </div>
               </div>
             </div>
 
-            <!-- 카드 3: 투숙완료 + 적립완료 (+4일 이후) -->
+            <!-- 카드 3: 투숙완료 + 적립완료 -->
             <div class="trip-card">
               <div class="trip-img">🌅</div>
               <div class="trip-content">
@@ -707,6 +685,10 @@
                 <div class="trip-bottom">
                   <span class="earn-badge eb-done">적립완료</span>
                   <span class="trip-amount ta-done">96,000 P</span>
+                </div>
+                <!-- [OTA 바로가기] 버튼 — 모든 카드 공통 -->
+                <div class="trip-confirm-area">
+                  <button class="trip-confirm-btn">OTA 바로가기 →</button>
                 </div>
               </div>
             </div>
@@ -724,6 +706,10 @@
                 </div>
                 <div class="trip-bottom">
                   <span class="earn-badge eb-refund">취소·만료</span>
+                </div>
+                <!-- [OTA 바로가기] 버튼 — 모든 카드 공통 -->
+                <div class="trip-confirm-area">
+                  <button class="trip-confirm-btn">OTA 바로가기 →</button>
                 </div>
               </div>
             </div>
@@ -863,17 +849,17 @@
     <div class="ann-item">
       <div class="cn">10</div>
       <div class="ann-body">
-        <div class="ann-title">여행 상태 배지 — +4일 이후 카드만 표시</div>
+        <div class="ann-title">여행 상태 배지 — 모든 카드 표시</div>
         <div class="ann-desc"><ul>
-          <li>예약일(<code>bookingDate</code>) 기준으로 +4일 이후인 카드에만 여행 상태 배지가 나타난다. +4일 이전 카드에는 없음.</li>
           <li>자사 서버에서 오늘 날짜와 체크인·체크아웃 날짜를 비교해서 계산한 값. KAYAK이 직접 제공하는 값이 아님.</li>
           <li><b style="color:#0891B2;">투숙중</b> (청록): 오늘이 체크인 이상, 체크아웃 미만.</li>
           <li><b style="color:#2563EB;">투숙예정</b> (파란색): 오늘이 체크인 이전.</li>
           <li><b style="color:#64748B;">투숙완료</b> (회색): 오늘이 체크아웃 이후.</li>
           <li><b style="color:#9CA3AF;">예약취소</b> (연회색): KAYAK 상태가 Cancelled인 경우.</li>
+          <li>날짜 데이터(bookingStartDate / bookingEndDate)가 null이면 배지 미표시.</li>
         </ul></div>
-        <div class="ann-front">← 자사 서버 계산: <code>bookingStartDate</code> / <code>bookingEndDate</code> vs 오늘. +4일 이전 카드는 이 배지 없음.</div>
-        <div class="ann-rule">포인트_정책서 v0.1 2-5절. +4일 이전 미표시 확정.</div>
+        <div class="ann-front">← 자사 서버 계산: <code>bookingStartDate</code> / <code>bookingEndDate</code> vs 오늘.</div>
+        <div class="ann-rule">포인트_정책서 v0.1 2-5절.</div>
       </div>
     </div>
 
@@ -892,13 +878,13 @@
     <div class="ann-item">
       <div class="cn">12</div>
       <div class="ann-body">
-        <div class="ann-title">체크인 ~ 체크아웃 날짜 — +4일 이후 카드만 표시</div>
+        <div class="ann-title">체크인 ~ 체크아웃 날짜 — 모든 카드 표시</div>
         <div class="ann-desc"><ul>
           <li>표시 형식: MM.DD ~ MM.DD. 예: 07.01 ~ 07.03.</li>
-          <li>+4일 이전 카드에는 이 날짜 행이 나타나지 않는다. KAYAK에서 예약 직후에는 날짜 데이터가 불안정하게 내려올 수 있기 때문.</li>
+          <li>날짜 데이터(<code>bookingStartDate</code> / <code>bookingEndDate</code>)가 null이면 이 행은 나타나지 않음.</li>
           <li>예약취소 건은 날짜도 회색으로 표시.</li>
         </ul></div>
-        <div class="ann-front">← <code>bookingStartDate</code> / <code>bookingEndDate</code>. +4일 이전 미표시.</div>
+        <div class="ann-front">← <code>bookingStartDate</code> / <code>bookingEndDate</code>. null이면 미표시.</div>
         <div class="ann-rule">포인트_정책서 v0.1 2-5절.</div>
       </div>
     </div>
@@ -906,13 +892,13 @@
     <div class="ann-item">
       <div class="cn">13</div>
       <div class="ann-body">
-        <div class="ann-title">포인트 상태 배지</div>
+        <div class="ann-title">포인트 상태 배지 — 모든 카드 표시</div>
         <div class="ann-desc"><ul>
-          <li><b style="color:#D97706;">적립예정</b> (주황): 체크아웃+7일이 아직 안 지난 상태. +4일 이전·이후 카드 모두 표시.</li>
-          <li><b style="color:#059669;">적립완료</b> (초록): 체크아웃+7일 배치 처리 완료. +4일 이후 카드에만 표시.</li>
-          <li><b style="color:#9CA3AF;">취소·만료</b> (회색): KAYAK Cancelled 전환 또는 소멸 처리 완료 — 금액 행 미표시. +4일 이후 카드에만 표시.</li>
+          <li><b style="color:#D97706;">적립예정</b> (주황): 체크아웃+7일이 아직 안 지난 상태.</li>
+          <li><b style="color:#059669;">적립완료</b> (초록): 체크아웃+7일 배치 처리 완료.</li>
+          <li><b style="color:#9CA3AF;">취소·만료</b> (회색): KAYAK Cancelled 전환 또는 소멸 처리 완료 — 포인트 금액 행 미표시.</li>
         </ul></div>
-        <div class="ann-front">← 자사 포인트 상태. 적립예정은 +4일 이전에도 표시.</div>
+        <div class="ann-front">← 자사 포인트 상태 (배치 기준).</div>
         <div class="ann-rule">포인트_정책서 v0.1 2-4절.</div>
       </div>
     </div>
@@ -925,29 +911,25 @@
           <li>KAYAK Transaction Report에서 가져온 금액. 자사에서 다시 계산하지 않는다. 1KRW = 1P 고정.</li>
           <li>표시 형식: N P. 예: 84,000 P.</li>
           <li>상태별 색상: 적립예정(주황) / 적립완료(초록) / 취소·만료(금액 행 자체 없음).</li>
+          <li>포인트 금액 행이 나타나지 않는 경우: (1) 취소·만료 건, (2) <code>cashbackType = null 또는 NONE</code>인 캐시백 미지원 공급사 예약 — 이 경우 카드 자체는 표시하지만 포인트 금액 행만 빠짐.</li>
         </ul></div>
-        <div class="ann-front">← <code>cashbackAmountLocalised</code> × 1P/KRW. 취소·만료 건은 금액 행 미표시.</div>
-        <div class="ann-rule">포인트_정책서 v0.1 2-2절·2-4절.</div>
+        <div class="ann-front">← <code>cashbackAmountLocalised</code> × 1P/KRW. 취소·만료 건 또는 cashbackType=null·NONE 건은 금액 행 미표시.</div>
+        <div class="ann-rule">포인트_정책서 v0.1 2-2절·2-4절. 캐시백 미지원 처리 기준: 신규_mvp_메타서치 v0.45 9-4절 (2026-08-05 확정).</div>
       </div>
     </div>
 
-    <div class="ann-item" style="background:#fef9c3;border-left:3px solid #f59e0b;">
-      <div class="cn" style="background:#d97706;">15</div>
+    <div class="ann-item">
+      <div class="cn">15</div>
       <div class="ann-body">
-        <div class="ann-title">[예약확인하기 →] 버튼 — +4일 이전 카드 전용</div>
+        <div class="ann-title">[OTA 바로가기 →] 버튼 — 모든 카드 공통</div>
         <div class="ann-desc"><ul>
-          <li>예약일(<code>bookingDate</code>) 기준 +4일 이전인 카드에만 나타난다. +4일 이후 카드에는 없음.</li>
+          <li>모든 카드에 공통으로 나타나는 버튼. 조건 없이 항상 표시.</li>
           <li>위치: 포인트 금액 행 바로 아래. 점선 구분선으로 금액 영역과 분리.</li>
-          <li><b>탭 시 → 해당 OTA 사이트로 이동.</b> 카드 본문(호텔명·금액 영역)을 탭하면 B1-α 상세 모달이 열리는 것과 다른 동작.</li>
+          <li><b>탭 시 → 해당 OTA 사이트로 이동.</b></li>
           <li>이동 목적지: <code>siteBrandCode</code> → 자사 OTA URL 매핑 테이블에서 해당 OTA 이동 URL 조회.</li>
-          <li>클릭 영역 구분:
-            <ul>
-              <li>카드 본문 탭 → B1-α 모달 열림</li>
-              <li>[예약확인하기 →] 버튼 탭 → OTA 직접 이동 (이벤트 전파 차단 필요)</li>
-            </ul>
-          </li>
+          <li>카드 본문 탭 → B1 상세 모달 열림 (버튼 탭과 동작 구분 필요 — 이벤트 전파 차단).</li>
         </ul></div>
-        <div class="ann-front">← <code>siteBrandCode</code> → OTA URL 매핑. +4일 이전 카드에만 표시.</div>
+        <div class="ann-front">← <code>siteBrandCode</code> → OTA URL 매핑. 모든 카드 공통 표시.</div>
         <div class="ann-rule">포인트_정책서 v0.1 2-5절·4-3절. OTA 이동 목적지(홈 vs 예약상세)는 미결 — 개발팀 확인 필요.</div>
       </div>
     </div>
@@ -981,284 +963,12 @@
   </div>
 </div>
 
-<hr class="sec-divider">
 
-<!-- ════ B1-α: 예약상세 모달 (+4일 이전) ════ -->
-<div id="b1a" class="sec-title">
-  <span class="sec-badge">MY02-D1-B1-α</span>포인트 — 예약상세 모달 (+4일 이전)
-  <span style="font-size:12px;font-weight:400;color:#888">— bookingDate 기준 +4일 이전 카드 탭 시 표시</span>
-</div>
 
-<div class="two-col">
-  <div class="mobile-wrap">
-    <div class="mobile-device">
-      <div class="m-notch"><div class="m-notch-pill"></div></div>
-      <div class="m-screen">
-
-        <!-- 초록 헤더 (B와 동일, 흐릿) -->
-        <div class="earn-header">
-          <div class="earn-top-bar"><button class="earn-user-btn">👤</button></div>
-          <div class="earn-cherry-wrap"><div class="earn-cherry" style="margin-bottom:0;">🍒</div></div>
-          <div class="earn-total-label">내 포인트 잔액</div>
-          <div class="earn-total-row">
-            <span class="earn-coin">🪙</span>
-            <span class="earn-amount">137,000</span>
-            <span class="earn-unit">P</span>
-          </div>
-          <div class="earn-summary">
-            <div class="earn-sum-card">
-              <div class="earn-sum-label">✅ 적립완료</div>
-              <div class="earn-sum-amount">18,500 P</div>
-            </div>
-            <div class="earn-sum-card">
-              <div class="earn-sum-label">🕐 적립예정</div>
-              <div class="earn-sum-amount">18,500 P</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 카드 바디 (흐릿) -->
-        <div class="earn-body" style="opacity:.35;pointer-events:none;">
-          <div class="earn-section-hdr">
-            <span class="earn-section-title">나의 여행</span>
-          </div>
-          <div class="earn-scroll">
-            <div class="trip-card">
-              <div class="trip-img">🌆</div>
-              <div class="trip-content">
-                <div><div class="trip-top"><span class="trip-hotel-name">포시즌스 호텔 서울</span></div></div>
-                <div class="trip-bottom"><span class="trip-amount ta-pending">154,000 P</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="earn-tabbar" style="opacity:.35;">
-          <div class="earn-tab"><div class="earn-tab-icon">🔍</div><span>검색</span></div>
-          <div class="earn-tab active"><div class="earn-tab-icon"><span class="ti">⭐</span></div><span>적립</span></div>
-          <div class="earn-tab earn-tab-cs"><div class="earn-tab-icon">🦚</div><span></span></div>
-        </div>
-
-        <!-- ── 예약상세 모달 (+4일 이전) ── -->
-        <div class="detail-modal-overlay">
-          <div class="detail-modal">
-
-            <!-- 썸네일 -->
-            <div class="detail-thumb-wrap">
-              <div class="detail-thumb-bg"></div>
-              <button class="detail-thumb-close">✕ <span class="wf-cn">M1</span></button>
-              <div class="detail-thumb-content">
-                <div class="detail-thumb-badges">
-                  <!-- M2 투숙상태 배지 없음 (+4일 이전) -->
-                  <span class="detail-thumb-badge dtb-pending">적립예정 <span class="wf-cn">M2</span></span>
-                </div>
-                <div class="detail-thumb-hotel-name">포시즌스 호텔 서울 <span class="wf-cn">M3</span></div>
-                <div class="detail-thumb-loc">중구, 서울특별시</div>
-              </div>
-            </div>
-
-            <!-- 날짜 행 없음 (+4일 이전: M4·M5 미표시) -->
-
-            <!-- 예약 정보 행 -->
-            <div class="detail-info-section">
-              <div class="detail-info-row">
-                <span class="detail-info-label">예약일 <span class="wf-cn">M6</span></span>
-                <span class="detail-info-val">2026.07.09</span>
-              </div>
-              <div class="detail-ota-row">
-                <span class="detail-info-label">예약처 <span class="wf-cn">M7</span></span>
-                <div class="detail-ota-inner">
-                  <span class="detail-info-val">booking.com</span>
-                  <button class="ota-confirm-btn">예약확인하기 <span class="wf-cn">M8</span></button>
-                </div>
-              </div>
-              <div class="detail-info-row">
-                <span class="detail-info-label">상품가 <span class="wf-cn">M9</span></span>
-                <span class="detail-info-val">₩154,000</span>
-              </div>
-              <div class="detail-point-row">
-                <span class="detail-point-label">포인트 <span class="wf-cn" style="color:#9ca3af;background:#f3f4f6;">M10</span></span>
-                <span class="detail-point-val">3,000 P</span>
-              </div>
-              <!-- M11 적립예정일 없음 (+4일 이전: checkoutDate 미확정) -->
-            </div>
-
-            <!-- [숙소 보러가기] 버튼 -->
-            <button class="detail-goto-btn">숙소 보러가기 → <span class="wf-cn">M12</span></button>
-
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- 주석 패널 B1-α -->
-  <div class="ann">
-    <h3>화면 주석 — MY02-D1-B1-α (+4일 이전 모달)</h3>
-
-    <div class="ann-item" style="background:#fef9c3;border-left:3px solid #f59e0b;">
-      <div class="cn" style="background:#d97706;">진입</div>
-      <div class="ann-body">
-        <div class="ann-title">진입 조건 — +4일 이전 카드 탭</div>
-        <div class="ann-desc"><ul>
-          <li>B 화면에서 <b>+4일 이전 카드</b>(배지·날짜 없는 카드)의 본문 영역을 탭 → 이 모달이 화면 중앙에 나타난다.</li>
-          <li>[예약확인하기 →] 버튼은 이 모달을 열지 않고 OTA 사이트로 바로 이동하므로 클릭 영역 구분 필요.</li>
-          <li>배경 어두운 영역(딤) 탭 또는 [✕] 버튼 탭 → 모달 닫힘.</li>
-        </ul></div>
-        <div class="ann-rule">포인트_정책서 v0.1 2-5절. bookingDate + 4일 이전 케이스 전용.</div>
-      </div>
-    </div>
-
-    <div class="ann-item">
-      <div class="cn">M1</div>
-      <div class="ann-body">
-        <div class="ann-title">썸네일 이미지 + [✕] 닫기 버튼</div>
-        <div class="ann-desc"><ul>
-          <li>모달 상단에 호텔 이미지가 풀 너비로 나타난다.</li>
-          <li>[✕] 닫기 버튼이 이미지 오른쪽 위에 반투명 원형 버튼으로 겹쳐 표시.</li>
-        </ul></div>
-      </div>
-    </div>
-
-    <div class="ann-item">
-      <div class="cn">M2</div>
-      <div class="ann-body">
-        <div class="ann-title">배지 — 적립예정만 표시 (투숙상태 배지 없음)</div>
-        <div class="ann-desc"><ul>
-          <li>+4일 이전에는 체크인·체크아웃 날짜가 확정되지 않아 투숙 상태(투숙예정·투숙중·투숙완료)를 계산할 수 없으므로 투숙상태 배지는 나타나지 않는다.</li>
-          <li><b style="color:#b45309;">적립예정</b> 배지만 표시 (포인트 상태 기준).</li>
-          <li>취소 건(<code>transactionStatus = Cancelled</code>)이면 "취소·만료" 배지만 표시.</li>
-        </ul></div>
-        <div class="ann-front">← +4일 이전: 적립예정 배지만. 투숙상태 배지 없음.</div>
-        <div class="ann-rule">포인트_정책서 v0.1 2-5절.</div>
-      </div>
-    </div>
-
-    <div class="ann-item">
-      <div class="cn">M3</div>
-      <div class="ann-body">
-        <div class="ann-title">호텔명 + 위치</div>
-        <div class="ann-desc"><ul>
-          <li>썸네일 이미지 하단에 흰색 텍스트로 겹쳐서 나타난다.</li>
-          <li>위치: "도시, 국가" 형식. 예: "중구, 서울특별시"</li>
-        </ul></div>
-        <div class="ann-front">← <code>hotelName</code> / <code>hotelCity</code> / <code>hotelCountry</code></div>
-      </div>
-    </div>
-
-    <div class="ann-item" style="background:#f1f5f9;">
-      <div class="cn" style="background:#64748b;">M4·M5</div>
-      <div class="ann-body">
-        <div class="ann-title">체크인·체크아웃 날짜 행 — 미표시</div>
-        <div class="ann-desc"><ul>
-          <li>+4일 이전에는 KAYAK에서 날짜 데이터가 불안정하게 내려오므로 이 날짜 행 전체를 표시하지 않는다.</li>
-          <li>D-DAY 배지도 없음 (날짜가 없으므로 계산 불가).</li>
-        </ul></div>
-        <div class="ann-rule">포인트_정책서 v0.1 2-5절. +4일 이후 모달(B1-β)에서 정상 표시.</div>
-      </div>
-    </div>
-
-    <div class="ann-item">
-      <div class="cn">M6</div>
-      <div class="ann-body">
-        <div class="ann-title">예약일</div>
-        <div class="ann-desc"><ul>
-          <li>예약이 발생한 날짜. Reporting API <code>date</code> 필드.</li>
-          <li>표시 형식: "YYYY.MM.DD"</li>
-        </ul></div>
-        <div class="ann-front">← <code>date</code> (Transaction 발생일)</div>
-      </div>
-    </div>
-
-    <div class="ann-item">
-      <div class="cn">M7</div>
-      <div class="ann-body">
-        <div class="ann-title">예약처 (OTA 이름)</div>
-        <div class="ann-desc"><ul>
-          <li>Booking.com·Agoda·Expedia 등 실제 예약이 이루어진 OTA 이름을 표시한다.</li>
-          <li>아웃링크 클릭 시점(OUT01)에 자사 DB에 <code>providerName</code>을 저장 → Reporting API <code>clickId</code>로 연결해서 불러오는 방식.</li>
-        </ul></div>
-        <div class="ann-front">← ⚠️ 개발팀 확인 필요: 아웃링크 클릭 시점에 <code>providerName</code>을 자사 DB에 저장하는 방식 검토.</div>
-        <div class="ann-rule">라벨명 "예약처". Reporting API에 없는 필드 — 별도 저장 로직 필요.</div>
-      </div>
-    </div>
-
-    <div class="ann-item" style="background:#fef9c3;border-left:3px solid #f59e0b;">
-      <div class="cn" style="background:#d97706;">M8</div>
-      <div class="ann-body">
-        <div class="ann-title">[예약확인하기] 버튼 — 예약처 옆 (공통 표시)</div>
-        <div class="ann-desc"><ul>
-          <li>예약처(OTA 이름) 옆에 작은 버튼으로 나타난다. +4일 이전·이후 모달 모두 표시 (공통).</li>
-          <li>탭 시 → 해당 OTA 사이트로 이동. <code>siteBrandCode</code> 값으로 어떤 OTA인지 찾아서 해당 URL로 이동.</li>
-          <li>이동 목적지(OTA 홈 vs 내 예약 상세 URL)는 개발팀 확인 필요.</li>
-        </ul></div>
-        <div class="ann-front">← <code>siteBrandCode</code> → OTA URL 매핑 테이블 조회. 포인트_정책서 v0.1 4-3절.</div>
-        <div class="ann-rule">⚠️ 미결: OTA 이동 버튼 목적지(사이트 홈 vs 개별 예약 상세) — 개발팀 확인 필요.</div>
-      </div>
-    </div>
-
-    <div class="ann-item">
-      <div class="cn">M9</div>
-      <div class="ann-body">
-        <div class="ann-title">상품가 (현금 금액)</div>
-        <div class="ann-desc"><ul>
-          <li>사용자가 OTA에서 실제 결제한 금액. ₩ 단위 표시 (포인트 단위 아님).</li>
-          <li>표시 형식: "₩N,NNN"</li>
-        </ul></div>
-        <div class="ann-front">← <code>localisedBookingValue</code> / <code>localisedCurrencyCode</code></div>
-        <div class="ann-rule">라벨명 "상품가" 확정.</div>
-      </div>
-    </div>
-
-    <div class="ann-item">
-      <div class="cn">M10</div>
-      <div class="ann-body">
-        <div class="ann-title">포인트 (초록 강조)</div>
-        <div class="ann-desc"><ul>
-          <li>이 예약으로 적립될 포인트 금액. KAYAK <code>cashbackAmountLocalised</code> 값을 1KRW=1P로 변환. 자사에서 다시 계산하지 않는다.</li>
-          <li>표시 형식: "N,NNN P" (초록색 굵은 글자).</li>
-          <li>취소 건은 이 행 자체가 나타나지 않음.</li>
-        </ul></div>
-        <div class="ann-front">← <code>cashbackAmountLocalised</code> × 1P/KRW. 취소 건 미표시.</div>
-        <div class="ann-rule">포인트_정책서 v0.1 2-2절.</div>
-      </div>
-    </div>
-
-    <div class="ann-item" style="background:#f1f5f9;">
-      <div class="cn" style="background:#64748b;">M11</div>
-      <div class="ann-body">
-        <div class="ann-title">적립예정일 — 미표시</div>
-        <div class="ann-desc"><ul>
-          <li>+4일 이전에는 체크아웃 날짜(<code>bookingEndDate</code>)가 확정되지 않아 "체크아웃+7일" 계산이 불가능하므로 이 행을 표시하지 않는다.</li>
-        </ul></div>
-        <div class="ann-rule">포인트_정책서 v0.1 2-5절. +4일 이후 모달(B1-β)에서 정상 표시.</div>
-      </div>
-    </div>
-
-    <div class="ann-item">
-      <div class="cn">M12</div>
-      <div class="ann-body">
-        <div class="ann-title">[숙소 보러가기 →] 버튼</div>
-        <div class="ann-desc"><ul>
-          <li>모달 하단 검정 버튼. 탭 시 해당 호텔의 숙소 상세 화면(S02)으로 이동.</li>
-          <li>Reporting API Hotel vertical의 <code>HotelID</code> 값으로 어떤 숙소인지 찾아서 이동.</li>
-          <li>S02에서 뒤로가기 탭 → MY02로 복귀 (모달은 닫힌 상태).</li>
-        </ul></div>
-        <div class="ann-front">← <code>HotelID</code> → S02 이동 키. 예: HotelID = 3345777</div>
-        <div class="ann-rule">이동 대상: S02 숙소 상세. 뒤로가기 복귀 경로: MY02.</div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<hr class="sec-divider">
-
-<!-- ════ B1-β: 예약상세 모달 (+4일 이후) ════ -->
+<!-- ════ B1: 예약상세 모달 ════ -->
 <div id="b1b" class="sec-title">
-  <span class="sec-badge">MY02-D1-B1-β</span>포인트 — 예약상세 모달 (+4일 이후)
-  <span style="font-size:12px;font-weight:400;color:#888">— bookingDate 기준 +4일 이후 카드 탭 시 표시 (전체 항목 정상)</span>
+  <span class="sec-badge">MY02-D1-B1</span>포인트 — 예약상세 모달
+  <span style="font-size:12px;font-weight:400;color:#888">— 카드 탭 시 표시되는 예약 상세 모달</span>
 </div>
 
 <div class="two-col">
@@ -1318,7 +1028,7 @@
           <div class="earn-tab earn-tab-cs"><div class="earn-tab-icon">🦚</div><span></span></div>
         </div>
 
-        <!-- ── 예약상세 모달 (+4일 이후) ── -->
+        <!-- ── 예약상세 모달 ── -->
         <div class="detail-modal-overlay">
           <div class="detail-modal">
 
@@ -1365,22 +1075,18 @@
                   <button class="ota-confirm-btn">예약확인하기 <span class="wf-cn">M9</span></button>
                 </div>
               </div>
-              <div class="detail-info-row">
-                <span class="detail-info-label">상품가 <span class="wf-cn">M10</span></span>
-                <span class="detail-info-val">₩154,000</span>
-              </div>
               <div class="detail-point-row">
-                <span class="detail-point-label">포인트 <span class="wf-cn" style="color:#9ca3af;background:#f3f4f6;">M11</span></span>
+                <span class="detail-point-label">포인트 <span class="wf-cn" style="color:#9ca3af;background:#f3f4f6;">M10</span></span>
                 <span class="detail-point-val">3,000 P</span>
               </div>
               <div class="detail-info-row">
-                <span class="detail-info-label">적립예정일 <span class="wf-cn">M12</span></span>
+                <span class="detail-info-label">적립예정일 <span class="wf-cn">M11</span></span>
                 <span class="detail-info-val">2026.12.12</span>
               </div>
             </div>
 
             <!-- [숙소 보러가기] 버튼 -->
-            <button class="detail-goto-btn">숙소 보러가기 → <span class="wf-cn">M13</span></button>
+            <button class="detail-goto-btn">숙소 보러가기 → <span class="wf-cn">M12</span></button>
 
           </div>
         </div>
@@ -1389,20 +1095,20 @@
     </div>
   </div>
 
-  <!-- 주석 패널 B1-β -->
+  <!-- 주석 패널 B1 -->
   <div class="ann">
-    <h3>화면 주석 — MY02-D1-B1-β (+4일 이후 모달)</h3>
+    <h3>화면 주석 — MY02-D1-B1</h3>
 
     <div class="ann-item" style="background:#f0f7ff;border-left:3px solid #2563EB;">
       <div class="cn" style="background:#2563EB;">진입</div>
       <div class="ann-body">
-        <div class="ann-title">진입 조건 — +4일 이후 카드 탭</div>
+        <div class="ann-title">진입 조건 — 카드 탭</div>
         <div class="ann-desc"><ul>
-          <li>B 화면에서 <b>+4일 이후 카드</b>(배지·날짜가 정상 표시되는 카드)를 탭 → 이 모달이 화면 중앙에 나타난다.</li>
+          <li>B 화면에서 카드를 탭 → 이 모달이 화면 중앙에 나타난다.</li>
           <li>배경 어두운 영역(딤) 탭 또는 [✕] 버튼 탭 → 모달 닫힘.</li>
           <li>데이터 출처: KAYAK Reporting API v2 — Hotel vertical (<code>/api/transactions/hotels</code>)</li>
         </ul></div>
-        <div class="ann-rule">포인트_정책서 v0.1 5-3절. bookingDate + 4일 이후 케이스.</div>
+        <div class="ann-rule">포인트_정책서 v0.1 5-3절.</div>
       </div>
     </div>
 
@@ -1422,7 +1128,7 @@
       <div class="ann-body">
         <div class="ann-title">투숙상태 배지 — 썸네일 이미지 위</div>
         <div class="ann-desc"><ul>
-          <li>+4일 이후에는 체크인·체크아웃 날짜가 확정되어 투숙 상태를 계산할 수 있으므로 배지가 표시된다.</li>
+          <li>자사 서버에서 오늘 날짜와 체크인·체크아웃 날짜를 비교해 투숙 상태를 계산한다.</li>
           <li><b style="color:#1d4ed8;">투숙예정</b> / <b style="color:#0891B2;">투숙중</b> / <b style="color:#64748B;">투숙완료</b> — bookingStartDate / bookingEndDate와 오늘 날짜 비교로 계산.</li>
           <li>취소 건(<code>transactionStatus = Cancelled</code>)이면 "예약취소" 배지 단독. M3 미표시.</li>
         </ul></div>
@@ -1514,7 +1220,7 @@
       <div class="ann-body">
         <div class="ann-title">[예약확인하기] 버튼 — 예약처 옆 (공통)</div>
         <div class="ann-desc"><ul>
-          <li>예약처(OTA 이름) 옆에 작은 버튼. +4일 이전·이후 모달 모두 표시 (공통).</li>
+          <li>예약처(OTA 이름) 옆에 작은 버튼. 모든 예약 건에 공통으로 표시.</li>
           <li>탭 시 → <code>siteBrandCode</code>로 해당 OTA URL을 찾아서 이동.</li>
           <li>이동 목적지(OTA 홈 vs 내 예약 상세 URL)는 개발팀 확인 필요.</li>
         </ul></div>
@@ -1523,34 +1229,23 @@
       </div>
     </div>
 
-    <div class="ann-item">
-      <div class="cn">M10</div>
-      <div class="ann-body">
-        <div class="ann-title">상품가 (현금 금액)</div>
-        <div class="ann-desc"><ul>
-          <li>OTA에서 실제 결제한 금액. ₩ 단위 (포인트 단위 아님).</li>
-        </ul></div>
-        <div class="ann-front">← <code>localisedBookingValue</code> / <code>localisedCurrencyCode</code></div>
-        <div class="ann-rule">라벨명 "상품가" 확정.</div>
-      </div>
-    </div>
 
     <div class="ann-item">
-      <div class="cn">M11</div>
+      <div class="cn">M10</div>
       <div class="ann-body">
         <div class="ann-title">포인트 (초록 강조)</div>
         <div class="ann-desc"><ul>
           <li>이 예약으로 적립될 포인트. KAYAK <code>cashbackAmountLocalised</code> 값 그대로 사용 (1KRW=1P). 자사에서 재계산하지 않는다.</li>
           <li>표시 형식: "N,NNN P" (초록 굵은 글자).</li>
-          <li>취소 건은 이 행 자체 미표시.</li>
+          <li>이 행이 나타나지 않는 경우: (1) 취소 건, (2) <code>cashbackType = null 또는 NONE</code>인 캐시백 미지원 공급사 예약 — 이때도 모달은 표시하지만 포인트 금액 행만 없음.</li>
         </ul></div>
-        <div class="ann-front">← <code>cashbackAmountLocalised</code> × 1P/KRW.</div>
-        <div class="ann-rule">포인트_정책서 v0.1 2-2절.</div>
+        <div class="ann-front">← <code>cashbackAmountLocalised</code> × 1P/KRW. 취소 건 또는 cashbackType=null·NONE 건 미표시.</div>
+        <div class="ann-rule">포인트_정책서 v0.1 2-2절. 캐시백 미지원 처리 기준: 신규_mvp_메타서치 v0.45 9-4절 (2026-08-05).</div>
       </div>
     </div>
 
     <div class="ann-item">
-      <div class="cn">M12</div>
+      <div class="cn">M11</div>
       <div class="ann-body">
         <div class="ann-title">적립예정일 / 적립완료 — 상태별 분기</div>
         <div class="ann-desc"><ul>
@@ -1565,7 +1260,7 @@
     </div>
 
     <div class="ann-item">
-      <div class="cn">M13</div>
+      <div class="cn">M12</div>
       <div class="ann-body">
         <div class="ann-title">[숙소 보러가기 →] 버튼</div>
         <div class="ann-desc"><ul>
@@ -1621,9 +1316,6 @@
             <span class="earn-section-title">나의 여행</span>
             <span class="earn-count">전체 0건</span>
           </div>
-
-          <!-- 주의문구 -->
-          <div class="earn-warn"><span class="wf-cn">3</span> ⚠ 예약 직후 포인트 내역은 최대 4일 이내 반영됩니다</div>
 
           <div class="earn-empty">
             <div class="earn-empty-icon">🧳</div>
