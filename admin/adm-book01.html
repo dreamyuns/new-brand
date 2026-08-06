@@ -232,7 +232,7 @@
               <td><span class="wf-badge badge-approved">적립완료</span></td>
               <td style="font-size:12px">2026-07-30</td>
             </tr>
-            <!-- 더미 5: 회원 / 적립예정 / NONE (포인트 미제공 공급사) -->
+            <!-- 더미 5: 회원 / 적립예정 / NONE (포인트 미제공 공급사 + 비취소) -->
             <tr onclick="location.href='adm-book02.html'" style="cursor:pointer">
               <td style="font-size:12px">park@example.com</td>
               <td style="font-family:monospace;font-size:11px">RES-20110</td>
@@ -243,6 +243,19 @@
               <td style="color:#9ca3af;font-size:11px">—</td>
               <td style="color:#9ca3af;font-size:11px">—</td>
               <td style="color:#9ca3af;font-size:12px">—</td>
+              <td style="color:#9ca3af">—</td>
+            </tr>
+            <!-- 더미 6: 회원 / 취소 / NONE (포인트 미제공 공급사 + 취소 — 포인트 관련 모든 데이터 null) -->
+            <tr onclick="location.href='adm-book02.html'" style="cursor:pointer">
+              <td style="font-size:12px">choi@example.com</td>
+              <td style="font-family:monospace;font-size:11px">RES-20133</td>
+              <td style="font-size:12px">2026-07-10</td>
+              <td>Novotel Ambassador Seoul Yongsan</td>
+              <td style="white-space:nowrap;font-size:12px">07.20 ~ 07.22</td>
+              <td style="font-size:12px">Accor Hotels</td>
+              <td style="color:#9ca3af;font-size:11px">—</td>
+              <td style="color:#9ca3af;font-size:11px">—</td>
+              <td><span class="wf-badge badge-cancelled">취소</span></td>
               <td style="color:#9ca3af">—</td>
             </tr>
           </tbody>
@@ -375,6 +388,7 @@
             <li><strong>적립완료:</strong> 체크아웃+7일 후 자사 배치 처리가 완료된 건</li>
             <li><strong>취소:</strong> KAYAK에서 Cancelled 상태가 감지된 건 (포인트 제공 여부 무관하게 표시). 만료는 Phase 2 이후 정책 확정</li>
             <li><strong>— (미표시):</strong> CashbackType=NONE/null인 포인트 미제공 공급사 + 비취소 건. 포인트 개념 자체가 없으므로 상태 표시 없음</li>
+            <li><strong>취소 (NONE/null 공급사):</strong> 포인트 미제공 공급사인데 취소까지 된 건. 포인트 관련 모든 데이터(CashbackType·CashbackValue·CashbackAmountLocalised)가 null로 내려옴. 포인트(P)·타입은 "—", 포인트 상태는 "취소" 배지 표시 — 더미 6</li>
           </ul></div>
           <div class="ann-rule">어드민 v0.7 5-2절 — 포인트 상태 자사 정의</div>
         </div>
