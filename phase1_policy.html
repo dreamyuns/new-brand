@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Phase 1 (MVP) 정책서 v0.44 — allmytour meta</title>
+<title>Phase 1 (MVP) 정책서 v0.45 — allmytour meta</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{
@@ -145,7 +145,7 @@ body{
     <span class="pn-sep">|</span>
     <span class="pn-code">POLICY-P1</span>
     <span class="pn-name">— Phase 1 (MVP) 정책서</span>
-    <span class="pn-route">/ v0.44</span>
+    <span class="pn-route">/ v0.45</span>
   </div>
   <div class="pn-r">
     <span class="pn-btn disabled">← 이전</span>
@@ -157,8 +157,8 @@ body{
 <div class="p1-header">
   <div class="p1-header-label">allmytour meta — Phase 1 (MVP)</div>
   <div class="p1-header-title"><span class="phase">Phase 1</span> 정책서 — 신규 메타서치 MVP</div>
-  <div class="p1-header-meta">KAYAK API 기반 메타서치+OTA 하이브리드 신규 서비스 · 개발자확인용 · v0.44</div>
-  <div class="p1-header-badge">기준 정책서 <span>v0.44</span> — context/신규정책/phase1정책/신규_mvp_메타서치_v0.44.md</div>
+  <div class="p1-header-meta">KAYAK API 기반 메타서치+OTA 하이브리드 신규 서비스 · 개발자확인용 · v0.45</div>
+  <div class="p1-header-badge">기준 정책서 <span>v0.45</span> — context/신규정책/phase1정책/신규_mvp_메타서치_v0.45.md</div>
 </div>
 
 <!-- ── 바디 ── -->
@@ -595,7 +595,8 @@ body{
             <ul>
               <li><strong>목록 UI:</strong> <strong>B안 확정</strong> — 공급사별 row 나열, 공급사 간 구분선(divider) 표시. A안(카드형) 미채택. (v0.37)</li>
               <li><strong>필터 칩 4개:</strong> 무료취소 / 조식포함 / 나중에 결제 / 💸 캐시백 (클라이언트 필터)</li>
-              <li><strong>더보기 방식:</strong> Accordion 펼치기</li>
+              <li><strong>집계 방식 <span class="tag-ok" style="font-size:10px">v0.45</span>:</strong> <code>results[]</code>를 <code>providerIndex</code> 기준으로 공급사별 묶음 → 각 묶음에서 <code>totalRate</code> 최솟값 상품 1개 선택 → 공급사당 1행 노출 → 낮은 가격순 정렬. 동일 공급사 중복 노출 없음.</li>
+              <li><strong>초기 노출 및 더보기 <span class="tag-ok" style="font-size:10px">v0.45</span>:</strong> 상위 4개 공급사 기본 표시. 5개 이상일 때 <code>[공급사 N개 더 보기 ▾]</code> 버튼 표시, 탭 시 나머지 전체 노출. (기존 Accordion 방식 삭제)</li>
               <li><strong>잔여 객실:</strong> <code>availableRooms</code> 있으면 표시, 없으면 미표시</li>
               <li><strong>날짜·인원 바:</strong> 공급사목록 섹션 상단 인라인. 수정 후 동일 호텔 재조회. S01 목록 갱신 없음.</li>
               <li><strong>캐시백 배지:</strong> 공급사 행에 표시 (<code>providers[].cashback</code>). S01 카드에는 미표시.</li>
@@ -731,7 +732,7 @@ body{
         </div>
 
         <div class="p1-sub">
-          <div class="p1-sub-title"><span class="p1-sub-num">9-4</span>예약 상태별 캐시백 처리 <span class="tag-ok" style="font-size:10px">v0.42 기준</span></div>
+          <div class="p1-sub-title"><span class="p1-sub-num">9-4</span>예약 상태별 캐시백 처리 <span class="tag-ok" style="font-size:10px">v0.45 기준</span></div>
           <div class="p1-notice" style="margin-bottom:10px"><strong>MY02 카드 표시 범위 (v0.41 확정):</strong> <code>TransactionType.TypeCode = 10</code> (Booking 건)만 카드로 표시. <code>TypeCode = 1</code> (Click 건 — 예약 미완료)은 MY02에서 완전 제외.</div>
           <div class="p1-table-wrap">
             <table class="p1-table">
@@ -745,6 +746,10 @@ body{
             </table>
           </div>
           <div class="p1-text"><p><strong>paymentMonth 설명:</strong> KAYAK이 예약 시점에 체크아웃 동일 월 기준으로 미리 설정하는 정산 예정 월 (KAYAK→자사 정산 참고용). 자사→고객 지급 기준(체크아웃+n일)과 무관.</p></div>
+          <div class="p1-notice" style="margin-top:10px"><strong>MY02 미표시 케이스 2가지 (v0.45 확정):</strong><ul style="margin:6px 0 0;padding-left:16px;line-height:1.9;">
+            <li><strong>(a) 비로그인 예약 건:</strong> 딥링크에 <code>p=</code> 라벨 없이 들어온 건 (label 필드 없음). → MY02 카드 완전 미노출. 포인트 귀속 불가.</li>
+            <li><strong>(b) cashbackType = <code>null</code> 또는 <code>NONE</code> 공급사 예약:</strong> Booking 건 카드는 표시하되, 포인트 적립금액 컬럼은 <code>—</code> (0P 아님). 공급사 자체가 캐시백 미지원.</li>
+          </ul></div>
         </div>
 
         <div class="p1-sub">
@@ -1158,7 +1163,8 @@ body{
         <div class="p1-hist-item"><div class="p1-hist-ver">v0.41</div><div class="p1-hist-body"><div class="p1-hist-date">2026-07-07</div><div class="p1-hist-text">① 9-4절 수정 — TransactionStatus 실 API값 반영: Waiting → Active 정정 (실 API 2026-07-07 확인), MY02 카드 표시 범위 Booking 건(TypeCode=10)만으로 명시, Click 건(TypeCode=1) 완전 제외 / ② 9-7절 수정 — cashbackType=null·필드없음도 배지 미표시 조건 추가 / ③ 10-2절 수정 — Booking 건 카드 표시 조건 추가, Waiting → Active 정정, 체크인·체크아웃 API 필드 정정 (clickStartDate/End → bookingStartDate/End), 적립금액 미노출 조건 보강</div></div></div>
         <div class="p1-hist-item"><div class="p1-hist-ver">v0.42</div><div class="p1-hist-body"><div class="p1-hist-date">2026-07-08</div><div class="p1-hist-text">① 9-4절 수정 — Active 상태에서도 cashbackAmountLocalised 금액 내려옴 실 테스트 확인 (2026-07-08) / ② 9-4절 수정 — Approved 판단 기준 변경: paymentMonth 기반 → 자사 내부 정책(체크아웃+n일) 기준으로 전환 결정 (미결 #10 해결, 미결 #16 신설) / ③ 9-4절 수정 — paymentMonth 구조 명시 (KAYAK이 예약 시점에 체크아웃 동일 월 기준으로 미리 설정) / ④ 10-2절 수정 — 투숙완료 판단 기준 변경(Approved → 체크아웃+n일 자사 내부 정책), paymentMonth 필드 설명 정정 / ⑤ 미결 #10 해결 처리 / ⑥ 미결 #16 신설 — 자사→고객 캐시백 지급 기준 n일 확정 필요</div></div></div>
         <div class="p1-hist-item"><div class="p1-hist-ver">v0.43</div><div class="p1-hist-body"><div class="p1-hist-date">2026-07-09</div><div class="p1-hist-text">① 10-2절 수정 — 예약상세 모달(B1) 확정 디자인 반영: 상단 숙소 썸네일 이미지 신규 추가 / 상태 배지 위치 변경(데이터 행→썸네일 오버레이) / 위치 필드 확장(hotelCity → hotelCountry+hotelCity) / D-DAY 배지 신규 추가(KST 기준, D≥1 표시·D≤0 미노출) / 예약 ID 삭제 / 적립일 항목 상태별 분기 신설(Active→"적립예정일 YYYY.MM.DD" / Approved→"적립완료") / [숙소 보러가기] 버튼 신규 추가(HotelID→S02 이동, 뒤로가기=MY02 복귀)</div></div></div>
-        <div class="p1-hist-item"><div class="p1-hist-ver" style="background:#dcfce7;color:#166534;font-weight:900;">v0.44</div><div class="p1-hist-body"><div class="p1-hist-date">2026-07-14</div><div class="p1-hist-text">① 제14조 신설 — 에러 페이지 정책 (ERR-A: 404 페이지 없음 / ERR-B: 일반 오류, GNB 뒤로가기+로고, 탭바 미표시, [홈으로] 버튼 없음, history.length 기반 뒤로가기 동작) / ② 기존 제14조(미결 사항) → 제15조로 번호 변경 / ③ 자연어검색 정책서 참조 버전 v0.6→v0.7 업데이트 (AI 검색바 플레이스홀더 "어디 호텔을 찾으세요." 확정)</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver" style="background:#dcfce7;color:#166534;font-weight:900;">v0.45</div><div class="p1-hist-body"><div class="p1-hist-date">2026-08-06</div><div class="p1-hist-text">① 6-3절 수정 — 공급사목록 집계 방식 변경: <code>providerIndex</code> 기준 공급사별 1행, 초기 4개 표시 + <code>[공급사 N개 더 보기 ▾]</code> 버튼, 기존 Accordion 방식 삭제 / ② 9-4절 수정 — MY02 미표시 케이스 2가지 확정: (a) 비로그인 예약 건(label 없는 건) → MY02 카드 완전 미노출, (b) cashbackType=null·NONE 공급사 예약 → 카드 표시·포인트 금액 미노출(<code>—</code>)</div></div></div>
+        <div class="p1-hist-item"><div class="p1-hist-ver" style="background:#e2e8f0;color:#475569;font-weight:900;">v0.44</div><div class="p1-hist-body"><div class="p1-hist-date">2026-07-14</div><div class="p1-hist-text">① 제14조 신설 — 에러 페이지 정책 (ERR-A: 404 페이지 없음 / ERR-B: 일반 오류, GNB 뒤로가기+로고, 탭바 미표시, [홈으로] 버튼 없음, history.length 기반 뒤로가기 동작) / ② 기존 제14조(미결 사항) → 제15조로 번호 변경 / ③ 자연어검색 정책서 참조 버전 v0.6→v0.7 업데이트 (AI 검색바 플레이스홀더 "어디 호텔을 찾으세요." 확정)</div></div></div>
       </div>
     </div>
 
@@ -1166,8 +1172,8 @@ body{
 </div><!-- /p1-body -->
 
 <div class="p1-footer">
-  allmytour meta. Phase 1 (MVP) 정책서 v0.44 · 2026-07-14 · 대화창 2 산출물<br>
-  전체 내용: context/신규정책/phase1정책/신규_mvp_메타서치_v0.44.md · 경로: context/신규정책/new_wireframe/phase1_policy.html
+  allmytour meta. Phase 1 (MVP) 정책서 v0.45 · 2026-08-06 · 대화창 2 산출물<br>
+  전체 내용: context/신규정책/phase1정책/신규_mvp_메타서치_v0.45.md · 경로: context/신규정책/new_wireframe/phase1_policy.html
 </div>
 
 <script>

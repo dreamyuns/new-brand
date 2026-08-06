@@ -113,9 +113,7 @@
     <span class="toc-sep"></span>
     <a href="#c" class="toc-link">C — 목록(로그인·동의X)</a>
     <span class="toc-sep"></span>
-    <a href="#d" class="toc-link">D — 뷰어(이용약관)</a>
-    <span class="toc-sep"></span>
-    <a href="#e" class="toc-link">E — 뷰어(마케팅·로그인)</a>
+    <a href="#d" class="toc-link">D — 뷰어(서비스 이용약관)</a>
   </div>
 </nav>
 
@@ -133,8 +131,7 @@
   <ul class="sec-policy-list">
     <li><strong>진입</strong>: MY01 마이페이지 > [약관] 탭 → MY04 전체화면 전환 (비로그인·로그인 공통)</li>
     <li><strong>GNB</strong>: ← 뒤로가기만 · 타이틀 중앙 고정 · [로그인]·[☰] 없음 (MY 하위 화면 패턴)</li>
-    <li><strong>항목 구성</strong>: 이용약관 / 개인정보처리방침 / 마케팅 수신 동의 — 로그인 여부 무관 항상 3개 표시</li>
-    <li><strong>마케팅 동의 이력</strong>: 로그인 + 동의 완료 시에만 날짜 표시 · 비로그인·미동의 시 미표시 ("미동의" 문구 없음)</li>
+    <li><strong>항목 구성</strong>: 서비스 이용약관 / 개인정보 처리방침 — 로그인 여부 무관 항상 2개 표시</li>
     <li><strong>약관 소스</strong>: MVP=하드코딩 · 이후 백엔드 API 전환 예정</li>
     <li><strong>동의 상태 변경</strong>: 이 화면에서 제공 안 함 → MY03 계정관리에서만 처리</li>
   </ul>
@@ -150,7 +147,7 @@
         <!-- GNB -->
         <div class="my-gnb">
           <button class="my-gnb-back">← <span class="wf-cn">1</span></button>
-          <div class="my-gnb-title">약관</div>
+          <div class="my-gnb-title">약관정책</div>
           <button class="my-gnb-icon">☰</button>
         </div>
 
@@ -160,7 +157,7 @@
 
             <div class="terms-item">
               <div class="terms-item-body">
-                <div class="terms-item-name">이용약관 <span class="wf-cn">2</span></div>
+                <div class="terms-item-name">서비스 이용약관 <span class="wf-cn">2</span></div>
                 <div class="terms-item-date">시행일: 2026.01.15</div>
               </div>
               <span class="terms-item-arrow">&#8250;</span>
@@ -168,20 +165,12 @@
 
             <div class="terms-item">
               <div class="terms-item-body">
-                <div class="terms-item-name">개인정보처리방침 <span class="wf-cn">2</span></div>
+                <div class="terms-item-name">개인정보 처리방침 <span class="wf-cn">2</span></div>
                 <div class="terms-item-date">시행일: 2026.01.15</div>
               </div>
               <span class="terms-item-arrow">&#8250;</span>
             </div>
 
-            <div class="terms-item">
-              <div class="terms-item-body">
-                <div class="terms-item-name">마케팅 수신 동의 <span class="wf-cn">3</span></div>
-                <div class="terms-item-date">시행일: 2026.01.15</div>
-                <!-- 비로그인 / 미동의: 동의 이력 날짜 미표시 -->
-              </div>
-              <span class="terms-item-arrow">&#8250;</span>
-            </div>
 
           </div>
         </div><!-- /my-scroll -->
@@ -210,7 +199,7 @@
     <div class="ann-item">
       <div class="cn">2</div>
       <div class="ann-body">
-        <div class="ann-title">이용약관 / 개인정보처리방침</div>
+        <div class="ann-title">서비스 이용약관 / 개인정보 처리방침</div>
         <div class="ann-desc">
           <ul>
             <li>항목명 + 시행일 표시</li>
@@ -219,23 +208,6 @@
           </ul>
         </div>
         <div class="ann-front">개발: MVP 하드코딩 → 이후 API 응답 기반 전환 시 시행일 필드 그대로 사용</div>
-      </div>
-    </div>
-
-    <div class="ann-item">
-      <div class="cn">3</div>
-      <div class="ann-body">
-        <div class="ann-title">마케팅 수신 동의</div>
-        <div class="ann-desc">
-          <ul>
-            <li>항목은 로그인 여부 무관 항상 표시</li>
-            <li>동의 이력 날짜: <strong>로그인 + 동의 완료 시에만</strong> 항목명 아래 표시 (케이스 B)</li>
-            <li>비로그인 또는 미동의: 날짜 없이 시행일만 (이 케이스, 케이스 C)</li>
-            <li>탭 → 약관 뷰어 전체화면 전환 (케이스 D/E)</li>
-          </ul>
-        </div>
-        <div class="ann-case">A (비로그인) · C (로그인+미동의): 날짜 미표시 — 동일 UI<br>B (로그인+동의O): 동의 이력 날짜 표시</div>
-        <div class="ann-rule">동의 상태 변경은 MY03 계정관리에서만 처리</div>
       </div>
     </div>
 
@@ -258,7 +230,7 @@
 
         <div class="my-gnb">
           <button class="my-gnb-back">←</button>
-          <div class="my-gnb-title">약관</div>
+          <div class="my-gnb-title">약관정책</div>
           <button class="my-gnb-icon">☰</button>
         </div>
 
@@ -267,7 +239,7 @@
 
             <div class="terms-item">
               <div class="terms-item-body">
-                <div class="terms-item-name">이용약관</div>
+                <div class="terms-item-name">서비스 이용약관</div>
                 <div class="terms-item-date">시행일: 2026.01.15</div>
               </div>
               <span class="terms-item-arrow">&#8250;</span>
@@ -275,20 +247,12 @@
 
             <div class="terms-item">
               <div class="terms-item-body">
-                <div class="terms-item-name">개인정보처리방침</div>
+                <div class="terms-item-name">개인정보 처리방침</div>
                 <div class="terms-item-date">시행일: 2026.01.15</div>
               </div>
               <span class="terms-item-arrow">&#8250;</span>
             </div>
 
-            <div class="terms-item">
-              <div class="terms-item-body">
-                <div class="terms-item-name">마케팅 수신 동의</div>
-                <div class="terms-item-date">시행일: 2026.01.15</div>
-                <div class="terms-item-consent">동의: 2026.06.01 <span class="wf-cn">1</span></div>
-              </div>
-              <span class="terms-item-arrow">&#8250;</span>
-            </div>
 
           </div>
         </div>
@@ -299,22 +263,7 @@
 
   <div class="ann">
     <h3>케이스 B 주석</h3>
-
-    <div class="ann-item">
-      <div class="cn">1</div>
-      <div class="ann-body">
-        <div class="ann-title">마케팅 동의 이력 날짜</div>
-        <div class="ann-desc">
-          <ul>
-            <li>시행일 아래 "동의: YYYY.MM.DD" 형식으로 표시</li>
-            <li>데이터: 회원가입 또는 MY03 계정관리에서 마케팅 동의 변경 시 저장된 일시</li>
-            <li>색상: 초록 (#059669) — 동의 완료 상태 구분</li>
-          </ul>
-        </div>
-        <div class="ann-front">개발: 회원 프로필 API에서 <code>marketingConsentAt</code> 필드 제공 필요</div>
-      </div>
-    </div>
-
+    <p style="font-size:12px;color:#9ca3af;">마케팅 수신 동의 항목 제거 후 케이스 A와 동일 UI. 별도 주석 없음.</p>
   </div>
 </div>
 
@@ -334,7 +283,7 @@
 
         <div class="my-gnb">
           <button class="my-gnb-back">←</button>
-          <div class="my-gnb-title">약관</div>
+          <div class="my-gnb-title">약관정책</div>
           <button class="my-gnb-icon">☰</button>
         </div>
 
@@ -343,7 +292,7 @@
 
             <div class="terms-item">
               <div class="terms-item-body">
-                <div class="terms-item-name">이용약관</div>
+                <div class="terms-item-name">서비스 이용약관</div>
                 <div class="terms-item-date">시행일: 2026.01.15</div>
               </div>
               <span class="terms-item-arrow">&#8250;</span>
@@ -351,20 +300,12 @@
 
             <div class="terms-item">
               <div class="terms-item-body">
-                <div class="terms-item-name">개인정보처리방침</div>
+                <div class="terms-item-name">개인정보 처리방침</div>
                 <div class="terms-item-date">시행일: 2026.01.15</div>
               </div>
               <span class="terms-item-arrow">&#8250;</span>
             </div>
 
-            <div class="terms-item">
-              <div class="terms-item-body">
-                <div class="terms-item-name">마케팅 수신 동의 <span class="wf-cn">1</span></div>
-                <div class="terms-item-date">시행일: 2026.01.15</div>
-                <!-- 미동의: 날짜 미표시, "미동의" 문구도 없음 -->
-              </div>
-              <span class="terms-item-arrow">&#8250;</span>
-            </div>
 
           </div>
         </div>
@@ -375,33 +316,18 @@
 
   <div class="ann">
     <h3>케이스 C 주석</h3>
-
-    <div class="ann-item">
-      <div class="cn">1</div>
-      <div class="ann-body">
-        <div class="ann-title">마케팅 미동의 상태</div>
-        <div class="ann-desc">
-          <ul>
-            <li>동의 이력 날짜 미표시</li>
-            <li>"미동의" 문구도 미표시 — 부정적 인상 방지</li>
-            <li>비로그인(케이스 A)과 UI 동일</li>
-          </ul>
-        </div>
-        <div class="ann-case">A(비로그인) · C(로그인+미동의): 동일 UI 처리</div>
-      </div>
-    </div>
-
+    <p style="font-size:12px;color:#9ca3af;">마케팅 수신 동의 항목 제거 후 케이스 A와 완전히 동일 UI.</p>
   </div>
 </div>
 
 <hr class="sec-divider">
 
-<!-- ════ D: 약관 뷰어 — 이용약관 ════ -->
+<!-- ════ D: 약관 뷰어 — 서비스 이용약관 ════ -->
 <div id="d" class="sec-title">
-  <span class="sec-badge">MY04-D</span>약관 뷰어 — 이용약관
-  <span style="font-size:12px;font-weight:400;color:#888">— 개인정보처리방침도 동일 레이아웃</span>
+  <span class="sec-badge">MY04-D</span>약관 뷰어 — 서비스 이용약관
+  <span style="font-size:12px;font-weight:400;color:#888">— 개인정보 처리방침도 동일 레이아웃</span>
 </div>
-<div class="sec-sub">이용약관·개인정보처리방침 공통 UI · 비로그인·로그인 구분 없음 · 전문 스크롤 · 하단 동의이력 바 없음</div>
+<div class="sec-sub">서비스 이용약관·개인정보 처리방침 공통 UI · 비로그인·로그인 구분 없음 · 전문 스크롤 · 하단 동의이력 바 없음</div>
 
 <div class="two-col">
   <div class="mobile-wrap">
@@ -411,13 +337,13 @@
 
         <div class="my-gnb">
           <button class="my-gnb-back">← <span class="wf-cn">1</span></button>
-          <div class="my-gnb-title">이용약관</div>
+          <div class="my-gnb-title">서비스 이용약관</div>
           <button class="my-gnb-icon">☰</button>
         </div>
 
         <div class="my-scroll">
           <div class="viewer-header">
-            <div class="viewer-title">이용약관 <span class="wf-cn">2</span></div>
+            <div class="viewer-title">서비스 이용약관 <span class="wf-cn">2</span></div>
             <div class="viewer-date">시행일: 2026년 1월 15일</div>
           </div>
           <div class="viewer-body">
@@ -453,7 +379,7 @@
         <div class="ann-desc">
           <ul>
             <li>← 버튼: 약관 목록(MY04)으로 복귀</li>
-            <li>타이틀: 선택한 약관명 ("이용약관" / "개인정보처리방침" / "마케팅 수신 동의")</li>
+            <li>타이틀: 선택한 약관명 ("서비스 이용약관" / "개인정보 처리방침")</li>
           </ul>
         </div>
       </div>
@@ -467,7 +393,7 @@
           <ul>
             <li>헤더: 약관명 + 시행일 고정 표시</li>
             <li>본문: 약관 전문 스크롤 · 하드코딩 텍스트 (MVP)</li>
-            <li>이용약관 · 개인정보처리방침: 동일 레이아웃 · 하단 동의 이력 바 없음</li>
+            <li>서비스 이용약관 · 개인정보 처리방침: 동일 레이아웃 · 하단 동의 이력 바 없음</li>
           </ul>
         </div>
         <div class="ann-front">개발: MVP 하드코딩 → 이후 API 응답(약관 본문 필드) 기반 전환</div>
@@ -477,80 +403,7 @@
   </div>
 </div>
 
-<hr class="sec-divider">
-
-<!-- ════ E: 약관 뷰어 — 마케팅 수신 동의 (로그인 + 동의이력) ════ -->
-<div id="e" class="sec-title">
-  <span class="sec-badge">MY04-E</span>약관 뷰어 — 마케팅 수신 동의 · 로그인 · 동의 이력 표시
-</div>
-<div class="sec-sub">로그인 + 마케팅 동의 완료 · 뷰어 하단에 동의 이력 바 고정 노출</div>
-
-<div class="two-col">
-  <div class="mobile-wrap">
-    <div class="mobile-device">
-      <div class="m-notch"><div class="m-notch-pill"></div></div>
-      <div class="m-screen">
-
-        <div class="my-gnb">
-          <button class="my-gnb-back">←</button>
-          <div class="my-gnb-title">마케팅 수신 동의</div>
-          <button class="my-gnb-icon">☰</button>
-        </div>
-
-        <!-- 뷰어: flex column으로 본문 스크롤 + 하단 bar 고정 -->
-        <div class="my-scroll" style="display:flex;flex-direction:column;">
-          <div class="viewer-header">
-            <div class="viewer-title">마케팅 수신 동의</div>
-            <div class="viewer-date">시행일: 2026년 1월 15일</div>
-          </div>
-          <div class="viewer-body" style="flex:1;min-height:0;">
-            <h4>마케팅 정보 수신 동의</h4>
-            <p>allmy meta는 회원님께 다음과 같은 마케팅 정보를 발송합니다.</p>
-            <h4>발송 항목</h4>
-            <p>① 특가 호텔 및 프로모션 정보<br>
-            ② 여행 추천 및 이벤트 안내<br>
-            ③ 신규 서비스 출시 안내<br>
-            ④ 캐시백 적립 및 혜택 안내</p>
-            <h4>발송 채널</h4>
-            <p>이메일 · 앱 푸시 알림 · 문자(SMS)</p>
-            <h4>동의 거부 권리</h4>
-            <p>마케팅 수신 동의는 선택 사항이며, 거부하더라도 기본 서비스 이용에 제한이 없습니다. 계정관리에서 언제든지 변경하실 수 있습니다.</p>
-            <p style="color:#9ca3af;font-size:11px;margin-top:16px">※ MVP 기간 중 약관 전문은 별도 공지 후 적용됩니다.</p>
-          </div>
-          <!-- 동의 이력 바 — 로그인 + 동의 완료 시에만 표시 -->
-          <div class="consent-bar">
-            <div class="consent-bar-label">동의 이력 <span class="wf-cn" style="background:#059669">1</span></div>
-            <div class="consent-bar-date">동의: 2026년 6월 1일</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <div class="ann">
-    <h3>케이스 E 주석</h3>
-
-    <div class="ann-item">
-      <div class="cn">1</div>
-      <div class="ann-body">
-        <div class="ann-title">동의 이력 바 — 로그인 + 동의 완료 시에만 표시</div>
-        <div class="ann-desc">
-          <ul>
-            <li>뷰어 하단 고정 (본문 스크롤 시에도 유지)</li>
-            <li>레이블 "동의 이력" + 동의 일시 표시</li>
-            <li>형식: "동의: YYYY년 M월 D일"</li>
-            <li>배경: 연한 초록 (#f0fdf4) — 동의 완료 상태 시각화</li>
-          </ul>
-        </div>
-        <div class="ann-case">로그인 + 동의O: 이 케이스 (동의 이력 바 표시)<br>비로그인 또는 미동의: 동의 이력 바 미노출 → 케이스 D 레이아웃</div>
-        <div class="ann-front">개발: 회원 프로필 API <code>marketingConsentAt</code> 필드 활용</div>
-        <div class="ann-rule">동의 상태 변경 버튼 없음 → MY03 계정관리에서만 처리</div>
-      </div>
-    </div>
-
-  </div>
-</div>
+<!-- ⚠️ MY04-E deprecated — 마케팅 수신 동의 항목 제거로 해당 케이스 삭제 (2026-08-06) -->
 
 <!-- 푸터 -->
 <div style="text-align:center;font-size:12px;color:#bbb;padding:48px 0 60px;border-top:1px dashed #e0e0da;margin-top:48px;line-height:1.8">

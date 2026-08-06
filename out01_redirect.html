@@ -201,8 +201,8 @@
     <li><strong>비로그인 [로그인] 버튼 동작 (방안 A — Pause/Resume)</strong>: [로그인] 탭 → 프로그레스 바 일시정지 + 로그인 바텀시트 팝업. 로그인 성공 → OUT01-A 전환(로그인 케이스) + 3초 카운트다운 새로 시작. 바텀시트 닫기/취소 → 남은 카운트다운 재개 (7-4절)</li>
     <li><strong>GNB ← 동작</strong>: <code>window.close()</code> → OUT01 탭 닫힘. 실패 시 직전 진입 화면으로 복귀 (fallback) (7-4절)</li>
     <li><strong>userTrackId</strong>: 로그인 여부 무관 항상 포함 (7-2절)</li>
-    <li><strong>캐시백 안내 배너 (#7·#8)</strong>: 로그인 회원 + cashback.type ≠ NONE 시만 표시. 비로그인 미표시 (7-4절)</li>
-    <li><strong>법적 면책 고지 (#5)</strong>: "allmy는 통신판매 중개업자로서 거래 당사자가 아닙니다." 전체 케이스 공통 표시 (7-4절)</li>
+    <li><strong>포인트 적립 안내 배너 (#7·#8)</strong>: 로그인 회원 + cashback.type ≠ NONE 시만 표시. 비로그인 미표시 (7-4절)</li>
+    <li><strong>법적 면책 고지 (#5)</strong>: "PickoQ는 통신판매 중개업자로서 거래 당사자가 아닙니다.<br>적립 포인트는 판매사 정책에 따라 달라질 수 있습니다." 전체 케이스 공통 표시 (7-4절)</li>
   </ul>
   <div class="sec-policy-rule">기준: v0.38 7-1절~7-4절</div>
 </div>
@@ -242,7 +242,8 @@
           <div class="out-msg-title">Agoda로 이동 중이에요 <span class="wf-cn">4</span></div>
           <div class="out-msg-sub">
             3초 후 자동으로 이동합니다.<br>
-            <b>예약만 완료하면 캐시백이 적립됩니다!</b> <span class="wf-cn">5</span>
+            예약 완료까지 창을 유지해야 포인트 적립이 가능해요 <span class="wf-cn">5</span><br>
+            <b>예약, 적립, 취소 확인은 최대 4영업일 소요</b>
           </div>
 
           <!-- 프로그레스 바 (3초 카운트다운) -->
@@ -269,17 +270,17 @@
             </div>
           </div>
 
-          <!-- 캐시백 안내 배너 (로그인 + cashbackType ≠ NONE 시만 노출) -->
+          <!-- 포인트 적립 안내 배너 (로그인 + cashbackType ≠ NONE 시만 노출) -->
           <div class="out-cb-banner">
-            <span class="out-cb-icon">💸</span>
+            <span class="out-cb-icon">🦚</span>
             <div class="out-cb-text">
-              <div class="out-cb-amount">투숙완료 확인 시 최대 15,194원 캐시백 적립 예상 <span class="wf-cn">11</span></div>
-              <div class="out-cb-desc">예약 금액 기준 예상값이며, 실제 금액은 체크아웃 후 확정됩니다.</div>
+              <div class="out-cb-amount">투숙을 완료하면 최대 15,194 포인트가 적립돼요! <span class="wf-cn">11</span></div>
+              <div class="out-cb-desc">현재 포인트 적립만 가능하며, 추후 사용 기능 오픈예정</div>
             </div>
           </div>
 
           <!-- 법적 면책 고지 -->
-          <div class="out-legal">allmy는 통신판매 중개업자로서 거래 당사자가 아닙니다. <span class="wf-cn">12</span></div>
+          <div class="out-legal">PickoQ는 통신판매 중개업자로서 거래 당사자가 아닙니다.<br>적립 포인트는 판매사 정책에 따라 달라질 수 있습니다. <span class="wf-cn">12</span></div>
 
         </div>
 
@@ -348,14 +349,14 @@
     <div class="ann-item">
       <span class="cn">5</span>
       <div class="ann-body">
-        <div class="ann-title">예약 완료 유도 메시지</div>
+        <div class="ann-title">예약 완료 유도 메시지 (2줄)</div>
         <div class="ann-desc">
           <ul>
-            <li>로그인 회원에게 예약 완료까지 이탈하지 않도록 유도하는 마케팅 문구.</li>
-            <li>구체적인 문구·디자인(공작새 캐릭터 포함)은 서비스 출시 전 최종 확정 예정.</li>
+            <li>1줄: "예약 완료까지 창을 유지해야 포인트 적립이 가능해요" — 창을 유지해야 포인트가 적립됨을 안내.</li>
+            <li>2줄: "예약, 적립, 취소 확인은 최대 4영업일 소요" — CS 처리 시간 안내.</li>
           </ul>
         </div>
-        <div class="ann-rule">정책서 v0.38 7-4절 — 예약 완료 유도 문구.</div>
+        <div class="ann-rule">정책서 v0.38 7-4절 — 예약 완료 유도 문구. 디자인 확정본 기준.</div>
       </div>
     </div>
     <div class="ann-item">
@@ -432,21 +433,21 @@
     <div class="ann-item">
       <span class="cn">11</span>
       <div class="ann-body">
-        <div class="ann-title">캐시백 예상금액 — 원화 계산값 표시</div>
+        <div class="ann-title">포인트 적립 예상금액 배너</div>
         <div class="ann-desc">
           <ul>
             <li>로그인 회원이고 해당 공급사에 캐시백이 있을 때만 배너 전체를 표시.</li>
             <li>비로그인 또는 cashback.type = NONE이면 배너 전체 숨김.</li>
-            <li><strong>PERCENTAGE 타입 계산식:</strong> <code>results[].totalRate × cashback.value(%) = 예상 원화 금액</code>. 소수점 이하 버림 처리.</li>
-            <li><strong>FLAT 타입:</strong> <code>cashback.value</code> 원화 금액 그대로 표시.</li>
-            <li>배너 본문: "예약 금액 기준 예상값이며, 실제 금액은 체크아웃 후 확정됩니다." — 확정 금액이 아님을 명시.</li>
+            <li><strong>PERCENTAGE 타입 계산식:</strong> <code>results[].totalRate × cashback.value(%) = 예상 포인트</code>. 소수점 이하 버림 처리.</li>
+            <li><strong>FLAT 타입:</strong> <code>cashback.value</code> 금액 그대로 표시.</li>
+            <li>배너 하단 고정 문구: "현재 포인트 적립만 가능하며, 추후 사용 기능 오픈예정".</li>
           </ul>
         </div>
         <div class="ann-front">← providers[selectedProviderIndex].cashback.type / .value × results[selectedIndex].totalRate</div>
-        <div class="ann-rule">⚠️ 정책서 v0.38 7-4절 #8은 % 표시 기준이나, OUT01에서 원화 계산값 표시로 변경 적용 — 대화창 1 정책서 업데이트 필요 (7-4절 #8 개정).</div>
+        <div class="ann-rule">기준: v0.45 9-7절 / 포인트_정책서 v0.1. 디자인 확정본 기준.</div>
         <div class="ann-case">
-          ◼ 로그인 + PERCENTAGE 5.5% + 판매가 ₩276,245 → "투숙완료 확인 시 최대 15,194원 캐시백 적립 예상"<br>
-          ◼ 로그인 + FLAT ₩10,000 → "투숙완료 확인 시 최대 10,000원 캐시백 적립 예상"<br>
+          ◼ 로그인 + PERCENTAGE 5.5% + 판매가 ₩276,245 → "투숙을 완료하면 최대 15,194 포인트가 적립돼요!"<br>
+          ◼ 로그인 + FLAT ₩10,000 → "투숙을 완료하면 최대 10,000 포인트가 적립돼요!"<br>
           ◼ 로그인 + NONE → 배너 전체 미표시<br>
           ◼ 비로그인 → 배너 전체 미표시 (대신 FOMO 배너 표시)
         </div>
@@ -519,12 +520,12 @@
           <div class="out-fomo-banner">
             <span class="out-fomo-icon">⚠️</span>
             <div class="out-fomo-text">
-              <div class="out-fomo-desc">로그인 없이 이동하면 캐시백을 받을 수 없어요. <span class="wf-cn">2</span></div>
+              <div class="out-fomo-desc">로그인 없이 이동하면 포인트를 받을 수 없어요. <span class="wf-cn">2</span></div>
             </div>
           </div>
 
           <!-- 로그인 버튼 -->
-          <button class="out-login-cta">로그인하고 캐시백 받기 <span class="wf-cn">3</span></button>
+          <button class="out-login-cta">로그인하고 포인트 받기 <span class="wf-cn">3</span></button>
 
           <!-- 호텔·공급사 카드 -->
           <div class="out-card">
@@ -543,7 +544,7 @@
           </div>
 
           <!-- 법적 면책 고지 -->
-          <div class="out-legal">allmy는 통신판매 중개업자로서 거래 당사자가 아닙니다.</div>
+          <div class="out-legal">PickoQ는 통신판매 중개업자로서 거래 당사자가 아닙니다.<br>적립 포인트는 판매사 정책에 따라 달라질 수 있습니다.</div>
 
         </div>
 
@@ -672,7 +673,7 @@
           <span class="out-back-link">← 다른 공급사 가격 보기</span>
 
           <!-- 법적 면책 고지 -->
-          <div class="out-legal">allmy는 통신판매 중개업자로서 거래 당사자가 아닙니다.</div>
+          <div class="out-legal">PickoQ는 통신판매 중개업자로서 거래 당사자가 아닙니다.<br>적립 포인트는 판매사 정책에 따라 달라질 수 있습니다.</div>
 
         </div>
 

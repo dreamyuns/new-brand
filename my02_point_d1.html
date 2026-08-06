@@ -637,6 +637,12 @@
           </div>
         </div>
 
+        <!-- 포인트 사용불가 안내 -->
+        <div style="background:#fffbeb;border-bottom:1px solid #fde68a;padding:8px 14px;font-size:11px;color:#92400e;display:flex;align-items:center;gap:6px;flex-shrink:0;">
+          <span>⏳</span>
+          <span>현재 포인트 적립만 가능하며, 추후 사용 기능 오픈예정</span>
+        </div>
+
         <!-- 카드 바디 -->
         <div class="earn-body">
           <div class="earn-section-hdr">
@@ -666,7 +672,11 @@
                 </div>
                 <!-- [OTA 바로가기] 버튼 — 모든 카드 공통 -->
                 <div class="trip-confirm-area">
-                  <button class="trip-confirm-btn">OTA 바로가기 → <span class="wf-cn">15</span></button>
+                  <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;font-size:11px;color:#6b7280;">
+                    <span style="width:18px;height:18px;background:#003b95;border-radius:3px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:8px;font-weight:800;">B.</span>
+                    <span>Booking.com <span class="wf-cn">15</span></span>
+                  </div>
+                  <button class="trip-confirm-btn">OTA 바로가기 → <span class="wf-cn">16</span></button>
                 </div>
               </div>
             </div>
@@ -688,6 +698,10 @@
                 </div>
                 <!-- [OTA 바로가기] 버튼 — 모든 카드 공통 -->
                 <div class="trip-confirm-area">
+                  <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;font-size:11px;color:#6b7280;">
+                    <span style="width:18px;height:18px;background:#ff5a00;border-radius:3px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:8px;font-weight:800;">A</span>
+                    <span>Agoda</span>
+                  </div>
                   <button class="trip-confirm-btn">OTA 바로가기 →</button>
                 </div>
               </div>
@@ -709,7 +723,11 @@
                 </div>
                 <!-- [OTA 바로가기] 버튼 — 모든 카드 공통 -->
                 <div class="trip-confirm-area">
-                  <button class="trip-confirm-btn">OTA 바로가기 →</button>
+                  <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;font-size:11px;color:#9ca3af;">
+                    <span style="width:18px;height:18px;background:#ddd;border-radius:3px;display:inline-flex;align-items:center;justify-content:center;color:#999;font-size:8px;font-weight:800;">H</span>
+                    <span style="color:#d1d5db;">Hotels.com</span>
+                  </div>
+                  <button class="trip-confirm-btn" style="opacity:.5;pointer-events:none;">OTA 바로가기 →</button>
                 </div>
               </div>
             </div>
@@ -1072,12 +1090,12 @@
                 <span class="detail-info-label">예약처 <span class="wf-cn">M8</span></span>
                 <div class="detail-ota-inner">
                   <span class="detail-info-val">booking.com</span>
-                  <button class="ota-confirm-btn">예약확인하기 <span class="wf-cn">M9</span></button>
+                  <a href="#" style="font-size:11px;color:#2563eb;text-decoration:underline;font-weight:600;" class="ota-confirm-btn-link">booking.com ↗ <span class="wf-cn">M9</span></a>
                 </div>
               </div>
               <div class="detail-point-row">
                 <span class="detail-point-label">포인트 <span class="wf-cn" style="color:#9ca3af;background:#f3f4f6;">M10</span></span>
-                <span class="detail-point-val">3,000 P</span>
+                <span class="detail-point-val"><span style="display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;background:#059669;color:#fff;font-size:8px;font-weight:900;border-radius:3px;margin-right:2px;">P</span>3,000</span>
               </div>
               <div class="detail-info-row">
                 <span class="detail-info-label">적립예정일 <span class="wf-cn">M11</span></span>

@@ -883,8 +883,8 @@
             <div class="auth-sheet-close">✕</div>
           </div>
           <div class="auth-sheet-head">
-            <div class="auth-sheet-title">거의 다 됐어요! <span class="wf-cn">1</span></div>
-            <div class="auth-sheet-sub">약관에 동의하고 가입을 완료해 주세요.</div>
+            <div class="auth-sheet-title">마지막 단계만 남았어요 <span class="wf-cn">1</span></div>
+            <div class="auth-sheet-sub">약관에 동의하고 가입을 완료해 주세요.<br>필수 약관에 동의해야 가입이 가능해요.</div>
           </div>
           <div class="auth-sheet-body">
             <!-- 인증 완료 박스 (비활성 표시) -->
@@ -902,20 +902,25 @@
                 <div class="auth-checkbox checked">✓ <span class="wf-cn">2</span></div>
                 <span class="auth-agree-all-text">전체 동의</span>
               </div>
-              <!-- 필수 -->
+              <!-- 필수 1 -->
               <div class="auth-agree-row">
                 <div class="auth-checkbox checked">✓</div>
-                <span class="auth-agree-text">[필수] 개인정보 수집·이용 동의 <span class="auth-agree-req">*</span> <span class="wf-cn">3</span></span>
+                <span class="auth-agree-text">[필수] 서비스 이용약관 <span class="auth-agree-req">*</span> <span class="wf-cn">3</span></span>
                 <a class="auth-agree-view" href="#">보기</a>
               </div>
-              <!-- 선택 -->
+              <!-- 필수 2 -->
               <div class="auth-agree-row">
-                <div class="auth-checkbox"></div>
-                <span class="auth-agree-text">[선택] 마케팅 수신 동의 (이메일·SMS) <span class="auth-agree-opt">(선택)</span> <span class="wf-cn">4</span></span>
+                <div class="auth-checkbox checked">✓</div>
+                <span class="auth-agree-text">[필수] 개인정보 수집·이용 동의 <span class="auth-agree-req">*</span> <span class="wf-cn">4</span></span>
                 <a class="auth-agree-view" href="#">보기</a>
+              </div>
+              <!-- 필수 3 -->
+              <div class="auth-agree-row">
+                <div class="auth-checkbox checked">✓</div>
+                <span class="auth-agree-text">[필수] 만 14세 이상입니다 <span class="auth-agree-req">*</span> <span class="wf-cn">5</span></span>
               </div>
             </div>
-            <button class="auth-cta">가입완료 <span class="wf-cn">5</span></button>
+            <button class="auth-cta">시작하기 <span class="wf-cn">6</span></button>
           </div>
         </div>
       </div>
@@ -955,45 +960,57 @@
     <div class="ann-item">
       <span class="cn">3</span>
       <div class="ann-body">
-        <div class="ann-title">[필수] 개인정보 수집·이용 동의</div>
+        <div class="ann-title">[필수] 서비스 이용약관</div>
         <div class="ann-desc">
           <ul>
-            <li>신규 가입 필수 동의 항목.</li>
-            <li>미체크 상태에서 [가입완료] 버튼 비활성(회색).</li>
-            <li>[보기] 링크 탭 시 개인정보 수집·이용 동의 약관 전문을 바텀시트 팝업으로 표시.</li>
+            <li>서비스 이용을 위한 필수 동의 항목.</li>
+            <li>미체크 상태에서 [시작하기] 버튼 비활성(회색).</li>
+            <li>[보기] 링크 탭 시 서비스 이용약관 전문을 바텀시트 팝업으로 표시.</li>
           </ul>
         </div>
-        <div class="ann-rule">정책서 8-5절 — [가입완료] 활성 조건: 인증코드 검증 완료 AND 개인정보 수집·이용 동의 필수 체크.</div>
+        <div class="ann-rule">정책서 8-5절.</div>
       </div>
     </div>
     <div class="ann-item">
       <span class="cn">4</span>
       <div class="ann-body">
-        <div class="ann-title">[선택] 마케팅 수신 동의 (이메일·SMS)</div>
+        <div class="ann-title">[필수] 개인정보 수집·이용 동의</div>
         <div class="ann-desc">
           <ul>
-            <li>이메일 및 SMS 마케팅 수신 동의. 선택 항목이므로 미체크 상태에서도 [가입완료] 활성 가능.</li>
-            <li>초기값: 미체크.</li>
-            <li>가입 완료 후 MY03 계정관리 화면에서 언제든지 ON/OFF 변경 가능.</li>
-            <li>[보기] 링크 탭 시 마케팅 수신 동의 약관 전문 바텀시트 팝업.</li>
+            <li>신규 가입 필수 동의 항목.</li>
+            <li>미체크 상태에서 [시작하기] 버튼 비활성(회색).</li>
+            <li>[보기] 링크 탭 시 개인정보 수집·이용 동의 약관 전문을 바텀시트 팝업으로 표시.</li>
           </ul>
         </div>
-        <div class="ann-rule">정책서 8-5절 / 10-3절 (계정관리에서 변경 가능).</div>
+        <div class="ann-rule">정책서 8-5절 — [시작하기] 활성 조건: 인증코드 검증 완료 AND 필수 3개 항목 모두 체크.</div>
       </div>
     </div>
     <div class="ann-item">
       <span class="cn">5</span>
       <div class="ann-body">
-        <div class="ann-title">[가입완료] — 활성</div>
+        <div class="ann-title">[필수] 만 14세 이상입니다</div>
         <div class="ann-desc">
           <ul>
-            <li>필수 항목(개인정보 수집·이용 동의) 체크 완료 시 인디고(#4f46e5) 버튼으로 즉시 활성 전환.</li>
+            <li>만 14세 미만은 가입 불가. 필수 체크 항목.</li>
+            <li>미체크 상태에서 [시작하기] 버튼 비활성(회색).</li>
+            <li>[보기] 링크 없음 — 체크박스만 표시.</li>
+          </ul>
+        </div>
+        <div class="ann-rule">정책서 8-5절.</div>
+      </div>
+    </div>
+    <div class="ann-item">
+      <span class="cn">6</span>
+      <div class="ann-body">
+        <div class="ann-title">[시작하기] — 활성</div>
+        <div class="ann-desc">
+          <ul>
+            <li>필수 3개 항목(서비스 이용약관·개인정보 수집·이용 동의·만 14세 이상) 모두 체크 완료 시 인디고(#4f46e5) 버튼으로 즉시 활성 전환.</li>
             <li>탭 시 가입 완료 API 호출 → 가입 완료 + 세션 생성(30일 유지) + 바텀시트 닫힘 + 직전 페이지 복귀.</li>
             <li>가입 시 이메일만 서버에 저장하며 추가 정보 입력 화면 없이 바로 서비스 진입.</li>
           </ul>
         </div>
         <div class="ann-rule">정책서 8-8절 — 가입 완료 후 직전 페이지 유지 / 8-9절 — 추가정보(이름·성·국적·전화번호) 가입 후 계정관리에서 선택 입력.</div>
-        <div class="ann-case">마케팅 동의 선택값은 MY03 계정관리 마케팅 동의 토글 초기값과 동기화됨</div>
       </div>
     </div>
   </div>
@@ -1028,8 +1045,8 @@
             <div class="auth-sheet-close">✕</div>
           </div>
           <div class="auth-sheet-head">
-            <div class="auth-sheet-title">거의 다 됐어요!</div>
-            <div class="auth-sheet-sub">약관에 동의하고 가입을 완료해 주세요.</div>
+            <div class="auth-sheet-title">마지막 단계만 남았어요</div>
+            <div class="auth-sheet-sub">약관에 동의하고 가입을 완료해 주세요.<br>필수 약관에 동의해야 가입이 가능해요.</div>
           </div>
           <div class="auth-sheet-body">
             <div class="auth-code-row" style="margin-bottom:12px;opacity:.45;pointer-events:none">
@@ -1043,16 +1060,20 @@
               </div>
               <div class="auth-agree-row">
                 <div class="auth-checkbox"></div>
-                <span class="auth-agree-text">[필수] 개인정보 수집·이용 동의 <span class="auth-agree-req">*</span> <span class="wf-cn">1</span></span>
+                <span class="auth-agree-text">[필수] 서비스 이용약관 <span class="auth-agree-req">*</span> <span class="wf-cn">1</span></span>
                 <a class="auth-agree-view" href="#">보기</a>
               </div>
               <div class="auth-agree-row">
                 <div class="auth-checkbox"></div>
-                <span class="auth-agree-text">[선택] 마케팅 수신 동의 (이메일·SMS) <span class="auth-agree-opt">(선택)</span></span>
+                <span class="auth-agree-text">[필수] 개인정보 수집·이용 동의 <span class="auth-agree-req">*</span></span>
                 <a class="auth-agree-view" href="#">보기</a>
               </div>
+              <div class="auth-agree-row">
+                <div class="auth-checkbox"></div>
+                <span class="auth-agree-text">[필수] 만 14세 이상입니다 <span class="auth-agree-req">*</span></span>
+              </div>
             </div>
-            <button class="auth-cta disabled">가입완료 <span class="wf-cn">2</span></button>
+            <button class="auth-cta disabled">시작하기 <span class="wf-cn">2</span></button>
           </div>
         </div>
       </div>
@@ -1063,27 +1084,26 @@
     <div class="ann-item">
       <span class="cn">1</span>
       <div class="ann-body">
-        <div class="ann-title">[필수] 개인정보 수집·이용 동의 — 미체크 상태</div>
+        <div class="ann-title">필수 약관 항목 — 미체크 상태</div>
         <div class="ann-desc">
           <ul>
             <li>AUTH-E 화면 초기 진입 시 모든 체크박스는 미체크 상태.</li>
-            <li>[필수] 개인정보 수집·이용 동의가 미체크인 상태.</li>
-            <li>이 상태에서는 [가입완료] 버튼이 비활성(회색)으로 표시되고 탭 불가.</li>
+            <li>서비스 이용약관·개인정보 수집·이용 동의·만 14세 이상, 3개 모두 필수 항목.</li>
+            <li>하나라도 미체크면 [시작하기] 버튼이 비활성(회색)으로 표시되고 탭 불가.</li>
             <li>[보기] 탭으로 약관 전문 확인 후 체크 가능.</li>
           </ul>
         </div>
-        <div class="ann-rule">정책서 8-5절 — [가입완료] 활성 조건: 개인정보 수집·이용 동의 필수 체크.</div>
+        <div class="ann-rule">정책서 8-5절 — [시작하기] 활성 조건: 필수 3개 항목 모두 체크.</div>
       </div>
     </div>
     <div class="ann-item">
       <span class="cn">2</span>
       <div class="ann-body">
-        <div class="ann-title">[가입완료] — 비활성(disabled)</div>
+        <div class="ann-title">[시작하기] — 비활성(disabled)</div>
         <div class="ann-desc">
           <ul>
-            <li>필수 항목 미체크 시 버튼 회색(#e5e7eb) 처리 + 탭 불가.</li>
-            <li>[필수] 개인정보 수집·이용 동의 체크박스를 체크하는 즉시 인디고 버튼 활성(AUTH-E) 상태로 전환.</li>
-            <li>선택 항목(마케팅 동의) 체크 여부는 버튼 활성에 영향 없음.</li>
+            <li>필수 3개 항목 중 하나라도 미체크 시 버튼 회색(#e5e7eb) 처리 + 탭 불가.</li>
+            <li>3개 모두 체크되는 즉시 인디고 버튼 활성(AUTH-E) 상태로 전환.</li>
           </ul>
         </div>
         <div class="ann-rule">정책서 8-5절.</div>

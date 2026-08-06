@@ -172,11 +172,11 @@
     <li><strong>공급사 노출 방식</strong>: <code>providerIndex</code>(공급사 구분 번호) 기준으로 공급사별 묶음 후 <code>totalRate</code> 최솟값 1행만 노출(같은 공급사 여러 줄 불가). 이후 <code>totalRate</code> 오름차순 정렬. 상위 4개 공급사 기본 표시, 나머지는 [공급사 N개 더 보기 ▾] 탭 시 전체 펼침 (6-3절)</li>
     <li><strong>잔여 객실 수 배지</strong>: <code>availableRooms ≤ 3</code>이면 해당 행 배지 영역에 "🔴 잔여 N실" 표시 (6-3절)</li>
     <li><strong>최저가 배지</strong>: 정렬 후 1위 행에만 파란 배지. 필터 적용 시 필터된 목록 기준 재산정 (6-3절)</li>
-    <li><strong>캐시백 예상금액 표시 (v0.38)</strong>: 판매가 × 캐시백율 = 원화 계산값 표시. PERCENTAGE → "최대 NN원 캐시백" + 서브 "판매가의 N% · 투숙완료 후 지급". FLAT → "최대 NN원 캐시백". NONE → 미표시 (9-7절)</li>
+    <li><strong>포인트 적립 예상금액 표시</strong>: 판매가 × 적립율 = 포인트 계산값 표시. PERCENTAGE → "최대 NN 적립". FLAT → "최대 NN 적립". NONE → 미표시 (9-7절)</li>
     <li><strong>아웃링크 진입</strong>: 비로그인 → 로그인 유도 모달 → [건너뛰기] 또는 로그인 후 OUT01. 로그인 → OUT01 새탭 (7-1·7-2절)</li>
     <li><strong>TTL 만료</strong>: 가격 blur + sticky 토스트 → [새로고침] → 재호출 (6-6절)</li>
   </ul>
-  <div class="sec-policy-rule">기준: v0.37 6-1·6-3·6-6·7-1·9-7절</div>
+  <div class="sec-policy-rule">기준: v0.45 6-1·6-3·6-6·7-1·9-7절</div>
 </div>
 
 <div class="two-col">
@@ -249,7 +249,7 @@
               </div>
               <div class="s02-prov-row-right">
                 <div class="s02-prov-price-txt">₩402,000</div><span class="wf-cn">15</span>
-                <div class="s02-earn-txt">최대 20,100원 캐시백</div><span class="wf-cn">16</span>
+                <div class="s02-earn-txt">최대 20,100 적립</div><span class="wf-cn">16</span>
               </div>
               <div style="position:relative;flex-shrink:0;margin-left:6px;">
                 <button class="s02-move-circle" style="margin-left:0;">→</button>
@@ -269,7 +269,7 @@
               </div>
               <div class="s02-prov-row-right">
                 <div class="s02-prov-price-txt">₩418,000</div>
-                <div class="s02-earn-txt">최대 8,360원 캐시백</div>
+                <div class="s02-earn-txt">최대 8,360 적립</div>
               </div>
               <button class="s02-move-circle">→</button>
             </div>
@@ -286,7 +286,7 @@
               </div>
               <div class="s02-prov-row-right">
                 <div class="s02-prov-price-txt">₩435,000</div>
-                <div class="s02-earn-txt">최대 13,050원 캐시백</div>
+                <div class="s02-earn-txt">최대 13,050 적립</div>
               </div>
               <button class="s02-move-circle">→</button>
             </div>
@@ -308,8 +308,24 @@
               <button class="s02-move-circle">→</button>
             </div>
 
+            <!-- CS 주의문구 (더보기 위, 항상 표시) -->
+            <div style="padding:10px 14px 6px;font-size:10px;color:#9ca3af;line-height:1.8;border-top:1px solid #f5f5f3;"><span class="wf-cn">19</span>
+              ※ 예약, 적립, 취소 확인은 최대 4영업일 소요<br>
+              ※ 환불에 따라 적립 금액은 상이할 수 있습니다.
+            </div>
+
             <!-- 더보기 -->
             <div class="s02-load-more">공급사 3개 더 보기 ▾ <span class="wf-cn">18</span></div>
+          </div>
+
+          <!-- 사업자정보 푸터 -->
+          <div style="padding:12px 14px 14px;background:#f8f8f6;border-top:1px solid #ededeb;font-size:10px;color:#c4c4c0;line-height:1.8;"><span class="wf-cn">20</span>
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">
+              <span style="font-size:14px;font-weight:900;color:#3d6b50;">PickoQ</span>
+            </div>
+            (주)올마이투어 · 대표이사 박철우 · 사업자등록번호 106-86-08751<br>
+            통신판매업신고 2013-서울서초-1130 · 서울 서초구 강남대로 479<br>
+            고객센터 1566-9970 · help@pickoq.com
           </div>
 
         </div><!-- /s02-scroll -->
@@ -495,15 +511,41 @@
     <div class="ann-item">
       <div class="cn">16</div>
       <div class="ann-body">
-        <div class="ann-title">캐시백 예상금액 표시 — <code>providers[].cashback</code> (v0.38 확정)</div>
+        <div class="ann-title">포인트 적립 예상금액 표시 — <code>providers[].cashback</code></div>
         <div class="ann-desc"><ul>
-          <li><code>cashback.type = PERCENTAGE</code> → 원화 계산값 표시. 계산식: <code>totalRate × cashback.value ÷ 100</code> = 예상 원화금액 (소수점 이하 버림). 예: "최대 20,100원 캐시백".</li>
-          <li><code>cashback.type = FLAT</code> → <code>cashback.value</code> 금액 그대로 표시 (선택 통화 기호 적용). 예: "최대 15,000원 캐시백".</li>
-          <li><code>cashback.type = NONE</code> → 캐시백 표시 없음 (행에 미표시).</li>
-          <li>서브 텍스트: "판매가의 N% · 투숙완료 후 지급" (PERCENTAGE 타입 한정).</li>
+          <li><code>cashback.type = PERCENTAGE</code> → 포인트 계산값 표시. 계산식: <code>totalRate × cashback.value ÷ 100</code> = 예상 포인트 (소수점 이하 버림). 예: "최대 20,100 적립".</li>
+          <li><code>cashback.type = FLAT</code> → <code>cashback.value</code> 금액 그대로 표시. 예: "최대 15,000 적립".</li>
+          <li><code>cashback.type = NONE</code> → 포인트 표시 없음 (행에 미표시).</li>
         </ul></div>
         <div class="ann-front">← <code>providers[].cashback.type</code> / <code>providers[].cashback.value</code> / <code>providers[].totalRate</code></div>
-        <div class="ann-rule">기준: v0.38 9-7절 / 2026-07-03 확정.</div>
+        <div class="ann-rule">기준: v0.45 9-7절 / 포인트_정책서 v0.1 기준.</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">19</div>
+      <div class="ann-body">
+        <div class="ann-title">CS 주의문구 — 공급사 목록 하단 항상 표시</div>
+        <div class="ann-desc"><ul>
+          <li>더보기 버튼 위, 공급사 목록 하단에 항상 표시. 조건 없음.</li>
+          <li>"※ 예약, 적립, 취소 확인은 최대 4영업일 소요"</li>
+          <li>"※ 환불에 따라 적립 금액은 상이할 수 있습니다."</li>
+          <li>글자색 연회색(#9ca3af), 10px. 법적·CS 안내 고정 문구.</li>
+        </ul></div>
+        <div class="ann-rule">디자인 확정본 기준. 항상 표시 (조건 없음).</div>
+      </div>
+    </div>
+
+    <div class="ann-item">
+      <div class="cn">20</div>
+      <div class="ann-body">
+        <div class="ann-title">사업자정보 푸터</div>
+        <div class="ann-desc"><ul>
+          <li>화면 최하단 고정. PickoQ 로고(텍스트) + 사업자 정보.</li>
+          <li>표시 항목: 법인명 · 대표이사 · 사업자등록번호 · 통신판매업신고번호 · 주소 · 고객센터 · 이메일.</li>
+          <li>배경 #f8f8f6, 폰트 10px 연회색 — 페이지 최하단 스크롤 시 표시.</li>
+        </ul></div>
+        <div class="ann-rule">디자인 확정본 기준. 전체 공급사 목록 하단에 배치.</div>
       </div>
     </div>
 
