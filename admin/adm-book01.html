@@ -96,7 +96,9 @@
           <li><strong>데이터 소스:</strong> KAYAK Reporting API — <code>TransactionType=Booking</code>인 예약완료 건만 표시. 클릭 건(TransactionType=Click)은 목록에서 제외 (5-1절)</li>
           <li><strong>회원ID 식별:</strong> 아웃링크 URL의 <code>labels</code> 파라미터로 자사 회원ID를 심어 전달 → Reporting API에서 귀속 확인. 비로그인 이동 건: labels 없음 → 회원ID "—" 표시 (5-3절)</li>
           <li><strong>포인트 상태(자사 정의):</strong> 적립예정(체크아웃+7일 미도래) / 적립완료(체크아웃+7일 자사 배치 처리 완료) / 취소(KAYAK Cancelled 감지) (5-2절)</li>
-          <li><strong>적립완료일:</strong> 체크아웃 날짜 + 7일로 계산. YYYY-MM-DD 형식. 적립예정 건은 예정일 표시, 취소 건은 "—" (5-2절)</li>
+          <li><strong>취소 건 처리 (TransactionStatus=Cancelled):</strong> KAYAK API에서 취소 후에도 <code>CashbackType</code>·<code>CashbackValue</code> 필드는 살아있고 <code>CashbackAmountLocalised=0</code>으로만 바뀜(실 API 확인). 따라서 타입 컬럼은 실제 값(PERCENTAGE/FLAT) 그대로 표시(흐림 처리), 포인트(P)는 0P 표시, 포인트 상태는 "취소" 배지, 적립완료일은 "—" (5-2절)</li>
+          <li><strong>포인트 미제공 공급사 처리 (CashbackType=NONE/null):</strong> 포인트(P)·타입 컬럼 "—" 표시. 포인트 상태는 취소 건만 "취소" 배지 표시, 그 외(적립예정·적립완료 해당 건) "—" 표시. 예약 자체의 취소 사실은 포인트 유무와 무관하게 관리자 확인 필요 (5-2절·5-3절)</li>
+          <li><strong>적립완료일:</strong> 체크아웃 날짜 + 7일로 계산. YYYY-MM-DD 형식. 적립예정 건은 예정일 표시, 취소·NONE 건은 "—" (5-2절)</li>
           <li><strong>기간 필터 기본값:</strong> 최근 1년 자동 설정(오늘 기준). 기간 기준은 예약일 또는 체크인일 선택 가능 (5-3절)</li>
           <li><strong>공급사 표시:</strong> 이름 텍스트만 표시. OTA 로고 이미지 없음 (5-3절)</li>
           <li><strong>MVP 조회전용:</strong> 상태 변경·수동 지급·환불 처리 기능 없음. Phase 2에서 추가 예정 (5-1절)</li>
@@ -204,7 +206,7 @@
               <td><span class="wf-badge badge-waiting">적립예정</span></td>
               <td style="font-size:12px;color:#6b7280">2026-09-19</td>
             </tr>
-            <!-- 더미 3: 회원 / 취소 -->
+            <!-- 더미 3: 회원 / 취소 / PERCENTAGE (취소 후에도 CashbackType 살아있음 — 실 API 확인) -->
             <tr onclick="location.href='adm-book02.html'" style="cursor:pointer">
               <td style="font-size:12px">mlee@example.com</td>
               <td style="font-family:monospace;font-size:11px">RES-20031</td>
@@ -212,8 +214,8 @@
               <td>Conrad Bangkok</td>
               <td style="white-space:nowrap;font-size:12px">06.15 ~ 06.17</td>
               <td style="font-size:12px">Hotels.com</td>
-              <td style="color:#9ca3af;font-size:11px">—</td>
-              <td style="color:#9ca3af;font-size:11px">—</td>
+              <td style="color:#9ca3af;font-size:12px">0P</td>
+              <td><span class="wf-badge badge-active" style="font-size:9px;padding:1px 6px;opacity:0.45">PERCENTAGE</span></td>
               <td><span class="wf-badge badge-cancelled">취소</span></td>
               <td style="color:#9ca3af">—</td>
             </tr>
@@ -229,6 +231,19 @@
               <td><span class="wf-badge badge-active" style="font-size:9px;padding:1px 6px">FLAT</span></td>
               <td><span class="wf-badge badge-approved">적립완료</span></td>
               <td style="font-size:12px">2026-07-30</td>
+            </tr>
+            <!-- 더미 5: 회원 / 적립예정 / NONE (포인트 미제공 공급사) -->
+            <tr onclick="location.href='adm-book02.html'" style="cursor:pointer">
+              <td style="font-size:12px">park@example.com</td>
+              <td style="font-family:monospace;font-size:11px">RES-20110</td>
+              <td style="font-size:12px">2026-07-30</td>
+              <td>Ibis Styles Bangkok</td>
+              <td style="white-space:nowrap;font-size:12px">08.10 ~ 08.12</td>
+              <td style="font-size:12px">Trivago</td>
+              <td style="color:#9ca3af;font-size:11px">—</td>
+              <td style="color:#9ca3af;font-size:11px">—</td>
+              <td style="color:#9ca3af;font-size:12px">—</td>
+              <td style="color:#9ca3af">—</td>
             </tr>
           </tbody>
         </table>
@@ -306,10 +321,11 @@
           <div class="ann-title">취소</div>
           <div class="ann-desc"><ul>
             <li>KAYAK Reporting API에서 TransactionStatus=Cancelled가 감지된 건</li>
-            <li>취소 건은 포인트 지급 대상에서 제외. 포인트(P)·적립완료일 컬럼에 "—" 표시</li>
+            <li>취소되어도 API 응답의 CashbackType·CashbackValue 필드는 그대로 살아있고, 실제 지급금액(CashbackAmountLocalised)만 0으로 바뀜 — 실 API 데이터 확인 완료(2026-08-06)</li>
+            <li>따라서 타입 컬럼은 실제 값(예: PERCENTAGE) 표시(흐림). 포인트(P)는 0P 표시. 적립완료일은 "—"</li>
             <li>만료(적립 기간 초과) 처리는 Phase 2 이후 정책 확정 예정</li>
           </ul></div>
-          <div class="ann-rule">어드민 v0.7 5-2절 — 취소 정의 / TransactionStatus=Cancelled</div>
+          <div class="ann-rule">어드민 v0.7 5-2절 — 취소 정의 / KAYAK TransactionStatus=Cancelled · CashbackAmountLocalised=0</div>
         </div>
       </div>
 
@@ -357,7 +373,8 @@
           <div class="ann-desc"><ul>
             <li><strong>적립예정:</strong> 체크아웃+7일이 아직 지나지 않은 건. 자사 배치 미실행</li>
             <li><strong>적립완료:</strong> 체크아웃+7일 후 자사 배치 처리가 완료된 건</li>
-            <li><strong>취소:</strong> KAYAK에서 Cancelled 상태가 감지된 건. 만료는 Phase 2 이후 정책 확정</li>
+            <li><strong>취소:</strong> KAYAK에서 Cancelled 상태가 감지된 건 (포인트 제공 여부 무관하게 표시). 만료는 Phase 2 이후 정책 확정</li>
+            <li><strong>— (미표시):</strong> CashbackType=NONE/null인 포인트 미제공 공급사 + 비취소 건. 포인트 개념 자체가 없으므로 상태 표시 없음</li>
           </ul></div>
           <div class="ann-rule">어드민 v0.7 5-2절 — 포인트 상태 자사 정의</div>
         </div>
@@ -454,9 +471,10 @@
           <div class="ann-desc"><ul>
             <li>KAYAK API <code>CashbackAmountLocalised</code> (원화 환산). 1P = 1원</li>
             <li>CashbackType=NONE 또는 null 건(포인트 없는 공급사): "—" 표시</li>
+            <li>취소 건: KAYAK API에서 <code>CashbackAmountLocalised=0</code>으로 내려오므로 <strong>0P</strong> 표시 ("—" 아님). 실 API 확인값 기반</li>
             <li>소수점 이하 버림. 예: 9,623.4 → 9,623P</li>
           </ul></div>
-          <div class="ann-rule">어드민 v0.7 5-3절 / 포인트_정책서 v0.1 2-2절 — 소수점 버림</div>
+          <div class="ann-rule">어드민 v0.7 5-3절 / 포인트_정책서 v0.1 2-2절 — 소수점 버림 / 취소 건 CashbackAmountLocalised=0 → 0P</div>
         </div>
       </div>
 
@@ -467,8 +485,10 @@
           <div class="ann-desc"><ul>
             <li><code>PERCENTAGE</code>: 예약금액의 몇 %를 포인트로 줌</li>
             <li><code>FLAT</code>: 예약금액과 관계없이 정해진 포인트를 그대로 줌</li>
-            <li>NONE/null: "—" 표시</li>
+            <li>NONE/null 건(포인트 없는 공급사): "—" 표시</li>
+            <li>취소 건: KAYAK API에서 CashbackType 값이 취소 후에도 그대로 유지됨(실 API 확인). 타입 배지를 실제 값으로 표시하되 흐림(opacity) 처리하여 취소 상태임을 시각적으로 구분</li>
           </ul></div>
+          <div class="ann-rule">KAYAK Reporting API — CashbackType 필드 / 취소 후에도 값 유지 확인(2026-08-06)</div>
         </div>
       </div>
 
