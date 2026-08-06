@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ADM-POLICY — 어드민 정책서 v0.4</title>
+<title>ADM-POLICY — 어드민 정책서 v0.7</title>
 <link rel="stylesheet" href="wf-admin-styles.css">
 <style>
 body{background:#f8fafc;margin:0}
@@ -88,13 +88,19 @@ body{background:#f8fafc;margin:0}
 .unresolved-content-desc{font-size:12px;color:#6b7280;line-height:1.6}
 .unresolved-owner{font-size:11px;color:#6b7280;text-align:right}
 .unresolved-owner strong{display:block;font-size:12px;font-weight:700;color:#374151}
+/* ── 보류 (개발팀 논의) ── */
+.unresolved-item-pending{
+  background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;
+  padding:14px 18px;margin-bottom:10px;
+  display:grid;grid-template-columns:28px 1fr 120px;gap:10px;align-items:start;
+}
 </style>
 </head>
 <body>
 <nav class="page-nav">
   <a class="page-nav-back" href="admin-index.html">← 목차</a>
   <span class="page-nav-title">ADM-POLICY</span>
-  <span class="page-nav-route">어드민 정책서 v0.3</span>
+  <span class="page-nav-route">어드민 정책서 v0.7</span>
   <div class="page-nav-nav">
     <span class="page-nav-pager-disabled">← 이전</span>
     <a class="page-nav-pager" href="adm-login.html">다음: LOGIN →</a>
@@ -120,12 +126,18 @@ body{background:#f8fafc;margin:0}
     <a class="policy-toc-item" href="#sec4">제4조 — 회원관리</a>
     <a class="policy-toc-sub" href="#sec4-1">회원 목록</a>
     <a class="policy-toc-sub" href="#sec4-2">회원 상세·수정</a>
-    <a class="policy-toc-sub" href="#sec4-3">탈퇴 회원 처리</a>
+    <a class="policy-toc-sub" href="#sec4-3">예약내역 탭</a>
+    <div class="policy-toc-divider"></div>
+    <a class="policy-toc-item" href="#sec5">제5조 — 예약내역</a>
+    <a class="policy-toc-sub" href="#sec5-1">개요</a>
+    <a class="policy-toc-sub" href="#sec5-2">포인트 상태 정의</a>
+    <a class="policy-toc-sub" href="#sec5-3">예약내역 목록</a>
+    <a class="policy-toc-sub" href="#sec5-4">예약상세</a>
     <div class="policy-toc-divider"></div>
     <a class="policy-toc-item" href="#sec6">제6조 — 포인트 관리</a>
     <a class="policy-toc-sub" href="#sec6-1">MVP 운영 방침</a>
     <a class="policy-toc-sub" href="#sec6-2">내역 조회</a>
-    <a class="policy-toc-sub" href="#sec6-4">공급사별 현황</a>
+    <a class="policy-toc-sub" href="#sec6-3">공급사별 현황</a>
     <div class="policy-toc-divider"></div>
     <a class="policy-toc-item" href="#sec7">제7조 — 관리자 설정</a>
     <div class="policy-toc-divider"></div>
@@ -142,14 +154,14 @@ body{background:#f8fafc;margin:0}
 
     <!-- 커버 -->
     <div class="policy-cover">
-      <div class="policy-cover-label">Admin Policy · v0.4</div>
+      <div class="policy-cover-label">Admin Policy · v0.7</div>
       <div class="policy-cover-title">신규 MVP 어드민 정책서</div>
-      <div class="policy-cover-sub">KAYAK 메타서치 MVP 어드민 기능·권한·운영 정책<br>관련 문서: Phase1 정책서 v0.44</div>
+      <div class="policy-cover-sub">KAYAK 메타서치 MVP 어드민 기능·권한·운영 정책<br>관련 문서: Phase1 정책서 v0.45</div>
       <div class="policy-cover-meta">
-        <div class="policy-cover-meta-item"><strong>버전</strong>v0.4</div>
-        <div class="policy-cover-meta-item"><strong>최종수정</strong>2026-07-30</div>
+        <div class="policy-cover-meta-item"><strong>버전</strong>v0.7</div>
+        <div class="policy-cover-meta-item"><strong>최종수정</strong>2026-08-06</div>
         <div class="policy-cover-meta-item"><strong>작성자</strong>윤성균 PO</div>
-        <div class="policy-cover-meta-item"><strong>미결 사항</strong>제8조 (8개)</div>
+        <div class="policy-cover-meta-item"><strong>미결 사항</strong>제8조 (6건 미결 · 1건 보류)</div>
       </div>
 
       <!-- 변경이력 -->
@@ -162,10 +174,13 @@ body{background:#f8fafc;margin:0}
             <th style="color:rgba(255,255,255,.4);font-weight:600;text-align:left;padding:4px 10px 4px 0;border-bottom:1px solid rgba(255,255,255,.08)">변경 내용</th>
           </tr></thead>
           <tbody>
-            <tr><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.55)">v0.1</td><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.35)">2026-06-22</td><td style="color:rgba(255,255,255,.35)">최초 작성</td></tr>
-            <tr><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.55)">v0.2</td><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.35)">2026-06-30</td><td style="color:rgba(255,255,255,.35)">이메일 검색 → 이름·이메일·회원ID 통합 검색, 멤버십 컬럼 삭제, 이름 미입력 검색 불가 명시, Approved 판단 기준(KAYAK 비공식 확인)</td></tr>
-            <tr><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.55)">v0.3</td><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.35)">2026-07-06</td><td style="color:rgba(255,255,255,.35)">이메일 템플릿 관리 1뎁스 추가(9절 신설), 탈퇴 회원 MVP 포함 확정, NONE/0원 미표시, EST 기준, Approved 판단 기준 KAYAK 공식 확인 완료, CPC 각주, 취소·만료 실데이터 주의사항</td></tr>
-            <tr><td style="padding:4px 10px 4px 0;color:#4f7cff;font-weight:700">v0.4</td><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.35)">2026-07-30</td><td style="color:rgba(255,255,255,.35)">예약내역 MVP 제외(1-2절·5조 삭제), 탈퇴 처리 B안 확정(1-2절·1-3절·4-3절), 어드민 계정 상태 변경·삭제 요청 추가(7-1절), 8조 미결 #4 예약내역→포인트내역 수정</td></tr>
+            <tr><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.35)">v0.1</td><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.25)">2026-06-22</td><td style="color:rgba(255,255,255,.25)">최초 작성</td></tr>
+            <tr><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.35)">v0.2</td><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.25)">2026-06-30</td><td style="color:rgba(255,255,255,.25)">이메일 검색 → 통합 검색, 멤버십 컬럼 삭제, Approved 기준 추가</td></tr>
+            <tr><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.35)">v0.3</td><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.25)">2026-07-06</td><td style="color:rgba(255,255,255,.25)">9절 신설(이메일 템플릿), 탈퇴 MVP 포함, NONE/0원 처리, Approved 기준 확정</td></tr>
+            <tr><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.35)">v0.4</td><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.25)">2026-07-10</td><td style="color:rgba(255,255,255,.25)">캐시백→포인트, 6-2절 상태 정의(자사 배치 기준), 이메일 #4 트리거 변경, #7 다통화 해결</td></tr>
+            <tr><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.35)">v0.5</td><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.25)">2026-07-30</td><td style="color:rgba(255,255,255,.25)">B안 확정 — 항목별 삭제 기준 신설(개인정보처리방침 v0.6), 4-2절 탈퇴 처리 기준 추가, ADM-MEM02 케이스D 재작성</td></tr>
+            <tr><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.35)">v0.6</td><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.25)">2026-08-06</td><td style="color:rgba(255,255,255,.25)">① 5-3절 예약내역 목록 컬럼 재정의(회원ID·투숙기간·예약금액KRW·포인트상태 자사정의·적립완료월) / ② 5-4절 신설 — 예약상세(adm-book02): 블록1~4·포인트 타임라인 / ③ 포인트 상태 자사 정의 확정 / ④ 적립완료일=체크아웃+7일 / ⑤ 소멸예정일=적립완료일+366일 / ⑥ adm-cb01 포인트 내역 화면 폐지 — 예약상세 통합 / ⑦ ADM-MEM02 케이스C 탭명 변경("예약·포인트 내역") / ⑧ 미결 #8 라벨 매핑 개발팀 논의로 전환</td></tr>
+            <tr><td style="padding:4px 10px 4px 0;color:#4f7cff;font-weight:700">v0.7</td><td style="padding:4px 10px 4px 0;color:rgba(255,255,255,.45)">2026-08-06</td><td style="color:rgba(255,255,255,.45)">탈퇴 정책 전면 수정 — 어드민 내 탈퇴 상태 표시·탈퇴 회원 조회 기능 전면 제거 / 4-2절 마케팅수신동의·회원상태 항목 삭제 / 5-3절 예약금액(KRW) 삭제·공급사 이미지 미노출·적립완료월→적립완료일 / 5-4절 블록3 거래기준금액·캐시백타입+율 한 row·적립완료일 / 블록4 체크인·체크아웃 단계 제거 / "적립완료" 용어 전면 반영</td></tr>
           </tbody>
         </table>
       </div>
@@ -185,11 +200,11 @@ body{background:#f8fafc;margin:0}
           <thead><tr><th>#</th><th>1뎁스</th><th>MVP 포함</th><th>비고</th></tr></thead>
           <tbody>
             <tr><td>1</td><td>대시보드</td><td><span class="ok">✅ 낮은 우선순위</span></td><td>핵심 수치 요약. 우선순위 낮음 — 공수 확인 후 결정</td></tr>
-            <tr><td>2</td><td>회원관리</td><td><span class="ok">✅</span></td><td>회원 목록·상세 조회 + 수정. 탈퇴 회원은 즉시 삭제(B안) — 어드민 조회 불가</td></tr>
-            <tr><td>3</td><td>예약내역</td><td><span class="no">❌ MVP 제외</span></td><td>KAYAK Reporting API 예약 데이터 조회 화면 — Phase 2 이후 추가 예정</td></tr>
-            <tr><td>4</td><td>포인트관리</td><td><span class="ok">✅</span></td><td>MVP = 조회 전용. Phase 2 = 상태변경·지급·회수</td></tr>
+            <tr><td>2</td><td>회원관리</td><td><span class="ok">✅</span></td><td>회원 목록·상세 조회 + 수정. 탈퇴 회원 기본 정보 조회 포함 (4-2절 항목별 삭제 기준 참조)</td></tr>
+            <tr><td>3</td><td>예약내역</td><td><span class="ok">✅</span></td><td>KAYAK Reporting API 예약완료 기준. 목록(adm-book01) + 상세(adm-book02) 2단계 구조. 5절 참조.</td></tr>
+            <tr><td>4</td><td>포인트관리</td><td><span class="ok">✅</span></td><td>MVP = 공급사별 현황 조회 전용. 포인트 내역은 예약상세(adm-book02)로 통합. Phase 2 = 상태변경·지급·회수</td></tr>
             <tr><td>5</td><td>어드민 관리자 설정</td><td><span class="ok">✅</span></td><td>마스터 계정 관리. 서브아이디는 Phase 2</td></tr>
-            <tr><td>6</td><td>이메일 템플릿 관리</td><td><span class="ok">✅</span></td><td>발송 템플릿 조회·편집. MVP 5종 + Phase 2 1종. 9절 참조</td></tr>
+            <tr><td>6</td><td>이메일 템플릿 관리</td><td><span class="ok">✅</span></td><td>발송 이메일 텍스트 편집 + 테스트 발송. 9절 참조</td></tr>
           </tbody>
         </table>
       </div>
@@ -199,11 +214,12 @@ body{background:#f8fafc;margin:0}
         <table class="policy-table">
           <thead><tr><th>제외 항목</th><th>Phase 예정</th><th>비고</th></tr></thead>
           <tbody>
-            <tr><td>탈퇴 회원 CS 조회</td><td><span class="no">❌ MVP 제외 (B안)</span></td><td>탈퇴 즉시 식별정보 전부 파기 → 어드민 조회 불가. 이메일+탈퇴일만 30일 보관 후 자동 삭제. 4-3절 참조</td></tr>
-            <tr><td>강제탈퇴 기능</td><td>추후 논의</td><td>CS 정책·개인정보 파기 프로세스 확정 후 추가</td></tr>
             <tr><td>서브 관리자 계정 (권한 설정)</td><td>Phase 2</td><td>권한 체계 별도 논의 필요</td></tr>
             <tr><td>포인트 수동 상태변경·지급·회수</td><td>Phase 2</td><td>1단계 조회 전용 → 2단계 관리 기능</td></tr>
-            <tr><td>공급사 포인트율 설정 UI</td><td>MVP 제외</td><td>KAYAK 양식 제출 방식 (자사 개발 불필요)</td></tr>
+            <tr><td>공급사 캐시백 요율 설정 UI</td><td>MVP 제외</td><td>KAYAK 양식 제출 방식 (자사 개발 불필요)</td></tr>
+            <tr><td>예약 상태 이메일 (대기·확정·취소)</td><td>Phase 2</td><td>자사 상품 도입 시 필요. 아웃링크 구조상 MVP 불가</td></tr>
+            <tr><td>포인트 내역 전용 화면 (adm-cb01)</td><td>폐지</td><td>예약상세(adm-book02) 블록3·4로 기능 통합. 공급사별 현황(adm-cb02)만 유지</td></tr>
+            <tr><td>강제탈퇴 기능</td><td>추후 논의</td><td>CS 정책·개인정보 파기 프로세스 확정 후 추가</td></tr>
           </tbody>
         </table>
       </div>
@@ -238,7 +254,7 @@ body{background:#f8fafc;margin:0}
           </tbody>
         </table>
       </div>
-      <div class="policy-blockquote">Phase 2 예정: 서브 관리자 계정 추가 및 기능별 권한 설정 (예: 캐시백 조회만 가능한 운영팀 계정 등). 권한 체계는 추후 별도 논의 필요.</div>
+      <div class="policy-blockquote">Phase 2 예정: 서브 관리자 계정 추가 및 기능별 권한 설정 (예: 포인트 조회만 가능한 운영팀 계정 등). 권한 체계는 추후 별도 논의 필요.</div>
     </div>
 
     <!-- ═══ 제3조 ═══ -->
@@ -253,7 +269,7 @@ body{background:#f8fafc;margin:0}
           <tbody>
             <tr><td>오늘 클릭 수</td><td>KAYAK Reporting API</td><td>당일 Click 건수</td></tr>
             <tr><td>오늘 예약완료 건수</td><td>KAYAK Reporting API</td><td>당일 Booking 건수</td></tr>
-            <tr><td>오늘 포인트 발생액</td><td>KAYAK Reporting API</td><td><code>cashbackAmountLocalised</code> 합계</td></tr>
+            <tr><td>오늘 포인트 발생액</td><td>자사 DB</td><td>당일 <code>booking_earn</code> 처리 완료 건 합계 (P)</td></tr>
             <tr><td>누적 가입 회원 수</td><td>자사 DB</td><td>전체 회원 수</td></tr>
             <tr><td>이번 달 신규 가입 수</td><td>자사 DB</td><td>당월 가입 건수</td></tr>
           </tbody>
@@ -271,18 +287,16 @@ body{background:#f8fafc;margin:0}
         <table class="policy-table">
           <thead><tr><th>표시 항목</th><th>데이터 출처</th><th>비고</th></tr></thead>
           <tbody>
-            <tr><td>회원ID</td><td>자사 DB</td><td>U-XXXXX 형식</td></tr>
-            <tr><td>이름(영문)</td><td>자사 DB</td><td>미입력 시 <code>—</code> 표시. 이름 미입력 회원은 이름 검색 불가</td></tr>
-            <tr><td>이메일</td><td>자사 DB</td><td>기본 식별자</td></tr>
-            <tr><td>상태</td><td>자사 DB</td><td>활성 / 탈퇴 배지 표시. 멤버십 컬럼 없음</td></tr>
+            <tr><td>회원ID</td><td>자사 DB</td><td>U-XXXXX 형식. 시스템 자동 부여</td></tr>
+            <tr><td>이름(영문)</td><td>자사 DB</td><td>First + Last 합산 표시. 미입력 시 <code>—</code>. KAYAK API 미제공 — 자사 DB 기준</td></tr>
+            <tr><td>이메일</td><td>자사 DB</td><td>인증 기반 식별자. 항상 존재</td></tr>
             <tr><td>가입일</td><td>자사 DB</td><td>YYYY-MM-DD 형식</td></tr>
-            <tr><td>마지막 로그인</td><td>자사 DB</td><td></td></tr>
-            <tr><td>예약 수</td><td>KAYAK + 자사 DB</td><td>지급완료(자사 배치 처리 완료) 기준 집계</td></tr>
+            <tr><td>마지막 로그인</td><td>자사 DB</td><td>미로그인 시 "—"</td></tr>
+            <tr><td>예약수</td><td>자사 DB</td><td>자사 포인트 <code>booking_earn</code> 처리 완료 건 기준. 비로그인 미귀속 건 제외. 취소·적립예정 미포함</td></tr>
           </tbody>
         </table>
       </div>
-      <p class="policy-p"><strong>검색:</strong> 이름(영문)·이메일·회원ID 동시 검색. 이름 미입력 회원은 이메일·회원ID로만 검색 가능<br>
-      <strong>기본 표시:</strong> 활성 회원만. 탈퇴 회원은 즉시 삭제(B안) — 어드민 조회 불가<br>
+      <p class="policy-p"><strong>검색·필터:</strong> 이름(영문)·이메일·회원ID 동시 검색. 단, 이름 미입력 회원은 이름 검색 불가 — 이메일·회원ID로만 조회 가능. 가입기간 필터: 날짜 범위 입력.<br>
       <strong>정렬 기본값:</strong> 가입일 최신순</p>
 
       <div id="sec4-2" class="policy-h3">4-2. 회원 상세 조회 및 수정</div>
@@ -291,30 +305,150 @@ body{background:#f8fafc;margin:0}
           <thead><tr><th>항목</th><th>수정 가능 여부</th><th>비고</th></tr></thead>
           <tbody>
             <tr><td>이메일</td><td><span class="no">❌ 읽기전용</span></td><td>인증 기반 식별자 — 변경 불가</td></tr>
-            <tr><td>이름 (영문)</td><td><span class="ok">✅</span></td><td></td></tr>
-            <tr><td>성 (영문)</td><td><span class="ok">✅</span></td><td></td></tr>
+            <tr><td>이름 (영문)</td><td><span class="ok">✅</span></td><td>영문만 허용. 선택 항목</td></tr>
+            <tr><td>성 (영문)</td><td><span class="ok">✅</span></td><td>영문만 허용. 선택 항목</td></tr>
             <tr><td>국적</td><td><span class="ok">✅</span></td><td>국가 코드 목록 선택</td></tr>
             <tr><td>전화번호</td><td><span class="ok">✅</span></td><td>국가코드 + 번호</td></tr>
-            <tr><td>마케팅 수신 동의</td><td class="no">미수집</td><td>화면 미노출 — MVP에서 수집하지 않음</td></tr>
             <tr><td>가입일</td><td><span class="no">❌ 읽기전용</span></td><td></td></tr>
           </tbody>
         </table>
       </div>
       <p class="policy-p"><strong>수정 정책:</strong> 관리자가 직접 수정 가능 (CS 대응 목적). 수정 시 변경 일시 기록 (로그 저장)</p>
 
-      <div id="sec4-3" class="policy-h3">4-3. 탈퇴 회원 처리 — B안 (즉시 삭제)</div>
+      <div id="sec4-3" class="policy-h3">4-3. 회원별 예약내역 탭 (연동)</div>
+      <p class="policy-p">
+        <strong>위치:</strong> 회원 상세 화면 내 <code>[예약·포인트 내역]</code> 탭 (v0.6 탭명 변경)<br>
+        <strong>내용:</strong> 해당 회원의 KAYAK Reporting API 예약완료 내역. 표시 항목은 5-3절(예약내역 목록) 컬럼과 동일<br>
+        <strong>진입:</strong> 목록 행 클릭 → 예약상세(5-4절, adm-book02.html)로 이동<br>
+        <strong>연동 방식:</strong> <code>p=</code> 파라미터로 삽입한 회원 식별자(<code>labels</code> 필터링) 기반 조회
+      </p>
+      <div class="policy-blockquote">⚠️ 예약자명·투숙자명 표시 불가: KAYAK Reporting API 응답 필드에 예약자명·투숙자명이 존재하지 않음. 아웃링크를 통해 타 OTA에서 예약 완료된 투숙자 정보는 해당 OTA가 보유하며 자사로 전달되지 않음. 회원 식별은 회원ID 기준으로만 가능.</div>
+    </div>
+
+    <!-- ═══ 제5조 ═══ -->
+    <div id="sec5" class="policy-section">
+      <div class="policy-h2">제5조 <span class="policy-h2-badge" style="background:#0369a1">예약내역</span></div>
+
+      <div id="sec5-1" class="policy-h3">5-1. 개요</div>
       <div class="policy-table-wrap">
         <table class="policy-table">
-          <thead><tr><th>항목</th><th>탈퇴 후 정책</th></tr></thead>
+          <thead><tr><th>항목</th><th>내용</th></tr></thead>
           <tbody>
-            <tr><td>회원 데이터 파기</td><td>탈퇴 요청 즉시 이름·전화번호·국적 등 식별정보 전부 삭제</td></tr>
-            <tr><td>이메일 보관</td><td>파기 후 탈퇴 이력(이메일 + 탈퇴일)만 30일 보관 → 자동 삭제 (재가입 방지·최소 이력)</td></tr>
-            <tr><td>어드민 조회</td><td>탈퇴 완료 즉시 목록에서 제거 — 어드민에서 탈퇴 회원 조회 불가</td></tr>
-            <tr><td>포인트·예약 이력</td><td>회원 귀속 해제 — KAYAK 보고서 내 트랜잭션 데이터는 KAYAK 측 보관</td></tr>
-            <tr><td>강제탈퇴 (어드민)</td><td>MVP 제외 — Phase 2 논의 예정</td></tr>
+            <tr><td>데이터 출처</td><td>KAYAK Reporting API (<code>/api/transactions/leads/Hotel</code>)</td></tr>
+            <tr><td>표시 기준</td><td><code>TransactionType = Booking</code> (예약완료)만 표시. Click 제외</td></tr>
+            <tr><td>화면 구조</td><td>목록(adm-book01) + 상세(adm-book02) 2단계 구조</td></tr>
           </tbody>
         </table>
       </div>
+
+      <div id="sec5-2" class="policy-h3">5-2. 포인트 상태 자사 정의</div>
+      <p class="policy-p">KAYAK <code>TransactionStatus</code> 원본값을 자사 용어로 변환하여 표시한다.</p>
+      <div class="policy-table-wrap">
+        <table class="policy-table">
+          <thead><tr><th>자사 표시 상태</th><th>KAYAK TransactionStatus</th><th>판단 기준</th><th>비고</th></tr></thead>
+          <tbody>
+            <tr><td><code>적립예정</code></td><td>Active</td><td>체크아웃+7일 미도래 또는 KAYAK 미확정</td><td></td></tr>
+            <tr><td><code>적립완료</code></td><td>—</td><td>자사 배치 선적립 처리 완료 (체크아웃+7일 배치 실행). 자사 DB <code>event_type = booking_earn</code></td><td>KAYAK TransactionStatus와 무관 — 자사 배치 완료 기준</td></tr>
+            <tr><td><code>취소·만료</code></td><td>Cancelled</td><td>KAYAK Cancelled 감지 후 자사 처리 완료</td><td>PERCENTAGE여도 금액 0인 경우 있음 (2026-07-06 실데이터 확인)</td></tr>
+            <tr><td><code>사용완료</code></td><td>—</td><td>Phase 2 포인트 사용 처리 완료</td><td>Phase 2 예정</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="policy-blockquote">
+        <strong>적립완료일 정의:</strong> 체크아웃+7일 (자사 배치 실행일). KAYAK PaymentMonth와 무관하게 자사 배치 처리 완료 시점 기준.<br>
+        <strong>소멸예정일 정의:</strong> 적립완료일 + 366일 (포인트_정책서_v0.1 기준). 적립완료 건에만 표시.
+      </div>
+
+      <div id="sec5-3" class="policy-h3">5-3. 예약내역 목록 (adm-book01.html)</div>
+      <p class="policy-p"><strong>표시 컬럼:</strong></p>
+      <div class="policy-table-wrap">
+        <table class="policy-table">
+          <thead><tr><th>컬럼명</th><th>API 필드 / 출처</th><th>비고</th></tr></thead>
+          <tbody>
+            <tr><td>회원ID</td><td>자사 DB (회원 매핑)</td><td>비회원이면 빈값. KAYAK Label 필드와의 매핑 방식은 개발팀 논의 예정</td></tr>
+            <tr><td>예약번호</td><td><code>BookingID</code></td><td></td></tr>
+            <tr><td>예약일</td><td><code>BookingDate</code></td><td></td></tr>
+            <tr><td>호텔명</td><td><code>HotelName</code></td><td>빈값 가능 → "—" 표시</td></tr>
+            <tr><td>투숙기간</td><td><code>BookingStartDate ~ BookingEndDate</code></td><td>체크인~체크아웃 하나로 합쳐 표시 (예: 09.15 ~ 09.16)</td></tr>
+            <tr><td>공급사(OTA)</td><td><code>ProviderCode</code></td><td>공급사 이름 텍스트만 표시. 로고 이미지 없음</td></tr>
+            <tr><td>포인트(P)</td><td><code>CashbackAmountLocalised</code></td><td>KRW 기준. KAYAK 환산 완료값. "—" = NONE 건</td></tr>
+            <tr><td>타입</td><td><code>CashbackType</code></td><td>PERCENTAGE / FLAT / — (NONE 또는 null)</td></tr>
+            <tr><td>포인트 상태</td><td>자사 정의 (5-2절)</td><td>적립예정 / 적립완료 / 취소·만료</td></tr>
+            <tr><td>적립완료일</td><td>자사 DB</td><td>체크아웃+7일 계산. YYYY-MM-DD. 적립예정: 예정일 표시 / 취소·만료: "—"</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="policy-p"><strong>검색·필터:</strong> 기간 필터(예약일 또는 체크인 기준 선택) / 공급사 필터(<code>ProviderCode</code>) / 회원 이메일 검색 / 예약번호 검색(<code>BookingID</code>) / 포인트 상태 필터<br>
+      <strong>정렬:</strong> 예약일 최신순 (기본)</p>
+
+      <div id="sec5-4" class="policy-h3">5-4. 예약상세 (adm-book02.html)</div>
+      <p class="policy-p">목록에서 행 클릭 시 별도 전체 화면으로 이동하는 예약 상세 페이지.</p>
+
+      <p class="policy-p"><strong>블록1 — 예약 기본 정보</strong></p>
+      <div class="policy-table-wrap">
+        <table class="policy-table">
+          <thead><tr><th>항목</th><th>API 필드 / 출처</th><th>비고</th></tr></thead>
+          <tbody>
+            <tr><td>예약번호</td><td><code>BookingID</code></td><td></td></tr>
+            <tr><td>예약일</td><td><code>BookingDate</code></td><td></td></tr>
+            <tr><td>회원ID</td><td>자사 DB (회원 매핑)</td><td>비회원이면 빈값</td></tr>
+            <tr><td>접속 기기</td><td><code>DeviceCategory</code></td><td>Desktop / Mobile</td></tr>
+            <tr><td>접속 국가</td><td><code>ClientCountryCode</code></td><td></td></tr>
+            <tr><td>언어</td><td><code>LanguageCode</code></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="policy-p" style="margin-top:12px"><strong>블록2 — 숙박 정보</strong></p>
+      <div class="policy-table-wrap">
+        <table class="policy-table">
+          <thead><tr><th>항목</th><th>API 필드 / 출처</th><th>비고</th></tr></thead>
+          <tbody>
+            <tr><td>호텔명</td><td><code>HotelName</code></td><td>빈값 가능 → "—" 표시</td></tr>
+            <tr><td>도시</td><td><code>HotelCity</code></td><td>빈값 가능 → "—" 표시</td></tr>
+            <tr><td>국가</td><td><code>HotelCountry</code></td><td>빈값 가능 → "—" 표시</td></tr>
+            <tr><td>투숙기간</td><td><code>BookingStartDate ~ BookingEndDate</code></td><td>체크인~체크아웃</td></tr>
+            <tr><td>박수</td><td>자사 계산</td><td>체크아웃 - 체크인 일수</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="policy-p" style="margin-top:12px"><strong>블록3 — 거래기준금액 &amp; 포인트 정보</strong></p>
+      <div class="policy-table-wrap">
+        <table class="policy-table">
+          <thead><tr><th>항목</th><th>API 필드 / 출처</th><th>비고</th></tr></thead>
+          <tbody>
+            <tr><td>거래기준금액(USD)</td><td><code>BookingValue</code></td><td>KAYAK API 원시값. 정산 기준. Cancelled 건은 0 → "—" 표시</td></tr>
+            <tr><td>거래기준금액(KRW)</td><td><code>LocalisedBookingValue</code></td><td>KRW 환산값</td></tr>
+            <tr><td>캐시백 타입 / 율</td><td><code>CashbackType</code> / <code>CashbackValue</code></td><td>한 행에 함께 표시. 예: PERCENTAGE · 3%</td></tr>
+            <tr><td>캐시백(USD)</td><td><code>CashbackAmount</code></td><td>KAYAK API 원시값. 정산 대사용</td></tr>
+            <tr><td>포인트지급액(P)</td><td><code>CashbackAmountLocalised</code></td><td>KRW 기준. 소수점 이하 버림. NONE/null이면 "—"</td></tr>
+            <tr><td>포인트 상태</td><td>자사 정의 (5-2절)</td><td>적립예정 / 적립완료 / 취소·만료</td></tr>
+            <tr><td>적립완료일</td><td>자사 DB</td><td>체크아웃+7일 계산. YYYY-MM-DD. 적립완료 건만 실제일 표시. 취소·만료: "—"</td></tr>
+            <tr><td>소멸예정일</td><td>자사 계산</td><td>적립완료일 + 366일. <strong>적립완료 건에만 표시</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="policy-p" style="margin-top:12px"><strong>블록4 — 포인트 상태 타임라인</strong></p>
+      <p class="policy-p">포인트 상태 변화만 표시. 체크인·체크아웃은 블록2(숙박 정보)에서 확인.</p>
+      <div class="policy-table-wrap">
+        <table class="policy-table">
+          <thead><tr><th>단계</th><th>날짜/기준</th><th>상태 조건</th></tr></thead>
+          <tbody>
+            <tr><td>예약완료</td><td><code>BookingDate</code></td><td>항상 표시</td></tr>
+            <tr><td>적립완료일(예정)</td><td>체크아웃+7일 (자사 배치 기준)</td><td>항상 표시 (미도래이면 예정일로 표시)</td></tr>
+            <tr><td>포인트 적립완료</td><td>자사 배치 완료 시점</td><td>적립완료 건만 표시</td></tr>
+            <tr><td>소멸예정일</td><td>적립완료일+366일</td><td>적립완료 건에만 표시</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="policy-blockquote">타임라인 이전 상태 표기: 현재 상태 기준으로 단계를 표시. 예: Cancelled 건이면 체크아웃까지 완료, 이후 단계는 취소·만료 배지로 표시.</div>
+
+      <div class="policy-h3">5-5. 데이터 내보내기 (Excel)</div>
+      <p class="policy-p"><strong>기능:</strong> 조회된 예약내역 Excel 파일로 다운로드<br>
+      <strong>포함 항목:</strong> 5-3절 전체 컬럼<br>
+      <strong>MVP 포함 여부:</strong> 개발 공수 확인 후 결정 → 공수 크면 Phase 2 이관 (8조 미결 4)</p>
     </div>
 
     <!-- ═══ 제6조 ═══ -->
@@ -322,76 +456,66 @@ body{background:#f8fafc;margin:0}
       <div class="policy-h2">제6조 <span class="policy-h2-badge" style="background:#f59e0b">포인트 관리</span></div>
 
       <div id="sec6-1" class="policy-h3">6-1. MVP 운영 방침</div>
-      <p class="policy-p"><strong>MVP(1단계)는 조회 전용으로 운영한다. 수동 조정·지급·회수 기능은 Phase 2에 추가한다.</strong></p>
+      <p class="policy-p"><strong>MVP(1단계)는 공급사별 현황 조회 전용으로 운영한다. 포인트 내역 상세는 예약상세(adm-book02)에 통합하며, 별도 포인트 내역 전용 화면(adm-cb01)은 폐지한다. 수동 조정·지급·회수 기능은 Phase 2에 추가한다.</strong></p>
       <div class="policy-table-wrap">
         <table class="policy-table">
           <thead><tr><th>구분</th><th>MVP (1단계)</th><th>Phase 2 (2단계)</th></tr></thead>
           <tbody>
-            <tr><td>전체 내역 조회</td><td><span class="ok">✅</span></td><td><span class="ok">✅</span></td></tr>
-            <tr><td>회원별 조회</td><td><span class="ok">✅</span></td><td><span class="ok">✅</span></td></tr>
-            <tr><td>상태별 필터</td><td><span class="ok">✅</span></td><td><span class="ok">✅</span></td></tr>
-            <tr><td>공급사별 현황</td><td><span class="ok">✅</span></td><td><span class="ok">✅</span></td></tr>
-            <tr><td>수동 상태변경</td><td><span class="no">❌</span></td><td>✅ (공급사별 수동 또는 자동 처리)</td></tr>
+            <tr><td>예약상세 내 포인트 조회</td><td><span class="ok">✅ (adm-book02 블록3·4)</span></td><td><span class="ok">✅</span></td></tr>
+            <tr><td>공급사별 현황</td><td><span class="ok">✅ (adm-cb02)</span></td><td><span class="ok">✅</span></td></tr>
+            <tr><td>포인트 내역 전용 화면</td><td><span class="no">❌ 폐지 (adm-cb01)</span></td><td>—</td></tr>
+            <tr><td>수동 상태변경</td><td><span class="no">❌</span></td><td><span class="ok">✅</span></td></tr>
             <tr><td>포인트 지급</td><td><span class="no">❌</span></td><td><span class="ok">✅</span></td></tr>
             <tr><td>포인트 취소·회수</td><td><span class="no">❌</span></td><td><span class="ok">✅</span></td></tr>
-            <tr><td>Excel 다운로드</td><td><span class="no">❌ 미정의</span></td><td>—</td></tr>
+            <tr><td>Excel 다운로드</td><td><span class="no">개발 공수 확인 후 결정</span></td><td><span class="ok">✅</span></td></tr>
           </tbody>
         </table>
       </div>
 
-      <div id="sec6-2" class="policy-h3">6-2. 포인트 내역 조회 (v0.3 업데이트)</div>
-      <p class="policy-p"><strong>데이터 출처:</strong> KAYAK Reporting API <code>cashbackAmountLocalised</code></p>
-      <div class="policy-table-wrap">
-        <table class="policy-table">
-          <thead><tr><th>항목</th><th>API 필드</th><th>비고</th></tr></thead>
-          <tbody>
-            <tr><td>회원 식별자</td><td><code>Label</code></td><td>p= 파라미터 삽입값 (회원ID)</td></tr>
-            <tr><td>예약일</td><td><code>BookingDate</code></td><td></td></tr>
-            <tr><td>체크인/체크아웃</td><td><code>BookingStartDate / End</code></td><td></td></tr>
-            <tr><td>호텔명</td><td><code>HotelName</code></td><td></td></tr>
-            <tr><td>예약 OTA</td><td><code>ProviderCode</code></td><td></td></tr>
-            <tr><td>포인트 유형</td><td><code>CashbackType</code></td><td>PERCENTAGE / FLAT / null (미설정)</td></tr>
-            <tr><td>포인트 금액</td><td><code>CashbackAmountLocalised</code></td><td>KAYAK 환율 환산 완료 후 반환. 단위: P</td></tr>
-            <tr><td>적립월</td><td><code>PaymentMonth</code></td><td>EST(미국 동부 시간) 기준. 한국 시간과 최대 13~14시간 차이</td></tr>
-            <tr><td>상태 배지</td><td>내부 정의</td><td><code>적립예정</code> / <code>지급완료</code> / <code>취소·만료</code></td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="policy-p"><strong>지급완료 판단 기준 (포인트_정책서 v0.1 2-1절 확정):</strong><br>
-      자사 내부 기준 — 체크아웃일로부터 <strong>7일</strong> 경과 후 자동으로 지급완료 전환 (자사 배치 처리). KAYAK <code>PaymentMonth</code> 단독 기준이 아님.<br>
-      <code>TransactionStatus = Active</code> AND 자사 체크아웃+7일 조건 충족 시 지급완료 처리.</p>
-      <p class="policy-p"><strong>Cancelled(취소·만료) 주의사항 (2026-07-06 실데이터 확인):</strong><br>
-      <code>TransactionStatus = Cancelled</code>. PERCENTAGE 타입이어도 포인트 금액 0원인 실데이터 케이스 존재. 타입만으로 금액 유추 불가.</p>
-      <p class="policy-p"><strong>null/0원 건 미표시:</strong><br>
-      <code>CashbackType이 null</code>(미설정) 또는 포인트 금액 0원인 건은 포인트 내역 화면에 표시하지 않음. MVP에서 별도 조회 화면 없음 — Phase 2 예약내역 화면 추가 시 조회 가능.</p>
+      <div id="sec6-2" class="policy-h3">6-2. 포인트 내역 조회 (adm-book02 통합)</div>
+      <p class="policy-p">포인트 상세 정보는 예약상세(adm-book02) 블록3·4에서 확인한다. 5-2절 포인트 상태 자사 정의 및 5-4절 블록3·4 참조.</p>
+      <p class="policy-p"><strong>표시 대상:</strong></p>
+      <ul style="font-size:13px;color:#374151;line-height:1.75;margin:0 0 10px;padding-left:20px">
+        <li><code>CashbackType = PERCENTAGE</code> 또는 <code>FLAT</code> 건: 포인트 지급액(P) 표시</li>
+        <li><code>CashbackType = NONE</code> 및 포인트 금액 0원 건: 포인트 컬럼 <code>—</code> 표시. <strong>예약 행은 유지 (B안 확정)</strong></li>
+      </ul>
+      <div class="policy-blockquote">⚠️ Cancelled(취소·만료) 주의사항 (2026-07-06 실데이터 확인): <code>TransactionStatus = Cancelled</code>이어도 PERCENTAGE 타입인데 포인트 금액 0원인 케이스 존재. 타입만으로 금액 유추 불가.</div>
 
-      <div class="policy-h3">6-3. 필터·검색</div>
-      <p class="policy-p">기간 필터 (예약일 / 적립월 기준 선택) / 상태 필터 (적립예정 / 지급완료 / 취소·만료) / 공급사 필터 (<code>ProviderCode</code>) / 회원 이메일 검색</p>
-
-      <div id="sec6-4" class="policy-h3">6-4. 공급사별 포인트 현황</div>
+      <div id="sec6-3" class="policy-h3">6-3. 공급사별 포인트 현황 (adm-cb02)</div>
       <p class="policy-p">공급사 코드별 포인트 발생 건수·합계 금액 집계. 기간 필터 적용 가능.</p>
-      <div class="policy-blockquote">⚠️ CPC 예외 공급사: 일부 공급사는 CPA(예약 완료 시 수수료) 대신 CPC(클릭 시 수수료) 모델로 운영됨. CPC 건은 TransactionType=Click으로 분류되어 포인트 내역 집계에 포함되지 않음. 공급사별 수익 분석 시 이 점 고려 필요.</div>
+      <div class="policy-blockquote">⚠️ CPC 예외 공급사: 일부 공급사는 CPA 대신 CPC(클릭 시 수수료) 모델로 운영됨. CPC 건은 TransactionType=Click으로 분류되어 포인트 내역 집계에 포함되지 않음. 해당 공급사라도 포인트 지급 내역이 1건 이상 존재하면 공급사별 현황에 계속 표시.</div>
     </div>
 
     <!-- ═══ 제7조 ═══ -->
     <div id="sec7" class="policy-section">
       <div class="policy-h2">제7조 <span class="policy-h2-badge" style="background:#8b5cf6">어드민 관리자 설정</span></div>
 
-      <div class="policy-h3">7-1. 마스터 계정 관리</div>
+      <div class="policy-h3">7-1. 화면 구조 (SET01 + SET02)</div>
+      <div class="policy-blockquote" style="background:#f5f3ff;border-color:#a78bfa;color:#4c1d95;font-family:monospace;font-size:12px;white-space:pre-wrap">ADM-SET01  관리자 계정 목록
+  └ MVP: 마스터 계정 1행만 존재
+  └ Phase 2: 서브계정 추가 시 행 추가 방식으로 확장 (화면 구조 변경 없음)
+
+ADM-SET02  관리자 계정 상세·수정
+  └ 계정 상태 카드 (마지막 로그인·비밀번호 최종 변경·세션·총 로그인 횟수)
+  └ 비밀번호 변경 폼
+  └ Phase 2: 서브계정 권한 변경·활성화 등</div>
+
+      <div class="policy-h3">7-2. 마스터 계정 관리</div>
       <div class="policy-table-wrap">
         <table class="policy-table">
           <thead><tr><th>기능</th><th>MVP</th><th>비고</th></tr></thead>
           <tbody>
-            <tr><td>계정 정보 조회</td><td><span class="ok">✅</span></td><td>마지막 로그인·현재 세션 포함. 이메일·등록일 표시</td></tr>
-            <tr><td>비밀번호 변경</td><td><span class="ok">✅</span></td><td>현재 비밀번호 확인 후 변경</td></tr>
-            <tr><td>상태 변경 (활성/비활성)</td><td><span class="ok">✅</span></td><td>셀렉트 박스 선택. 비활성 시 로그인 즉시 차단</td></tr>
-            <tr><td>계정 삭제</td><td><span class="ok">✅</span></td><td>화면 내 직접 삭제 로직 없음. 백엔드 API 요청 방식으로 처리</td></tr>
+            <tr><td>계정 목록 조회</td><td><span class="ok">✅</span></td><td>SET01 목록 화면</td></tr>
+            <tr><td>계정 상세 조회·수정</td><td><span class="ok">✅</span></td><td>SET02 상세 화면</td></tr>
+            <tr><td>비밀번호 변경</td><td><span class="ok">✅</span></td><td>현재 비밀번호 검증 후 변경. 영문+숫자+특수문자 8자 이상</td></tr>
+            <tr><td>계정 비밀번호 초기화</td><td><span class="ok">✅</span></td><td>임시 비밀번호 발급</td></tr>
+            <tr><td>계정 비활성화</td><td><span class="ok">✅</span></td><td>삭제 대신 비활성 처리</td></tr>
             <tr><td>아이디 변경</td><td><span class="no">❌</span></td><td>초기 발급 후 고정</td></tr>
           </tbody>
         </table>
       </div>
 
-      <div class="policy-h3">7-2. 서브 관리자 (Phase 2 예정)</div>
+      <div class="policy-h3">7-3. 서브 관리자 (Phase 2 예정)</div>
       <p class="policy-p">서브 관리자 계정 추가 및 기능별 권한 설정은 Phase 2에서 논의·개발한다.<br>
       권한 체계(역할 정의·기능 단위 접근 제어)는 운영팀·개발팀 협의 후 별도 정책서로 정의 예정.</p>
     </div>
@@ -408,14 +532,16 @@ body{background:#f8fafc;margin:0}
         </div>
         <div class="unresolved-owner"><strong>담당</strong>PO + 개발팀</div>
       </div>
+
       <div class="unresolved-item" style="opacity:0.55;border-style:dashed">
         <div class="unresolved-num" style="color:#059669">✅</div>
         <div>
-          <div class="unresolved-content-title" style="color:#059669">[해결] 포인트 지급완료 판단 기준</div>
-          <div class="unresolved-content-desc">포인트_정책서 v0.1 확정: 자사 내부 기준(체크아웃+7일 경과 후 자동 전환)으로 확정. KAYAK <code>PaymentMonth</code> 단독 기준 아님. 6-2절 반영.</div>
+          <div class="unresolved-content-title" style="color:#059669">[해결 v0.3] 포인트 적립완료 판단 기준</div>
+          <div class="unresolved-content-desc">포인트_정책서 v0.1 확정: 자사 내부 기준(체크아웃+7일 경과 후 자동 전환)으로 확정. KAYAK <code>PaymentMonth</code> 단독 기준 아님. 5-2절 반영.</div>
         </div>
         <div class="unresolved-owner"><strong>해결일</strong>2026-06-23</div>
       </div>
+
       <div class="unresolved-item">
         <div class="unresolved-num">#3</div>
         <div>
@@ -424,14 +550,25 @@ body{background:#f8fafc;margin:0}
         </div>
         <div class="unresolved-owner"><strong>담당</strong>PO + 개발팀</div>
       </div>
+
+      <div class="unresolved-item">
+        <div class="unresolved-num">#4</div>
+        <div>
+          <div class="unresolved-content-title">Excel 다운로드 MVP 포함 여부</div>
+          <div class="unresolved-content-desc">예약내역·공급사별 현황 다운로드 공수 확인 후 결정. 공수 크면 Phase 2 이관.</div>
+        </div>
+        <div class="unresolved-owner"><strong>담당</strong>PO + 개발팀</div>
+      </div>
+
       <div class="unresolved-item" style="opacity:0.55;border-style:dashed">
         <div class="unresolved-num" style="color:#059669">✅</div>
         <div>
-          <div class="unresolved-content-title" style="color:#059669">[변경] 탈퇴 회원 처리 — B안 (즉시 삭제) 확정</div>
-          <div class="unresolved-content-desc">탈퇴 요청 즉시 식별정보 전부 파기. 이메일+탈퇴일만 30일 보관 후 자동 삭제. 어드민 조회 불가. 4-3절 반영. (2026-07-30 변경)</div>
+          <div class="unresolved-content-title" style="color:#059669">[해결 v0.7] 탈퇴 회원 처리</div>
+          <div class="unresolved-content-desc">탈퇴 시 즉시 전체 데이터 삭제. 어드민 내 탈퇴 상태 표시·탈퇴 회원 조회 기능 없음. Phase 1 정책서 8-11절 참조.</div>
         </div>
-        <div class="unresolved-owner"><strong>해결일</strong>2026-07-30</div>
+        <div class="unresolved-owner"><strong>해결일</strong>2026-08-06</div>
       </div>
+
       <div class="unresolved-item">
         <div class="unresolved-num">#6</div>
         <div>
@@ -440,30 +577,34 @@ body{background:#f8fafc;margin:0}
         </div>
         <div class="unresolved-owner"><strong>담당</strong>PO + 운영팀</div>
       </div>
-      <div class="unresolved-item">
-        <div class="unresolved-num">#7</div>
+
+      <div class="unresolved-item" style="opacity:0.55;border-style:dashed">
+        <div class="unresolved-num" style="color:#059669">✅</div>
         <div>
-          <div class="unresolved-content-title">다통화 설정</div>
-          <div class="unresolved-content-desc"><code>localisedCurrencyCode</code> 계정 통화 설정 방식 KAYAK 확인 대기</div>
+          <div class="unresolved-content-title" style="color:#059669">[해결 v0.4] 다중 통화 포인트 집계 표시</div>
+          <div class="unresolved-content-desc">포인트는 KRW 단일 통화로 확정. <code>localisedCurrencyCode = KRW</code> 고정. 다중 통화 이슈 소멸.</div>
+        </div>
+        <div class="unresolved-owner"><strong>해결일</strong>2026-07-10</div>
+      </div>
+
+      <div class="unresolved-item-pending">
+        <div class="unresolved-num" style="color:#b45309">⏸</div>
+        <div>
+          <div class="unresolved-content-title" style="color:#92400e">[개발팀 논의] 라벨(Label)↔회원ID 매핑 방식</div>
+          <div class="unresolved-content-desc">KAYAK Reporting API <code>Label</code> 필드(UUID 외 긴 문자열 혼재 케이스 실데이터 확인)와 자사 회원ID 연결 방식 — 개발팀 논의 후 결정. 매핑 확정 전까지 회원ID 컬럼 빈값 처리.</div>
         </div>
         <div class="unresolved-owner"><strong>담당</strong>기술연구소</div>
       </div>
-      <div class="unresolved-item">
-        <div class="unresolved-num">#8</div>
-        <div>
-          <div class="unresolved-content-title">예약 ID 라벨 형식 다양성</div>
-          <div class="unresolved-content-desc">KAYAK Reporting API <code>Label</code> 필드가 UUID 외 긴 문자열 혼재 케이스 실데이터에서 확인. 회원 식별자 매핑 로직에서 형식 다양성 대응 필요. 개발팀 확인 필요.</div>
-        </div>
-        <div class="unresolved-owner"><strong>담당</strong>기술연구소</div>
-      </div>
+
       <div class="unresolved-item">
         <div class="unresolved-num">#9</div>
         <div>
           <div class="unresolved-content-title">KAYAK 정산 상태 어드민 표시 방식</div>
-          <div class="unresolved-content-desc">자사 포인트 상태(적립예정/지급완료/취소·만료) 외에 KAYAK <code>TransactionStatus</code>(Active/Cancelled)를 어드민 포인트 내역(ADM-CB01)에 별도 표시할지 결정 필요. 표시 방식: 컬럼 추가 vs 툴팁 vs 상세 팝업. 고객 화면(MY02)에는 미적용 — 어드민 전용. 개발팀 확인 필요.</div>
+          <div class="unresolved-content-desc">자사 포인트 상태(적립예정/적립완료/취소·만료) 외에 KAYAK <code>TransactionStatus</code>(Active/Cancelled)를 어드민 예약내역에서 별도 표시할지 결정 필요. 표시 방식: 컬럼 추가 vs 툴팁 vs 상세 팝업. 고객 화면(MY02)에는 미적용 — 어드민 전용.</div>
         </div>
         <div class="unresolved-owner"><strong>담당</strong>PO + 기술연구소</div>
       </div>
+
       <div class="unresolved-item">
         <div class="unresolved-num">#10</div>
         <div>
@@ -482,46 +623,47 @@ body{background:#f8fafc;margin:0}
       <p class="policy-p">관리자가 서비스 발송 이메일 본문을 어드민에서 직접 편집할 수 있도록 템플릿 관리 기능을 제공한다.</p>
       <div class="policy-table-wrap">
         <table class="policy-table">
-          <thead><tr><th>#</th><th>템플릿명</th><th>발송 트리거</th><th>MVP</th></tr></thead>
+          <thead><tr><th>#</th><th>템플릿명</th><th>발송 트리거</th><th>주요 변수</th><th>Phase</th></tr></thead>
           <tbody>
-            <tr><td>1</td><td>이메일 인증코드</td><td>회원가입·로그인 시 인증코드 입력 요청</td><td><span class="ok">✅</span></td></tr>
-            <tr><td>2</td><td>환영 이메일</td><td>신규 회원가입 완료 직후 자동 발송</td><td><span class="ok">✅</span></td></tr>
-            <tr><td>3</td><td>포인트 적립예정 안내</td><td>아웃링크 통한 예약완료 후 (Active 상태)</td><td><span class="ok">✅</span></td></tr>
-            <tr><td>4</td><td>포인트 지급완료 안내</td><td>Approved 확정 후 자동 발송 (자사 내부 기준)</td><td><span class="ok">✅</span></td></tr>
-            <tr><td>5</td><td>포인트 취소·만료 안내</td><td>Cancelled 상태 전환 시 자동 발송</td><td><span class="ok">✅</span></td></tr>
-            <tr><td>6</td><td>예약 상태 알림</td><td>자사 직접 예약 시 예약확정·취소 알림</td><td><span class="no">❌ Phase 2</span></td></tr>
+            <tr><td>1</td><td>이메일 인증코드</td><td>로그인·회원가입 시 [인증코드 받기] 탭</td><td><code>{인증코드}</code> · <code>{유효시간(5분)}</code></td><td><span class="ok">✅</span></td></tr>
+            <tr><td>2</td><td>회원가입 환영</td><td>신규 회원 약관 동의 + 가입 완료 시</td><td><code>{서비스명}</code> · <code>{포인트 혜택 안내}</code></td><td><span class="ok">✅</span></td></tr>
+            <tr><td>3</td><td>포인트 적립예정 안내</td><td>KAYAK Reporting API 폴링 시 신규 예약 건(Active) 첫 감지</td><td><code>{호텔명}</code> · <code>{체크인}</code> · <code>{체크아웃}</code> · <code>{적립완료일}</code></td><td><span class="ok">✅</span></td></tr>
+            <tr><td>4</td><td>포인트 적립완료 안내</td><td>자사 배치 선적립 처리 완료 시 (체크아웃+7일 배치 실행)</td><td><code>{포인트금액}</code> · <code>{적립일}</code></td><td><span class="ok">✅</span></td></tr>
+            <tr><td>5</td><td>포인트 취소·만료 안내</td><td>KAYAK API 폴링 시 Cancelled 상태 전환 감지</td><td><code>{호텔명}</code> · <code>{취소 사유 안내}</code></td><td><span class="ok">✅</span></td></tr>
+            <tr><td>6</td><td>예약 상태 알림</td><td>자사 직접 예약 시 예약확정·취소 알림</td><td>(Phase 2 설계)</td><td><span class="no">❌ Phase 2</span></td></tr>
           </tbody>
         </table>
       </div>
+      <div class="policy-blockquote">⚠️ 포인트 이메일 발송 시차: KAYAK Reporting API는 실시간 webhook 미제공. 폴링 주기만큼 발송 지연 발생 가능 — 서비스 정책으로 허용.</div>
 
-      <div id="sec9-2" class="policy-h3">9-2. 편집 화면 정책 (A안 — 자체 반응형)</div>
-      <p class="policy-p"><strong>A안(확정):</strong> 편집 화면 자체를 반응형으로 제작. 모바일에서도 어드민 접속 시 편집 가능.</p>
-      <div class="policy-table-wrap">
-        <table class="policy-table">
-          <thead><tr><th>편집 항목</th><th>비고</th></tr></thead>
-          <tbody>
-            <tr><td>발신자명</td><td>예: "올마이투어" 또는 브랜드명</td></tr>
-            <tr><td>이메일 제목</td><td>텍스트 필드</td></tr>
-            <tr><td>본문 (텍스트)</td><td>멀티라인 텍스트 입력. HTML 편집기는 Phase 2 검토</td></tr>
-            <tr><td>변수 삽입</td><td>읽기전용 가이드 제공. 예: <code>{{user_name}}</code> <code>{{point_amount}}</code> 등</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="policy-p">미리보기 영역: 편집 내용을 실시간 또는 [미리보기] 버튼 클릭 시 표시<br>
-      테스트 발송: 담당자 이메일 주소 입력 후 [테스트 발송] 버튼으로 실제 발송 가능<br>
-      [저장]: 수정된 내용 DB 저장. 성공 시 상단 토스트 알림</p>
+      <div id="sec9-2" class="policy-h3">9-2. 편집 화면 정책</div>
+      <p class="policy-p"><strong>편집 방식:</strong> 발신자명·이메일 제목·본문 텍스트만 수정 가능. 디자인 구조(레이아웃·색상) 고정.<br>
+      <strong>변수 처리:</strong> 고정 변수 자동 삽입 — 개발자가 사전 정의한 위치에 값 자동 삽입. 담당자 직접 삽입 불가.<br>
+      <strong>테스트 발송:</strong> 편집 후 저장 전 담당자 이메일로 테스트 발송 가능. 실제 회원에게 발송되지 않음.</p>
+      <div class="policy-blockquote" style="background:#f5f3ff;border-color:#a78bfa;color:#4c1d95;font-family:monospace;font-size:12px;white-space:pre-wrap">ADM-EMAIL01  이메일 템플릿 목록
+  └ 전체 템플릿 목록 (템플릿명 / 발송 트리거 / 마지막 수정일 / [편집] 버튼)
+
+ADM-EMAIL02  이메일 템플릿 편집
+  └ 편집: 발신자명 / 이메일 제목 / 본문 텍스트 (멀티라인)
+  └ 고정 변수 가이드 (읽기전용 참고)
+  └ 미리보기: 실제 이메일 디자인에 적용한 렌더링
+  └ 테스트 발송: 담당자 이메일 입력 → [테스트 발송] ⚠️ 실제 회원 미발송
+  └ [저장] → 저장 후 실제 발송에 즉시 반영</div>
 
       <div id="sec9-3" class="policy-h3">9-3. 이메일 변수 가이드</div>
       <div class="policy-table-wrap">
         <table class="policy-table">
           <thead><tr><th>변수</th><th>설명</th><th>사용 템플릿</th></tr></thead>
           <tbody>
-            <tr><td><code>{{user_name}}</code></td><td>회원 이름 (미입력 시 "고객"으로 대체)</td><td>전체</td></tr>
-            <tr><td><code>{{auth_code}}</code></td><td>6자리 인증코드</td><td>인증코드</td></tr>
-            <tr><td><code>{{point_amount}}</code></td><td>포인트 금액 (P)</td><td>포인트 안내 3종</td></tr>
-            <tr><td><code>{{hotel_name}}</code></td><td>예약 호텔명</td><td>캐시백 안내 3종</td></tr>
-            <tr><td><code>{{payment_month}}</code></td><td>지급 예정월 (YYYY-MM)</td><td>지급완료 안내</td></tr>
-            <tr><td><code>{{service_name}}</code></td><td>서비스 브랜드명</td><td>전체</td></tr>
+            <tr><td><code>{인증코드}</code></td><td>6자리 인증코드</td><td>인증코드</td></tr>
+            <tr><td><code>{유효시간}</code></td><td>5분 (고정값)</td><td>인증코드</td></tr>
+            <tr><td><code>{서비스명}</code></td><td>브랜드명</td><td>환영·전체</td></tr>
+            <tr><td><code>{호텔명}</code></td><td>예약 호텔명</td><td>적립예정·취소</td></tr>
+            <tr><td><code>{체크인}</code> · <code>{체크아웃}</code></td><td>예약 날짜</td><td>적립예정</td></tr>
+            <tr><td><code>{예약 OTA}</code></td><td>예약한 OTA 공급사명</td><td>적립예정</td></tr>
+            <tr><td><code>{적립완료일}</code></td><td>체크아웃+7일 (자사 배치 기준)</td><td>적립예정</td></tr>
+            <tr><td><code>{포인트금액}</code></td><td>지급 포인트 금액 (P, KRW 기준)</td><td>적립완료</td></tr>
+            <tr><td><code>{적립일}</code></td><td>자사 배치 처리 완료일</td><td>적립완료</td></tr>
           </tbody>
         </table>
       </div>

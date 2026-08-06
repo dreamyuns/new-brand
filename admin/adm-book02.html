@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADM-BOOK02 — 예약 상세</title>
+<link rel="stylesheet" href="wf-admin-styles.css">
+<style>
+  .detail-block {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .detail-block-hdr {
+    font-size: 13px;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 10px 16px;
+  }
+  .detail-label {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .detail-value {
+    font-size: 13px;
+    color: #111827;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .detail-value.mono {
+    font-family: monospace;
+    font-size: 12px;
+  }
+  /* 타임라인 */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 6px;
+  }
+  .tl-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    position: relative;
+  }
+  .tl-item + .tl-item {
+    margin-top: 0;
+  }
+  .tl-item + .tl-item::before {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: -12px;
+    width: 2px;
+    height: 12px;
+    background: #d1d5db;
+  }
+  .tl-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #d1d5db;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .tl-dot.done {
+    background: #10b981;
+    border-color: #10b981;
+    color: #fff;
+  }
+  .tl-dot.pending {
+    background: #f3f4f6;
+    border-color: #d1d5db;
+    color: #9ca3af;
+  }
+  .tl-dot.cancelled {
+    background: #ef4444;
+    border-color: #ef4444;
+    color: #fff;
+  }
+  .tl-body {
+    padding-bottom: 16px;
+  }
+  .tl-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+  }
+  .tl-title.dim { color: #9ca3af; }
+  .tl-sub {
+    font-size: 11px;
+    color: #6b7280;
+    margin-top: 2px;
+  }
+  .tl-sub.dim { color: #d1d5db; }
+</style>
+</head>
+<body>
+<nav class="page-nav">
+  <a class="page-nav-back" href="admin-index.html">← 목차</a>
+  <span class="page-nav-title">ADM-BOOK02</span>
+  <span class="page-nav-route">예약내역 · 예약 상세</span>
+  <div class="page-nav-nav">
+    <a class="page-nav-pager" href="adm-book01.html">← BOOK01</a>
+    <a class="page-nav-pager" href="adm-cb02.html">다음: CB02 →</a>
+  </div>
+</nav>
+
+<div class="adm-shell">
+  <!-- 사이드바 -->
+  <aside class="adm-sidebar">
+    <div class="adm-sidebar-logo">
+      <div class="adm-sidebar-logo-name">allmytour admin</div>
+      <div class="adm-sidebar-logo-sub">관리자 전용 시스템</div>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">Overview</div>
+      <a class="adm-nav-item" href="adm-dashboard.html"><span class="adm-nav-icon">📊</span>대시보드</a>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">회원관리</div>
+      <a class="adm-nav-item" href="adm-mem01.html"><span class="adm-nav-icon">👥</span>회원 목록</a>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">예약내역</div>
+      <a class="adm-nav-item active" href="adm-book01.html"><span class="adm-nav-icon">📋</span>예약내역 전체</a>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">포인트관리</div>
+      <a class="adm-nav-item" href="adm-cb02.html"><span class="adm-nav-icon">📈</span>공급사별 현황</a>
+    </div>
+    <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">설정</div>
+      <a class="adm-nav-item" href="adm-set01.html"><span class="adm-nav-icon">⚙️</span>관리자 설정</a>
+    </div>
+    <div class="adm-sidebar-footer">
+      <div class="adm-sidebar-user"><strong>마스터 관리자</strong>admin@allmytour.com</div>
+      <div class="adm-sidebar-logout">로그아웃</div>
+    </div>
+  </aside>
+
+  <!-- 메인 -->
+  <main class="adm-main">
+
+    <div class="adm-page-hdr" style="display:flex;align-items:center;gap:12px">
+      <a href="adm-book01.html" class="wf-btn wf-btn-ghost wf-btn-sm">← 목록으로</a>
+      <div>
+        <div class="adm-page-title">예약 상세 — RES-20042 <span class="wf-cn">1</span></div>
+        <div class="adm-page-sub">조회전용 · 2026-06-28 예약완료 · hong@example.com</div>
+      </div>
+    </div>
+
+    <div class="two-col" style="align-items:start">
+    <div>
+
+      <!-- 공통정책 블록 -->
+      <div class="sec-policy">
+        <div class="sec-policy-hdr">⚙ 공통 정책 — 예약 상세</div>
+        <ul class="sec-policy-list">
+          <li><strong>진입 방식:</strong> ADM-BOOK01 목록에서 행 클릭 시 이동. URL 파라미터로 예약번호 전달 (BookingID 기반 조회)</li>
+          <li><strong>적립기준금액:</strong> KAYAK이 포인트 계산에 사용하는 원천금액. 고객 실제 결제금액과 다를 수 있음. USD 원시값(<code>BookingValue</code>)과 KRW 환산값(<code>LocalisedBookingValue</code>) 각각 표시, 소수점 2자리까지 (5-4절)</li>
+          <li><strong>적립완료일:</strong> 체크아웃+7일 계산. 데이터 없는 필드는 "—" 표시 (5-2절)</li>
+          <li><strong>포인트 예상만료날짜:</strong> 적립완료일 기준 +365일. 적립예정 건은 예정 적립완료일+365일로 계산하여 "(예상)" 표기. 취소 건은 "—" (포인트_정책서 v0.1 소멸 기준)</li>
+          <li><strong>블록4 타임라인:</strong> 포인트 상태 흐름 표시. 날짜 없이 상태명만 표시. 케이스1(체크인 전 3단계) / 케이스2(취소) (5-4절)</li>
+          <li><strong>MVP 조회전용:</strong> 포인트 수동 지급·삭제·회수 기능 없음. Phase 2에서 추가 예정 (5-1절)</li>
+        </ul>
+        <div class="sec-policy-rule">기준: 어드민 v0.7 5-1절·5-2절·5-4절 / 포인트_정책서 v0.1 소멸 기준</div>
+      </div>
+
+      <!-- 블록1: 예약 기본 정보 -->
+      <div class="detail-block">
+        <div class="detail-block-hdr">
+          📋 블록1 — 예약 기본 정보 <span class="wf-cn">2</span>
+        </div>
+        <div class="detail-grid">
+          <div class="detail-label">예약번호</div>
+          <div class="detail-value mono">RES-20042</div>
+
+          <div class="detail-label">예약일</div>
+          <div class="detail-value">2026-06-28</div>
+
+          <div class="detail-label">호텔명</div>
+          <div class="detail-value">Grand Hyatt Seoul</div>
+
+          <div class="detail-label">도시</div>
+          <div class="detail-value">서울</div>
+
+          <div class="detail-label">국가</div>
+          <div class="detail-value">대한민국 (KR)</div>
+
+          <div class="detail-label">투숙기간</div>
+          <div class="detail-value">
+            2026-07-01 ~ 2026-07-03
+            <span style="background:#eff6ff;color:#2563eb;font-size:11px;padding:2px 7px;border-radius:99px;font-weight:600">2박</span>
+          </div>
+
+          <div class="detail-label">공급사(OTA)</div>
+          <div class="detail-value">Booking.com</div>
+        </div>
+      </div>
+
+      <!-- 블록2: 회원 정보 -->
+      <div class="detail-block">
+        <div class="detail-block-hdr">
+          👤 블록2 — 회원 정보 <span class="wf-cn">3</span>
+        </div>
+        <div class="detail-grid">
+          <div class="detail-label">회원ID</div>
+          <div class="detail-value" style="font-size:12px">hong@example.com</div>
+
+          <div class="detail-label">접속기기</div>
+          <div class="detail-value">Mobile</div>
+
+          <div class="detail-label">언어</div>
+          <div class="detail-value">한국어 (ko)</div>
+        </div>
+      </div>
+
+      <!-- 블록3: 적립기준금액 & 포인트 정보 -->
+      <div class="detail-block">
+        <div class="detail-block-hdr">
+          💰 블록3 — 적립기준금액 &amp; 포인트 정보 <span class="wf-cn">4</span>
+        </div>
+        <div class="detail-grid">
+          <div class="detail-label">적립기준금액(USD) <span class="wf-cn">5</span></div>
+          <div class="detail-value mono">
+            $126.79
+            <span style="font-size:11px;color:#9ca3af;font-family:sans-serif">API 원시값</span>
+          </div>
+
+          <div class="detail-label">적립기준금액(KRW)</div>
+          <div class="detail-value" style="font-weight:700;font-size:15px">₩194,165.39</div>
+
+          <div class="detail-label">캐시백 타입 / 율(금액) <span class="wf-cn">6</span></div>
+          <div class="detail-value" style="flex-direction:column;align-items:flex-start;gap:4px">
+            <div>
+              <span class="wf-badge badge-active" style="font-size:10px">PERCENTAGE</span>
+              <span style="margin-left:4px;font-size:12px">· 3%</span>
+            </div>
+            <div style="font-size:11px;color:#6b7280">FLAT 타입일 때: <span style="font-family:monospace;background:#f3f4f6;padding:1px 5px;border-radius:3px">FLAT · $12.00</span> (고정금액, 율 없음)</div>
+          </div>
+
+          <div class="detail-label">캐시백(USD)</div>
+          <div class="detail-value mono">
+            $3.80
+            <span style="font-size:11px;color:#9ca3af;font-family:sans-serif">API 원시값</span>
+          </div>
+
+          <div class="detail-label">포인트지급액</div>
+          <div class="detail-value" style="color:#f59e0b;font-weight:700;font-size:16px">
+            5,824P
+            <span style="font-size:11px;color:#6b7280;font-weight:400">(소수점 버림)</span>
+          </div>
+
+          <div class="detail-label">포인트 상태</div>
+          <div class="detail-value">
+            <span class="wf-badge badge-approved">적립완료</span>
+          </div>
+
+          <div class="detail-label">적립완료일 <span class="wf-cn">7</span></div>
+          <div class="detail-value">
+            2026-07-10
+            <span style="font-size:11px;color:#6b7280">(체크아웃+7일)</span>
+          </div>
+
+          <div class="detail-label">포인트 예상만료날짜 <span class="wf-cn">8</span></div>
+          <div class="detail-value">
+            2027-07-10
+            <span style="font-size:11px;color:#6b7280">(적립완료일+365일)</span>
+          </div>
+        </div>
+
+        <!-- 적립예정 건일 때 예상만료 표시 예시 -->
+        <div style="margin-top:14px;padding-top:12px;border-top:1px dashed #e5e7eb">
+          <div style="font-size:11px;font-weight:700;color:#f59e0b;margin-bottom:6px">적립예정 건일 때 예상만료날짜 표시 예시:</div>
+          <div style="font-size:12px;color:#6b7280">
+            예상만료날짜 → <span style="color:#111827;font-weight:500">2027-09-19 <span style="color:#9ca3af;font-size:11px">(예상)</span></span>
+            <span style="margin-left:6px;font-size:11px">(예정 적립완료일+365일, 적립완료 확정 시 갱신)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 블록4: 포인트 상태 타임라인 -->
+      <div class="detail-block">
+        <div class="detail-block-hdr">
+          📅 블록4 — 포인트 상태 타임라인 <span class="wf-cn">9</span>
+        </div>
+
+        <!-- 케이스1: 체크인 전 (3단계 흐름) -->
+        <div style="font-size:11px;font-weight:700;color:#2563eb;margin-bottom:10px;background:#eff6ff;padding:4px 10px;border-radius:4px;display:inline-block">케이스1 — 체크인 전</div>
+        <div class="timeline" style="margin-bottom:28px">
+          <div class="tl-item">
+            <div class="tl-dot pending">○</div>
+            <div class="tl-body">
+              <div class="tl-title dim">투숙예정 · 적립예정</div>
+              <div class="tl-sub dim">체크인 전 현재 상태</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot pending">○</div>
+            <div class="tl-body">
+              <div class="tl-title dim">투숙완료 · 적립예정</div>
+              <div class="tl-sub dim">체크아웃 후, 자사 배치 대기 중</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot pending">○</div>
+            <div class="tl-body">
+              <div class="tl-title dim">투숙완료 · 적립완료</div>
+              <div class="tl-sub dim">체크아웃+7일 이후 자사 배치 완료</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 케이스2: 취소 -->
+        <div style="font-size:11px;font-weight:700;color:#9ca3af;margin-bottom:10px;background:#f3f4f6;padding:4px 10px;border-radius:4px;display:inline-block">케이스2 — 취소</div>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot pending">○</div>
+            <div class="tl-body">
+              <div class="tl-title dim">투숙예정 · 적립예정</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot cancelled">✕</div>
+            <div class="tl-body">
+              <div class="tl-title" style="color:#ef4444">취소</div>
+              <div class="tl-sub">KAYAK Cancelled 감지. 포인트 미지급</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 2 안내 -->
+      <div style="background:#fef3c7;border:1px solid #fde68a;border-left:3px solid #f59e0b;border-radius:6px;padding:10px 14px;font-size:12px;color:#92400e">
+        <strong>Phase 2 예정:</strong> 포인트 수동 지급·삭제·회수 기능. MVP에서는 조회만 가능.
+      </div>
+
+    </div><!-- /본문 컬럼 -->
+
+    <!-- 주석 -->
+    <div class="ann">
+      <h3>주석 — ADM-BOOK02 (어드민 v0.7 5-4절)</h3>
+
+      <div class="ann-item">
+        <span class="cn">1</span>
+        <div class="ann-body">
+          <div class="ann-title">예약번호 기반 상세 조회</div>
+          <div class="ann-desc"><ul>
+            <li>ADM-BOOK01 목록에서 행을 클릭하면 URL 파라미터(예: ?bookingId=RES-20042)를 전달받아 해당 예약 정보를 불러옴</li>
+            <li>직접 URL 접근 시 bookingId 파라미터가 없으면 목록(ADM-BOOK01)으로 이동 처리 권장</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-4절 — 예약상세 진입 방식</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">2</span>
+        <div class="ann-body">
+          <div class="ann-title">블록1 — 예약 기본 정보</div>
+          <div class="ann-desc"><ul>
+            <li><strong>예약번호:</strong> KAYAK Reporting API <code>BookingID</code> 필드. 고객이 OTA에서 예약 완료 시 KAYAK이 부여하는 고유 번호. CS 상담 시 고객이 말하는 예약번호와 동일</li>
+            <li><strong>예약일:</strong> KAYAK API <code>BookingDate</code>. 고객이 예약을 완료한 날짜(YYYY-MM-DD). 체크인 날짜와 다름</li>
+            <li><strong>호텔명:</strong> KAYAK API <code>HotelName</code>. OTA에서 판매한 호텔 이름 그대로 표시. 빈값 가능 → "—" 표시</li>
+            <li><strong>도시 / 국가:</strong> KAYAK API <code>CityName</code> / <code>CountryCode</code>. 국가는 ISO 2자리 코드(예: KR) 함께 표시</li>
+            <li><strong>투숙기간:</strong> 체크인(<code>BookingStartDate</code>) ~ 체크아웃(<code>BookingEndDate</code>). 박수는 두 날짜 차이로 계산해 자동 표시. 체크인·체크아웃 날짜 정보는 이 블록에서만 확인 (블록4 타임라인에는 날짜 미표시)</li>
+            <li><strong>공급사(OTA):</strong> KAYAK API <code>ProviderCode</code>를 사람이 읽기 쉬운 이름으로 변환해 텍스트 표시. OTA 로고 이미지 없음</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-4절 블록1 / KAYAK Reporting API</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">3</span>
+        <div class="ann-body">
+          <div class="ann-title">블록2 — 회원 정보</div>
+          <div class="ann-desc"><ul>
+            <li><strong>회원ID:</strong> 자사가 아웃링크 URL의 <code>labels</code> 파라미터로 심은 이메일 주소. KAYAK Reporting API에서 해당 예약의 labels 값을 받아와 표시. 이메일이 곧 회원 식별자. 비로그인 상태로 이동한 건: labels 없음 → "—" 표시 (포인트 귀속 불가)</li>
+            <li><strong>접속기기:</strong> 아웃링크 시점의 접속 환경. Mobile 또는 Desktop으로만 구분 표시. OS·브라우저 세부 정보는 표시하지 않음. 데이터 없는 경우 "—"</li>
+            <li><strong>언어:</strong> 고객이 사용 중이던 언어 설정. BCP 47 코드(예: ko = 한국어, en = 영어, ja = 일본어)로 받아 사람이 읽기 쉬운 이름과 함께 표시. 데이터 없는 경우 "—"</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-4절 블록2 / 정책서 v0.45 9절 — labels 파라미터 귀속</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">4</span>
+        <div class="ann-body">
+          <div class="ann-title">블록3 — 적립기준금액 &amp; 포인트 정보 (전체 흐름)</div>
+          <div class="ann-desc"><ul>
+            <li>KAYAK API에서 받은 원시 데이터를 그대로 보여주는 섹션. 자사가 재계산하거나 임의 수정하지 않음</li>
+            <li><strong>데이터 흐름:</strong> KAYAK API 원시값(USD) → KRW 환산(API 제공) → 포인트 계산 → 소수점 버림 → 화면 표시</li>
+            <li><strong>포인트지급액:</strong> KAYAK API <code>CashbackAmountLocalised</code> (KRW 환산 캐시백 금액). 소수점 이하 버림 후 P 단위 표시. 1P = 1원. 예: ₩5,824.7 → 5,824P</li>
+            <li><strong>캐시백(USD):</strong> KAYAK API <code>CashbackAmount</code>. USD 원시 캐시백 금액. PERCENTAGE 타입일 때: 적립기준금액(USD) × 율 / 100. FLAT 타입일 때: CashbackValue 그대로</li>
+            <li><strong>포인트 상태:</strong> 자사 정의 기준. 적립예정(체크아웃+7일 미도래) / 적립완료(자사 배치 처리 완료) / 취소(KAYAK Cancelled 감지)</li>
+            <li>CashbackType=NONE 또는 null인 공급사 건: 캐시백(USD)·포인트지급액·타입/율 모두 "—" 표시</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-4절 블록3 / 포인트_정책서 v0.1 2절</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">5</span>
+        <div class="ann-body">
+          <div class="ann-title">적립기준금액(USD) — API 원시값</div>
+          <div class="ann-desc"><ul>
+            <li>KAYAK API <code>BookingValue</code> 필드. KAYAK이 포인트 계산에 사용하는 기준 금액. USD로 내려옴</li>
+            <li>고객이 OTA에서 실제 결제한 금액과 다를 수 있음 (OTA 수수료·세금 제외 기준이거나 KAYAK 자체 집계 방식 때문)</li>
+            <li>소수점 2자리까지 표시. 예: $126.79</li>
+            <li>정산·대사(회계 확인) 시 이 USD 값을 기준으로 사용</li>
+            <li><strong>적립기준금액(KRW):</strong> <code>LocalisedBookingValue</code>. KAYAK이 제공하는 KRW 환산값. 환율은 KAYAK 적용 환율 사용(자사 환율 아님). 소수점 2자리까지 표시. 예: ₩194,165.39</li>
+          </ul></div>
+          <div class="ann-rule">KAYAK Reporting API — BookingValue / LocalisedBookingValue</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">6</span>
+        <div class="ann-body">
+          <div class="ann-title">캐시백 타입 / 율(금액)</div>
+          <div class="ann-desc"><ul>
+            <li>KAYAK API <code>CashbackType</code>과 <code>CashbackValue</code>를 한 줄에 함께 표시</li>
+            <li><strong>PERCENTAGE:</strong> 적립기준금액의 몇 %를 포인트로 지급하는 방식. 표시 형식: "PERCENTAGE · 3%". 포인트 계산식: 적립기준금액(KRW) × CashbackValue(%) / 100</li>
+            <li><strong>FLAT:</strong> 예약금액 크기와 관계없이 정해진 금액을 고정으로 지급하는 방식. 표시 형식: "FLAT · $12.00". 율(%) 없음. 포인트 계산식: CashbackValue(USD)를 KRW 환산</li>
+            <li><strong>NONE / null:</strong> 이 공급사(OTA)는 캐시백을 지급하지 않는 건. "—" 표시. 포인트지급액도 "—"</li>
+          </ul></div>
+          <div class="ann-rule">KAYAK Reporting API — CashbackType / CashbackValue</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">7</span>
+        <div class="ann-body">
+          <div class="ann-title">적립완료일</div>
+          <div class="ann-desc"><ul>
+            <li>계산식: 체크아웃 날짜(<code>BookingEndDate</code>) + 7일. 형식: YYYY-MM-DD</li>
+            <li>고객 체크아웃 후 7일이 지난 뒤 자사 배치 처리가 실행되면 포인트가 실제로 지급됨. 이 날짜가 자사 배치 실행 기준</li>
+            <li><strong>적립완료 건:</strong> 자사 배치가 실제로 실행된 날짜 표시</li>
+            <li><strong>적립예정 건:</strong> 아직 배치 미실행. 예정일(체크아웃+7일 계산값) 표시</li>
+            <li><strong>취소 건:</strong> 포인트 지급 없음 → "—" 표시</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-2절 — 적립완료일 계산 기준 / 포인트_정책서 v0.1 3절</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">8</span>
+        <div class="ann-body">
+          <div class="ann-title">포인트 예상만료날짜</div>
+          <div class="ann-desc"><ul>
+            <li>고객에게 지급된 포인트가 사라지는(소멸) 예정 날짜</li>
+            <li>계산식: 적립완료일 + 365일. 예: 적립완료일 2026-07-10 → 예상만료 2027-07-10</li>
+            <li><strong>적립완료 건:</strong> 확정된 적립완료일 + 365일 → 확정 날짜 표시</li>
+            <li><strong>적립예정 건:</strong> 아직 배치 미실행이므로 적립완료일이 확정되지 않음 → 예정 적립완료일 + 365일로 미리 계산하여 날짜 뒤에 "(예상)" 표기. 실제 배치 완료 시 날짜 갱신됨</li>
+            <li><strong>취소 건:</strong> 포인트 없으므로 만료 없음 → "—" 표시</li>
+          </ul></div>
+          <div class="ann-rule">포인트_정책서 v0.1 소멸 기준 — 적립완료일+365일</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">9</span>
+        <div class="ann-body">
+          <div class="ann-title">블록4 — 포인트 상태 타임라인</div>
+          <div class="ann-desc"><ul>
+            <li>이 예약의 포인트 상태가 어떤 단계를 거치는지 흐름으로 보여줌. 날짜 없이 상태명만 표시. 정확한 날짜는 블록1(투숙기간)·블록3(적립완료일)에서 확인</li>
+            <li><strong>케이스1 (체크인 전) — 3단계 흐름:</strong>
+              <ol style="margin:4px 0 0 14px;padding:0;font-size:11px;line-height:2">
+                <li><strong>투숙예정 · 적립예정</strong> — 고객이 아직 체크인을 하지 않은 상태. 포인트 적립 대기 중</li>
+                <li><strong>투숙완료 · 적립예정</strong> — 체크아웃이 끝났지만 체크아웃+7일이 아직 지나지 않아 자사 배치 대기 중</li>
+                <li><strong>투숙완료 · 적립완료</strong> — 체크아웃+7일 이후 자사 배치가 실행되어 포인트 지급 완료</li>
+              </ol>
+            </li>
+            <li><strong>케이스2 (취소) — 2단계 흐름:</strong> 투숙예정·적립예정 상태였다가 → KAYAK에서 Cancelled 감지 → 취소(빨간 X). 포인트 미지급. 체크아웃 후 취소는 별도 정책 없음(취소로 통일)</li>
+            <li>아직 안 된 단계: 회색 원(○) / 취소됨: 빨간 X(✕)</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-4절 블록4 — 타임라인 케이스1·케이스2</div>
+        </div>
+      </div>
+
+      <hr class="divider">
+      <div class="text-muted">
+        이 화면은 <strong>ADM-BOOK01(예약내역 전체 목록)</strong>에서 행 클릭 시 진입합니다. <strong>ADM-MEM02(회원 상세 &gt; 예약·포인트 내역 탭)</strong>에서도 행 클릭 시 동일하게 이 화면으로 연결됩니다.
+      </div>
+    </div><!-- /ann -->
+
+    </div><!-- /two-col -->
+
+  </main>
+</div>
+
+</body>
+</html>

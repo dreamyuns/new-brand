@@ -33,8 +33,11 @@
       <a class="adm-nav-item active" href="adm-mem01.html"><span class="adm-nav-icon">👥</span>회원 목록</a>
     </div>
     <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">예약내역</div>
+      <a class="adm-nav-item" href="adm-book01.html"><span class="adm-nav-icon">📋</span>예약 목록</a>
+    </div>
+    <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">포인트관리</div>
-      <a class="adm-nav-item" href="adm-cb01.html"><span class="adm-nav-icon">💰</span>포인트 내역</a>
       <a class="adm-nav-item" href="adm-cb02.html"><span class="adm-nav-icon">📈</span>공급사별 현황</a>
     </div>
     <div class="adm-sidebar-section">
@@ -61,7 +64,7 @@
         <!-- 필터 바 -->
         <div class="filter-bar">
           <span class="filter-label">검색</span>
-          <input class="wf-input" style="width:220px" placeholder="이메일·회원ID 검색"><span class="wf-cn">1</span>
+          <input class="wf-input" style="width:220px" placeholder="이메일 검색"><span class="wf-cn">1</span>
           <span class="filter-label">가입기간</span>
           <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:13px;color:#374151;white-space:nowrap"><input type="radio" name="period-mem01" value="all" checked style="cursor:pointer"> 전체</label>
           <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:13px;color:#374151;white-space:nowrap"><input type="radio" name="period-mem01" value="range" style="cursor:pointer"> 기간 선택</label>
@@ -79,8 +82,7 @@
           <table class="adm-table">
             <thead>
               <tr>
-                <th>회원ID</th>
-                <th>이메일</th>
+                <th>회원ID <span class="wf-cn">3</span></th>
                 <th>상태</th>
                 <th>가입일</th>
                 <th>예약 수 <span class="wf-cn">4</span></th>
@@ -90,8 +92,7 @@
             </thead>
             <tbody>
               <tr>
-                <td style="font-family:monospace;font-size:11px">U-10042</td>
-                <td>hong@example.com</td>
+                <td style="font-size:12px">hong@example.com</td>
                 <td><span class="wf-badge badge-active">활성</span></td>
                 <td>2026-03-12</td>
                 <td style="text-align:center">3</td>
@@ -99,8 +100,7 @@
                 <td><a href="adm-mem02.html" class="wf-btn wf-btn-outline wf-btn-sm">상세</a></td>
               </tr>
               <tr>
-                <td style="font-family:monospace;font-size:11px">U-10041</td>
-                <td>jkim@example.com</td>
+                <td style="font-size:12px">jkim@example.com</td>
                 <td><span class="wf-badge badge-active">활성</span></td>
                 <td>2026-03-08</td>
                 <td style="text-align:center">1</td>
@@ -108,8 +108,7 @@
                 <td><a href="adm-mem02.html" class="wf-btn wf-btn-outline wf-btn-sm">상세</a></td>
               </tr>
               <tr>
-                <td style="font-family:monospace;font-size:11px">U-10040</td>
-                <td>mlee@example.com</td>
+                <td style="font-size:12px">mlee@example.com</td>
                 <td><span class="wf-badge badge-active">활성</span></td>
                 <td>2026-02-25</td>
                 <td style="text-align:center">7</td>
@@ -117,8 +116,7 @@
                 <td><a href="adm-mem02.html" class="wf-btn wf-btn-outline wf-btn-sm">상세</a></td>
               </tr>
               <tr>
-                <td style="font-family:monospace;font-size:11px">U-10039</td>
-                <td>user39@example.com</td>
+                <td style="font-size:12px">user39@example.com</td>
                 <td><span class="wf-badge badge-active">활성</span></td>
                 <td>2026-02-10</td>
                 <td style="text-align:center">0</td>
@@ -126,8 +124,7 @@
                 <td><a href="adm-mem02.html" class="wf-btn wf-btn-outline wf-btn-sm">상세</a></td>
               </tr>
               <tr>
-                <td style="font-family:monospace;font-size:11px">U-10001</td>
-                <td>alpha@allmytour.com</td>
+                <td style="font-size:12px">alpha@allmytour.com</td>
                 <td><span class="wf-badge badge-active">활성</span></td>
                 <td>2026-01-01</td>
                 <td style="text-align:center">12</td>
@@ -158,7 +155,7 @@
           <div class="sec-policy-hdr">⚙ 공통 정책 — 회원 목록</div>
           <ul class="sec-policy-list">
             <li><strong>데이터 소스:</strong> 자사 DB 회원 테이블. 기본값: 활성(탈퇴하지 않은) 회원만 표시 (4-1절)</li>
-            <li><strong>검색 범위:</strong> 이메일·회원ID 대상. 이름은 회원이 선택으로 입력하는 항목이라 목록 검색 미제공 — 이름 확인은 상세(MEM02)에서 (4-1절)</li>
+            <li><strong>검색 범위:</strong> 이메일 주소 기준. 이메일 주소가 곧 회원 식별자. 이름은 회원이 선택으로 입력하는 항목이라 목록 검색 미제공 — 이름 확인은 상세(MEM02)에서 (4-1절)</li>
             <li><strong>정렬 기본값:</strong> 가입일 내림차순 (가장 최근에 가입한 회원이 위로)</li>
             <li><strong>페이지네이션:</strong> 1페이지 50건 표시 (개발팀 협의 필요)</li>
             <li><strong>누적 포인트(P) 컬럼:</strong> 회원별 적립완료(Approved) 포인트 총합. 1P = 1원 기준. 적립예정(Active)·취소(Cancelled) 미포함. CashbackType이 null인 건 제외. 포인트 없으면 "—" 표시 (6-4절)</li>
@@ -171,13 +168,25 @@
         <div class="ann-item">
           <span class="cn">1</span>
           <div class="ann-body">
-            <div class="ann-title">통합 검색 필드</div>
+            <div class="ann-title">이메일 검색 필드</div>
             <div class="ann-desc"><ul>
-              <li>회원 이메일 주소나 회원 ID(예: U-10042)로 원하는 회원을 찾을 수 있음</li>
+              <li>이 서비스는 이메일 주소로만 계정을 만들기 때문에, 이메일이 곧 회원 식별자. 이메일로 원하는 회원을 찾음</li>
               <li>이름(영문)은 회원이 선택으로 입력하는 항목이라 여기서는 검색 불가 → 이름 확인은 [상세] 버튼을 눌러 MEM02에서 확인</li>
               <li>입력 후 Enter 키 또는 [검색] 버튼 클릭으로 검색. 2자 이상 입력 권장</li>
             </ul></div>
-            <div class="ann-rule">어드민 v0.5 4-1절</div>
+            <div class="ann-rule">어드민 v0.7 4-1절</div>
+          </div>
+        </div>
+
+        <div class="ann-item">
+          <span class="cn">3</span>
+          <div class="ann-body">
+            <div class="ann-title">회원ID 컬럼 — 이메일 주소로 표시</div>
+            <div class="ann-desc"><ul>
+              <li>이메일 주소가 회원을 구분하는 유일한 식별자이므로 이메일 값을 그대로 표시</li>
+              <li>내부 시스템 번호(예: U-10042)는 추후 개발팀 확인 후 별도 컬럼으로 추가 예정</li>
+            </ul></div>
+            <div class="ann-rule">어드민 v0.7 4-1절 — 이메일 기반 회원 운영</div>
           </div>
         </div>
 

@@ -13,7 +13,7 @@
   <span class="page-nav-route">예약내역 · 전체 목록</span>
   <div class="page-nav-nav">
     <a class="page-nav-pager" href="adm-mem02.html">← MEM02</a>
-    <a class="page-nav-pager" href="adm-cb01.html">다음: CB01 →</a>
+    <a class="page-nav-pager" href="adm-book02.html">다음: BOOK02 →</a>
   </div>
 </nav>
 
@@ -26,24 +26,23 @@
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">Overview</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">📊</span>대시보드</div>
+      <a class="adm-nav-item" href="adm-dashboard.html"><span class="adm-nav-icon">📊</span>대시보드</a>
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">회원관리</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">👥</span>회원 목록</div>
+      <a class="adm-nav-item" href="adm-mem01.html"><span class="adm-nav-icon">👥</span>회원 목록</a>
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">예약내역</div>
-      <div class="adm-nav-item active"><span class="adm-nav-icon">📋</span>예약내역 전체</div>
+      <a class="adm-nav-item active" href="adm-book01.html"><span class="adm-nav-icon">📋</span>예약내역 전체</a>
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">포인트관리</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">💰</span>포인트 내역</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">📈</span>공급사별 현황</div>
+      <a class="adm-nav-item" href="adm-cb02.html"><span class="adm-nav-icon">📈</span>공급사별 현황</a>
     </div>
     <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">설정</div>
-      <div class="adm-nav-item"><span class="adm-nav-icon">⚙️</span>관리자 설정</div>
+      <a class="adm-nav-item" href="adm-set01.html"><span class="adm-nav-icon">⚙️</span>관리자 설정</a>
     </div>
     <div class="adm-sidebar-footer">
       <div class="adm-sidebar-user"><strong>마스터 관리자</strong>admin@allmytour.com</div>
@@ -56,153 +55,180 @@
 
     <div class="adm-page-hdr">
       <div class="adm-page-title">예약내역 전체 목록</div>
-      <div class="adm-page-sub">KAYAK Reporting API Booking 기준 · 예약완료(Booking) 건만 표시 · 조회전용</div>
+      <div class="adm-page-sub">KAYAK Reporting API Booking 기준 · 예약완료 건만 표시 · 조회전용 · 행 클릭 시 예약상세(ADM-BOOK02)로 이동</div>
     </div>
 
     <div class="two-col" style="align-items:start">
     <div>
 
-      <!-- 공통정책 블록 -->
-      <div class="sec-policy">
-        <div class="sec-policy-hdr">⚙ 공통 정책 — 예약내역</div>
-        <ul class="sec-policy-list">
-          <li><strong>데이터 소스:</strong> KAYAK Reporting API — TypeCode=10(예약 완료 건)만 표시. TypeCode=1(클릭 건)은 표시하지 않음 (5조)</li>
-          <li><strong>회원 식별:</strong> 아웃링크 URL에 포함된 <code>p=</code> 파라미터(회원 ID)를 Reporting API의 <code>labels</code> 필드와 연결해 회원별로 구분 (정책서 v0.30 9절)</li>
-          <li><strong>포인트 적립완료(Approved) 판단:</strong> 자사 내부 기준 적용 — 체크아웃 후 일정 기간 경과 시 자동으로 적립완료 처리. KAYAK <code>paymentMonth</code> 값 단독 기준 아님 (5조 v0.42)</li>
-          <li><strong>MVP 조회전용:</strong> 상태 변경·환불 처리 기능 없음. Phase 2에서 추가 예정 (5조)</li>
-        </ul>
-        <div class="sec-policy-rule">기준: 어드민 v0.3 5조</div>
+      <!-- ① 요약 통계 (최상단) -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:13px;font-weight:700;color:#374151">요약 통계</span>
+        <span class="wf-cn">1</span>
+      </div>
+      <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
+        <div class="stat-card blue">
+          <div class="stat-card-label">전체 예약 <span class="wf-cn">2</span></div>
+          <div class="stat-card-value">1,203</div>
+          <div class="stat-card-sub">누적</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-card-label">적립예정 <span class="wf-cn">3</span></div>
+          <div class="stat-card-value">287</div>
+          <div class="stat-card-sub">체크아웃+7일 미도래</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-card-label">적립완료 <span class="wf-cn">4</span></div>
+          <div class="stat-card-value">891</div>
+          <div class="stat-card-sub">자사 배치 처리 완료</div>
+        </div>
+        <div class="stat-card gray">
+          <div class="stat-card-label">취소 <span class="wf-cn">5</span></div>
+          <div class="stat-card-value">25</div>
+          <div class="stat-card-sub">KAYAK Cancelled</div>
+        </div>
       </div>
 
-      <!-- 필터 바 -->
-      <div class="filter-bar">
-        <span class="filter-label">검색</span>
-        <input class="wf-input" style="width:180px" placeholder="예약ID·이메일·호텔명"><span class="wf-cn">1</span>
+      <!-- ② 공통정책 블록 -->
+      <div class="sec-policy">
+        <div class="sec-policy-hdr">⚙ 공통 정책 — 예약내역 목록</div>
+        <ul class="sec-policy-list">
+          <li><strong>데이터 소스:</strong> KAYAK Reporting API — <code>TransactionType=Booking</code>인 예약완료 건만 표시. 클릭 건(TransactionType=Click)은 목록에서 제외 (5-1절)</li>
+          <li><strong>회원ID 식별:</strong> 아웃링크 URL의 <code>labels</code> 파라미터로 자사 회원ID를 심어 전달 → Reporting API에서 귀속 확인. 비로그인 이동 건: labels 없음 → 회원ID "—" 표시 (5-3절)</li>
+          <li><strong>포인트 상태(자사 정의):</strong> 적립예정(체크아웃+7일 미도래) / 적립완료(체크아웃+7일 자사 배치 처리 완료) / 취소(KAYAK Cancelled 감지) (5-2절)</li>
+          <li><strong>적립완료일:</strong> 체크아웃 날짜 + 7일로 계산. YYYY-MM-DD 형식. 적립예정 건은 예정일 표시, 취소 건은 "—" (5-2절)</li>
+          <li><strong>기간 필터 기본값:</strong> 최근 1년 자동 설정(오늘 기준). 기간 기준은 예약일 또는 체크인일 선택 가능 (5-3절)</li>
+          <li><strong>공급사 표시:</strong> 이름 텍스트만 표시. OTA 로고 이미지 없음 (5-3절)</li>
+          <li><strong>MVP 조회전용:</strong> 상태 변경·수동 지급·환불 처리 기능 없음. Phase 2에서 추가 예정 (5-1절)</li>
+        </ul>
+        <div class="sec-policy-rule">기준: 어드민 v0.7 5-1절·5-2절·5-3절</div>
+      </div>
+
+      <!-- ③ 필터 바 -->
+      <div class="filter-bar" style="flex-wrap:wrap;gap:8px 12px">
+        <!-- 기간 기준 라디오 -->
+        <span class="filter-label">기간 기준</span>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer;font-weight:600">
+          <input type="radio" name="date-type" checked style="margin:0"> 예약일
+        </label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer">
+          <input type="radio" name="date-type" style="margin:0"> 체크인일
+        </label>
+        <span class="wf-cn">6</span>
         <span class="filter-sep"></span>
-        <span class="filter-label">상태</span>
-        <select class="wf-select"><option>전체</option><option>적립예정 (Active)</option><option>적립완료 (Approved)</option><option>취소·만료 (Cancelled)</option></select><span class="wf-cn">2</span>
+        <!-- 기간 범위 (기본: 최근 1년) -->
+        <input class="wf-input" style="width:105px" value="2025-08-06">
+        <span style="font-size:12px;color:#6b7280">~</span>
+        <input class="wf-input" style="width:105px" value="2026-08-06">
+        <span class="wf-cn">7</span>
+        <span class="filter-sep"></span>
+        <!-- 회원/비회원 -->
+        <span class="filter-label">회원/비회원</span>
+        <select class="wf-select">
+          <option>전체</option>
+          <option>회원</option>
+          <option>비회원</option>
+        </select>
+        <span class="wf-cn">8</span>
+        <span class="filter-sep"></span>
+        <!-- 포인트 상태 -->
+        <span class="filter-label">포인트 상태</span>
+        <select class="wf-select">
+          <option>전체</option>
+          <option>적립예정</option>
+          <option>적립완료</option>
+          <option>취소</option>
+        </select>
+        <span class="wf-cn">9</span>
+        <!-- 공급사 -->
         <span class="filter-label">공급사(OTA)</span>
-        <select class="wf-select"><option>전체</option><option>Agoda</option><option>Booking.com</option><option>Hotels.com</option></select><span class="wf-cn">3</span>
-        <span class="filter-label">체크인</span>
-        <input class="wf-input" style="width:100px" placeholder="2026-01-01">
-        <span>~</span>
-        <input class="wf-input" style="width:100px" placeholder="2026-12-31">
+        <select class="wf-select">
+          <option>전체</option>
+          <option>Agoda</option>
+          <option>Booking.com</option>
+          <option>Hotels.com</option>
+        </select>
+        <span class="wf-cn">10</span>
+        <span class="filter-sep"></span>
+        <!-- 검색 -->
+        <span class="filter-label">검색</span>
+        <input class="wf-input" style="width:180px" placeholder="이메일 · 예약번호">
+        <span class="wf-cn">11</span>
         <div class="filter-actions">
           <button class="wf-btn wf-btn-primary wf-btn-sm">검색</button>
           <button class="wf-btn wf-btn-ghost wf-btn-sm">초기화</button>
         </div>
       </div>
 
-      <!-- 요약 카드 -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="font-size:13px;font-weight:700;color:#374151">요약 통계</span><span class="wf-cn">6</span></div>
-      <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px">
-        <div class="stat-card blue">
-          <div class="stat-card-label">전체 예약</div>
-          <div class="stat-card-value">1,203</div>
-          <div class="stat-card-sub">누적</div>
-        </div>
-        <div class="stat-card amber">
-          <div class="stat-card-label">적립예정</div>
-          <div class="stat-card-value">287</div>
-          <div class="stat-card-sub">Active</div>
-        </div>
-        <div class="stat-card green">
-          <div class="stat-card-label">적립완료</div>
-          <div class="stat-card-value">891</div>
-          <div class="stat-card-sub">Approved</div>
-        </div>
-        <div class="stat-card gray">
-          <div class="stat-card-label">취소·만료</div>
-          <div class="stat-card-value">25</div>
-          <div class="stat-card-sub">Cancelled</div>
-        </div>
-      </div>
-
-      <!-- 테이블 -->
-      <div class="adm-table-wrap">
+      <!-- ④ 테이블 -->
+      <div class="adm-table-wrap" style="overflow-x:auto">
         <table class="adm-table">
           <thead>
             <tr>
-              <th>예약 ID</th>
-              <th>회원</th>
-              <th>호텔명</th>
-              <th>도시</th>
-              <th>공급사(OTA)</th>
-              <th>체크인</th>
-              <th>체크아웃</th>
-              <th>예약금액(상품가) <span class="wf-cn">7</span></th>
-              <th>포인트</th>
-              <th>상태</th>
+              <th>회원ID <span class="wf-cn">12</span></th>
+              <th>예약번호 <span class="wf-cn">13</span></th>
+              <th>예약일 <span class="wf-cn">14</span></th>
+              <th>호텔명 <span class="wf-cn">15</span></th>
+              <th>투숙기간 <span class="wf-cn">16</span></th>
+              <th>공급사(OTA) <span class="wf-cn">10</span></th>
+              <th>포인트(P) <span class="wf-cn">17</span></th>
+              <th>타입 <span class="wf-cn">18</span></th>
+              <th>포인트 상태 <span class="wf-cn">9</span></th>
+              <th>적립완료일 <span class="wf-cn">19</span></th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td style="font-family:monospace;font-size:11px">RES-20001</td>
+            <!-- 더미 1: 회원 / 적립완료 / PERCENTAGE -->
+            <tr onclick="location.href='adm-book02.html'" style="cursor:pointer">
               <td style="font-size:12px">hong@example.com</td>
+              <td style="font-family:monospace;font-size:11px">RES-20042</td>
+              <td style="font-size:12px">2026-06-28</td>
               <td>Grand Hyatt Seoul</td>
-              <td>서울</td>
-              <td>
-                <div style="display:flex;align-items:center;gap:5px">
-                  <div style="width:20px;height:14px;background:#003580;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:7px;color:#fff;font-weight:700">Bk</div>
-                  Booking.com
-                </div>
-              </td>
-              <td>2026-07-01</td>
-              <td>2026-07-03</td>
-              <td style="font-weight:600">₩320,000</td>
+              <td style="white-space:nowrap;font-size:12px">07.01 ~ 07.03</td>
+              <td style="font-size:12px">Booking.com</td>
               <td style="color:#f59e0b;font-weight:600">9,600P</td>
+              <td><span class="wf-badge badge-active" style="font-size:9px;padding:1px 6px">PERCENTAGE</span></td>
               <td><span class="wf-badge badge-approved">적립완료</span></td>
+              <td style="font-size:12px">2026-07-10</td>
             </tr>
-            <tr>
-              <td style="font-family:monospace;font-size:11px">RES-19998</td>
+            <!-- 더미 2: 회원 / 적립예정 / PERCENTAGE -->
+            <tr onclick="location.href='adm-book02.html'" style="cursor:pointer">
               <td style="font-size:12px">jkim@example.com</td>
-              <td>Shinjuku Prince Hotel</td>
-              <td>도쿄</td>
-              <td>
-                <div style="display:flex;align-items:center;gap:5px">
-                  <div style="width:20px;height:14px;background:#e03c31;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:7px;color:#fff;font-weight:700">Ag</div>
-                  Agoda
-                </div>
-              </td>
-              <td>2026-08-10</td>
-              <td>2026-08-14</td>
-              <td style="font-weight:600">¥56,000</td>
-              <td style="color:#f59e0b;font-weight:600">2,800P</td>
+              <td style="font-family:monospace;font-size:11px">RES-20089</td>
+              <td style="font-size:12px">2026-08-25</td>
+              <td>Westin Tokyo</td>
+              <td style="white-space:nowrap;font-size:12px">09.10 ~ 09.12</td>
+              <td style="font-size:12px">Agoda</td>
+              <td style="color:#f59e0b;font-weight:600">190,000P</td>
+              <td><span class="wf-badge badge-active" style="font-size:9px;padding:1px 6px">PERCENTAGE</span></td>
               <td><span class="wf-badge badge-waiting">적립예정</span></td>
+              <td style="font-size:12px;color:#6b7280">2026-09-19</td>
             </tr>
-            <tr>
-              <td style="font-family:monospace;font-size:11px">RES-19990</td>
-              <td style="font-size:12px">alpha@allmytour.com</td>
-              <td>Marina Bay Sands</td>
-              <td>싱가포르</td>
-              <td>
-                <div style="display:flex;align-items:center;gap:5px">
-                  <div style="width:20px;height:14px;background:#0078d4;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:7px;color:#fff;font-weight:700">Ht</div>
-                  Hotels.com
-                </div>
-              </td>
-              <td>2026-06-01</td>
-              <td>2026-06-04</td>
-              <td style="font-weight:600">SGD 780</td>
-              <td style="color:#dc2626;font-size:11px">—</td>
+            <!-- 더미 3: 회원 / 취소 -->
+            <tr onclick="location.href='adm-book02.html'" style="cursor:pointer">
+              <td style="font-size:12px">mlee@example.com</td>
+              <td style="font-family:monospace;font-size:11px">RES-20031</td>
+              <td style="font-size:12px">2026-06-05</td>
+              <td>Conrad Bangkok</td>
+              <td style="white-space:nowrap;font-size:12px">06.15 ~ 06.17</td>
+              <td style="font-size:12px">Hotels.com</td>
+              <td style="color:#9ca3af;font-size:11px">—</td>
+              <td style="color:#9ca3af;font-size:11px">—</td>
               <td><span class="wf-badge badge-cancelled">취소</span></td>
+              <td style="color:#9ca3af">—</td>
             </tr>
-            <tr>
+            <!-- 더미 4: 비회원 / 적립완료 / FLAT -->
+            <tr onclick="location.href='adm-book02.html'" style="cursor:pointer">
+              <td style="font-size:12px;color:#9ca3af">—</td>
               <td style="font-family:monospace;font-size:11px">RES-19985</td>
-              <td style="font-size:12px;color:#9ca3af">미귀속</td>
+              <td style="font-size:12px">2026-07-20</td>
               <td>The Westin Bangkok</td>
-              <td>방콕</td>
-              <td>
-                <div style="display:flex;align-items:center;gap:5px">
-                  <div style="width:20px;height:14px;background:#e03c31;border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:7px;color:#fff;font-weight:700">Ag</div>
-                  Agoda
-                </div>
-              </td>
-              <td>2026-07-20</td>
-              <td>2026-07-23</td>
-              <td style="font-weight:600">THB 12,000</td>
-              <td style="color:#9ca3af;font-size:11px">미귀속 <span class="wf-cn">5</span></td>
+              <td style="white-space:nowrap;font-size:12px">07.20 ~ 07.23</td>
+              <td style="font-size:12px">Agoda</td>
+              <td style="color:#f59e0b;font-weight:600">24,000P</td>
+              <td><span class="wf-badge badge-active" style="font-size:9px;padding:1px 6px">FLAT</span></td>
               <td><span class="wf-badge badge-approved">적립완료</span></td>
+              <td style="font-size:12px">2026-07-30</td>
             </tr>
           </tbody>
         </table>
@@ -218,93 +244,251 @@
         </div>
       </div>
 
-    </div><!-- /첫 번째 컬럼 -->
+    </div><!-- /본문 컬럼 -->
 
     <!-- 주석 -->
     <div class="ann">
-      <h3>주석 — ADM-BOOK01</h3>
+      <h3>주석 — ADM-BOOK01 (어드민 v0.7 5-3절)</h3>
+
       <div class="ann-item">
         <span class="cn">1</span>
         <div class="ann-body">
-          <div class="ann-title">통합 검색</div>
-          <div class="ann-desc">
-            <ul>
-              <li>예약 ID(예: RES-20001), 회원 이메일, 호텔 이름 중 하나로 원하는 내역을 찾을 수 있음</li>
-              <li>KAYAK에서 받아온 데이터를 자사 서버에 저장한 뒤 검색하거나, 직접 API에서 필터링함 (개발팀 결정 사항)</li>
-            </ul>
-          </div>
+          <div class="ann-title">요약 통계</div>
+          <div class="ann-desc"><ul>
+            <li>현재 필터 조건을 반영한 건수 집계. 필터 적용 시 동적으로 숫자가 바뀜</li>
+            <li>전체 예약 = 적립예정 + 적립완료 + 취소 합계</li>
+          </ul></div>
         </div>
       </div>
+
       <div class="ann-item">
         <span class="cn">2</span>
         <div class="ann-body">
-          <div class="ann-title">상태 필터</div>
-          <div class="ann-desc">
-            <ul>
-              <li>예약 건의 포인트 상태를 세 가지로 구분해 필터링할 수 있음</li>
-              <li><strong>적립예정 (Active):</strong> 아직 체크아웃 전이거나 포인트 지급이 확정되지 않은 상태. KAYAK 시스템 상태값은 <code>Active</code></li>
-              <li><strong>적립완료 (Approved):</strong> 자사 내부 기준(체크아웃 후 일정 기간 경과)에 따라 포인트 지급이 확정된 상태</li>
-              <li><strong>취소·만료 (Cancelled):</strong> 예약이 취소됐거나 포인트가 만료된 상태</li>
-            </ul>
-          </div>
-          <div class="ann-rule">어드민 v0.3 5조 / 정책서 v0.30 9-4절 — 포인트 상태값 (v0.42 Approved 기준 변경)</div>
+          <div class="ann-title">전체 예약</div>
+          <div class="ann-desc"><ul>
+            <li>KAYAK Reporting API에서 TransactionType=Booking인 예약완료 건의 누적 합계</li>
+            <li>계산식: 적립예정 + 적립완료 + 취소 합계</li>
+            <li>현재 필터 조건(기간·공급사·회원 등) 적용 시 해당 조건에 맞는 건수만 집계</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-1절 — TransactionType=Booking 기준</div>
         </div>
       </div>
+
       <div class="ann-item">
         <span class="cn">3</span>
         <div class="ann-body">
-          <div class="ann-title">공급사(OTA) 필터</div>
-          <div class="ann-desc">
-            <ul>
-              <li>KAYAK에서 제공한 OTA(타사 예약 사이트) 이름 목록으로 필터링. 예: Agoda, Booking.com, Hotels.com</li>
-              <li>고정 목록이 아니라 실제 데이터에 있는 OTA 이름을 동적으로 불러와 보여줌</li>
-            </ul>
-          </div>
+          <div class="ann-title">적립예정</div>
+          <div class="ann-desc"><ul>
+            <li>체크아웃 날짜 + 7일이 아직 지나지 않은 건</li>
+            <li>또는 체크아웃+7일이 지났지만 자사 배치 처리가 아직 실행되지 않은 건</li>
+            <li>KAYAK 상태가 Cancelled가 아닌 활성 예약 중 포인트 미지급 건</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-2절 — 적립예정 정의</div>
         </div>
       </div>
+
+      <div class="ann-item">
+        <span class="cn">4</span>
+        <div class="ann-body">
+          <div class="ann-title">적립완료</div>
+          <div class="ann-desc"><ul>
+            <li>체크아웃 날짜 + 7일 후 자사 배치가 실행되어 포인트 지급이 완료된 건</li>
+            <li>계산식: 적립완료일 = 체크아웃 날짜(BookingEndDate) + 7일</li>
+            <li>KAYAK Reporting API TransactionStatus=Approved에 해당하는 건</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-2절 — 적립완료 정의 / 계산식</div>
+        </div>
+      </div>
+
       <div class="ann-item">
         <span class="cn">5</span>
         <div class="ann-body">
-          <div class="ann-title">비로그인 미귀속 건</div>
-          <div class="ann-desc">
-            <ul>
-              <li>로그인 없이 타 OTA로 이동한 경우, 예약이 완료돼도 어떤 회원이 예약했는지 알 수 없음</li>
-              <li>이런 경우 포인트 수익은 자사가 받지만 특정 회원의 포인트로 쌓아줄 수 없음 → 회원 컬럼에 "미귀속" 표시</li>
-              <li>이를 줄이기 위해 아웃링크 전 로그인 유도 모달을 운영함</li>
-            </ul>
-          </div>
-          <div class="ann-rule">정책서 v0.30 9절 — 비로그인 포인트 귀속 불가</div>
+          <div class="ann-title">취소</div>
+          <div class="ann-desc"><ul>
+            <li>KAYAK Reporting API에서 TransactionStatus=Cancelled가 감지된 건</li>
+            <li>취소 건은 포인트 지급 대상에서 제외. 포인트(P)·적립완료일 컬럼에 "—" 표시</li>
+            <li>만료(적립 기간 초과) 처리는 Phase 2 이후 정책 확정 예정</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-2절 — 취소 정의 / TransactionStatus=Cancelled</div>
         </div>
       </div>
+
       <div class="ann-item">
         <span class="cn">6</span>
         <div class="ann-body">
-          <div class="ann-title">요약 통계 계산 방식</div>
-          <div class="ann-desc">
-            <ul>
-              <li><strong>전체 예약(1,203건):</strong> KAYAK Reporting API에서 가져온 예약 완료 건(TypeCode=10)의 전체 개수</li>
-              <li><strong>적립예정(287건):</strong> KAYAK 상태값 <code>Active</code> — 아직 체크아웃 전이거나 포인트 미확정 건</li>
-              <li><strong>적립완료(891건):</strong> 자사 기준으로 포인트 지급이 확정된 건 (<code>Approved</code>)</li>
-              <li><strong>취소·만료(25건):</strong> 취소 또는 만료된 건 (<code>Cancelled</code>)</li>
-              <li>검산: 1,203 = 287 + 891 + 25 ✓</li>
-            </ul>
-          </div>
-          <div class="ann-rule">KAYAK Reporting API transactionStatus 필드 / 어드민 v0.3 5조</div>
+          <div class="ann-title">기간 기준 선택 (예약일 / 체크인일)</div>
+          <div class="ann-desc"><ul>
+            <li><strong>예약일(기본):</strong> 고객이 OTA에서 예약을 완료한 날짜(<code>BookingDate</code>) 기준으로 조회</li>
+            <li><strong>체크인일:</strong> 체크인 날짜(<code>BookingStartDate</code>) 기준으로 조회. CS 대응 시 "몇 월에 투숙한 건" 찾을 때 유용</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-3절 — 기간 기준 선택</div>
         </div>
       </div>
+
       <div class="ann-item">
         <span class="cn">7</span>
         <div class="ann-body">
-          <div class="ann-title">예약금액(상품가) 컬럼</div>
-          <div class="ann-desc">
-            <ul>
-              <li>KAYAK Reporting API의 <code>transactionAmount</code> 값 — 고객이 OTA(타사 예약 사이트)에 실제로 결제한 금액</li>
-              <li>세금·수수료 포함 여부는 OTA마다 다름 — 화면에서는 "상품가"로 통일해 표기</li>
-              <li>통화가 다를 수 있음: 원화(₩), 엔화(¥), 태국 밧(THB), 싱가포르 달러(SGD) 등 그대로 표시. 포인트는 별도 P 단위로 표기</li>
-            </ul>
-          </div>
-          <div class="ann-rule">어드민 v0.3 5-2절 — 예약금액(상품가) 라벨 확정</div>
+          <div class="ann-title">기간 범위 기본값 (최근 1년)</div>
+          <div class="ann-desc"><ul>
+            <li>기본값: 화면이 처음 열릴 때 자동으로 오늘 기준 정확히 1년 전 ~ 오늘로 채워짐</li>
+            <li>관리자가 날짜를 직접 수정해 조회 범위 변경 가능</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-3절 — 기간 기본값 1년 고정</div>
         </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">8</span>
+        <div class="ann-body">
+          <div class="ann-title">회원/비회원 필터</div>
+          <div class="ann-desc"><ul>
+            <li><strong>전체(기본):</strong> 회원·비회원 예약 모두 표시</li>
+            <li><strong>회원:</strong> 회원ID가 매핑된 건만 표시 (labels 파라미터 귀속 완료)</li>
+            <li><strong>비회원:</strong> 회원ID가 "—"인 건만 표시 (비로그인 이동, 포인트 미귀속)</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-3절 — 회원/비회원 필터</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">9</span>
+        <div class="ann-body">
+          <div class="ann-title">포인트 상태 (필터 및 컬럼)</div>
+          <div class="ann-desc"><ul>
+            <li><strong>적립예정:</strong> 체크아웃+7일이 아직 지나지 않은 건. 자사 배치 미실행</li>
+            <li><strong>적립완료:</strong> 체크아웃+7일 후 자사 배치 처리가 완료된 건</li>
+            <li><strong>취소:</strong> KAYAK에서 Cancelled 상태가 감지된 건. 만료는 Phase 2 이후 정책 확정</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-2절 — 포인트 상태 자사 정의</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">10</span>
+        <div class="ann-body">
+          <div class="ann-title">공급사(OTA) — 필터 및 컬럼</div>
+          <div class="ann-desc"><ul>
+            <li>실제 예약 데이터에 있는 OTA 이름을 불러와 목록으로 보여줌 (고정 목록 아님)</li>
+            <li>KAYAK API <code>ProviderCode</code> 기반. 코드를 사람이 읽기 쉬운 이름으로 변환해 표시</li>
+            <li>컬럼에는 OTA 이름 텍스트만 표시. OTA 로고 이미지 없음</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-3절 — 공급사 표시</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">11</span>
+        <div class="ann-body">
+          <div class="ann-title">통합 검색</div>
+          <div class="ann-desc"><ul>
+            <li>이메일 주소(예: hong@example.com) 또는 예약번호(예: RES-20042)로 특정 건을 찾을 수 있음</li>
+            <li>검색 결과는 현재 필터 조건과 함께 적용됨</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-3절 — 검색·필터</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">12</span>
+        <div class="ann-body">
+          <div class="ann-title">회원ID</div>
+          <div class="ann-desc"><ul>
+            <li>아웃링크 URL에 심은 <code>labels</code> 파라미터로 자사 회원 이메일을 전달 → Reporting API에서 귀속 확인</li>
+            <li>이메일이 곧 회원 식별자. 비로그인 상태로 아웃링크 이동한 건: labels 없음 → "—" 표시 (이 경우 포인트 귀속 불가)</li>
+            <li>labels↔이메일 매핑 방식은 개발팀 논의 예정 (8조 미결 #8)</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-3절 / 정책서 v0.45 9절 — 비로그인 귀속 불가</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">13</span>
+        <div class="ann-body">
+          <div class="ann-title">예약번호 (BookingID)</div>
+          <div class="ann-desc"><ul>
+            <li>KAYAK Reporting API에서 내려오는 예약 고유 번호</li>
+            <li>CS 상담 시 고객이 말하는 예약번호로 빠르게 찾을 수 있는 컬럼</li>
+          </ul></div>
+          <div class="ann-rule">KAYAK Reporting API — BookingID 필드</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">14</span>
+        <div class="ann-body">
+          <div class="ann-title">예약일 (BookingDate)</div>
+          <div class="ann-desc"><ul>
+            <li>고객이 예약을 완료한 날짜. 체크인 날짜와 다름</li>
+            <li>CS 상담 시 예약 시점 파악 또는 분쟁 기준일로 활용</li>
+          </ul></div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">15</span>
+        <div class="ann-body">
+          <div class="ann-title">호텔명 (HotelName)</div>
+          <div class="ann-desc"><ul>
+            <li>KAYAK API에서 내려오는 호텔 이름 그대로 표시. 빈값 가능 → "—" 표시</li>
+          </ul></div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">16</span>
+        <div class="ann-body">
+          <div class="ann-title">투숙기간</div>
+          <div class="ann-desc"><ul>
+            <li>체크인~체크아웃 날짜를 한 컬럼에 묶어 표시. 예: "07.01 ~ 07.03"</li>
+            <li>API: <code>BookingStartDate</code>(체크인) / <code>BookingEndDate</code>(체크아웃)</li>
+            <li>적립완료일 기준: 체크아웃 날짜 + 7일 후 자사 배치 실행 시 전환</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-3절 — 투숙기간 통합 컬럼 / 5-2절 적립완료일 기준</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">17</span>
+        <div class="ann-body">
+          <div class="ann-title">포인트(P)</div>
+          <div class="ann-desc"><ul>
+            <li>KAYAK API <code>CashbackAmountLocalised</code> (원화 환산). 1P = 1원</li>
+            <li>CashbackType=NONE 또는 null 건(포인트 없는 공급사): "—" 표시</li>
+            <li>소수점 이하 버림. 예: 9,623.4 → 9,623P</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-3절 / 포인트_정책서 v0.1 2-2절 — 소수점 버림</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">18</span>
+        <div class="ann-body">
+          <div class="ann-title">타입 (CashbackType)</div>
+          <div class="ann-desc"><ul>
+            <li><code>PERCENTAGE</code>: 예약금액의 몇 %를 포인트로 줌</li>
+            <li><code>FLAT</code>: 예약금액과 관계없이 정해진 포인트를 그대로 줌</li>
+            <li>NONE/null: "—" 표시</li>
+          </ul></div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">19</span>
+        <div class="ann-body">
+          <div class="ann-title">적립완료일</div>
+          <div class="ann-desc"><ul>
+            <li>체크아웃 날짜 + 7일로 계산한 날짜. 형식: YYYY-MM-DD</li>
+            <li>적립완료 건: 자사 배치가 실행된 날짜</li>
+            <li>적립예정 건: 예정일(YYYY-MM-DD) 표시</li>
+            <li>취소 건: "—" 표시</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-2절·5-3절 — 적립완료일 계산 기준</div>
+        </div>
+      </div>
+
+      <hr class="divider">
+      <div class="text-muted">
+        행을 클릭하면 해당 예약의 상세화면(ADM-BOOK02)으로 이동합니다. 적립기준금액·포인트 정보·상태 타임라인은 상세화면에서 확인할 수 있습니다.
       </div>
     </div><!-- /ann -->
 

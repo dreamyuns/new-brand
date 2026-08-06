@@ -33,8 +33,11 @@
       <a class="adm-nav-item" href="adm-mem01.html"><span class="adm-nav-icon">👥</span>회원 목록</a>
     </div>
     <div class="adm-sidebar-section">
+      <div class="adm-sidebar-section-label">예약내역</div>
+      <a class="adm-nav-item" href="adm-book01.html"><span class="adm-nav-icon">📋</span>예약 목록</a>
+    </div>
+    <div class="adm-sidebar-section">
       <div class="adm-sidebar-section-label">포인트관리</div>
-      <a class="adm-nav-item" href="adm-cb01.html"><span class="adm-nav-icon">💰</span>포인트 내역</a>
       <a class="adm-nav-item" href="adm-cb02.html"><span class="adm-nav-icon">📈</span>공급사별 현황</a>
     </div>
     <div class="adm-sidebar-section">
@@ -188,6 +191,75 @@
         </div>
       </div>
 
+      <!-- 공급사별 현황 -->
+      <div style="margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <div class="sec-title" style="margin-bottom:0">공급사별 현황 <span class="wf-cn">7</span></div>
+          <div style="display:flex;gap:4px;margin-left:auto">
+            <button class="wf-btn wf-btn-primary wf-btn-sm" id="dash-week-btn">최근 1주일</button>
+            <button class="wf-btn wf-btn-ghost wf-btn-sm" id="dash-month-btn">최근 1달</button>
+          </div>
+        </div>
+        <div style="font-size:11px;color:#6b7280;margin-bottom:10px">예약일(BookingDate) 기준 · 예약건수 내림차순 정렬</div>
+        <div class="adm-table-wrap" style="overflow-x:auto">
+          <table class="adm-table">
+            <thead>
+              <tr>
+                <th>공급사(OTA)</th>
+                <th style="text-align:right">예약건수 <span class="wf-cn">7</span></th>
+                <th style="text-align:right">포인트지급액 합계(P)</th>
+                <th style="text-align:right">적립완료</th>
+                <th style="text-align:right">적립예정</th>
+                <th style="text-align:right">취소</th>
+              </tr>
+            </thead>
+            <tbody id="dash-provider-body">
+              <!-- 최근 1주일 더미 데이터 (기본 표시) -->
+              <tr>
+                <td>Booking.com</td>
+                <td style="text-align:right;font-weight:600">87</td>
+                <td style="text-align:right;color:#f59e0b;font-weight:600">580,000P</td>
+                <td style="text-align:right"><span class="wf-badge badge-approved" style="font-size:10px">74</span></td>
+                <td style="text-align:right"><span class="wf-badge badge-waiting" style="font-size:10px">10</span></td>
+                <td style="text-align:right"><span class="wf-badge badge-cancelled" style="font-size:10px">3</span></td>
+              </tr>
+              <tr>
+                <td>Agoda</td>
+                <td style="text-align:right;font-weight:600">52</td>
+                <td style="text-align:right;color:#f59e0b;font-weight:600">320,000P</td>
+                <td style="text-align:right"><span class="wf-badge badge-approved" style="font-size:10px">42</span></td>
+                <td style="text-align:right"><span class="wf-badge badge-waiting" style="font-size:10px">8</span></td>
+                <td style="text-align:right"><span class="wf-badge badge-cancelled" style="font-size:10px">2</span></td>
+              </tr>
+              <tr>
+                <td>Hotels.com</td>
+                <td style="text-align:right;font-weight:600">31</td>
+                <td style="text-align:right;color:#f59e0b;font-weight:600">160,000P</td>
+                <td style="text-align:right"><span class="wf-badge badge-approved" style="font-size:10px">26</span></td>
+                <td style="text-align:right"><span class="wf-badge badge-waiting" style="font-size:10px">4</span></td>
+                <td style="text-align:right"><span class="wf-badge badge-cancelled" style="font-size:10px">1</span></td>
+              </tr>
+              <tr>
+                <td>Expedia</td>
+                <td style="text-align:right;font-weight:600">19</td>
+                <td style="text-align:right;color:#f59e0b;font-weight:600">95,000P</td>
+                <td style="text-align:right"><span class="wf-badge badge-approved" style="font-size:10px">16</span></td>
+                <td style="text-align:right"><span class="wf-badge badge-waiting" style="font-size:10px">2</span></td>
+                <td style="text-align:right"><span class="wf-badge badge-cancelled" style="font-size:10px">1</span></td>
+              </tr>
+              <tr>
+                <td>Trivago</td>
+                <td style="text-align:right;font-weight:600">12</td>
+                <td style="text-align:right;color:#f59e0b;font-weight:600">48,000P</td>
+                <td style="text-align:right"><span class="wf-badge badge-approved" style="font-size:10px">11</span></td>
+                <td style="text-align:right"><span class="wf-badge badge-waiting" style="font-size:10px">1</span></td>
+                <td style="text-align:right"><span class="wf-badge badge-cancelled" style="font-size:10px">0</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div><!-- /첫 번째 컬럼 -->
 
     <!-- 주석 -->
@@ -291,6 +363,27 @@
             <li>[전체 회원 보기] 버튼 → ADM-MEM01로 이동</li>
           </ul></div>
           <div class="ann-rule">자사 회원 DB — 가입일 기준 정렬</div>
+        </div>
+      </div>
+      <div class="ann-item">
+        <span class="cn">7</span>
+        <div class="ann-body">
+          <div class="ann-title">공급사별 현황 테이블</div>
+          <div class="ann-desc"><ul>
+            <li><strong>집계 기준:</strong> 예약일(BookingDate) 기준. 기간 토글(최근 1주일/최근 1달)에 따라 해당 기간 내 예약완료(TransactionType=Booking) 건만 집계</li>
+            <li><strong>[최근 1주일]:</strong> 오늘 포함 7일간 예약일 기준 집계. 기본 선택 상태</li>
+            <li><strong>[최근 1달]:</strong> 오늘 포함 30일간 예약일 기준 집계. 토글 클릭 시 데이터 변경</li>
+            <li><strong>컬럼 정의:</strong></li>
+            <li>공급사(OTA): KAYAK <code>ProviderCode</code> → 표시명으로 변환. 예: "bookingcom" → "Booking.com"</li>
+            <li>예약건수: 해당 기간 내 해당 공급사 전체 예약 건수 (적립완료+적립예정+취소 합산)</li>
+            <li>포인트지급액 합계(P): 적립완료(자사 Approved) 건의 <code>CashbackAmountLocalised</code> 합계. 소수점 버림. 취소 건 제외</li>
+            <li>적립완료: 자사 Approved 판정 완료 건수</li>
+            <li>적립예정: 체크아웃+7일 미도래(자사 Active) 건수</li>
+            <li>취소: KAYAK Cancelled 감지 건수</li>
+            <li><strong>정렬:</strong> 예약건수 내림차순 (가장 예약이 많은 공급사 최상단)</li>
+            <li><strong>빈 데이터:</strong> 해당 기간 내 예약이 없는 공급사는 목록에서 제외</li>
+          </ul></div>
+          <div class="ann-rule">어드민 v0.7 5-1절 — 예약일(BookingDate) 기준 / KAYAK Reporting API</div>
         </div>
       </div>
     </div><!-- /ann -->
