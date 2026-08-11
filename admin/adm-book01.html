@@ -99,7 +99,7 @@
           <li><strong>취소 건 처리 (TransactionStatus=Cancelled):</strong> KAYAK API에서 취소 후에도 <code>CashbackType</code>·<code>CashbackValue</code> 필드는 살아있고 <code>CashbackAmountLocalised=0</code>으로만 바뀜(실 API 확인). 따라서 타입 컬럼은 실제 값(PERCENTAGE/FLAT) 그대로 표시(흐림 처리), 포인트(P)는 0P 표시, 포인트 상태는 "취소" 배지, 적립완료일은 "—" (5-2절)</li>
           <li><strong>포인트 미제공 공급사 처리 (CashbackType=NONE/null):</strong> 포인트(P)·타입 컬럼 "—" 표시. 포인트 상태는 취소 건만 "취소" 배지 표시, 그 외(적립예정·적립완료 해당 건) "—" 표시. 예약 자체의 취소 사실은 포인트 유무와 무관하게 관리자 확인 필요 (5-2절·5-3절)</li>
           <li><strong>적립완료일:</strong> 체크아웃 날짜 + 7일로 계산. YYYY-MM-DD 형식. 적립예정 건은 예정일 표시, 취소·NONE 건은 "—" (5-2절)</li>
-          <li><strong>기간 필터 기본값:</strong> 최근 1년 자동 설정(오늘 기준). 기간 기준은 예약일 또는 체크인일 선택 가능 (5-3절)</li>
+          <li><strong>기간 필터:</strong> [최근 1주일](기본) · [최근 1달] · [직접 입력] 버튼 선택. 퀵 버튼 클릭 시 날짜 필드에 해당 기간 자동 채움·수정 불가(회색), [직접 입력] 클릭 시 날짜 필드 활성화·수동 입력. 최대 365일. 기간 기준: 예약일(기본) 또는 체크인일 선택 가능 (5-3절)</li>
           <li><strong>공급사 표시:</strong> 이름 텍스트만 표시. OTA 로고 이미지 없음 (5-3절)</li>
           <li><strong>MVP 조회전용:</strong> 상태 변경·수동 지급·환불 처리 기능 없음. Phase 2에서 추가 예정 (5-1절)</li>
         </ul>
@@ -118,11 +118,17 @@
         </label>
         <span class="wf-cn">6</span>
         <span class="filter-sep"></span>
-        <!-- 기간 범위 (기본: 최근 1년) -->
-        <input class="wf-input" style="width:105px" value="2025-08-06">
-        <span style="font-size:12px;color:#6b7280">~</span>
-        <input class="wf-input" style="width:105px" value="2026-08-06">
+        <!-- 기간 버튼 그룹 -->
+        <button class="wf-btn wf-btn-primary wf-btn-sm" id="book01-week-btn">최근 1주일</button>
+        <button class="wf-btn wf-btn-ghost wf-btn-sm" id="book01-month-btn">최근 1달</button>
+        <button class="wf-btn wf-btn-ghost wf-btn-sm" id="book01-custom-btn">직접 입력</button>
         <span class="wf-cn">7</span>
+        <span class="filter-sep"></span>
+        <!-- 날짜 필드 — 퀵 버튼 선택 시 자동 채움·수정 불가 / 직접 입력 선택 시 활성화 -->
+        <input class="wf-input" style="width:120px;background:#f3f4f6;color:#374151;cursor:not-allowed" value="2026-08-04" readonly id="book01-start">
+        <span style="font-size:12px;color:#6b7280">~</span>
+        <input class="wf-input" style="width:120px;background:#f3f4f6;color:#374151;cursor:not-allowed" value="2026-08-11" readonly id="book01-end">
+        <span class="wf-cn">7a</span>
         <span class="filter-sep"></span>
         <!-- 회원/비회원 -->
         <span class="filter-label">회원/비회원</span>
@@ -357,12 +363,27 @@
       <div class="ann-item">
         <span class="cn">7</span>
         <div class="ann-body">
-          <div class="ann-title">기간 범위 기본값 (최근 1년)</div>
+          <div class="ann-title">퀵 버튼 — 최근 1주일 / 최근 1달</div>
           <div class="ann-desc"><ul>
-            <li>기본값: 화면이 처음 열릴 때 자동으로 오늘 기준 정확히 1년 전 ~ 오늘로 채워짐</li>
-            <li>관리자가 날짜를 직접 수정해 조회 범위 변경 가능</li>
+            <li><strong>[최근 1주일] (기본):</strong> 화면이 처음 열릴 때 기본 선택 상태. 오늘 포함 7일간 (오늘 기준 6일 전 ~ 오늘). 버튼 옆에 실제 날짜 범위가 YYYY-MM-DD ~ YYYY-MM-DD (오늘) 형식으로 표시됨 (예: 2026-08-04 ~ 2026-08-11 (오늘))</li>
+            <li><strong>[최근 1달]:</strong> 오늘 포함 30일간 (오늘 기준 29일 전 ~ 오늘). 버튼 클릭 즉시 조회, 날짜 범위 부연 표시도 갱신됨</li>
+            <li><strong>[직접 입력]:</strong> 클릭 시 날짜 입력 필드가 활성화되고 값이 지워짐. 직접 날짜를 입력한 후 [검색] 버튼을 눌러야 조회됨</li>
+            <li>퀵 버튼([최근 1주일] 또는 [최근 1달]) 선택 시: 해당 날짜 범위가 날짜 필드에 자동으로 채워지고 수정 불가 상태(회색 배경)로 바뀜</li>
           </ul></div>
-          <div class="ann-rule">어드민 v0.7 5-3절 — 기간 기본값 1년 고정</div>
+          <div class="ann-rule">검색 조건 공통 규칙 — 퀵 버튼=날짜 자동 채움·수정 불가 / 직접 입력=활성화</div>
+        </div>
+      </div>
+
+      <div class="ann-item">
+        <span class="cn">7a</span>
+        <div class="ann-body">
+          <div class="ann-title">날짜 입력 필드 — 퀵 버튼 시 자동 채움 / 직접 입력 시 수정 가능</div>
+          <div class="ann-desc"><ul>
+            <li><strong>퀵 버튼([최근 1주일] 또는 [최근 1달]) 선택 시:</strong> 해당 기간의 시작일·종료일이 자동으로 채워짐 (예: 2026-08-04 ~ 2026-08-11). 배경이 회색으로 바뀌고 직접 수정 불가</li>
+            <li><strong>[직접 입력] 선택 시:</strong> 날짜 필드가 흰 배경으로 바뀌고 값이 지워져 직접 입력 가능. 입력 후 [검색] 버튼 클릭으로 조회 실행</li>
+            <li>날짜 형식: YYYY-MM-DD. 최대 365일 초과 입력 시 오류 메시지 + [검색] 버튼 비활성</li>
+          </ul></div>
+          <div class="ann-rule">검색 조건 공통 규칙 — 퀵 버튼=자동 채움·수정 불가 / 직접 입력=활성화·수동 입력</div>
         </div>
       </div>
 
