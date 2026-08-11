@@ -11,10 +11,10 @@ const state = {
   memberId:null, memTab:'info',
   bookSelId:null,          // 예약 상세 대상
   setSelId:null, adminList:[],
-  mem:  { q:'', mode:'all', from:'', to:'', sort:'joinDate', dir:'desc', page:1 },
-  book: { dateType:'booking', from:'2025-08-06', to:'2026-08-06', memberType:'all', status:'all', ota:'all', q:'' },
-  cb02: { mode:'all', from:'', to:'' },
-  dashWindow:'week',       // week | month (공급사별 현황)
+  mem:  { q:'', mode:'all', from:'', to:'', sort:'joinDate', dir:'desc', page:1 },   // mode: all|week|month|custom
+  book: { dateType:'booking', mode:'week', from:'', to:'', memberType:'all', status:'all', ota:'all', q:'' }, // mode: week|month|custom
+  cb02: { mode:'week', from:'', to:'' },   // 적립완료일 기준 · week|month|custom
+  dash: { mode:'week' },                   // 대시보드 조회기간 · week|month
 };
 const PAGE_SIZE = 50;
 
@@ -51,6 +51,54 @@ function pointCell(r){
 }
 // 타입 셀(목록) — NONE은 "—", 그 외는 타입 배지(취소면 흐림)
 function typeCell(r){ if(r.cashbackType==='NONE' || !r.cashbackType) return DASH; return typeBadge(r.cashbackType, r.cancelled); }
+
+/* ── 공용 날짜 필터(퀵 버튼 + 직접 입력) ── */
+// 최근 1주일 = 오늘 포함 7일 / 최근 1달 = 오늘 포함 30일
+function rangeOf(mode){ if(mode==='week') return [addDays(TODAY,-6),TODAY]; if(mode==='month') return [addDays(TODAY,-29),TODAY]; return ['','']; }
+function daysBetween(a,b){ return Math.round((new Date(b)-new Date(a))/86400000)+1; }  // 양끝 포함
+function rangeValid(from,to){ if(!from||!to) return false; if(to<from) return false; return daysBetween(from,to)<=365; }
+// 퀵 버튼 그룹 HTML (prefix로 id 구분, extra=[전체] 버튼 포함 여부)
+function quickBtns(prefix, mode, withAll){
+  const b=(m,label)=>`<button class="wf-btn wf-btn-sm ${mode===m?'wf-btn-primary':'wf-btn-ghost'}" onclick="${prefix}Quick('${m}')">${label}</button>`;
+  return (withAll?b('all','전체'):'')+b('week','최근 1주일')+b('month','최근 1달')
+    +`<button class="wf-btn wf-btn-sm ${mode==='custom'?'wf-btn-primary':'wf-btn-ghost'}" onclick="${prefix}Custom()">직접 입력</button>`;
+}
+// 날짜 입력 필드 HTML (custom이면 흰 배경 활성, 아니면 회색 readonly)
+function dateFields(prefix, mode, from, to){
+  const custom = mode==='custom';
+  const st = custom ? '' : 'background:#f3f4f6;color:#6b7280;cursor:not-allowed';
+  const ro = custom ? '' : 'readonly';
+  const dis = (mode==='all') ? 'disabled' : '';
+  return `<input class="wf-input" id="${prefix}-start" type="date" style="width:150px;${st}" value="${from||''}" ${ro} ${dis}>
+    <span>~</span>
+    <input class="wf-input" id="${prefix}-end" type="date" style="width:150px;${st}" value="${to||''}" ${ro} ${dis}>`;
+}
+// 공급사별 집계(적립완료일 기준·적립완료 건만) — cb02/dashboard 공용
+function providerAgg(from,to){
+  const map={};
+  RESERVATIONS.forEach(r=>{
+    if(statusOf(r)!=='Approved') return;                 // 적립완료(Approved)만
+    if(from){ const cd=completeDate(r); if(cd<from||cd>to) return; }  // 적립완료일 기준
+    const m=map[r.ota]||(map[r.ota]={ota:r.ota,cnt:0,sum:0,meta:PROVIDERS[r.ota]||{type:r.cashbackType}});
+    m.cnt++; if(r.cashbackType!=='NONE') m.sum+=floorP(r.pointKRW);
+  });
+  return Object.values(map).sort((a,b)=>b.cnt-a.cnt);
+}
+function provRateCell(meta){ if(!meta) return DASH_R; if(meta.type==='PERCENTAGE') return meta.rate+'%'; if(meta.type==='FLAT') return '₩'+(meta.flat||0).toLocaleString(); return DASH_R; }
+function provTypeBadge(type){ const map={PERCENTAGE:['#eff6ff','#1d4ed8'],FLAT:['#f0fdf4','#15803d'],NONE:['#f3f4f6','#6b7280']};
+  const [bg,c]=map[type]||map.NONE; return `<span class="wf-badge" style="font-size:9px;background:${bg};color:${c}">${type||'NONE'}</span>`; }
+// 공급사별 5컬럼 행 (cb02/dashboard 공용)
+function provRows(from,to){
+  const arr=providerAgg(from,to);
+  if(!arr.length) return `<tr><td colspan="5" class="adm-table-empty">해당 기간(적립완료일 기준)에 적립완료 건이 없습니다.</td></tr>`;
+  return arr.map(p=>`<tr>
+    <td><strong>${esc(p.ota)}</strong></td>
+    <td style="text-align:right;font-weight:600">${p.cnt}</td>
+    <td style="text-align:right;font-weight:600;color:#f59e0b">${p.sum>0?fmtP(p.sum):DASH_R}</td>
+    <td style="text-align:right">${provRateCell(p.meta)}</td>
+    <td>${provTypeBadge(p.meta?p.meta.type:'NONE')}</td>
+  </tr>`).join('');
+}
 
 /* ── 파생 (회원별) ── */
 function memberApprovedCount(email){ return RESERVATIONS.filter(r=>r.memberEmail===email && statusOf(r)==='Approved').length; }
@@ -111,13 +159,33 @@ function renderDashboard(){
   const recentRes=[...RESERVATIONS].sort((a,b)=>b.bookingDate.localeCompare(a.bookingDate)).slice(0,5);
   const recentMem=[...MEMBERS].sort((a,b)=>b.joinDate.localeCompare(a.joinDate)).slice(0,5);
 
+  const [dfrom,dto]=rangeOf(state.dash.mode);
   $('view').innerHTML=`
     <div class="adm-page-hdr">
       <div class="adm-page-title">대시보드</div>
       <div class="adm-page-sub">주요 운영 지표 요약</div>
     </div>
 
-    <div class="sec-title">핵심 지표</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px;padding:12px 16px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px">
+      <span style="font-size:12px;font-weight:600;color:#6b7280">조회 기간</span>
+      <button class="wf-btn wf-btn-sm ${state.dash.mode==='week'?'wf-btn-primary':'wf-btn-ghost'}" onclick="dashQuick('week')">최근 1주일</button>
+      <button class="wf-btn wf-btn-sm ${state.dash.mode==='month'?'wf-btn-primary':'wf-btn-ghost'}" onclick="dashQuick('month')">최근 1달</button>
+      <span style="font-size:11px;color:#6b7280;margin-left:4px">${dfrom} ~ ${dto} (오늘)</span>
+    </div>
+
+    <div class="sec-title">핵심 지표</div>`;
+  renderDashBody(dfrom,dto);
+}
+function dashQuick(m){ state.dash.mode=m; renderDashboard(); }
+function renderDashBody(dfrom,dto){
+  const totalMembers=MEMBERS.length;
+  const approved=RESERVATIONS.filter(r=>statusOf(r)==='Approved');
+  const active=RESERVATIONS.filter(r=>statusOf(r)==='Active');
+  const approvedPts=approved.filter(r=>r.cashbackType!=='NONE').reduce((s,r)=>s+floorP(r.pointKRW),0);
+  const activePts=active.filter(r=>r.cashbackType!=='NONE').reduce((s,r)=>s+floorP(r.pointKRW),0);
+  const recentRes=[...RESERVATIONS].sort((a,b)=>b.bookingDate.localeCompare(a.bookingDate)).slice(0,5);
+  const recentMem=[...MEMBERS].sort((a,b)=>b.joinDate.localeCompare(a.joinDate)).slice(0,5);
+  $('view').insertAdjacentHTML('beforeend', `
     <div class="stat-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:28px">
       <div class="stat-card blue"><div class="stat-card-label">전체 회원</div><div class="stat-card-value">${totalMembers.toLocaleString()}</div><div class="stat-card-sub">활성 회원 기준</div></div>
       <div class="stat-card blue"><div class="stat-card-label">총 적립완료 건수</div><div class="stat-card-value">${approved.length.toLocaleString()}</div><div class="stat-card-sub">Approved 누적 건수</div></div>
@@ -128,6 +196,7 @@ function renderDashboard(){
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px">
       <div>
         <div class="sec-title">포인트 적립 현황 <span class="sec-badge" style="font-size:10px">최신 5건</span></div>
+        <div style="font-size:11px;color:#6b7280;margin-bottom:8px">예약일(BookingDate) 기준</div>
         <div class="adm-table-wrap"><table class="adm-table">
           <thead><tr><th>회원 이메일</th><th>OTA</th><th>포인트 금액</th><th>상태</th></tr></thead>
           <tbody>${recentRes.map(r=>{
@@ -147,37 +216,12 @@ function renderDashboard(){
       </div>
     </div>
 
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-      <div class="sec-title" style="margin-bottom:0">공급사별 현황</div>
-      <div style="display:flex;gap:4px;margin-left:auto">
-        <button class="wf-btn wf-btn-sm ${state.dashWindow==='week'?'wf-btn-primary':'wf-btn-ghost'}" onclick="dashWin('week')">최근 1주일</button>
-        <button class="wf-btn wf-btn-sm ${state.dashWindow==='month'?'wf-btn-primary':'wf-btn-ghost'}" onclick="dashWin('month')">최근 1달</button>
-      </div>
-    </div>
-    <div style="font-size:11px;color:#6b7280;margin-bottom:10px">예약일(BookingDate) 기준 · 예약건수 내림차순 정렬</div>
+    <div class="sec-title" style="margin-bottom:4px">공급사별 현황</div>
+    <div style="font-size:11px;color:#6b7280;margin-bottom:10px">적립완료일 기준 · 적립완료 건수 내림차순 정렬</div>
     <div class="adm-table-wrap" style="overflow-x:auto"><table class="adm-table">
-      <thead><tr><th>공급사(OTA)</th><th style="text-align:right">예약건수</th><th style="text-align:right">포인트지급액 합계(P)</th><th style="text-align:right">적립완료</th><th style="text-align:right">적립예정</th><th style="text-align:right">취소</th></tr></thead>
-      <tbody>${dashProviderRows()}</tbody>
-    </table></div>`;
-}
-function dashWin(w){ state.dashWindow=w; renderDashboard(); }
-function dashProviderRows(){
-  const days = state.dashWindow==='week' ? 7 : 30;
-  const from = addDays(TODAY, -(days-1));
-  const rows = RESERVATIONS.filter(r=> r.bookingDate>=from && r.bookingDate<=TODAY);
-  const map={};
-  rows.forEach(r=>{ const st=statusOf(r); const m=map[r.ota]||(map[r.ota]={cnt:0,pts:0,ap:0,ac:0,cc:0});
-    m.cnt++; if(st==='Approved'){m.ap++; if(r.cashbackType!=='NONE')m.pts+=floorP(r.pointKRW);} else if(st==='Active')m.ac++; else m.cc++; });
-  const arr=Object.entries(map).sort((a,b)=>b[1].cnt-a[1].cnt);
-  if(!arr.length) return `<tr><td colspan="6" class="adm-table-empty">해당 기간(예약일 기준)에 예약이 없습니다.</td></tr>`;
-  return arr.map(([ota,m])=>`<tr>
-    <td>${esc(ota)}</td>
-    <td style="text-align:right;font-weight:600">${m.cnt}</td>
-    <td style="text-align:right;color:#f59e0b;font-weight:600">${m.pts>0?fmtP(m.pts):DASH_R}</td>
-    <td style="text-align:right"><span class="wf-badge badge-approved" style="font-size:10px">${m.ap}</span></td>
-    <td style="text-align:right"><span class="wf-badge badge-waiting" style="font-size:10px">${m.ac}</span></td>
-    <td style="text-align:right"><span class="wf-badge badge-cancelled" style="font-size:10px">${m.cc}</span></td>
-  </tr>`).join('');
+      <thead><tr><th>공급사(OTA)</th><th style="text-align:right">적립완료 건수</th><th style="text-align:right">포인트 합계(P)</th><th style="text-align:right">포인트율/금액</th><th>타입</th></tr></thead>
+      <tbody>${provRows(dfrom,dto)}</tbody>
+    </table></div>`);
 }
 
 /* ════════ 회원 목록 (ADM-MEM01) ════════ */
@@ -185,7 +229,7 @@ function memFiltered(){
   const s=state.mem;
   let rows=MEMBERS.filter(m=>{
     if(s.q){ if(!m.email.toLowerCase().includes(s.q.toLowerCase())) return false; }
-    if(s.mode==='range' && s.from){ const t=s.to||s.from; if(m.joinDate<s.from||m.joinDate>t) return false; }
+    if(s.mode!=='all'){ const [from,to]= s.mode==='custom'?[s.from,s.to]:rangeOf(s.mode); if(from && (m.joinDate<from||m.joinDate>to)) return false; }
     return true;
   });
   const dir=s.dir==='asc'?1:-1;
@@ -202,27 +246,25 @@ function sortInd(view,key){ return state[view].sort===key ? `<span class="sort-i
 function renderMemList(){
   const s=state.mem, all=memFiltered(), total=all.length;
   const start=(s.page-1)*PAGE_SIZE, rows=all.slice(start,start+PAGE_SIZE);
+  const [mfrom,mto] = s.mode==='all' ? ['',''] : (s.mode==='custom'?[s.from,s.to]:rangeOf(s.mode));
   $('view').innerHTML=`
     <div class="adm-page-hdr">
       <div class="adm-page-title">회원 목록</div>
-      <div class="adm-page-sub">가입 회원 전체 · 이메일 검색·기간 필터·상세 진입</div>
+      <div class="adm-page-sub">가입 회원 전체 · 이메일 검색·기간 필터·상세 진입 · 기본 정렬 가입일 최신순</div>
     </div>
-    <div class="filter-bar">
+    <div class="filter-bar" style="flex-wrap:wrap;gap:8px 12px">
       <span class="filter-label">검색</span>
       <input class="wf-input" id="mem-q" style="width:200px" placeholder="이메일 검색" value="${esc(s.q)}">
       <span class="filter-sep"></span>
       <span class="filter-label">가입기간</span>
-      <label class="radio-opt"><input type="radio" name="mem-mode" value="all" ${s.mode==='all'?'checked':''} onclick="memMode('all')"> 전체</label>
-      <label class="radio-opt"><input type="radio" name="mem-mode" value="range" ${s.mode==='range'?'checked':''} onclick="memMode('range')"> 기간 선택</label>
-      <input class="wf-input" id="mem-from" style="width:150px" type="date" value="${s.from}" ${s.mode==='all'?'disabled':''} onchange="memFromInput()">
-      <span>~</span>
-      <input class="wf-input" id="mem-to" style="width:150px" type="date" value="${s.to}" ${(s.mode==='all'||!s.from)?'disabled':''}>
+      ${quickBtns('mem', s.mode, true)}
+      ${dateFields('mem', s.mode, mfrom, mto)}
       <div class="filter-actions">
         <button class="wf-btn wf-btn-primary wf-btn-sm" onclick="memSearch()">검색</button>
         <button class="wf-btn wf-btn-ghost wf-btn-sm" onclick="memReset()">초기화</button>
       </div>
     </div>
-    <div class="wf-hint" style="margin:-8px 0 14px">가입기간: <strong>전체</strong>(기본) 또는 <strong>기간 선택</strong> · 시작일만 입력하면 그 날 하루만 조회(종료일=시작일) · 형식 YYYY-MM-DD</div>
+    <div class="wf-hint" style="margin:-4px 0 14px">가입기간: <strong>전체</strong>(기본·A안)/<strong>최근 1주일</strong>/<strong>최근 1달</strong>/<strong>직접 입력</strong> · 직접 입력 후 [검색] · 최대 365일</div>
     <div class="adm-table-wrap"><table class="adm-table">
       <thead><tr>
         <th>회원ID</th><th>상태</th>
@@ -255,11 +297,11 @@ function memPager(total){ const pages=Math.max(1,Math.ceil(total/PAGE_SIZE)),cur
   for(let i=1;i<=pages;i++) b+=`<span class="adm-pagination-btn ${i===cur?'active':''}" onclick="memPage(${i})">${i}</span>`;
   b+='<span class="adm-pagination-btn" onclick="memPage('+Math.min(pages,cur+1)+')">»</span>';
   return '<div class="adm-pagination-btns">'+b+'</div>'; }
-function memMode(m){ const f=$('mem-from'),t=$('mem-to'); if(m==='all'){f.value='';t.value='';f.disabled=true;t.disabled=true;} else {f.disabled=false;t.disabled=!f.value;} }
-function memFromInput(){ const f=$('mem-from'),t=$('mem-to'); t.disabled=!f.value; if(!f.value)t.value=''; else if(t.value&&t.value<f.value)t.value=f.value; }
-function memSearch(){ const mode=document.querySelector('input[name=mem-mode]:checked').value; state.mem.mode=mode;
-  if(mode==='all'){state.mem.from='';state.mem.to='';} else {const f=$('mem-from').value; state.mem.from=f; state.mem.to=f?($('mem-to').value||f):'';}
-  state.mem.q=$('mem-q').value.trim(); state.mem.page=1; renderMemList(); }
+function memQuick(m){ state.mem.q=$('mem-q').value.trim(); state.mem.mode=m; state.mem.from=''; state.mem.to=''; state.mem.page=1; renderMemList(); }
+function memCustom(){ state.mem.q=$('mem-q').value.trim(); state.mem.mode='custom'; state.mem.from=''; state.mem.to=''; state.mem.page=1; renderMemList(); }
+function memSearch(){ state.mem.q=$('mem-q').value.trim();
+  if(state.mem.mode==='custom'){ state.mem.from=$('mem-start').value; state.mem.to=$('mem-end').value; }
+  state.mem.page=1; renderMemList(); }
 function memReset(){ state.mem={q:'',mode:'all',from:'',to:'',sort:'joinDate',dir:'desc',page:1}; renderMemList(); }
 function memSort(k){ const s=state.mem; if(s.sort===k)s.dir=s.dir==='asc'?'desc':'asc'; else{s.sort=k;s.dir='desc';} renderMemList(); }
 function memPage(p){ state.mem.page=p; renderMemList(); }
@@ -366,11 +408,11 @@ function pickNation(code){ const m=MEMBERS.find(x=>x.id===state.memberId); m.nat
 /* ════════ 예약내역 전체 목록 (ADM-BOOK01) ════════ */
 function bookFiltered(){
   const s=state.book;
+  const [from,to] = s.mode==='custom' ? [s.from,s.to] : rangeOf(s.mode);
   return RESERVATIONS.filter(r=>{
     const st=statusOf(r);
     const dateField = s.dateType==='checkin' ? r.checkIn : r.bookingDate;
-    if(s.from && dateField < s.from) return false;
-    if(s.to   && dateField > s.to)   return false;
+    if(from && (dateField<from || dateField>to)) return false;
     if(s.memberType==='member' && !r.memberEmail) return false;
     if(s.memberType==='guest'  && r.memberEmail)  return false;
     if(s.status!=='all' && st!==s.status) return false;
@@ -381,6 +423,7 @@ function bookFiltered(){
 }
 function renderBook01(){
   const s=state.book, rows=bookFiltered();
+  const [bfrom,bto] = s.mode==='custom' ? [s.from,s.to] : rangeOf(s.mode);
   const cnt=n=>rows.filter(r=>statusOf(r)===n).length;
   const otas=[...new Set(RESERVATIONS.map(r=>r.ota))].sort();
   $('view').innerHTML=`
@@ -401,9 +444,9 @@ function renderBook01(){
       <span class="filter-label">기간 기준</span>
       <label class="radio-opt"><input type="radio" name="bk-dt" value="booking" ${s.dateType==='booking'?'checked':''} onclick="bookDateType('booking')"> 예약일</label>
       <label class="radio-opt"><input type="radio" name="bk-dt" value="checkin" ${s.dateType==='checkin'?'checked':''} onclick="bookDateType('checkin')"> 체크인일</label>
-      <input class="wf-input" id="bk-from" type="date" style="width:150px" value="${s.from}">
-      <span>~</span>
-      <input class="wf-input" id="bk-to" type="date" style="width:150px" value="${s.to}">
+      <span class="filter-sep"></span>
+      ${quickBtns('book', s.mode, false)}
+      ${dateFields('book', s.mode, bfrom, bto)}
       <span class="filter-sep"></span>
       <span class="filter-label">회원/비회원</span>
       <select class="wf-select" id="bk-member">
@@ -452,12 +495,15 @@ function renderBook01(){
   $('bk-q').addEventListener('keydown',e=>{ if(e.key==='Enter') bookSearch(); });
 }
 function bookDateType(t){ state.book.dateType=t; }
-function bookSearch(){ const s=state.book;
+function bookReadOthers(){ const s=state.book;
   s.dateType=document.querySelector('input[name=bk-dt]:checked').value;
-  s.from=$('bk-from').value; s.to=$('bk-to').value;
-  s.memberType=$('bk-member').value; s.status=$('bk-status').value; s.ota=$('bk-ota').value; s.q=$('bk-q').value.trim();
+  s.memberType=$('bk-member').value; s.status=$('bk-status').value; s.ota=$('bk-ota').value; s.q=$('bk-q').value.trim(); }
+function bookQuick(m){ bookReadOthers(); state.book.mode=m; renderBook01(); }
+function bookCustom(){ bookReadOthers(); state.book.mode='custom'; state.book.from=''; state.book.to=''; renderBook01(); }
+function bookSearch(){ bookReadOthers(); const s=state.book;
+  if(s.mode==='custom'){ s.from=$('book-start').value; s.to=$('book-end').value; }
   renderBook01(); }
-function bookReset(){ state.book={dateType:'booking',from:'2025-08-06',to:'2026-08-06',memberType:'all',status:'all',ota:'all',q:''}; renderBook01(); }
+function bookReset(){ state.book={dateType:'booking',mode:'week',from:'',to:'',memberType:'all',status:'all',ota:'all',q:''}; renderBook01(); }
 function openBook(resId){ state.bookSelId=resId; go('book02'); }
 
 /* ════════ 예약 상세 (ADM-BOOK02) ════════ */
@@ -553,57 +599,39 @@ function bookTimeline(r,st){
     </div>`;
 }
 
-/* ════════ 공급사별 현황 (ADM-CB02) — 예약일 날짜범위 ════════ */
+/* ════════ 공급사별 현황 (ADM-CB02) — 적립완료일 기준·퀵버튼·5컬럼 ════════ */
 function renderCB02(){
   const s=state.cb02;
-  const inRange = r => { if(s.mode!=='range'||!s.from) return true; const t=s.to||s.from; return r.bookingDate>=s.from && r.bookingDate<=t; };
-  const providers=Object.keys(PROVIDERS).map(name=>{
-    const rs=RESERVATIONS.filter(r=>r.ota===name && inRange(r));
-    let ac=0,ap=0,cc=0,sum=0;
-    rs.forEach(r=>{ const st=statusOf(r); if(st==='Active')ac++; else if(st==='Approved'){ap++; if(r.cashbackType!=='NONE')sum+=floorP(r.pointKRW);} else cc++; });
-    return {name, meta:PROVIDERS[name], count:rs.length, ac, ap, cc, sum};
-  }).filter(p=>p.count>0);
-
+  const [from,to] = s.mode==='custom' ? [s.from,s.to] : rangeOf(s.mode);
+  const custom = s.mode==='custom';
+  const err = custom && s.from && s.to && !rangeValid(s.from,s.to);
   $('view').innerHTML=`
     <div class="adm-page-hdr">
       <div class="adm-page-title">공급사별 포인트 현황</div>
-      <div class="adm-page-sub">OTA 공급사별 포인트 발생·집계 현황 · 예약일 기준</div>
+      <div class="adm-page-sub">OTA 공급사별 포인트 지급 현황 · 적립완료일 기준 · 적립완료 건만 집계</div>
     </div>
-    <div class="filter-bar" style="margin-bottom:8px">
-      <span class="filter-label">예약일</span>
-      <label class="radio-opt"><input type="radio" name="cb2-mode" value="all" ${s.mode==='all'?'checked':''} onclick="cb02Mode('all')"> 전체</label>
-      <label class="radio-opt"><input type="radio" name="cb2-mode" value="range" ${s.mode==='range'?'checked':''} onclick="cb02Mode('range')"> 기간 선택</label>
-      <input class="wf-input" id="cb2-from" type="date" style="width:150px" value="${s.from}" ${s.mode==='all'?'disabled':''} onchange="cb02FromInput()">
-      <span>~</span>
-      <input class="wf-input" id="cb2-to" type="date" style="width:150px" value="${s.to}" ${(s.mode==='all'||!s.from)?'disabled':''}>
-      <div class="filter-actions"><button class="wf-btn wf-btn-primary wf-btn-sm" onclick="cb02Search()">조회</button></div>
+    <div class="filter-bar" style="margin-bottom:8px;flex-wrap:wrap;gap:8px 12px">
+      <span class="filter-label">적립완료일</span>
+      ${quickBtns('cb02', s.mode, false)}
+      <span class="filter-sep"></span>
+      ${dateFields('cb02', s.mode, from, to)}
+      <div class="filter-actions">
+        <button class="wf-btn wf-btn-primary wf-btn-sm" onclick="cb02Apply()" ${custom?'':'disabled style="opacity:0.45"'}>조회</button>
+      </div>
     </div>
-    <div class="wf-hint" style="margin:0 0 16px">예약일(BookingDate) 기준 · <strong>전체</strong>(기본) 또는 <strong>기간 선택</strong> · 시작일만 입력하면 그 날 하루만 집계(종료일=시작일) · 형식 YYYY-MM-DD</div>
+    ${err?'<div style="color:#e53e3e;font-size:12px;margin:0 0 10px">조회 기간은 최대 365일까지 가능합니다.</div>':''}
+    <div class="wf-hint" style="margin:0 0 16px">적립완료일(체크아웃+7일 자사 배치 시점) 기준 · <strong>최근 1주일</strong>(기본)/<strong>최근 1달</strong>/<strong>직접 입력</strong> · 직접 입력 후 [조회] · 최대 365일</div>
 
     <div class="sec-title">공급사별 상세</div>
     <div class="adm-table-wrap"><table class="adm-table">
-      <thead><tr><th>공급사 (OTA)</th><th style="text-align:center">예약 건수</th><th style="text-align:center">적립예정</th><th style="text-align:center">적립완료</th><th style="text-align:center">Cancelled</th><th style="text-align:right">포인트 합계</th><th>포인트율/금액</th><th>타입</th></tr></thead>
-      <tbody>${providers.length? providers.map(p=>{
-        const rate = p.meta.type==='PERCENTAGE'?p.meta.rate+'%':(p.meta.type==='FLAT'?fmtP(p.meta.flat):DASH);
-        return `<tr>
-          <td><div style="display:flex;align-items:center;gap:8px">
-            <div style="width:24px;height:16px;background:${p.meta.color};border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:8px;color:#fff;font-weight:700">${p.meta.short}</div>
-            <strong>${esc(p.name)}</strong></div></td>
-          <td style="text-align:center">${p.count}</td>
-          <td style="text-align:center">${p.ac?'<span class="wf-badge badge-waiting">'+p.ac+'</span>':'0'}</td>
-          <td style="text-align:center">${p.ap?'<span class="wf-badge badge-approved">'+p.ap+'</span>':'0'}</td>
-          <td style="text-align:center">${p.cc?'<span class="wf-badge badge-cancelled">'+p.cc+'</span>':'0'}</td>
-          <td style="text-align:right;font-weight:600;color:#f59e0b">${p.sum>0?fmtP(p.sum):DASH_R}</td>
-          <td>${rate}</td><td>${typeBadge(p.meta.type)}</td>
-        </tr>`;
-      }).join('') : `<tr><td colspan="8" class="adm-table-empty">해당 기간(예약일 기준)에 집계된 데이터가 없습니다.</td></tr>`}</tbody>
+      <thead><tr><th>공급사 (OTA)</th><th style="text-align:right">적립완료 건수</th><th style="text-align:right">포인트 합계(P)</th><th style="text-align:right">포인트율/금액</th><th>타입</th></tr></thead>
+      <tbody>${provRows(from,to)}</tbody>
     </table></div>`;
 }
-function cb02Mode(m){ const f=$('cb2-from'),t=$('cb2-to'); if(m==='all'){f.value='';t.value='';f.disabled=true;t.disabled=true;} else {f.disabled=false;t.disabled=!f.value;} }
-function cb02FromInput(){ const f=$('cb2-from'),t=$('cb2-to'); t.disabled=!f.value; if(!f.value)t.value=''; else if(t.value&&t.value<f.value)t.value=f.value; }
-function cb02Search(){ const mode=document.querySelector('input[name=cb2-mode]:checked').value; state.cb02.mode=mode;
-  if(mode==='all'){state.cb02.from='';state.cb02.to='';} else {const f=$('cb2-from').value; state.cb02.from=f; state.cb02.to=f?($('cb2-to').value||f):'';}
-  renderCB02(); }
+function cb02Quick(m){ state.cb02.mode=m; renderCB02(); }
+function cb02Custom(){ state.cb02.mode='custom'; state.cb02.from=''; state.cb02.to=''; renderCB02(); }
+function cb02Apply(){ state.cb02.from=$('cb02-start').value; state.cb02.to=$('cb02-end').value;
+  if(!rangeValid(state.cb02.from,state.cb02.to)){ renderCB02(); return; } renderCB02(); }
 
 /* ════════ 관리자 설정 목록 (ADM-SET01) ════════ */
 function renderSet(){

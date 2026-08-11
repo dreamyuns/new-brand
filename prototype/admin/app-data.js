@@ -9,7 +9,7 @@
    - 취소 = KAYAK Cancelled 감지 (cancelled=true)
 ══════════════════════════════════════════════════════════════ */
 
-const TODAY = '2026-08-05';   // 데모 기준일
+const TODAY = '2026-08-11';   // 데모 기준일(오늘)
 const FX = 1350;              // USD→KRW 데모 환율 (표시용)
 
 // 어드민 로그인 계정 (데모) — admin01 / admin1234!
@@ -54,6 +54,16 @@ const MEMBERS = [
    usd·krw = 적립기준금액(BookingValue / LocalisedBookingValue)
    cashbackUSD·pointKRW = 캐시백(USD 원시) / 포인트지급액(KRW, 소수점 포함 가능) */
 const RESERVATIONS = [
+  // ── 최근 예약(예약일 최근 1주일) — book01 기본 뷰용 · 대부분 적립예정(Active) ──
+  { resId:'RES-20200', bookingDate:'2026-08-10', memberEmail:'hong@example.com',  hotel:'Grand Hyatt Seoul',      city:'서울',   country:'대한민국', countryCode:'KR', checkIn:'2026-08-25', checkOut:'2026-08-27', ota:'Booking.com', device:'Mobile',  lang:'ko', langName:'한국어', usd:222.22, krw:300000, cashbackType:'PERCENTAGE', cashbackValue:3.2, cashbackUSD:7.11, pointKRW:9600, cancelled:false },
+  { resId:'RES-20198', bookingDate:'2026-08-08', memberEmail:'mlee@example.com',  hotel:'Westin Tokyo',           city:'도쿄',   country:'일본',    countryCode:'JP', checkIn:'2026-09-01', checkOut:'2026-09-03', ota:'Agoda',       device:'Mobile',  lang:'ko', langName:'한국어', usd:385.19, krw:520000, cashbackType:'PERCENTAGE', cashbackValue:4.8, cashbackUSD:18.49, pointKRW:24960, cancelled:false },
+  { resId:'RES-20195', bookingDate:'2026-08-06', memberEmail:'jkim@example.com',  hotel:'Lotte Hotel Seoul',      city:'서울',   country:'대한민국', countryCode:'KR', checkIn:'2026-08-20', checkOut:'2026-08-22', ota:'Hotels.com',  device:'Desktop', lang:'ko', langName:'한국어', usd:133.33, krw:180000, cashbackType:'FLAT', cashbackValue:9.78, cashbackUSD:9.78, pointKRW:13200, cancelled:false },
+  // ── 최근 적립완료(적립완료일 최근 1주일 = 체크아웃 7/29~8/4) — cb02·대시보드 기본 뷰용 ──
+  { resId:'RES-20150', bookingDate:'2026-07-15', memberEmail:'hong@example.com',  hotel:'Lotte Hotel Busan',      city:'부산',   country:'대한민국', countryCode:'KR', checkIn:'2026-07-28', checkOut:'2026-07-30', ota:'Booking.com', device:'Mobile',  lang:'ko', langName:'한국어', usd:185.19, krw:250000, cashbackType:'PERCENTAGE', cashbackValue:3.2, cashbackUSD:5.93, pointKRW:8000, cancelled:false },
+  { resId:'RES-20148', bookingDate:'2026-07-14', memberEmail:'mlee@example.com',  hotel:'Conrad Osaka',           city:'오사카', country:'일본',    countryCode:'JP', checkIn:'2026-07-30', checkOut:'2026-08-01', ota:'Agoda',       device:'Mobile',  lang:'ko', langName:'한국어', usd:355.56, krw:480000, cashbackType:'PERCENTAGE', cashbackValue:4.8, cashbackUSD:17.07, pointKRW:23040, cancelled:false },
+  { resId:'RES-20145', bookingDate:'2026-07-12', memberEmail:'tpark@example.com', hotel:'The Shilla Seoul',       city:'서울',   country:'대한민국', countryCode:'KR', checkIn:'2026-07-29', checkOut:'2026-08-02', ota:'Booking.com', device:'Mobile',  lang:'ko', langName:'한국어', usd:251.85, krw:340000, cashbackType:'PERCENTAGE', cashbackValue:3.2, cashbackUSD:8.06, pointKRW:10880, cancelled:false },
+  { resId:'RES-20143', bookingDate:'2026-07-20', memberEmail:'chen@example.tw',   hotel:'W Taipei',               city:'타이베이',country:'대만',   countryCode:'TW', checkIn:'2026-07-31', checkOut:'2026-08-03', ota:'Hotels.com',  device:'Mobile',  lang:'zh', langName:'중국어(번체)', usd:222.22, krw:300000, cashbackType:'FLAT', cashbackValue:9.78, cashbackUSD:9.78, pointKRW:13200, cancelled:false },
+
   { resId:'RES-20042', bookingDate:'2026-06-28', memberEmail:'hong@example.com',  hotel:'Grand Hyatt Seoul',      city:'서울',   country:'대한민국', countryCode:'KR', checkIn:'2026-07-01', checkOut:'2026-07-03', ota:'Booking.com', device:'Mobile',  lang:'ko', langName:'한국어', usd:237.04, krw:320000, cashbackType:'PERCENTAGE', cashbackValue:3.2, cashbackUSD:7.58, pointKRW:10240, cancelled:false },
   { resId:'RES-19980', bookingDate:'2026-05-18', memberEmail:'hong@example.com',  hotel:'Lotte Hotel Busan',      city:'부산',   country:'대한민국', countryCode:'KR', checkIn:'2026-05-20', checkOut:'2026-05-21', ota:'Booking.com', device:'Mobile',  lang:'ko', langName:'한국어', usd:133.33, krw:180000, cashbackType:'PERCENTAGE', cashbackValue:3.2, cashbackUSD:4.27, pointKRW:5760,  cancelled:false },
   { resId:'RES-19750', bookingDate:'2026-04-01', memberEmail:'hong@example.com',  hotel:'Marina Bay Sands',       city:'싱가포르',country:'싱가포르', countryCode:'SG', checkIn:'2026-04-05', checkOut:'2026-04-07', ota:'Agoda',       device:'Desktop', lang:'ko', langName:'한국어', usd:888.89, krw:1200000, cashbackType:'PERCENTAGE', cashbackValue:4.8, cashbackUSD:0, pointKRW:0, cancelled:true },
