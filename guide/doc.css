@@ -1,0 +1,159 @@
+/* ═══════════════════════════════════════════════════════════
+   픽콕 기능정책서 — 공통 스타일
+   제안서(픽콕_여행보상플랫폼_서비스_제안서_v0.1_20260928/index.html)의
+   색·간격 체계를 그대로 쓴다. 두 문서가 한 벌로 보여야 하므로.
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  --blue:#1B4FD8; --blue-d:#0E3396; --blue-l:#EAF0FF;
+  --gold:#F5B623; --gold-l:#FFF6E0; --gold-ink:#8A6400;
+  --ink:#14161A; --gray:#5B6474; --line:#E3E7EE; --bg:#F6F8FC;
+  --red:#D93025; --red-l:#FDECEA; --green:#1F8A5B; --green-l:#E8F7F0;
+  --nav:244px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:Pretendard,-apple-system,BlinkMacSystemFont,'Malgun Gothic',system-ui,sans-serif;
+  color:var(--ink); background:var(--bg); line-height:1.68;
+  -webkit-font-smoothing:antialiased; word-break:keep-all;
+}
+
+/* ───────── 좌측 차례 ───────── */
+.nav{
+  position:fixed; left:0; top:0; bottom:0; width:var(--nav); background:#fff;
+  border-right:1px solid var(--line); padding:24px 0 20px; overflow-y:auto; z-index:50;
+}
+.nav-brand{padding:0 20px 16px; border-bottom:1px solid var(--line); margin-bottom:12px}
+.nav-logo{font-size:20px;font-weight:900;letter-spacing:-.7px;color:var(--blue)}
+.nav-sub{font-size:11.5px;color:var(--gray);margin-top:3px;font-weight:600}
+.nav a{
+  display:block; padding:9px 20px; font-size:13px; font-weight:600; color:var(--gray);
+  text-decoration:none; border-left:3px solid transparent; transition:.14s;
+}
+.nav a:hover{background:var(--bg); color:var(--ink)}
+.nav a.on{color:var(--blue); border-left-color:var(--blue); background:var(--blue-l); font-weight:800}
+.nav-gap{height:14px}
+.nav-lb{padding:10px 20px 5px; font-size:10.5px; font-weight:800; color:#9AA3B2; letter-spacing:.6px}
+.nav-foot{padding:16px 20px 0; margin-top:14px; border-top:1px solid var(--line);
+  font-size:11.5px; color:var(--gray); line-height:1.6}
+.nav-foot a{display:inline; padding:0; color:var(--blue); font-weight:700; text-decoration:underline}
+
+/* ───────── 본문 ───────── */
+.wrap{margin-left:var(--nav); padding:0 40px 90px; max-width:1180px}
+.hero{padding:56px 0 34px; border-bottom:1px solid var(--line)}
+.hero .tag{display:inline-block; background:var(--blue); color:#fff; font-size:11.5px;
+  font-weight:800; padding:5px 11px; border-radius:7px; letter-spacing:.3px}
+.hero h1{font-size:38px; font-weight:900; letter-spacing:-1.4px; margin:14px 0 10px; line-height:1.25}
+.hero p{font-size:15px; color:var(--gray); max-width:720px}
+.hero .meta{margin-top:20px; display:flex; flex-wrap:wrap; gap:8px}
+.hero .meta span{background:#fff; border:1px solid var(--line); border-radius:8px;
+  padding:7px 12px; font-size:12px; font-weight:600; color:var(--gray)}
+.hero .meta b{color:var(--ink)}
+
+section{padding:46px 0; border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+.s-no{font-size:11px; font-weight:800; color:var(--blue); letter-spacing:1.2px}
+section h2{font-size:27px; font-weight:900; letter-spacing:-.9px; margin:7px 0 12px}
+.s-lead{font-size:14.5px; color:var(--gray); max-width:760px}
+.s-lead b{color:var(--ink)}
+section h3{font-size:18px; font-weight:800; letter-spacing:-.4px; margin:34px 0 12px}
+
+/* ───────── 기능 항목 ───────── */
+.feat{background:#fff; border:1px solid var(--line); border-radius:15px;
+  padding:22px 24px; margin-top:16px}
+.feat-hd{display:flex; align-items:flex-start; gap:11px; flex-wrap:wrap}
+.feat-no{flex:none; width:25px; height:25px; border-radius:7px; background:var(--blue);
+  color:#fff; font-size:12.5px; font-weight:800; display:grid; place-items:center; margin-top:1px}
+.feat-t{flex:1; min-width:200px; font-size:17px; font-weight:800; letter-spacing:-.4px}
+.feat-row{display:flex; gap:11px; margin-top:15px}
+.feat-k{flex:none; width:64px; font-size:12px; font-weight:800; color:var(--blue-d);
+  background:var(--blue-l); border-radius:7px; padding:4px 0; text-align:center; height:fit-content}
+.feat-k.why{color:var(--gold-ink); background:var(--gold-l)}
+.feat-v{flex:1; min-width:0; font-size:14px; line-height:1.72}
+.feat-v b{font-weight:800}
+.feat-v ul{margin:7px 0 0 17px}
+.feat-v li{margin-top:4px}
+
+/* ───────── 기능 항목에 바로 붙는 캡처 ─────────
+   설명을 다 읽고 섹션 끝에서 번호로 되짚게 하면 위아래를 오가야 한다.
+   그 기능을 설명한 자리 바로 아래에 그 화면을 둔다. */
+.feat-shots{display:flex; flex-wrap:wrap; gap:14px; margin-top:17px;
+  padding-top:16px; border-top:1px dashed var(--line)}
+.feat-shots .sw{flex:0 0 228px; max-width:228px}          /* 모바일 캡처 — 세로로 길다 */
+.feat-shots.wide .sw{flex:1 1 340px; max-width:none}      /* 어드민 캡처 — 가로로 넓다 */
+.feat-shots .cap{margin-top:6px}
+
+/* ───────── 근거 배지 ───────── */
+.ev{display:inline-block; font-size:10.5px; font-weight:800; border-radius:6px;
+  padding:3px 7px; margin-left:5px; vertical-align:middle; white-space:nowrap}
+.ev.ref{background:var(--blue-l); color:var(--blue-d)}      /* 타사 사례 */
+.ev.talk{background:var(--gold-l); color:var(--gold-ink)}   /* 협의 대상 */
+.ev.open{background:var(--red-l); color:var(--red)}         /* 미결 */
+
+/* ───────── 협의 박스 ───────── */
+.agree{background:var(--gold-l); border:1px solid #F0D79A; border-left:4px solid var(--gold);
+  border-radius:12px; padding:18px 20px; margin-top:26px}
+.agree-t{font-size:14px; font-weight:800; color:var(--gold-ink); margin-bottom:9px}
+.agree ul{margin-left:17px}
+.agree li{font-size:13.5px; margin-top:6px; line-height:1.65}
+.agree li b{font-weight:800}
+.agree .now{color:var(--gold-ink); font-weight:800}
+
+/* ───────── 표 ───────── */
+table{width:100%; border-collapse:collapse; margin-top:14px; background:#fff;
+  border:1px solid var(--line); border-radius:11px; overflow:hidden; font-size:13.5px}
+th,td{padding:11px 13px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+th{background:#FAFBFD; font-weight:800; font-size:12.5px; color:var(--gray)}
+tr:last-child td{border-bottom:0}
+td b{font-weight:800}
+
+/* ───────── 상태 배지 ───────── */
+.st{display:inline-block; font-size:11.5px; font-weight:800; border-radius:7px; padding:3px 9px}
+.st.wait{background:#FFF4DC; color:#8A6400}
+.st.ok{background:var(--green-l); color:var(--green)}
+.st.off{background:#F1F3F7; color:#7A8396}
+.st.no{background:var(--red-l); color:var(--red)}
+
+/* ───────── 캡처 ───────── */
+.shots{display:grid; gap:16px; margin-top:18px}
+.shots.s2{grid-template-columns:repeat(2,1fr)}
+.shots.s3{grid-template-columns:repeat(3,1fr)}
+.shots.s4{grid-template-columns:repeat(4,1fr)}
+.sw{min-width:0}
+.shot{display:block; background:#fff; border:1px solid var(--line); border-radius:13px;
+  overflow:hidden; transition:.16s}
+.shot:hover{transform:translateY(-2px); box-shadow:0 8px 22px rgba(20,30,60,.13)}
+.shot img{display:block; width:100%; height:auto}
+.shot.wide img{aspect-ratio:1360/873; object-fit:cover; object-position:top}
+.cap{font-size:11.5px; color:var(--gray); text-align:center; margin-top:7px; line-height:1.5}
+.cap b{color:var(--ink); font-weight:700}
+
+/* ───────── 메모 ───────── */
+.note{border-radius:11px; padding:15px 17px; margin-top:16px; font-size:13.5px; line-height:1.7}
+.note.blue{background:var(--blue-l); border:1px solid #CBDAFB}
+.note.red{background:var(--red-l); border:1px solid #F5C6C2}
+.note.gray{background:#fff; border:1px solid var(--line); color:var(--gray)}
+.note b{font-weight:800}
+
+/* ───────── 확대 보기 ───────── */
+.lb{position:fixed; inset:0; background:rgba(10,16,30,.86); display:none;
+  align-items:center; justify-content:center; z-index:200; padding:28px; cursor:zoom-out}
+.lb.on{display:flex}
+.lb img{max-width:100%; max-height:100%; border-radius:10px;
+  box-shadow:0 20px 60px rgba(0,0,0,.5)}
+
+@media (max-width:1000px){
+  .nav{position:static; width:auto; height:auto; border-right:0;
+    border-bottom:1px solid var(--line)}
+  .nav a{display:inline-block; border-left:0; border-bottom:3px solid transparent}
+  .nav a.on{border-left:0; border-bottom-color:var(--blue)}
+  .nav-lb,.nav-gap{display:none}
+  .wrap{margin-left:0; padding:0 18px 60px}
+  .hero h1{font-size:28px}
+  .shots.s3,.shots.s4{grid-template-columns:repeat(2,1fr)}
+}
+@media print{
+  .nav,.lb{display:none}
+  .wrap{margin-left:0; max-width:none}
+  section{break-inside:avoid}
+}

@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="googlebot" content="noindex, nofollow">
+<title>픽콕 고객앱 기능정책서</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="doc.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="nav-logo">PickoQ</div>
+    <div class="nav-sub">고객앱 기능정책서</div>
+  </div>
+  <div class="nav-lb">읽기 전에</div>
+  <a href="#s0">이 문서를 읽는 법</a>
+  <div class="nav-gap"></div>
+  <div class="nav-lb">기능</div>
+  <a href="#s1">1. 회원가입 · 로그인</a>
+  <a href="#s2">2. 홈과 저금통</a>
+  <a href="#s3">3. 참여형 적립</a>
+  <a href="#s4">4. 친구 추천</a>
+  <a href="#s5">5. 호텔 검색</a>
+  <a href="#s6">6. 예약 적립과 뽑기</a>
+  <a href="#s7">7. 포인트 사용</a>
+  <a href="#s8">8. 마이페이지</a>
+  <a href="#s9">9. 알림</a>
+  <div class="nav-gap"></div>
+  <div class="nav-lb">모아보기</div>
+  <a href="#s10">협의가 필요한 것</a>
+  <div class="nav-foot">
+    어드민은 <a href="admin.html">어드민 기능정책서</a>에 있습니다.
+  </div>
+</nav>
+
+<div class="wrap">
+
+<div class="hero">
+  <span class="tag">고객앱</span>
+  <h1>픽콕 고객앱 기능정책서</h1>
+  <p>
+    시연에서 보실 화면을 기능 단위로 정리했습니다. 각 기능마다 <b>어떻게 동작하는지(정책)</b>와
+    <b>왜 그렇게 정했는지(이유)</b>를 함께 적었습니다.
+    수치와 규칙에는 <b>근거가 어디서 왔는지</b>를 표시했습니다.
+  </p>
+  <div class="meta">
+    <span>기준 <b>2026-10-08 구현 상태</b></span>
+    <span>화면 <b>38장</b></span>
+    <span>기능 <b>25개</b></span>
+    <span>작성 <b>PO 윤성균</b></span>
+  </div>
+</div>
+
+<!-- ══════════ 0. 읽는 법 ══════════ -->
+<section id="s0">
+  <div class="s-no">READ ME</div>
+  <h2>이 문서를 읽는 법</h2>
+  <p class="s-lead">
+    두 가지만 알고 보시면 됩니다. <b>근거 표시</b>와 <b>상태값</b>입니다.
+  </p>
+
+  <h3>① 근거 표시 — 이 숫자는 어디서 왔나</h3>
+  <p class="s-lead">
+    수치와 규칙 옆에 붙는 배지입니다. <b>노란색만 보시면</b> 논의할 거리가 바로 보입니다.
+  </p>
+  <table>
+    <tr><th style="width:118px">표시</th><th>뜻</th><th style="width:300px">예</th></tr>
+    <tr>
+      <td><span class="ev ref">타사 사례</span></td>
+      <td>조사에서 <b>원문으로 확인한 타사 규칙</b>을 그대로 가져왔습니다.
+        바꾸려면 "왜 다르게 가는지"에 대한 근거가 필요합니다.</td>
+      <td>친구 추천 양방 1,000P — 토스와 같은 금액</td>
+    </tr>
+    <tr>
+      <td><span class="ev talk">협의 대상</span></td>
+      <td><b>우리가 정한 값</b>입니다. 참고한 사례는 있어도 최종 숫자는 판단으로 골랐습니다.
+        <b>논의로 바꿀 수 있습니다.</b></td>
+      <td>추천코드 뒤늦게 넣을 수 있는 기한 7일</td>
+    </tr>
+    <tr>
+      <td><span class="ev open">미결</span></td>
+      <td>아직 정하지 못했습니다. 법무 검토나 외부 확인이 끝나야 정해집니다.</td>
+      <td>포인트를 현금으로 바꾸는 기능의 도입 여부</td>
+    </tr>
+  </table>
+
+  <h3>② 상태값 — 화면에 뜨는 말들</h3>
+  <p class="s-lead">
+    포인트와 쿠폰은 <b>지금 쓸 수 있는지</b>가 가장 중요합니다. 그래서 상태를 글자로 분명히 보여줍니다.
+  </p>
+  <table>
+    <tr><th style="width:118px">상태</th><th>뜻</th><th style="width:330px">언제 이렇게 되나</th></tr>
+    <tr>
+      <td><span class="st ok">적립완료</span></td>
+      <td><b>지금 쓸 수 있는</b> 포인트가 됐습니다.</td>
+      <td>출석·퀴즈·친구 추천은 즉시 / 예약은 다녀온 뒤</td>
+    </tr>
+    <tr>
+      <td><span class="st off">사용</span></td>
+      <td>포인트가 빠져나갔습니다.</td>
+      <td>현금으로 꺼내거나 픽샵에서 샀을 때</td>
+    </tr>
+    <tr>
+      <td><span class="st no">취소 · 만료</span></td>
+      <td>무효가 됐습니다. 쓸 수 없습니다.</td>
+      <td>예약을 취소했거나, 쌓인 지 1년이 지났을 때</td>
+    </tr>
+    <tr>
+      <td><span class="st ok">사용가능</span> <span class="st off">사용완료</span></td>
+      <td>쿠폰 상태입니다. 취소하면 <span class="st no">취소</span>가 됩니다.</td>
+      <td>픽샵에서 산 쿠폰</td>
+    </tr>
+  </table>
+  <div class="note gray">
+    <b>예약 적립은 「적립완료」 하나로만 보여줍니다</b> — 「적립예정」 단계는 두지 않습니다.
+    단계를 나누면 고객이 <b>포인트가 두 종류</b>인 것으로 받아들여 혼동이 생기고,
+    사용 시점에 대한 문의가 그만큼 늘어납니다.
+    대신 <b>적립이 확정된 뒤에 넣어 주는 것</b>으로 정리했습니다.
+  </div>
+</section>
+
+<!-- ══════════ 1. 회원가입 ══════════ -->
+<section id="s1">
+  <div class="s-no">SECTION 1</div>
+  <h2>회원가입 · 로그인</h2>
+  <p class="s-lead">
+    포인트를 쌓고 현금으로 꺼내는 서비스입니다. <b>계정 하나에 사람 한 명</b>을 보장하는 일이
+    서비스의 바탕이 됩니다. 그래서 가입 단계는 짧게 가되, 본인확인만은 반드시 거치게 했습니다.
+  </p>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">1</div>
+      <div class="feat-t">이메일 인증코드 로그인 — 비밀번호 없음</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      이메일을 넣고 받은 <b>6자리 숫자</b>를 입력하면 끝납니다. 비밀번호는 만들지 않습니다.
+      코드는 <b>5분</b> 동안 쓸 수 있고 <span class="ev talk">협의 대상</span>,
+      다시 받는 횟수에는 제한이 없습니다.
+      6자리를 다 넣으면 <b>버튼을 누르지 않아도</b> 자동으로 확인합니다.
+      이미 가입한 사람이면 바로 로그인되고, 처음이면 본인인증 화면으로 넘어갑니다.
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      비밀번호는 잊어버립니다. 찾기 절차를 거치는 동안 사람이 빠져나갑니다.
+      적립을 받으러 온 사람을 <b>가입 단계에서의 이탈을 줄이려면</b> 절차가 짧아야 합니다.
+      비밀번호를 두지 않으면 유출 사고의 여지도 없습니다.
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f02_auth_email.jpg"><img src="screens/f02_auth_email.jpg" alt="이메일 입력"></a>
+        <div class="cap">이메일만 넣습니다 — 비밀번호 없음</div></div>
+      <div class="sw"><a class="shot" href="screens/f03_auth_code.jpg"><img src="screens/f03_auth_code.jpg" alt="인증코드"></a>
+        <div class="cap">6자리를 채우면 버튼 없이 자동 확인</div></div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">2</div>
+      <div class="feat-t">휴대폰 본인인증 — 필수</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      <b>신규 가입에만</b> 나옵니다. 통신사를 고르고 이름·생년월일·전화번호를 넣어 확인합니다.
+      <b>이걸 마치지 않으면 가입이 끝나지 않습니다.</b>
+      확인된 이름과 번호는 계정관리에서 <b>고칠 수 없고</b>, 번호를 바꾸려면 인증을 다시 해야 합니다.
+      <ul>
+        <li>본인인증을 마치지 않으면 <b>출석·퀴즈·혜택·친구 추천 어느 것도 적립되지 않습니다.</b></li>
+        <li>시연에서는 인증번호를 아무 6자리나 넣어도 통과합니다 <span class="ev open">미결</span>
+          — 실제 본인확인기관 연동은 업체 선정 후</li>
+      </ul>
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      <b>한 사람이 계정을 여러 개 만들어 적립을 가져가는 것</b>을 막기 위해서입니다.
+      출석·퀴즈처럼 매일 주는 포인트는 계정 수만큼 비용이 됩니다.
+      이메일은 얼마든지 새로 만들 수 있지만 <b>휴대폰 번호는 그렇지 않습니다.</b>
+      현금으로 꺼내는 기능까지 생각하면 사람을 특정할 수단이 반드시 필요합니다.
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f04_cert_telco.jpg"><img src="screens/f04_cert_telco.jpg" alt="통신사 선택"></a>
+        <div class="cap">통신사를 고릅니다</div></div>
+      <div class="sw"><a class="shot" href="screens/f05_cert_form.jpg"><img src="screens/f05_cert_form.jpg" alt="본인인증 입력"></a>
+        <div class="cap">이름 · 생년월일 · 휴대폰 번호</div></div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">3</div>
+      <div class="feat-t">약관 동의</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      서비스 이용약관과 개인정보 수집·이용은 <b>필수</b>, 마케팅 수신은 <b>선택</b>입니다.
+      필수 두 개를 모두 체크해야 [가입 완료]가 눌립니다.
+      마케팅 동의는 나중에 <b>마이페이지 &gt; 설정</b>에서 켜고 끌 수 있습니다.
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      법으로 정해진 절차입니다. 마케팅만 선택으로 둔 것은, 동의를 강요하면 거부감이 생기고
+      <b>법적으로도 강제할 수 없기</b> 때문입니다.
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f06_join_terms.jpg"><img src="screens/f06_join_terms.jpg" alt="약관 동의"></a>
+        <div class="cap">필수 2개를 체크해야 [가입 완료]가 눌립니다</div></div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">4</div>
+      <div class="feat-t">추천코드 입력 — 선택</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      <ul>
+        <li><b>비워 두고 가입해도 됩니다.</b> 기본은 접혀 있고 「친구 추천코드가 있나요?」를 눌러야 펼쳐집니다.</li>
+        <li>9자리를 넣고 <b>[조회]</b>를 눌러 확인된 코드만 통과합니다. 없는 코드면 가입 버튼이 잠깁니다.</li>
+        <li><b>계정당 한 번만</b> 넣을 수 있고 <b>수정할 수 없습니다.</b></li>
+        <li>가입할 때 못 넣었으면 <b>가입 후 7일 안에</b> <span class="ev talk">협의 대상</span>
+          마이페이지 &gt; 계정관리에서 넣을 수 있습니다.</li>
+        <li>넣는 즉시 <b>나와 추천인에게 각각 1,000P</b> <span class="ev ref">타사 사례</span>가 들어옵니다.</li>
+      </ul>
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      <b>기존 회원이 새 회원을 데려오는 것이 가장 저렴한 비용의 유입</b>입니다. 광고 집행보다 비용이 적게 듭니다.<br>
+      다만 가입 화면에 칸을 하나 더 두면 전환율이 떨어집니다. 그래서 <b>접어 두고</b>,
+      추천 링크로 들어온 사람에게는 <b>미리 채워</b> 둡니다.<br>
+      한 번만 허용하고 수정을 막는 것은 <b>코드를 반복 사용해 포인트만 취득하는 행위</b>을 막기 위해서입니다.
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f07_join_ref.jpg"><img src="screens/f07_join_ref.jpg" alt="추천코드 조회"></a>
+        <div class="cap">[조회]로 확인된 코드만 통과합니다</div></div>
+      <div class="sw"><a class="shot" href="screens/f37_earn_invite.jpg"><img src="screens/f37_earn_invite.jpg" alt="가입이 끝나면 — 바로 1,000P 적립"></a>
+        <div class="cap">가입이 끝나면 — 바로 1,000P 적립</div></div>
+    </div>
+  </div>
+
+  <div class="agree">
+    <div class="agree-t">이 섹션에서 협의가 필요한 것</div>
+    <ul>
+      <li><b>인증코드 유효시간 5분</b> — <span class="now">현재 5분.</span>
+        짧으면 메일이 늦게 올 때 다시 받아야 하고, 길면 보안이 약해집니다.</li>
+      <li><b>추천코드 뒤늦게 넣는 기한 7일</b> — <span class="now">현재 7일.</span>
+        참고한 사례는 <b>Wise 30일 · 토스 24시간</b>으로 폭이 넓어, 그 사이에서 판단으로 골랐습니다.
+        길게 잡으면 구제 폭이 넓어지고, 짧게 잡으면 어뷰징 여지가 줄어듭니다.</li>
+      <li><b>본인인증 업체</b> — <span class="now">미정.</span>
+        건당 비용이 발생하므로 업체·단가가 정해져야 비용을 계산할 수 있습니다.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════ 2. 홈과 저금통 ══════════ -->
+<section id="s2">
+  <div class="s-no">SECTION 2</div>
+  <h2>홈과 저금통</h2>
+  <p class="s-lead">
+    앱을 열면 가장 먼저 <b>내 포인트가 얼마인지</b> 보입니다.
+    그 아래에 포인트를 모을 수 있는 방법들이 차례로 놓입니다.
+  </p>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">1</div>
+      <div class="feat-t">내 저금통 — 포인트를 모으는 그릇</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      쌓인 포인트를 <b>저금통</b>으로 부르고, 목표 <b>10,000P</b> <span class="ev talk">협의 대상</span>까지
+      얼마나 찼는지 막대로 보여줍니다. 10,000P를 넘으면 <b>현금으로 꺼낼 수 있는 상태</b>가 됩니다.
+      로그인하지 않으면 0P와 함께 「로그인하면 포인트가 쌓이기 시작해요」가 보입니다.
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      포인트는 숫자에 불과하여 <b>적립하는 재미를 느끼기 어렵습니다.</b>
+      저금통과 목표선을 두면 "조금만 더 모으면 꺼낼 수 있다"는 상태가 눈에 보입니다.
+      <b>목표가 가까워질수록 이탈이 줄어듭니다.</b>
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f08_home.jpg"><img src="screens/f08_home.jpg" alt="홈 저금통"></a>
+        <div class="cap">내 포인트 → 저금통 막대 → [꺼내기]</div></div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">2</div>
+      <div class="feat-t">적립 수단을 한 화면에 모으기</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      홈 아래쪽에 <b>호텔 예약 적립 → 출석체크 → 여행상식 퀴즈 → 친구 추천 → 혜택</b> 순서로 놓습니다.
+      적립액이 가장 큰 호텔 예약을 맨 위에 둡니다.
+      이미 오늘 참여한 것은 <b>참여완료</b>로 표시되고, 눌러서 내용은 볼 수 있지만 다시 참여할 수는 없습니다.
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      <b>매일 올 이유를 만드는 것</b>이 이 화면의 목적입니다.
+      출석·퀴즈는 금액이 작지만 <b>매일 앱을 열게 합니다.</b> 그렇게 들어온 사람이 호텔을 예약하면
+      그때 큰 적립이 일어납니다. 작은 적립은 <b>큰 적립으로 가는 길</b>입니다.
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f09_home_earn.jpg"><img src="screens/f09_home_earn.jpg" alt="적립 수단"></a>
+        <div class="cap">홈을 내리면 — 예약 · 출석 · 퀴즈 · 추천 · 혜택</div></div>
+    </div>
+  </div>
+
+  <div class="agree">
+    <div class="agree-t">이 섹션에서 협의가 필요한 것</div>
+    <ul>
+      <li><b>현금으로 꺼낼 수 있는 최소 금액 10,000P</b> — <span class="now">현재 10,000P.</span>
+        낮추면 조기에 출금할 수 있어 체감은 개선되지만 송금 수수료가 자주 발생합니다.
+        높이면 오래 모으게 되지만 "못 꺼내는 포인트"라는 인상을 줄 수 있습니다.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════ 3. 참여형 적립 ══════════ -->
+<section id="s3">
+  <div class="s-no">SECTION 3</div>
+  <h2>참여형 적립 — 출석 · 퀴즈 · 혜택</h2>
+  <p class="s-lead">
+    예약하지 않아도 포인트를 모을 수 있는 세 가지입니다.
+    <b>출석과 퀴즈는 자사 비용이 발생하고</b>, <b>혜택은 광고주가 비용을 부담합니다.</b>
+    성격이 다르므로 설계도 다릅니다.
+  </p>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">1</div>
+      <div class="feat-t">출석체크 — 하루 한 번</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      <ul>
+        <li>하루에 <b>한 번</b>만 누를 수 있습니다. 한국 시간 자정에 다시 열립니다.</li>
+        <li>도장판은 <b>6칸</b>입니다 <span class="ev talk">협의 대상</span>.
+          1~5번째는 <b>각 10P</b>, 6번째는 <b>10P + 추가 10~100P</b>를 뽑습니다.</li>
+        <li><b>꽝이 없습니다.</b> 6번째는 최소 20P, 최대 110P입니다.</li>
+        <li>하루 빠져도 도장은 <b>그대로 남습니다.</b> 연속으로 올 필요가 없습니다.</li>
+        <li>본인인증을 마쳐야 적립됩니다.</li>
+      </ul>
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      <b>연속 출석을 요구하면 한 번 빠진 사람이 돌아오지 않습니다.</b>
+      연속 기록이 끊긴 시점에 참여 동기가 사라지기 때문입니다. 그래서 누적만 되는 방식으로 설계했습니다.<br>
+      6번째에 뽑기를 둔 것은 <b>마지막 한 칸을 채우기 위해 재방문하도록 유도</b>하기 위해서입니다.
+      꽝을 두지 않은 것은, 매일 참여한 이용자에게 0원을 지급하면 <b>다음 방문으로 이어지지 않기</b> 때문입니다.<br>
+      <b>상자를 한 번 누르게 한 것</b>도 일부러입니다. 금액을 바로 제시하면 단순한 숫자에 그치지만,
+      누르고 열리는 순간을 거치면 <b>"내가 뽑았다"</b>가 됩니다.
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f10_attend.jpg"><img src="screens/f10_attend.jpg" alt="출석체크"></a>
+        <div class="cap">도장 6칸 — 1~5일은 바로 10P</div></div>
+      <div class="sw"><a class="shot" href="screens/f30_earn_attend.jpg"><img src="screens/f30_earn_attend.jpg" alt="누르면 — 동전이 쏟아지고 포인트가 오릅니다"></a>
+        <div class="cap">누르면 — 동전이 쏟아지고 포인트가 오릅니다</div></div>
+      <div class="sw"><a class="shot" href="screens/f33_gift_box.jpg"><img src="screens/f33_gift_box.jpg" alt="6번째 — 상자가 뜨고 기다립니다"></a>
+        <div class="cap"><b>6번째</b> — 상자가 뜨고 기다립니다</div></div>
+      <div class="sw"><a class="shot" href="screens/f34_gift_opening.jpg"><img src="screens/f34_gift_opening.jpg" alt="누르면 여는 중"></a>
+        <div class="cap">누르면 여는 중</div></div>
+      <div class="sw"><a class="shot" href="screens/f35_gift_result.jpg"><img src="screens/f35_gift_result.jpg" alt="출석 10P + 추가 40P = 50P"></a>
+        <div class="cap">출석 10P + 추가 40P = <b>50P</b></div></div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">2</div>
+      <div class="feat-t">여행상식 퀴즈 — 하루 3문제</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      <ul>
+        <li>하루 <b>3문제</b>, <b>O/X</b> 두 개 중 하나를 고릅니다.</li>
+        <li>맞히면 문항당 <b>10P</b>, 다 맞히면 <b>30P</b>입니다
+          <span class="ev talk">협의 대상</span>.</li>
+        <li><b>한 문제에 한 번만</b> 답할 수 있습니다. 틀리면 그 문항은 0P입니다.
+          결과는 <b>0P에서 30P 사이</b>입니다.</li>
+        <li>틀려도 <b>정답과 해설</b>은 보여줍니다.</li>
+        <li>해설 아래에 <b>광고 버튼</b>을 둘 수 있습니다. 눌러도 적립은 없습니다.</li>
+        <li>포인트는 <b>마지막 문제를 푼 순간</b> 한 번에 들어옵니다.</li>
+        <li>한 번 낸 문제는 당분간 다시 나오지 않습니다.</li>
+      </ul>
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      여행 상식이라 <b>읽는 재미가 있고</b>, 오답이어도 해설을 통해 얻는 것이 있습니다.<br>
+      재도전을 두지 않은 것은 <b>비용 때문</b>입니다. 계속 다시 풀 수 있으면 모두가 30P를 받아
+      사실상 출석체크와 같아집니다. 한 번만 답하게 하면 <b>평균 지급액이 절반으로</b> 줄고,
+      문제를 제대로 읽을 이유도 생깁니다.<br>
+      해설에 광고를 붙인 것은 <b>자사 비용이 발생하는 기능에서 일부라도 수익을 확보하기</b> 위해서입니다.
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f11_quiz.jpg"><img src="screens/f11_quiz.jpg" alt="퀴즈"></a>
+        <div class="cap">O/X 중 하나 — 한 문제에 한 번만</div></div>
+      <div class="sw"><a class="shot" href="screens/f12_quiz_result.jpg"><img src="screens/f12_quiz_result.jpg" alt="퀴즈 해설"></a>
+        <div class="cap">틀려도 해설을 보여주고, 아래에 광고</div></div>
+      <div class="sw"><a class="shot" href="screens/f31_earn_quiz.jpg"><img src="screens/f31_earn_quiz.jpg" alt="다 풀면 — 맞힌 만큼 한 번에"></a>
+        <div class="cap">다 풀면 — 맞힌 만큼 한 번에</div></div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">3</div>
+      <div class="feat-t">혜택(오퍼월) — 광고주가 주는 포인트</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      <ul>
+        <li>광고를 누르면 <b>새 창으로 광고 안내 페이지</b>가 열립니다.
+          광고주 사이트로 바로 가지 않고, <b>픽콕이 만든 중간 페이지</b>를 먼저 거칩니다.</li>
+        <li>그 페이지에 <b>3초 이상 머물러야</b> 적립됩니다
+          <span class="ev talk">협의 대상</span>.
+          3초가 지나기 전에는 <b>이동 버튼이 나타나지 않습니다.</b></li>
+        <li>3초가 차면 <b>그 페이지 안에서</b> 「10P 적립됐어요!」가 표시되고
+          <b>[창 닫고 이동하기]</b> 버튼이 나옵니다. 누르면 광고주 사이트로 넘어갑니다.</li>
+        <li><b>적립 축하 연출은 없습니다.</b> 픽콕으로 돌아오면
+          「포인트가 적립됐어요」 안내만 짧게 뜨고 포인트가 올라가 있습니다.</li>
+        <li>한 광고당 <b>한 번만</b> 적립됩니다. 받은 광고는 참여완료로 바뀝니다.</li>
+        <li>광고마다 금액·체류 시간·분류를 어드민에서 정합니다.</li>
+      </ul>
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      <b>자사 비용이 발생하지 않는 유일한 적립 수단</b>입니다. 광고주가 비용을 부담합니다.
+      출석·퀴즈에서 발생한 비용을 이 수익으로 보전하는 구조입니다.<br>
+      3초를 둔 것은 <b>진입 직후 종료하고 포인트만 수령하는 행위</b>를 막기 위해서입니다.
+      광고주가 비용을 지불하는 이유는 이용자가 해당 페이지를 보기 때문이고,
+      실제 열람이 이루어지지 않으면 <b>광고 집행이 중단됩니다.</b><br>
+      <b>중간 페이지를 둔 이유</b>는 체류 시간을 셀 수 있는 자리가 필요하기 때문입니다.
+      광고주 사이트로 바로 보내면 <b>이용자가 거기 얼마나 머물렀는지 알 수 없어</b>
+      적립 조건을 확인할 방법이 없습니다.
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f13_benefit.jpg"><img src="screens/f13_benefit.jpg" alt="혜택"></a>
+        <div class="cap">혜택 목록 — 광고주가 비용을 냅니다</div></div>
+      <div class="sw"><a class="shot" href="screens/f36_ad_wait.jpg"><img src="screens/f36_ad_wait.jpg" alt="광고 안내 페이지 — 3초 대기"></a>
+        <div class="cap">새 창 — <b>3초 대기</b> · 이동 버튼 아직 없음</div></div>
+      <div class="sw"><a class="shot" href="screens/f42_ad_done.jpg"><img src="screens/f42_ad_done.jpg" alt="광고 안내 페이지 — 적립 완료"></a>
+        <div class="cap">3초가 차면 — <b>적립 완료 + 이동 버튼</b></div></div>
+    </div>
+  </div>
+
+  <div class="agree">
+    <div class="agree-t">이 섹션에서 협의가 필요한 것</div>
+    <ul>
+      <li><b>출석 도장 6칸 · 1~5일 10P · 6일 10~100P</b> — <span class="now">현재 값.</span>
+        타사 사례를 그대로 쓴 게 아니라 <b>우리가 설계한 구조</b>입니다.
+        칸 수와 금액 모두 조정할 수 있습니다.</li>
+      <li><b>퀴즈 문항당 10P · 하루 3문제</b> — <span class="now">현재 값.</span>
+        완주해도 최대 30P입니다.</li>
+      <li><b>퀴즈 재응시 없음 (0~30P)</b> — <span class="now">10/07 변경.</span>
+        원래는 틀리면 다시 풀 수 있어 모두가 30P를 받는 구조였습니다.
+        <b>0P를 받고 나가는 경험이 생기므로</b> 이탈에 영향이 있는지 지켜봐야 합니다.</li>
+      <li><b>혜택 체류 시간 3초</b> — <span class="now">현재 3초.</span>
+        광고주가 더 긴 시간을 요구할 수 있습니다. 광고별로 다르게 둘 수도 있습니다.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════ 4. 친구 추천 ══════════ -->
+<section id="s4">
+  <div class="s-no">SECTION 4</div>
+  <h2>친구 추천</h2>
+  <p class="s-lead">
+    내 코드로 친구가 가입하면 <b>둘 다</b> 포인트를 받습니다.
+    이 절의 규칙은 대부분 <b>타사에서 원문으로 확인한 것을 그대로</b> 가져왔습니다.
+  </p>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">1</div>
+      <div class="feat-t">양방 1,000P · 가입하는 순간 지급</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      친구가 <b>가입하면서 내 코드를 넣는 순간</b> 양쪽에 <b>각 1,000P</b>
+      <span class="ev ref">타사 사례</span>가 바로 들어옵니다.
+      친구가 여행을 다녀올 때까지 기다리지 않습니다.
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      <b>여행업계 관행과 다른 선택입니다.</b> 트립닷컴·아고다·에어비앤비는 모두 "여행을 다녀와야" 줍니다.<br>
+      그럼에도 가입 시점으로 한 이유는 <b>우리가 예약 결과를 직접 알 수 없기</b> 때문입니다.
+      픽콕의 예약은 다른 사이트로 넘어가서 일어나고, 그 결과는 호텔스컴바인이 알려줘야 압니다.
+      확정까지 <b>수개월</b>이 걸리고 <b>누락되는 경우도 있습니다.</b><br>
+      이 상태에서 "친구가 다녀오면 드립니다"라고 하면,
+      <b>"다녀왔는데 왜 안 들어오냐"는 문의에 우리가 답할 수단이 없습니다.</b>
+      <b>우리가 통제할 수 없는 데이터에 보상을 묶지 않는다</b>는 것이 이 결정의 핵심입니다.
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f07_join_ref.jpg"><img src="screens/f07_join_ref.jpg" alt="가입 시 코드 입력"></a>
+        <div class="cap">가입 화면에서 코드를 넣는 순간 둘 다 적립</div></div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">2</div>
+      <div class="feat-t">어뷰징 방지 — 상한과 제한</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      <ul>
+        <li><b>코드를 보내는 횟수는 제한이 없습니다.</b> 다만 <b>내가 적립받는 것은 월 20회</b>까지입니다
+          <span class="ev ref">타사 사례</span>.
+          <b>시연에서는 3회로 낮춰 두었습니다</b> — 상한에 걸리는 모습을 보여드리기 위한 설정입니다.</li>
+        <li>상한을 넘어도 <b>친구는 정상적으로 1,000P를 받습니다</b> <span class="ev ref">타사 사례</span>.</li>
+        <li><b>하루 단위 제한은 두지 않습니다</b> — 조사한 8개사 중 공개 사례가 없었습니다.</li>
+        <li>내 코드를 내가 넣을 수 없고, 같은 명의·번호로 만든 계정은 적립되지 않습니다.</li>
+        <li>코드는 <b>9자리</b> <span class="ev ref">타사 사례</span>이며,
+          혼동하기 쉬운 문자(O·0·I·1·l)는 제외했습니다.</li>
+      </ul>
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      가입만으로 비용이 발생하는 구조이므로 <b>어뷰징 방지가 이 정책의 핵심</b>입니다. 기준이 느슨하면 그대로 비용으로 이어집니다.<br>
+      그런데 상한을 우리 마음대로 정하면 <b>"왜 20회냐"에 답할 수 없습니다.</b>
+      그래서 상한·코드 형식·어뷰징 조항은 <b>임의로 만들지 않고 타사에서 확인된 것을 그대로</b> 썼습니다.<br>
+      <b>친구가 받는 포인트에 제한을 두지 않은 것</b>은, 추천받은 사람이 "왜 나는 못 받냐"고 느끼면
+      서비스 첫인상이 나빠지기 때문입니다.
+    </div></div>
+  </div>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">3</div>
+      <div class="feat-t">내 추천 실적만 보여주고, 누구인지는 숨김</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      <b>이번 달 추천한 친구 · 누적 · 받은 포인트</b>만 숫자로 보여줍니다.
+      <b>누가 내 코드로 가입했는지는 보여주지 않습니다.</b>
+      언제 적립됐는지는 포인트 내역에서 확인할 수 있습니다.
+      내가 추천받은 경우에는 위에 <b>「○○○ 코드로 가입했어요」</b>가 표시됩니다.<br>
+      친구가 내 코드로 가입하면 <b>알림</b>으로 알려드립니다 —
+      「친구가 가입했어요 +1,000P」. <b>적립 축하 연출은 뜨지 않습니다.</b>
+      친구가 가입하는 시점에 내가 앱을 보고 있지 않기 때문입니다.
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      <b>다른 회원의 이름은 개인정보</b>입니다. 코드는 공개된 곳에 뿌려질 수도 있어,
+      <b>내가 모르는 사람이 쓸 수도 있습니다.</b> 그 사람의 이름을 나에게 보여줄 이유가 없습니다.<br>
+      내가 알아야 하는 것은 <b>"몇 명이 썼고 얼마를 받았나"</b>이고, 그것만 보여줍니다.
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f14_invite.jpg"><img src="screens/f14_invite.jpg" alt="친구 추천"></a>
+        <div class="cap">내 코드 · 실적 3개 — 누가 썼는지는 없음</div></div>
+      <div class="sw"><a class="shot" href="screens/f39_noti_open.jpg"><img src="screens/f39_noti_open.jpg" alt="친구가 가입했어요 알림"></a>
+        <div class="cap">친구가 가입하면 — <b>알림</b>으로 알려드립니다</div></div>
+    </div>
+  </div>
+
+  <div class="agree">
+    <div class="agree-t">이 섹션에서 협의가 필요한 것</div>
+    <ul>
+      <li><b>가입 시점에 지급</b> — <span class="now">현재 가입 시점.</span>
+        여행업 관행(여행 완료)과 다릅니다. <b>실제 이용 없이 계정만 늘어도 비용이 나갑니다.</b>
+        대신 여행 완료로 바꾸면 우리가 통제할 수 없는 데이터에 보상이 묶입니다. 어느 쪽을 감수할지의 문제입니다.</li>
+      <li><b>월 상한 20회</b> — 무신사 사례를 그대로 썼습니다.
+        시연용으로는 <b>3회</b>로 낮춰 두었으니(어드민에서 조정) 화면 숫자는 다를 수 있습니다.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════ 5. 호텔 검색 ══════════ -->
+<section id="s5">
+  <div class="s-no">SECTION 5</div>
+  <h2>호텔 검색 — 호텔스컴바인 실연동</h2>
+  <p class="s-lead">
+    시연에서 보시는 호텔·가격·적립률은 <b>만들어 넣은 값이 아니라 호텔스컴바인에서 지금 받아온 실제 값</b>입니다.
+    자동완성부터 예약처로 넘어가는 링크까지 전부 실제로 동작합니다.
+  </p>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">1</div>
+      <div class="feat-t">목적지 자동완성</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      글자를 치면 호텔스컴바인에 물어봐 <b>도시 → 지역·공항 → 호텔</b> 순서로 보여줍니다.
+      실제 데이터이므로 전 세계 어디든 나옵니다.
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      목적지를 정확히 집어야 검색 결과가 맞습니다. 도시를 먼저 보여주는 것은
+      <b>대부분의 사람이 도시 단위로 여행을 정하기</b> 때문입니다.
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f15_search_form.jpg"><img src="screens/f15_search_form.jpg" alt="검색 폼"></a>
+        <div class="cap">어디로 · 언제 · 몇 명</div></div>
+      <div class="sw"><a class="shot" href="screens/f16_search_ac.jpg"><img src="screens/f16_search_ac.jpg" alt="도시 → 지역 → 호텔 순으로 묶어 보여줍니다"></a>
+        <div class="cap">도시 → 지역 → 호텔 순으로 묶어 보여줍니다</div></div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">2</div>
+      <div class="feat-t">검색 결과 — 두 번에 나눠 보여줍니다</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      <ul>
+        <li>호텔스컴바인은 <b>처음 응답에 예약처를 한 곳만</b> 주고, 전부 모으는 데 <b>10초쯤</b> 걸립니다.</li>
+        <li>그래서 <b>0.5초 안에 먼저 목록을 보여주고</b>, 나머지 예약처 가격은 뒤에서 채웁니다.
+          채우는 동안 「예약처 가격을 불러오는 중이에요」가 뜹니다.</li>
+        <li>카드에는 <b>최저가</b>만 표시합니다. 예약처별 비교는 숙소상세에서 합니다.</li>
+        <li>정렬은 호텔스컴바인이 합니다. 기본은 <b>인기순</b>이고, 바꾸면 다시 물어봅니다.</li>
+      </ul>
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      10초를 빈 화면으로 기다리게 하면 <b>사람이 나갑니다.</b> 먼저 보여주고 채우는 방식은
+      카약·Vio 같은 가격비교 서비스가 쓰는 방법입니다.<br>
+      정렬을 직접 하지 않는 것은, 받아온 30곳만 다시 늘어놓으면
+      <b>전체 최저가가 아니라 받아온 30곳 중의 최저가</b>가 되어 정확하지 않기 때문입니다.
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f17_search_result.jpg"><img src="screens/f17_search_result.jpg" alt="숙소마다 최저가 한 줄"></a>
+        <div class="cap">숙소마다 최저가 한 줄</div></div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">3</div>
+      <div class="feat-t">숙소상세 — 예약처별 가격·적립 비교</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      한 호텔에 <b>예약처가 최대 8곳</b>까지 나옵니다(아고다·부킹닷컴·트립닷컴·호텔스닷컴·하나투어·모두투어 등).
+      각 줄에 <b>가격 · 적립 포인트 · 조건(무료취소·조식)</b>을 함께 보여주고,
+      <b>가격이 낮은 순서</b>로 배열합니다. 같은 예약처가 객실만 바꿔 여러 번 나오면 <b>최저가 1건</b>만 남깁니다.
+      사진·객실명·소개글·평점도 호텔스컴바인에서 받아옵니다.
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      <b>최저가 예약처와 적립이 가장 큰 예약처가 다를 수 있습니다.</b>
+      예약처마다 적립률이 다르기 때문입니다(2%~4%).
+      이걸 한 화면에서 비교하게 하는 것이 <b>픽콕이 다른 가격비교와 다른 점</b>입니다.
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f18_detail.jpg"><img src="screens/f18_detail.jpg" alt="사진 · 기본정보 · 이 숙소의 최대 적립"></a>
+        <div class="cap">사진 · 기본정보 · 이 숙소의 최대 적립</div></div>
+      <div class="sw"><a class="shot" href="screens/f19_detail_compare.jpg"><img src="screens/f19_detail_compare.jpg" alt="예약처 8곳 — 가격과 적립을 나란히"></a>
+        <div class="cap">예약처 8곳 — 가격과 적립을 나란히</div></div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">4</div>
+      <div class="feat-t">아웃링크 — 예약은 그쪽에서 합니다</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      [예약]을 누르면 <b>새 창으로 그 예약처 페이지</b>가 열립니다. 픽콕에서 결제하지 않습니다.
+      넘어가는 주소에는 <b>내 회원번호가 들어 있어</b>, 나중에 예약 결과를 내 계정과 맞출 수 있습니다.
+      <div class="note gray" style="margin-top:10px">
+        시연용으로는 그 화면에 <b>[예약 완료 처리하고 적립받기]</b> 버튼을 두었습니다.
+        실제로는 호텔스컴바인이 예약 결과를 알려주면 자동으로 쌓입니다.
+      </div>
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      우리는 <b>예약을 중개하지 않고 연결만</b> 합니다. 결제·취소·고객응대를 하지 않으므로
+      그만큼 책임과 비용이 줄어듭니다. 대신 <b>연결한 대가로 수수료</b>를 받고,
+      그 일부를 고객에게 포인트로 돌려줍니다.
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f20_outlink.jpg"><img src="screens/f20_outlink.jpg" alt="예약처로 넘어가기 직전 화면"></a>
+        <div class="cap">예약처로 넘어가기 직전 화면</div></div>
+    </div>
+  </div>
+
+
+  <div class="note blue">
+    <b>호텔스컴바인 연동은 회사 네트워크에서만 됩니다.</b>
+    상대 쪽에서 우리 회사 IP만 허용해 두었기 때문입니다.
+    밖에서 열면 검색이 되지 않으니, 시연은 <b>사무실 네트워크</b>에서 해야 합니다.
+  </div>
+</section>
+
+<!-- ══════════ 6. 예약 적립과 뽑기 ══════════ -->
+<section id="s6">
+  <div class="s-no">SECTION 6</div>
+  <h2>예약 적립과 뽑기</h2>
+  <p class="s-lead">
+    호텔 예약은 <b>가장 큰 적립</b>입니다. 다만 전액을 즉시 지급하지 않고
+    <b>일부를 뽑기로</b> 돌립니다. 여기에 이유가 있습니다.
+  </p>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">1</div>
+      <div class="feat-t">기본 적립 + 뽑기 몫</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      예약처가 주는 적립률(2~4%)을 <b>둘로 나눕니다.</b>
+      <ul>
+        <li><b>기본 1%</b> <span class="ev talk">협의 대상</span> — 예약하면 확정으로 들어옵니다.</li>
+        <li><b>나머지</b> — 뽑기로 받습니다. 예약 1건당 한 번, <b>꽝은 없습니다.</b></li>
+      </ul>
+      예: 4% 적립이면 기본 1% + 뽑기로 최대 3% 더.
+      뽑기는 <b>적립이 확정된 뒤</b>에 열립니다.
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      <b>추가 비용이 발생하지 않습니다.</b> 예약처가 지급하는 금액을 배분하는 구조입니다.<br>
+      다만 전액을 즉시 지급하면 <b>적립 사실을 인지하지 못한 채 지나가게 됩니다.</b>
+      뽑기를 거치게 하면 앱을 한 번 더 열고, 받는 순간을 기억합니다.<br>
+      한 가지 더 — <b>뽑지 않은 포인트는 지급되지 않습니다.</b>
+      이건 비용을 줄이지만 동시에 <b>고객 불만이 될 수 있는 지점</b>이라 어드민에서 미수령액을 봅니다.
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f21_history.jpg"><img src="screens/f21_history.jpg" alt="내역에 「뽑기하고 더 받기」 띠가 뜹니다"></a>
+        <div class="cap">내역에 <b>「뽑기하고 더 받기」</b> 띠가 뜹니다</div></div>
+      <div class="sw"><a class="shot" href="screens/f22_draw_box.jpg"><img src="screens/f22_draw_box.jpg" alt="예약당 한 번 · 꽝 없음"></a>
+        <div class="cap">예약당 한 번 · 꽝 없음</div></div>
+      <div class="sw"><a class="shot" href="screens/f38_booking_draw.jpg"><img src="screens/f38_booking_draw.jpg" alt="열면 — 기본 적립과 뽑기를 나눠서"></a>
+        <div class="cap">열면 — 기본 적립과 뽑기를 나눠서</div></div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">2</div>
+      <div class="feat-t">적립 시점 — 다녀와야 확정</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      <b>체크아웃 +7일</b> <span class="ev talk">협의 대상</span>에
+      <span class="st ok">적립완료</span>로 한 번에 들어옵니다.
+      <b>그 전에는 내역에 나타나지 않습니다</b> — 「적립예정」 같은 중간 단계를 두지 않습니다.
+      예약을 취소하면 <span class="st no">취소</span>가 되고 포인트는 들어오지 않습니다.
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      예약은 <b>취소될 수 있습니다.</b> 예약 즉시 쓸 수 있는 포인트로 주면,
+      취소한 사람이 이미 쓴 포인트를 회수해야 합니다. <b>사실상 회수가 어렵습니다.</b><br>
+      실제로 호텔스컴바인이 "이 예약은 확정됐다"고 알려주기까지 <b>수개월</b>이 걸립니다.
+      7일은 그보다 훨씬 짧게 설정한 것으로, <b>자사가 선지급하는 구조</b>입니다.
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f21_history.jpg"><img src="screens/f21_history.jpg" alt="포인트 내역 — 적립 내역과 뽑기 안내 띠"></a>
+        <div class="cap">포인트 내역 — 적립 내역과 뽑기 안내 띠</div></div>
+    </div>
+  </div>
+
+
+  <div class="agree">
+    <div class="agree-t">이 섹션에서 협의가 필요한 것</div>
+    <ul>
+      <li><b>기본 적립 1%</b> — <span class="now">현재 1%.</span>
+        높이면 확정 적립이 커져 안심되지만 뽑기의 재미가 줄고,
+        낮추면 뽑기 몫이 커지는 대신 <b>안 뽑으면 못 받는 금액</b>이 늘어납니다.</li>
+      <li><b>적립 확정 시점 체크아웃 +7일</b> — <span class="now">현재 7일.</span>
+        실제 확정 통보까지 수개월이 걸리므로 <b>자사가 선지급하는 구조</b>입니다.
+        취소 건을 걸러내려면 더 길게, 이용 체감을 높이려면 더 짧게 설정합니다.</li>
+      <li><b>뽑기 기한</b> — <span class="now">시연은 무기한.</span>
+        적립 후 <b>30일</b>로 정해 두었으나 시연에서는 꺼 두었습니다.
+        기한을 두면 미수령액이 줄지만 "몰라서 못 받았다"는 불만이 생깁니다.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════ 7. 포인트 사용 ══════════ -->
+<section id="s7">
+  <div class="s-no">SECTION 7</div>
+  <h2>포인트 사용 — 현금 · 픽샵</h2>
+  <p class="s-lead">
+    모은 포인트를 쓰는 방법은 두 가지입니다.
+    <b>현금으로 꺼내기</b>와 <b>픽샵에서 쿠폰 사기</b>입니다.
+  </p>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">1</div>
+      <div class="feat-t">현금으로 꺼내기 <span class="ev open">도입 미결</span></div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      <ul>
+        <li><b>계좌 등록 → 1원 인증 → 금액 신청</b> 3단계입니다.</li>
+        <li><b>본인 명의 계좌만</b> 됩니다. 예금주는 본인인증 정보와 맞춰 봅니다.</li>
+        <li>한 번 인증한 계좌는 <b>저장되어 다시 넣지 않아도 됩니다.</b>
+          바꾸려면 [변경]을 눌러 인증을 다시 합니다.</li>
+        <li><b>1,000P 단위 · 최소 10,000P · 1회 최대 100,000P · 월 최대 500,000P</b> <span class="ev talk">협의 대상</span></li>
+        <li>신청하면 <b>영업일 기준 5일 이내</b> 입금됩니다. 승인·반려를 가르는 절차는 없습니다.</li>
+        <li><b>시연에서는 운영자가 어드민에서 [지급완료]를 눌러</b> 처리합니다.
+          <b>실제 운영에서는 자동 송금</b>으로 바꿀 예정입니다
+          <span class="ev talk">협의 대상</span> — 사람이 누르는 단계는 시연을 보여주기 위한 것입니다.</li>
+      </ul>
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      <b>"진짜 돈이 된다"는 것이 이 서비스의 핵심</b>입니다. 쿠폰만 제공한다면 일반적인 적립 서비스와 차별점이 없습니다.<br>
+      1원 인증은 <b>타인 명의 계좌로 출금되는 것</b>을 방지하기 위해서입니다.
+      최소 금액을 둔 것은 송금 수수료 때문입니다. 소액으로 반복 출금하면 수수료가 적립액을 넘어섭니다.
+      <div class="note red" style="margin-top:10px">
+        <b>도입 여부가 아직 정해지지 않았습니다.</b>
+        포인트를 현금으로 바꾸는 것이 <b>전자금융거래법상 선불업 등록</b> 대상인지 법무 검토가 진행 중입니다.
+        화면과 금액은 시연용이며, 검토 결과에 따라 기능 자체가 빠질 수 있습니다.
+      </div>
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f23_cash.jpg"><img src="screens/f23_cash.jpg" alt="계좌 등록 → 1원 인증 → 금액 신청"></a>
+        <div class="cap"><b>1</b> 계좌 등록 — 은행·계좌번호</div></div>
+      <div class="sw"><a class="shot" href="screens/f40_cash_verify.jpg"><img src="screens/f40_cash_verify.jpg" alt="2 계좌 인증 — 1원 입금자명 뒤 4자리"></a>
+        <div class="cap"><b>2</b> 계좌 인증 — 1원 입금자명 뒤 4자리</div></div>
+      <div class="sw"><a class="shot" href="screens/f41_cash_amount.jpg"><img src="screens/f41_cash_amount.jpg" alt="3 금액 신청 — 한도·입금 예정 안내"></a>
+        <div class="cap"><b>3</b> 금액 신청 — 한도·입금 예정 안내</div></div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">2</div>
+      <div class="feat-t">픽샵 — 포인트로 쿠폰 사기</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      <ul>
+        <li>[구매하기]를 누르면 <b>정말 살지 한 번 묻고</b>, 확인하면 끝납니다.</li>
+        <li>포인트가 <b>바로 차감</b>되고 <b>쿠폰이 즉시 발급</b>됩니다. 관리자 승인이 없습니다.</li>
+        <li>쿠폰은 <b>마이페이지 &gt; 내 쿠폰함</b>에서 봅니다. 쿠폰번호와 바코드가 있습니다.</li>
+        <li>유효기간은 <b>구매일로부터 1년</b> <span class="ev talk">협의 대상</span>입니다.</li>
+        <li><b>쓰기 전이라면</b> 유효기간 안에 <b>취소하고 포인트를 돌려받을 수 있습니다.</b>
+          이미 쓴 쿠폰은 취소할 수 없습니다.</li>
+      </ul>
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      현금 꺼내기는 최소 10,000P가 필요하지만, <b>픽샵은 적은 포인트로도 쓸 수 있습니다.</b>
+      적립한 포인트를 사용할 곳이 없으면 적립할 이유도 사라집니다.<br>
+      승인 절차를 두지 않은 것은 <b>포인트로 교환하는 것이어서 실제 자금 이동이 없기</b> 때문입니다.
+      취소를 허용한 것은 착오 구매를 구제하기 위해서이고,
+      <b>쓴 쿠폰은 막아야</b> 쓰고 환불받는 일이 생기지 않습니다.
+      <div class="note red" style="margin-top:10px">
+        <b>쿠폰을 발행해 줄 업체가 아직 정해지지 않았습니다.</b>
+        화면의 브랜드·가격은 시연용입니다.
+      </div>
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f24_shop.jpg"><img src="screens/f24_shop.jpg" alt="포인트로 살 수 있는 쿠폰"></a>
+        <div class="cap">포인트로 살 수 있는 쿠폰</div></div>
+      <div class="sw"><a class="shot" href="screens/f25_shop_confirm.jpg"><img src="screens/f25_shop_confirm.jpg" alt="살 때 한 번 더 확인합니다"></a>
+        <div class="cap">살 때 한 번 더 확인합니다</div></div>
+      <div class="sw"><a class="shot" href="screens/f26_coupon.jpg"><img src="screens/f26_coupon.jpg" alt="쿠폰함 — 번호 · 바코드 · 취소"></a>
+        <div class="cap">쿠폰함 — 번호 · 바코드 · 취소</div></div>
+    </div>
+  </div>
+
+
+  <div class="agree">
+    <div class="agree-t">이 섹션에서 협의가 필요한 것</div>
+    <ul>
+      <li><b>출금 수수료</b> — <span class="now">미정 — 화면에도 「정책 미확정」으로 표시됩니다.</span>
+        송금 수수료를 <b>자사가 부담할지 신청 금액에서 뺄지</b> 정해야 합니다.
+        최소 금액(10,000P)을 정한 근거와도 맞물립니다.</li>
+      <li><b>월 출금 한도 500,000P</b> — <span class="now">현재 화면에만 있습니다.</span>
+        <b>서버가 실제로 막지 않고 어드민 설정에도 없습니다.</b>
+        한도를 유지한다면 설정값으로 옮기고 서버에서 검증해야 합니다.</li>
+      <li><b>현금 전환 도입 여부</b> — <span class="now">법무 검토 중.</span>
+        선불업 등록 대상이면 등록 절차와 자본금 요건이 따라붙습니다.</li>
+      <li><b>출금 최소 10,000P · 1회 100,000P · 1,000P 단위</b> — <span class="now">현재 값.</span></li>
+      <li><b>쿠폰 유효기간 1년 · 사용 전 취소 가능</b> — <span class="now">현재 값.</span>
+        발행 업체가 정해지면 그쪽 약관에 맞춰야 할 수 있습니다.</li>
+      <li><b>쿠폰 발행 업체</b> — <span class="now">미정.</span> 문의 발송 후 회신 대기 중입니다.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════ 8. 마이페이지 ══════════ -->
+<section id="s8">
+  <div class="s-no">SECTION 8</div>
+  <h2>마이페이지</h2>
+  <p class="s-lead">
+    내 포인트가 <b>언제 왜 들어오고 나갔는지</b>를 확인하는 곳입니다.
+    포인트를 다루는 서비스에서 이 기록은 <b>고객 문의를 상당 부분 예방합니다.</b>
+  </p>
+
+  <div class="shots" style="grid-template-columns:228px">
+    <div class="sw"><a class="shot" href="screens/f27_mypage.jpg"><img src="screens/f27_mypage.jpg" alt="마이페이지"></a>
+      <div class="cap">마이페이지 — 여기서 아래 세 가지로 들어갑니다</div></div>
+  </div>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">1</div>
+      <div class="feat-t">포인트 내역 — 모든 증감을 한 줄씩</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      포인트가 움직인 <b>모든 기록</b>을 시간 순으로 보여줍니다.
+      <b>전체 / 예약 적립 / 참여 적립 / 사용</b>으로 걸러 볼 수 있습니다.
+      각 줄에는 <b>구분 · 금액 · 그때의 잔액 · 상태 · 일시</b>가 있습니다.
+      예약 적립 줄에는 <b>뽑기 안내 띠</b>가 붙습니다.
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      <b>보유 포인트가 예상보다 적다</b>는 것이 가장 많은 문의입니다.
+      기록이 없으면 고객센터가 일일이 찾아 답해야 합니다.
+      <b>변동 시점의 잔액까지 함께 기록하면</b> 어디서 어긋났는지 고객이 직접 확인할 수 있습니다.
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f21_history.jpg"><img src="screens/f21_history.jpg" alt="모든 증감이 한 줄씩 · 그때의 잔액"></a>
+        <div class="cap">모든 증감이 한 줄씩 · 그때의 잔액</div></div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">2</div>
+      <div class="feat-t">계정관리</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      <b>이름(한글)</b>은 바꿀 수 있고, <b>영문 이름·성</b>은 해외 예약용으로 따로 받습니다.
+      <b>전화번호는 본인인증 정보라 바꿀 수 없습니다.</b>
+      추천코드를 아직 안 넣었으면 여기서 넣을 수 있습니다.
+      이메일은 계정을 구분하는 값이라 <b>프로필에 보여주기만</b> 합니다.
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      해외 호텔은 <b>여권 영문 이름</b>이 필요합니다. 한글 이름만 받으면 예약 단계에서 막힙니다.
+      본인인증 값을 못 바꾸게 한 것은, 바꿀 수 있으면 <b>본인확인의 의미가 없어지기</b> 때문입니다.
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f28_account.jpg"><img src="screens/f28_account.jpg" alt="한글·영문 이름 · 국적 · 번호"></a>
+        <div class="cap">한글·영문 이름 · 국적 · 번호</div></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════ 9. 알림 ══════════ -->
+<section id="s9">
+  <div class="s-no">SECTION 9</div>
+  <h2>알림</h2>
+  <p class="s-lead">
+    포인트는 <b>내가 안 보는 사이에도 움직입니다.</b> 출금이 처리되고, 쿠폰이 발행되고,
+    포인트가 소멸합니다. 알림은 그것을 알리는 거의 유일한 통로라서 따로 떼어 설명합니다.
+  </p>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">1</div>
+      <div class="feat-t">알림이 닿는 길은 셋입니다</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      <ul>
+        <li><b>종 아이콘 배지</b> — 안 읽은 건수를 빨간 숫자로 보여줍니다.
+          99건이 넘으면 <b>99+</b>. 읽으면 바로 줄어듭니다.</li>
+        <li><b>토스트</b> — 새 알림이 오면 화면 아래에 잠깐 떴다 사라집니다.
+          누르면 알림함으로 넘어갑니다.</li>
+        <li><b>알림함</b> — 받은 알림이 쌓이는 곳. 종 아이콘을 누르면 열립니다.</li>
+      </ul>
+      앱은 <b>5초마다</b> 서버에 새 알림이 있는지 물어봅니다
+      <span class="ev talk">협의 대상</span>. 토스트는 <b>약 4초</b> 떠 있다 사라집니다.
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      셋의 역할이 다릅니다. <b>토스트는 지금 보라는 것</b>,
+      <b>배지는 나중에라도 보라는 것</b>, <b>알림함은 지난 것을 다시 찾는 곳</b>입니다.
+      한 가지만 두면 확인을 놓치거나 불편을 줍니다.<br>
+      <b>휴대폰 푸시가 아닙니다.</b> 앱을 켜 둔 동안에만 옵니다
+      <span class="ev open">미결</span> — 실제 푸시는 앱 출시와 함께 정해야 합니다.
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f32_noti_toast.jpg"><img src="screens/f32_noti_toast.jpg" alt="오른쪽 위 배지 1 · 아래 토스트"></a>
+        <div class="cap">오른쪽 위 <b>배지 1</b> · 아래 <b>토스트</b></div></div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">2</div>
+      <div class="feat-t">알림 다섯 가지 — 무엇을 알리나</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      <table style="margin-top:4px">
+        <tr><th style="width:92px">종류</th><th style="width:218px">언제 오나</th><th>예시 문구</th></tr>
+        <tr><td><b>적립</b></td>
+          <td>출석 · 출석 보너스 당첨 · 예약 적립 · 예약 뽑기</td>
+          <td>「출석 적립 +10P」 · 「뽑기 2,260P 추가 적립」</td></tr>
+        <tr><td><b>친구 추천</b></td>
+          <td>추천코드를 넣었을 때 · 내 코드로 친구가 가입했을 때</td>
+          <td>「친구가 가입했어요 +1,000P」</td></tr>
+        <tr><td><b>픽샵</b></td>
+          <td>쿠폰 발행 · 재발행 · 발행 지연 · 교환 반려</td>
+          <td>「쿠폰이 발행됐어요」 · 「쿠폰 발행이 지연되고 있어요」</td></tr>
+        <tr><td><b>출금</b></td>
+          <td>운영자가 송금을 마쳤을 때 · 반려했을 때</td>
+          <td>「출금이 완료됐어요 20,000P」</td></tr>
+        <tr><td><b>공지</b></td>
+          <td>본인인증 완료 · 운영자가 보낸 안내 · 광고</td>
+          <td>「픽콕 포인트 소멸 안내」</td></tr>
+      </table>
+      <b>공지만 전체 회원에게</b> 보낼 수 있고, 나머지 넷은 <b>그 사람에게만</b> 갑니다.
+      전체 공지는 <b>읽음 여부를 회원마다 따로</b> 기록합니다.
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      종류를 나눠 둔 것은 <b>「포인트가 변동된 알림」과 「단순 안내」를 구분</b>하기 위해서입니다.
+      앞의 넷에는 <b>[포인트 내역 보기]</b> 버튼이 붙고 공지에는 붙지 않습니다.
+      금액이 적힌 알림을 받으면 <b>바로 "내 잔액이 맞나"를 확인하고 싶어지기</b> 때문입니다.<br>
+      전체 공지의 읽음을 회원마다 따로 적는 것은, 공지 하나를 여러 사람이 보기 때문입니다.
+      한 사람이 읽었다고 <b>모두의 배지가 사라지면 안 됩니다.</b>
+    </div></div>
+  </div>
+
+  <div class="feat">
+    <div class="feat-hd"><div class="feat-no">3</div>
+      <div class="feat-t">알림함 — 게시판처럼</div></div>
+    <div class="feat-row"><div class="feat-k">정책</div><div class="feat-v">
+      <ul>
+        <li>최신순으로 쌓이고, <b>안 읽은 것은 진하게</b> 보입니다.</li>
+        <li>제목을 누르면 <b>펼쳐지면서 읽음</b> 처리됩니다. 배지 숫자가 그만큼 줄어듭니다.</li>
+        <li>펼치면 본문과 함께 <b>[포인트 내역 보기]</b> 버튼이 나옵니다 (공지 제외).</li>
+        <li>오른쪽 위 <b>[모두 읽음]</b> — 안 읽은 것이 없으면 눌리지 않습니다.</li>
+        <li>기기 알림이 꺼져 있으면 맨 위에 <b>안내 띠</b>가 뜹니다.</li>
+        <li>최근 <b>100건</b>까지 보여줍니다.</li>
+      </ul>
+    </div></div>
+    <div class="feat-row"><div class="feat-k why">이유</div><div class="feat-v">
+      <b>적립 축하 화면이 떠 있는 동안에는 토스트를 띄우지 않습니다.</b>
+      같은 내용을 두 번 안내하면 중복이 되고, 노출 순서도 어긋나 보입니다.
+      대신 <b>알림함에는 그대로 남습니다</b> — 내용이 사라지지는 않습니다.<br>
+      반대로 <b>내가 하지 않은 일</b>(출금 완료, 쿠폰 발행, 운영자 지급)은
+      화면에 보일 일이 없으므로 <b>반드시 알림으로 알려야 합니다.</b>
+      알림이 이 서비스에서 중요한 이유가 여기 있습니다.
+    </div></div>
+    <div class="feat-shots">
+      <div class="sw"><a class="shot" href="screens/f29_noti.jpg"><img src="screens/f29_noti.jpg" alt="알림함 — 안 읽은 것이 진하게"></a>
+        <div class="cap">알림함 — 안 읽은 것이 진하게</div></div>
+      <div class="sw"><a class="shot" href="screens/f39_noti_open.jpg"><img src="screens/f39_noti_open.jpg" alt="펼치면 본문 + [포인트 내역 보기]"></a>
+        <div class="cap">펼치면 본문 + <b>[포인트 내역 보기]</b></div></div>
+    </div>
+  </div>
+
+  <div class="agree">
+    <div class="agree-t">이 섹션에서 협의가 필요한 것</div>
+    <ul>
+      <li><b>알림 보관 90일</b> — <span class="now">화면에는 90일이라고 적혀 있지만
+        실제로 지우는 기능은 아직 없습니다.</span>
+        최근 100건만 보여줄 뿐 오래된 알림이 그대로 남아 있습니다.
+        <b>문구를 바꾸거나 지우는 기능을 넣거나</b> 둘 중 하나를 정해야 합니다.</li>
+      <li><b>새 알림 확인 주기 5초</b> — <span class="now">현재 5초.</span>
+        시연에서 바로 보이도록 짧게 잡았습니다. 실제로는 <b>회원 수만큼 서버 부담</b>이 되므로
+        주기를 늘리거나 푸시로 바꾸는 편이 맞습니다.</li>
+      <li><b>휴대폰 푸시</b> — <span class="now">없음.</span>
+        앱을 켜 둔 동안에만 알림이 옵니다. <b>포인트 소멸 안내처럼 꼭 닿아야 하는 알림</b>은
+        푸시가 없으면 전달되지 않습니다.</li>
+      <li><b>광고 알림</b> — <span class="now">보낼 수 있게는 해두었습니다.</span>
+        광고성 정보는 <b>수신 동의를 받은 사람에게만</b> 보낼 수 있어,
+        마케팅 동의 여부와 연결하는 규칙이 필요합니다.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════ 10. 협의 모아보기 ══════════ -->
+<section id="s10">
+  <div class="s-no">SUMMARY</div>
+  <h2>협의가 필요한 것 — 모아보기</h2>
+  <p class="s-lead">
+    앞에서 <span class="ev talk">협의 대상</span> · <span class="ev open">미결</span>로 표시한 것을 모았습니다.
+    <b>정해진 값이 아니라 논의로 바꿀 수 있는 것들</b>입니다.
+  </p>
+
+  <h3>논의로 바꿀 수 있는 값</h3>
+  <table>
+    <tr><th style="width:120px">기능</th><th style="width:230px">항목</th><th style="width:110px">현재</th><th>바꾸면 생기는 일</th></tr>
+    <tr><td>회원가입</td><td>인증코드 유효시간</td><td><b>5분</b></td>
+      <td>짧으면 다시 받는 일이 잦고, 길면 보안이 약해집니다</td></tr>
+    <tr><td>회원가입</td><td>추천코드 뒤늦게 넣는 기한</td><td><b>7일</b></td>
+      <td>Wise 30일 · 토스 24시간 — 길면 구제 폭이 넓고, 짧으면 어뷰징 여지가 줄어듭니다</td></tr>
+    <tr><td>저금통</td><td>현금 전환 최소 금액</td><td><b>10,000P</b></td>
+      <td>낮추면 이용 체감은 개선되나 수수료 부담이 늘어납니다</td></tr>
+    <tr><td>출석체크</td><td>도장 칸 수와 금액</td><td><b>6칸 · 10P · 10~100P</b></td>
+      <td>우리가 설계한 구조라 전부 조정 가능합니다</td></tr>
+    <tr><td>퀴즈</td><td>문항당 포인트 · 하루 문항 수</td><td><b>10P · 3문제</b></td>
+      <td>완주 최대 30P. 늘리면 매일 오는 이유가 커지고 비용도 큽니다</td></tr>
+    <tr><td>퀴즈</td><td>재응시 없음 (0~30P)</td><td><b>10/07 변경</b></td>
+      <td>평균 지급액이 절반으로 줄지만 0P를 받는 사례가 발생합니다</td></tr>
+    <tr><td>혜택</td><td>광고 체류 시간</td><td><b>3초</b></td>
+      <td>광고주 요구에 따라 광고별로 다르게 둘 수도 있습니다</td></tr>
+    <tr><td>친구 추천</td><td>지급 시점</td><td><b>가입 시점</b></td>
+      <td>여행업 관행은 여행 완료. 가입 시점은 비용이 선집행됩니다</td></tr>
+    <tr><td>예약 적립</td><td>기본 적립률</td><td><b>1%</b></td>
+      <td>나머지는 뽑기 몫. 높이면 확정분이 커지고 뽑기의 유인이 줄어듭니다</td></tr>
+    <tr><td>예약 적립</td><td>적립 확정 시점</td><td><b>체크아웃 +7일</b></td>
+      <td>실제 확정 통보는 수개월 — 우리가 먼저 주는 셈입니다</td></tr>
+    <tr><td>예약 적립</td><td>뽑기 기한</td><td><b>시연 무기한</b></td>
+      <td>30일로 두면 미수령액이 줄지만 안내 부족에 대한 불만이 발생합니다</td></tr>
+    <tr><td>포인트 사용</td><td>출금 최소·최대·단위</td><td><b>1만 · 10만 · 1천P</b></td>
+      <td>송금 수수료와 직결됩니다</td></tr>
+    <tr><td>포인트 사용</td><td>쿠폰 유효기간 · 취소</td><td><b>1년 · 사용 전 가능</b></td>
+      <td>발행 업체 약관에 맞춰야 할 수 있습니다</td></tr>
+      <tr><td>알림</td><td>새 알림 확인 주기</td><td><b>5초</b></td>
+      <td>시연용으로 짧게. 회원이 늘면 그대로 서버 부담이 됩니다</td></tr>
+    <tr><td>알림</td><td>알림 보관 기간</td><td><b>화면 문구만 90일</b></td>
+      <td>실제로 지우지 않습니다. 문구를 고치거나 기능을 넣거나 택일</td></tr>
+</table>
+
+  <h3>아직 정하지 못한 것</h3>
+  <table>
+    <tr><th style="width:200px">항목</th><th>상태</th></tr>
+    <tr><td><b>현금 전환 도입 여부</b></td>
+      <td>포인트를 현금으로 바꾸는 것이 <b>전자금융거래법상 선불업 등록</b> 대상인지 법무 검토 중.
+        결과에 따라 기능 자체가 빠질 수 있습니다.</td></tr>
+    <tr><td><b>본인확인 업체</b></td>
+      <td>건당 비용이 발생합니다. 업체·단가가 정해져야 비용을 계산할 수 있습니다.</td></tr>
+    <tr><td><b>쿠폰 발행 업체</b></td>
+      <td>문의 발송 후 회신 대기 중. 브랜드·가격은 시연용입니다.</td></tr>
+    <tr><td><b>탈퇴 후 재가입 제한</b></td>
+      <td>어뷰징을 막으려면 기록을 남겨야 하는데, <b>개인정보 보유기간</b>과 충돌할 수 있습니다. 법무 확인 필요.</td></tr>
+      <tr><td><b>휴대폰 푸시</b></td>
+      <td>지금은 <b>앱을 켜 둔 동안에만</b> 알림이 옵니다.
+        포인트 소멸 안내처럼 꼭 닿아야 하는 알림은 푸시가 없으면 전달되지 않습니다. 앱 출시와 함께 정해야 합니다.</td></tr>
+    <tr><td><b>광고 알림과 마케팅 동의</b></td>
+      <td>광고 알림을 보낼 수 있게는 해두었지만, 광고성 정보는 <b>수신 동의를 받은 사람에게만</b>
+        보낼 수 있습니다. 가입 때 받은 마케팅 동의와 연결하는 규칙이 필요합니다.</td></tr>
+</table>
+
+  <div class="note blue">
+    <b>이 표는 「아직 안 정했다」가 아니라 「이렇게 정했는데 바꿀 수 있다」는 뜻입니다.</b>
+    지금 값으로도 서비스는 돌아갑니다. 다만 위 값들은 <b>협의 없이 정한 것</b>이므로,
+    다른 판단이 있으면 반영하겠습니다.
+  </div>
+</section>
+
+</div>
+
+<div class="lb" id="lb"><img id="lbImg" src="" alt=""></div>
+
+<script>
+/* 차례 — 지금 보고 있는 섹션을 표시한다 */
+const links = [...document.querySelectorAll('.nav a[href^="#"]')];
+const secs = links.map(a => document.getElementById(a.getAttribute('href').slice(1)))
+                  .filter(Boolean);
+function mark(){
+  let cur = secs[0];
+  for (const s of secs) { if (s.getBoundingClientRect().top <= 120) cur = s; }
+  links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + cur.id));
+}
+addEventListener('scroll', mark, {passive:true});
+mark();
+
+/* 캡처 — 눌러서 크게 본다 */
+const lb = document.getElementById('lb'), lbImg = document.getElementById('lbImg');
+document.querySelectorAll('a.shot').forEach(a => a.addEventListener('click', e => {
+  e.preventDefault();
+  lbImg.src = a.getAttribute('href');
+  lb.classList.add('on');
+}));
+lb.addEventListener('click', () => lb.classList.remove('on'));
+addEventListener('keydown', e => { if (e.key === 'Escape') lb.classList.remove('on'); });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="googlebot" content="noindex, nofollow">
+<title>픽콕 기능정책서</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="doc.css">
+<style>
+  .wrap{margin-left:0; max-width:980px; margin-inline:auto; padding:0 24px 80px}
+  .pick{display:grid; grid-template-columns:repeat(2,1fr); gap:20px; margin-top:30px}
+  .pk{display:block; background:#fff; border:1px solid var(--line); border-radius:16px;
+      padding:26px 26px 22px; text-decoration:none; color:var(--ink); transition:.16s}
+  .pk:hover{transform:translateY(-3px); box-shadow:0 10px 28px rgba(20,30,60,.13);
+            border-color:#C9D6F5}
+  .pk-tag{display:inline-block; background:var(--blue); color:#fff; font-size:11px;
+          font-weight:800; padding:4px 10px; border-radius:7px}
+  .pk h2{font-size:21px; font-weight:900; letter-spacing:-.6px; margin:12px 0 7px}
+  .pk p{font-size:13.5px; color:var(--gray); line-height:1.65}
+  .pk .num{margin-top:14px; display:flex; gap:7px; flex-wrap:wrap}
+  .pk .num span{background:var(--bg); border:1px solid var(--line); border-radius:7px;
+                padding:5px 9px; font-size:11.5px; font-weight:700; color:var(--gray)}
+  @media (max-width:760px){ .pick{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <span class="tag">시연 설명 자료</span>
+    <h1>픽콕 기능정책서</h1>
+    <p>
+      10월 13일 시연에서 보실 화면을 <b>기능 단위로 정리</b>했습니다.
+      각 기능마다 <b>어떻게 동작하는지(정책)</b>와 <b>왜 그렇게 정했는지(이유)</b>를 함께 적었고,
+      수치와 규칙에는 <b>근거가 어디서 왔는지</b>를 표시했습니다.
+    </p>
+    <div class="meta">
+      <span>기준 <b>2026-10-08 구현 상태</b></span>
+      <span>작성 <b>PO 윤성균</b></span>
+    </div>
+  </div>
+
+  <div class="pick">
+    <a class="pk" href="front.html">
+      <span class="pk-tag">고객앱</span>
+      <h2>고객앱 기능정책서</h2>
+      <p>가입부터 적립·사용까지, 이용자가 보는 화면 전체를 순서대로 설명합니다.</p>
+      <div class="num"><span>섹션 11</span><span>기능 25</span><span>화면 41</span></div>
+    </a>
+    <a class="pk" href="admin.html">
+      <span class="pk-tag">어드민</span>
+      <h2>어드민 기능정책서</h2>
+      <p>운영자가 쓰는 화면입니다. 포인트가 어떻게 기록되는지를 먼저 설명합니다.</p>
+      <div class="num"><span>섹션 9</span><span>기능 16</span><span>화면 15</span></div>
+    </a>
+  </div>
+
+  <div class="note blue" style="margin-top:30px">
+    <b>읽는 순서</b> — 두 문서 모두 맨 앞 「이 문서를 읽는 법」에
+    <b>근거 표시</b>와 <b>상태값 정의</b>를 정리해 두었습니다. 거기부터 보시면 수월합니다.<br>
+    문서 맨 끝 <b>「협의가 필요한 것」</b>에는 아직 확정하지 못했거나
+    논의로 바꿀 수 있는 항목을 모아 두었습니다.
+  </div>
+
+  <div class="note gray" style="margin-top:14px">
+    화면과 수치는 <b>시연용 데이터</b> 기준입니다. 회원·예약·쿠폰 정보는 모두 가상입니다.
+  </div>
+</div>
+</body>
+</html>
