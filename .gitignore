@@ -1,0 +1,24 @@
+# 이 저장소는 Public 이다. 아래는 절대 올리지 않는다.
+#   (2026-10-12 신설 — prototype 폴더를 통째로 복사하는 push 절차가 있어
+#    DB·API 키가 딸려 올라갈 수 있었다. 사고가 나기 전에 막아 둔다.)
+
+# 회원 정보가 들어 있는 데이터베이스
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# KAYAK API 키가 들어 있는 설정
+config.py
+.env
+*.key
+
+# 시연용 Flask 서버 전체 — GitHub Pages 에서 돌지 않고, DB·키를 품고 있다
+prototype/pickoq_demo/
+
+# 파이썬 부산물
+__pycache__/
+*.pyc
+
+# 작업 중 산출물
+*.zip
