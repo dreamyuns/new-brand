@@ -219,7 +219,7 @@
       <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>축하하는 공작새</div></div>
       <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>「가입을 환영해요!」</div></div>
       <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>"이제 포인트를 모을 수 있어요"</div>
-        <ul><li>추천코드로 받았으면 "추천코드로 <b>1,000P</b>가 저금통에 들어왔어요".</li></ul></div>
+        <ul><li>추천코드를 넣었으면 — 가입 때는 본인인증 전이라 보통 "추천코드를 등록했어요 · 본인인증하면 <b>1,000P</b>가 적립돼요" + 토스트 "추천코드를 등록했어요. 본인인증하면 적립돼요". 이미 인증된 경우만 "추천코드로 <b>1,000P</b>가 저금통에 들어왔어요".</li></ul></div>
       <div class="cn"><div class="cn-hd">동작</div>
         <ul><li>[✕]가 없고 <b>약 1.7초 뒤 저절로 닫힙니다</b> → 토스트 "회원가입을 완료했어요 · 내 저금통이 열렸어요"(추천코드로 받았으면 "회원가입 완료 · 추천코드로 1,000P 받았어요").</li>
             <li>보던 화면에 그대로 남습니다. 가입한 회원은 아직 본인인증 전이므로 홈에 본인인증 안내 띠가 나옵니다(<a href="f_home.html#zV">F-HOME V</a>).</li>
@@ -411,6 +411,8 @@
     <tr><td>E5</td><td>가입 도중 시트를 닫음</td><td>확인창 → 닫으면 계정을 만들지 않음 (약관 동의 전)</td></tr>
     <tr><td>E6</td><td>본인인증 정보가 이미 다른 계정에 쓰임</td><td>다음 단계 — <b>계정 통합 흐름으로 잇는다</b>(방향만 PO 확정). 그 전까지 지급하지 않고 기존 계정 안내 <span class="tag open">미결</span> R-M2</td></tr>
     <tr><td>E7</td><td>만 14세 미만 · 외국인(국내 휴대폰 없음) · 정지 회원</td><td>정책 없음 <span class="tag open">미결</span> R-M3~R-M5</td></tr>
+    <tr><td>E8</td><td>[인증코드 받기]가 서버에서 실패</td><td>확인창 "인증코드를 보내지 못했어요" + [다시 시도] — 다음 단계로 넘어가지 않음</td></tr>
+    <tr><td>E9</td><td>초대 링크로 들어와 로그인·가입을 마침</td><td>링크의 추천코드는 그때 지움(같은 창에서 다시 열어도 자동으로 채우지 않음)</td></tr>
   </table></div>
 </section>
 

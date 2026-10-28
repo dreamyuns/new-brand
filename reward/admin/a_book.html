@@ -94,8 +94,8 @@
   <div class="shots-row"><div class="sw pc"><div class="lb">A-BOOK-B1</div><figure class="shot" data-id="A-BOOK-B1" data-base="../"></figure></div></div>
   <div class="detail"><div class="ann">
     <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>제목 「예약 적립」</div></div>
-    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>"기본 적립 1% 는 예약 즉시 지급되고, 나머지는 뽑기로 지급됩니다"</div>
-      <ul><li>"기본 적립 1% 는 <b>체크아웃 7일 뒤</b> 확정·지급되고, 나머지는 뽑기로 지급됩니다" (#37 · 10-28).</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>"기본 적립 N% 는 체크아웃 7일 뒤 확정·지급되고, 나머지는 뽑기로 지급됩니다"</div>
+      <ul><li>N = 설정 「예약 기본 적립 요율」(기본 1%) · 체크아웃 7일 뒤 확정 (#37 · 10-28).</li></ul></div>
   </div><div class="ann">
     <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>[+ 예약 적립 만들기]</div><ul><li>시연용 — ④ X1. 실제 서비스에서는 숨깁니다.</li></ul></div>
   </div></div>
@@ -128,7 +128,7 @@
   <div class="detail"><div class="ann">
     <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>전체</div></div>
     <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>뽑기 완료 N</div></div>
-    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>미수령 N</div><ul><li>적립완료됐고 뽑기 몫이 있는데 아직 안 뽑은 예약.</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>미수령 N</div><ul><li>적립완료됐고 뽑기 몫이 있는데 아직 안 뽑은 예약. 적립예정·적립대기 행은 섞이지 않습니다.</li></ul></div>
   </div><div class="ann">
     <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>검색어 "회원 · 호텔 · 예약처로 찾기"</div></div>
     <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>날짜 기준 — 숙박일 / 적립일 · 기간 · 뽑기(전체/미수령)</div>
@@ -154,7 +154,7 @@
     <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>뽑기</div>
       <ul><li>뽑음 = 당첨액(초록) · 안 뽑음 = 「미수령 NP」(노랑, 뽑기 몫 최대) · 몫 없음 = 「대상아님」(흐림).</li></ul></div>
     <div class="cn" data-n="9"><div class="cn-hd"><span class="no">9</span>총 적립 = 기본 + 뽑기</div>
-      <ul><li>본인인증 전이면 「적립대기」 배지 + "본인인증 전 · NP".</li></ul>
+      <ul><li>본인인증 전이면 「적립대기」 배지 + "본인인증 전 · NP". 뽑기 칸은 「적립 후」.</li></ul>
       <ul><li><b>적립예정</b>이면 「적립예정」 배지 + 적립예정일 + [지금 확정](시연용) — 아래 E2. 뽑기 칸은 「적립 후」.</li></ul></div>
     <div class="cn" data-n="10"><div class="cn-hd"><span class="no">10</span>체크인 / 체크아웃</div><ul><li>적립예정일(체크아웃 + 7일)의 기준.</li></ul></div>
     <div class="cn" data-n="11"><div class="cn-hd"><span class="no">11</span>적립일시</div><ul><li><b>확정한 시각</b>(전: 등록 시각). 적립예정이면 「—」.</li></ul></div>
@@ -188,7 +188,7 @@
     </div><div class="ann">
       <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>체크인 · 체크아웃</div>
         <ul><li>"실제 운영에서는 카약 리포팅에서 bookingStartDate · bookingEndDate 로 들어옵니다. 적립 확정일(체크아웃 +7일)을 계산하는 기준이 됩니다."</li></ul></div>
-      <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>계산 결과</div><ul><li>금액·요율을 넣으면 기본 적립·뽑기 최대가 바로 계산됩니다.</li></ul></div>
+      <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>계산 결과</div><ul><li>금액·요율을 넣으면 「기본 적립 NP (설정%)」·뽑기 최대가 바로 계산됩니다. 기본 요율은 설정 「예약 기본 적립 요율」.</li></ul></div>
       <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>[취소] [만들기]</div>
         <ul><li>실제 서비스에서는 이 기능을 두지 않습니다(리포팅으로 들어옴). [만들기] → <b>「적립예정」</b>으로 생기고 토스트 "적립예정으로 만들었어요 · 적립예정일 … · 기본 NP" — 지급은 확정 때(E2 [지금 확정]).</li></ul></div>
     </div></div>

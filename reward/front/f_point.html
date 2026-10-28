@@ -142,7 +142,7 @@
       <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>[본인인증하기]</div>
         <ul><li>본인인증 시트(<a href="f_auth.html#zS6">F-AUTH S6</a>) → 마치면 적립대기를 한꺼번에 지급하고 이 화면을 다시 불러옵니다(섹션이 사라지고 카드가 「적립완료」로).</li></ul></div>
       <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>「적립대기」 배지 (노랑)</div>
-        <ul><li>본인인증 전에 생긴 적립은 <b>금액과 함께</b> 목록에 보이지만 잔액에는 들어가지 않습니다. 관리자 회수 대기는 「차감대기」.</li></ul></div>
+        <ul><li>본인인증 전에 생긴 적립은 <b>금액과 함께</b> 목록에 보이지만 잔액에는 들어가지 않습니다. 관리자 회수 대기는 「차감대기」(아이콘 ↩️).</li></ul></div>
       <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>예약 카드 아래 "🔒 본인인증하면 적립되고 뽑기를 할 수 있어요"</div>
         <div class="rule"><b>근거</b> 적립대기는 포인트 내역에서만 배지로 (PO 지시 2026-10-27 · <a href="../policy/pol_earn.html#s1-6">참여형 1-6</a>)</div></div>
     </div>
@@ -186,7 +186,8 @@
   </div>
   <div class="detail"><div class="ann">
     <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>아이콘</div>
-      <ul><li>예약 🏨 · 참여 🎯 · 픽샵 🛍️ · 현금 전환 💸 · 소멸 ⏳ · 회수 ↩️ · 환불 💰 (#40 · 10-28).</li></ul></div>
+      <ul><li>「예약 뽑기」 기록도 예약 🏨 · 「예약 적립」 필터에 들어갑니다.</li>
+          <li>예약 🏨 · 참여 🎯 · 픽샵 🛍️ · 현금 전환 💸 · 소멸 ⏳ · 회수 ↩️ · 환불 💰 (#40 · 10-28).</li></ul></div>
     <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>제목</div>
       <ul><li>기록 이름 — 출석 보너스 · 관리자 지급 · 픽샵 구매 · 픽샵 구매 취소 · 포인트 소멸 등.</li>
           <li><b>예약은 예약처(공급사명)</b> — 아고다 · 부킹닷컴 등. 호텔명·상품가·요율은 카드에 넣지 않습니다(P93). 뽑기 결과·알림·토스트에는 호텔명을 그대로 씁니다.</li></ul>
@@ -196,6 +197,7 @@
           <li><b>예약 카드에는 부제 줄이 없습니다</b>(P93 — 전에는 "예약처 · 금액원 · 요율%").</li></ul></div>
     <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>일시 줄</div>
       <ul><li>적립·사용 일시 "YYYY.MM.DD HH:MM". 적립예정이면 <b>"적립예정일 YYYY.MM.DD"</b>(= 체크아웃 + 7일).</li>
+          <li><b>환불 카드(💰)</b>에는 소멸 예정일이 없습니다(출금 반려 환불 · 픽샵 구매 취소 환불 모두).</li>
           <li><b>소멸 예정일</b> — 적립 카드는 이 줄 끝에 <b>흐린 작은 글씨</b>로 "· 소멸 예정 YYYY.MM.DD"를 붙입니다. 색·굵기·배지로 강조하지 않습니다. 적립예정·적립대기·사용·차감 카드에는 붙이지 않습니다.</li></ul>
       <div class="rule"><b>근거</b> 소멸 예정일 약하게 표시 (PO 확정 2026-10-27 · <a href="../policy/pol_point.html#s5-3">5-3절</a>)</div></div>
   </div><div class="ann">
@@ -206,7 +208,7 @@
     <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>예약 카드 아래 줄 — 상태별</div>
       <ul><li><b>적립예정</b>(C1): "적립이 완료되면 추가 포인트를 받을 수 있어요" — 누를 수 없음.</li>
           <li><b>적립완료</b>(C2): [🎁 뽑기하고 <b>최대 N%</b> 더 받기 ›] 노란 줄 — 누르면 선물상자(④ X1). N = 예약처 요율 − 기본 1%.</li>
-          <li><b>뽑은 뒤</b>(C3): 「🎁 뽑기 추가 적립 +NP」 — 누를 수 없음.</li>
+          <li><b>뽑은 뒤</b>(C3): 「🎁 뽑기 추가 적립 +NP」 — 누를 수 없음. 뽑기 기한(30일)이 지나도 이 줄은 그대로입니다.</li>
           <li><b>뽑기 기간이 지남</b>(C9): 「⏱ 뽑기 기간이 지났어요」 — 누를 수 없고, 뽑기 몫은 지급하지 않습니다. 기본 적립은 그대로.</li>
           <li>뽑기 몫이 없는 예약(요율 ≤ 1%)은 아래 줄 없이 카드만.</li></ul>
       <div class="rule"><b>근거</b> 적립완료 뒤에만 뽑기 · 예약당 1회 (<a href="../policy/pol_point.html#s3-2">3-2</a> · <a href="../policy/pol_point.html#s4">4절</a> · PO 확정 2026-09-21)</div></div>

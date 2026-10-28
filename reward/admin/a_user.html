@@ -76,7 +76,7 @@
     <tr><td><code>GET /api/admin/user/{id}</code></td><td>[상세]</td><td><code>user</code> · <code>summary</code>(총 적립·사용·잔액·출금·픽샵·회수·소멸) · <code>pending</code>(예약·친구 추천·관리자 지급 묶음별 금액·건수) · <code>invite</code> · <code>account</code>(출금 계좌) · <code>profile</code> · <code>ledger</code>(포인트 내역)</td></tr>
     <tr><td><code>POST /api/admin/point</code></td><td>상세 [포인트 반영] — <code>user_id</code> · <code>amount</code>(회수는 음수) · <code>reason</code></td><td><code>balance</code> · <code>held</code>(미인증이라 적립대기로 넣었는지)</td></tr>
     <tr><td><code>POST /api/admin/point/bulk</code></td><td>일괄 [처리] — <code>user_ids</code> · <code>amount</code> · <code>reason</code></td><td><code>success</code> 처리 수 · <code>held</code> 적립대기 수 · <code>failed</code></td></tr>
-    <tr><td><code>POST /api/admin/user/{id}/verify</code></td><td>[인증 완료로 처리] → 확인 모달(X4)</td><td><code>released</code> 지급된 적립대기 · 관리자 로그 <span class="tag proto">프로토 수정 #35</span></td></tr>
+    <tr><td><code>POST /api/admin/user/{id}/verify</code></td><td>[인증 완료로 처리] → 확인 모달(X4)</td><td><code>released</code> 지급된 적립대기 · 관리자 로그</td></tr>
     <tr><td colspan="3">오류: 금액이 숫자가 아님 → "금액을 확인해 주세요" · 0 → "금액을 입력해 주세요" · 사유 없음 → "사유를 입력해 주세요" · 없는 회원 → "없는 회원이에요" · 회수가 보유분을 넘음 → 거절(미인증은 "회수할 포인트가 모자라요 (적립대기 포함)") — 모두 빨간 토스트</td></tr>
   </table></div>
 </section>
@@ -107,7 +107,7 @@
   <div class="shots-row"><div class="sw pc"><div class="lb">A-USER-B1</div><figure class="shot" data-id="A-USER-B1" data-base="../"></figure></div></div>
   <div class="detail"><div class="ann">
     <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>제목 「회원 목록」</div></div>
-    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>"회원 ID는 이메일 주소 형식으로 표시합니다 (어드민 정책서 4-1절)"</div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>"회원 ID는 이메일 주소 형식으로 표시합니다"</div>
       <div class="case">문구 속 절 번호가 옛 번호입니다 — 회원 관리는 어드민 정책서 v0.2 <b>제5조</b>. 절 번호를 빼거나 5-1절로 고칩니다.</div></div>
     <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>[선택 회원 포인트 지급·회수]</div>
       <ul><li>목록에서 체크한 회원에게 같은 금액을 한 번에 처리합니다(④ X3). 아무도 고르지 않으면 빨간 토스트 "회원을 선택해 주세요".</li></ul></div>
@@ -181,7 +181,7 @@
     <div class="lb" style="font-weight:700;margin-bottom:6px">A-USER-X1 <small style="font-weight:400">회원 상세 — 본인인증 회원</small></div>
     <figure class="shot" data-id="A-USER-X1" data-base="../"></figure>
     <div class="detail"><div class="ann">
-      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>추천코드</div><ul><li>"이 코드로 가입한 친구 N명" · 추천받아 가입했으면 "이 회원을 추천한 친구 · {코드}".</li></ul></div>
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>추천코드</div><ul><li>"이 코드로 가입한 친구 N명" · 추천받아 가입했으면 "이 회원을 추천한 친구 · {이름} ({이메일})" — 상담할 때 바로 찾을 수 있게 코드 대신 이름·이메일 (PO 2026-10-28).</li></ul></div>
       <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>포인트 요약</div>
         <ul><li>총 적립(+) · 총 사용(−) · <b>사용 가능</b>(노란 줄). 아래 작은 칩: 출금 · 픽샵 · 회수 · 소멸 금액.</li></ul>
         <div class="case">「총 적립·사용」의 셈법은 대시보드 정책 재수립 때 함께 정합니다(환불·소멸을 어디에 넣을지) <span class="tag open">미결</span></div></div>
@@ -223,10 +223,10 @@
   <div class="two-col unit sub-item" style="grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)">
     <div><div class="lb" style="font-weight:700;margin-bottom:6px">A-USER-X4 <small style="font-weight:400">본인인증 완료로 처리</small></div><figure class="shot pc" data-id="A-USER-X4" data-base="../"></figure></div>
     <div class="ann">
-      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>"이 회원을 본인인증 완료로 바꿉니다. 적립대기 NP가 바로 지급되고, 고객에게 알림이 갑니다. 되돌리는 기능은 없어요."</div>
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>"이 회원을 본인인증 완료로 바꿉니다. 적립대기 NP가 바로 지급되고, 고객에게 알림이 갑니다. 본인인증 전에 쌓인 NP도 고객 화면에 보이게 돼요. 되돌리는 기능은 없어요."</div>
         <ul><li>적립대기가 없으면 "지급할 적립대기는 없어요." 인증 <b>해제는 없습니다</b>(완료만 · PO 2026-10-28).</li></ul></div>
       <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>[취소] [인증 완료로 처리]</div>
-        <ul><li>→ 토스트 "본인인증 완료로 처리했어요 · 적립대기 NP 지급" · 상세를 다시 엽니다 · 고객 알림 「적립대기 포인트 +NP」 · 관리자 로그.</li></ul>
+        <ul><li>→ 토스트 "본인인증 완료로 처리했어요 · 적립대기 NP 지급" · 상세를 다시 엽니다 · 고객 알림 「본인인증이 완료됐어요」 · 「적립대기 포인트 +NP」 · 관리자 로그.</li></ul>
         <div class="rule"><b>근거</b> 관리자 본인인증 처리 (#35 · 10-28 · <a href="../policy/pol_admin.html#s5-4">어드민 5-4</a>)</div></div>
     </div>
   </div>

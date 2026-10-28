@@ -65,7 +65,7 @@
   <div class="sec-hd"><h2>① 화면 흐름 · 데이터</h2></div>
   <div class="box">
     <div class="flow"><span>광고 카드 누르기</span><i>→</i><span>(비로그인) 로그인 시트 · (미인증) 본인인증 시트</span><i>→</i><span>광고 페이지 새 창</span><i>→</i><span>N초 머묾</span><i>→</i><span>적립 + 알림</span></div>
-    <div class="flow" style="margin-top:8px"><span>픽콕으로 돌아옴 (창 닫기 · [창 닫고 이동하기])</span><i>→</i><span>잔액·목록 다시 받기</span><i>→</i><span>「✓ 적립완료」 · 토스트 "포인트가 적립됐어요"</span></div>
+    <div class="flow" style="margin-top:8px"><span>픽콕으로 돌아옴 (창 닫기 · [광고주 페이지로 이동하기])</span><i>→</i><span>잔액·목록 다시 받기</span><i>→</i><span>「✓ 적립완료」 · 적립됐으면 <b>적립 연출</b> 「NP 적립! · {광고주} 혜택 참여 완료」 (실패·이미 참여는 연출 없이 목록만)</span></div>
   </div>
   <div class="box wrapx"><table class="t">
     <tr><th>요청</th><th>언제</th><th>받는 값 (화면에 쓰는 것)</th></tr>
@@ -216,8 +216,8 @@
           <li>실패 "적립하지 못했어요" + 서버 사유("종료된 광고예요" 등)</li></ul></div>
   </div><div class="ann">
     <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>"적립이 끝나면 이동 버튼이 나타나요"</div><ul><li>기다리는 동안만.</li></ul></div>
-    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>[창 닫고 이동하기]</div>
-      <ul><li>적립이 끝나야(또는 이미 참여·비로그인) 나타납니다. 누르면 픽콕에 알리고 광고주 링크로 이동합니다.</li></ul></div>
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>[광고주 페이지로 이동하기]</div>
+      <ul><li>적립이 끝나야(또는 이미 참여·비로그인) 나타납니다. 누르면 이 창이 광고주 링크로 이동합니다. 픽콕에는 적립이 끝난 순간 이미 결과를 알렸습니다.</li></ul></div>
     <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>카운트 → ✓</div><ul><li>1초마다 줄고, 0이 되면 서버에 적립을 요청합니다.</li></ul></div>
     <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>"이 화면은 시연용입니다…"</div></div>
     <div class="cn"><div class="cn-hd">서버 적립 조건</div>
@@ -237,7 +237,7 @@
     <tr><td>E2</td><td>본인인증 전 회원</td><td>나가기 전에 본인인증 시트 · 마치면 이어서 광고 열기</td></tr>
     <tr><td>E3</td><td>받은 광고를 다시 누름</td><td>토스트 "이미 적립한 혜택이에요"</td></tr>
     <tr><td>E4</td><td>체류 전에 창을 닫음</td><td>적립 안 됨 · 다시 누르면 처음부터</td></tr>
-    <tr><td>E5</td><td>보는 중 광고가 내려감</td><td>"종료된 광고예요"</td></tr>
+    <tr><td>E5</td><td>보는 중 광고가 내려감 · 노출 기간이 지난 광고</td><td>광고 페이지 "종료된 광고예요" · 적립도 거절</td></tr>
   </table></div>
 </section>
 

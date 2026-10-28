@@ -79,7 +79,7 @@
   </div>
   <div class="box wrapx"><table class="t">
     <tr><th>요청</th><th>언제</th><th>받는 값 (화면에 쓰는 것)</th></tr>
-    <tr><td><code>GET /api/earn/home</code></td><td>홈을 열 때 · 적립 후</td><td><code>balance</code> 잔액 · <code>month_earn</code> 이번 달 적립(B 보조 문구 "이번 달 +NP") · <code>attend_done</code> 오늘 출석 · <code>attend</code>(도장 수·연속 일수) · <code>quiz_solved</code> 오늘 답한 수 · <code>quiz_done</code> · <code>pending</code> 적립대기 여부 · <code>phone_verified</code></td></tr>
+    <tr><td><code>GET /api/earn/home</code></td><td>홈에 들어올 때마다 · 적립 후</td><td><code>balance</code> 잔액 · <code>month_earn</code> 이번 달 적립(B 보조 문구 "이번 달 +NP") · <code>attend_done</code> 오늘 출석 · <code>attend</code>(도장 수·연속 일수) · <code>quiz_solved</code> 오늘 답한 수 · <code>quiz_done</code> · <code>pending</code> 적립대기 여부 · <code>phone_verified</code></td></tr>
     <tr><td><code>GET /api/earn/config</code></td><td>앱을 열 때</td><td>설정값 — 출석·퀴즈·추천 포인트, 현금 전환 최소액 등 (안내 문구의 숫자)</td></tr>
     <tr><td><code>GET /api/earn/offers</code></td><td>홈을 열 때</td><td>혜택 목록 → <b>아직 참여하지 않은 혜택 수를 화면이 셈</b> (혜택 카드 숫자)</td></tr>
     <tr><td><code>GET /api/noti/unread</code></td><td>홈을 열 때 · 5초마다</td><td>안 읽은 알림 수 → 알림 종 배지</td></tr>
@@ -168,7 +168,7 @@
         <tr><td>목표의 70% 이상</td><td>이번 달 +NP · 거의 다 모았어요</td></tr>
         <tr><td>목표 달성</td><td>이번 달 +NP · 꺼낼 준비가 됐어요! (B안: 쇼핑할 준비가 됐어요!)</td></tr>
       </table></div>
-      <div class="data"><b>데이터</b> ← 「이번 달 +NP」 = 서버가 계산한 <b>이번 달 적립</b> — 이번 달 늘어난 포인트 중 <b>환불(출금 반려·구매 취소로 돌려준 것)만 뺀 합</b>. 운영자 지급은 포함합니다.</div>
+      <div class="data"><b>데이터</b> ← 「이번 달 +NP」 = 서버가 계산한 <b>이번 달 적립</b> — 이번 달 늘어난 포인트 중 <b>환불(출금 반려·픽샵 구매 취소로 돌려준 것)과 계정 통합 이관을 뺀 합</b>. 운영자 지급은 포함합니다.</div>
       <div class="case">「목표」 = 현금 전환 최소액(어드민 「출금 최소 신청액」 <code>withdraw_min</code>, 기본 10,000P). 「적립」에 무엇을 넣을지는 대시보드 숫자 정의와 함께 다시 정합니다 <span class="tag open">미결</span> · 캡처의 금액은 상태별 예시값입니다.</div></div>
   </div></div>
   </div>
@@ -275,7 +275,7 @@
       <div class="rule"><b>근거</b> <a href="../policy/pol_earn.html#s3-11">3-11절</a></div></div>
   </div><div class="ann">
     <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>친구 추천 카드</div>
-      <ul><li>「+1,000P」 [추천] — 항상 같은 모양(하루 1회가 아님). [추천]을 누르면 친구 추천 화면(F-INV). 비로그인은 토스트 "로그인하고 참여할 수 있어요".</li></ul></div>
+      <ul><li>「+{추천 포인트}P」(설정값 · 기본 1,000P) [추천] — 항상 같은 모양(하루 1회가 아님). [추천]을 누르면 친구 추천 화면(F-INV). 비로그인은 로그인 시트.</li></ul></div>
     <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>남은 요약 「N개 남음 · 최대 +NP」</div>
       <ul><li>오늘 아직 하지 않은 <b>출석·퀴즈</b>의 개수와 받을 수 있는 최대 포인트. 하면 빠집니다. <b>친구 추천은 세지 않습니다</b>(PO 확정 2026-10-26).</li>
           <li>최대 포인트 = 출석 포인트(안 했으면) + <b>퀴즈 남은 문항 수 × 문항당 포인트</b>. 예: 출석 안 함 + 퀴즈 1문제 답함 → "2개 남음 · 최대 +30P".</li>

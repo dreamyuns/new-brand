@@ -60,6 +60,12 @@
 <tbody>
 <tr>
   <td>2026-10-28</td>
+  <td>v0.3 (10-28 크로스체크 — 대화창4)</td>
+  <td><strong>Q5</strong> 혜택 기본 포인트·체류 = 등록 창 기본값 · 소멸 기간 칸 숨김 · <strong>Q6 회원 상세 추천인은 「이름 (이메일)」 유지</strong>(CS용) · <strong>Q8 [인증 완료로 처리]도 「본인인증이 완료됐어요」 알림</strong> · 프로토 반영: 「미수령」 거르기 = 적립완료 건만·적립대기 행 뽑기 칸 「적립 후」(K14) · 메뉴 대기 숫자·위 「송금 대기」가 출금·픽샵 화면에서도 갱신(K15) · 예약 적립 만들기 계산이 설정 기본 요율(K28) · 퀴즈 머리 「매일 N개」 = 설정값 · 회원 목록 머리 옛 절 번호 삭제 · 혜택 수정도 제목·광고주 검사(K34) · 인증 처리 모달에 「본인인증 전에 쌓인 NP도 고객 화면에 보이게 돼요」(K36) · 출금 띠 「승인 단계 … 회원별 월 한도는 설정에 있어요」(A19)</td>
+  <td>PO 확정</td>
+</tr>
+<tr>
+  <td>2026-10-28</td>
   <td>v0.3 (10-28 추가 — 대화창4)</td>
   <td>프로토 10-28 반영분 — <strong>9-5 「적립예정」 상태 신설</strong>(체크아웃 + 7일 확정 · [지금 확정] 시연 버튼 · 전에는 「적립예정 단계를 두지 않는다」) · <strong>5-4 [인증 완료로 처리] 화면</strong>(해제 없음) · 회원 목록 <strong>적립대기 모아보기</strong> · 전체 포인트 내역 <strong>[하루 처리 지금 실행]</strong>(소멸·소멸 예정 알림·알림 정리, 시연용) · 관리자 로그 작업 이름 한글(A17) · 알림 발송 「마케팅」 유형 숨김(A18) · 일괄 지급 안내 「본인인증 전 회원에게는 알림을 보내지 않아요」(#36) · 원장 묶음 「픽샵구매」에 구매 취소 환불(#39)</td>
   <td>대화창4</td>
@@ -959,122 +965,29 @@
 <hr />
 <h2 id="s12">제12조 (설정)</h2>
 <p>값을 바꾸면 <strong>고객 화면에 바로 반영</strong>된다.</p>
-<table>
-<thead>
-<tr>
-  <th>키</th>
-  <th style="text-align:right">현재 값</th>
-  <th>뜻</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-  <td><code>attend_point</code></td>
-  <td style="text-align:right">10</td>
-  <td>출석 1회 적립 포인트</td>
-</tr>
-<tr>
-  <td><code>attend_card_size</code></td>
-  <td style="text-align:right">6</td>
-  <td>출석 카드 칸 수</td>
-</tr>
-<tr>
-  <td><code>quiz_count</code></td>
-  <td style="text-align:right">3</td>
-  <td>1일 출제 문항 수</td>
-</tr>
-<tr>
-  <td><code>quiz_point</code></td>
-  <td style="text-align:right">10</td>
-  <td>퀴즈 문항당 포인트</td>
-</tr>
-<tr>
-  <td><code>quiz_allow_repeat</code></td>
-  <td style="text-align:right">0</td>
-  <td><strong>푼 문제 다시 출제 허용</strong> — 고르기 「끔 — 푼 문항은 다시 내지 않음」/「켬 — 푼 문항도 다시 출제」 (「적립」 묶음)</td>
-</tr>
-<tr>
-  <td><code>offer_point</code></td>
-  <td style="text-align:right">10</td>
-  <td>오퍼월 클릭 기본 포인트</td>
-</tr>
-<tr>
-  <td><code>offer_dwell</code></td>
-  <td style="text-align:right">3</td>
-  <td>오퍼월 체류 조건(초)</td>
-</tr>
-<tr>
-  <td><code>draw_w1</code></td>
-  <td style="text-align:right">45</td>
-  <td>출석 보너스 10~20P 비중(%)</td>
-</tr>
-<tr>
-  <td><code>draw_w2</code></td>
-  <td style="text-align:right">30</td>
-  <td>출석 보너스 21~40P 비중(%)</td>
-</tr>
-<tr>
-  <td><code>draw_w3</code></td>
-  <td style="text-align:right">18</td>
-  <td>출석 보너스 41~70P 비중(%)</td>
-</tr>
-<tr>
-  <td><code>draw_w4</code></td>
-  <td style="text-align:right"><strong>7</strong></td>
-  <td>출석 보너스 71~100P 비중(%) — <strong>하한</strong> (설명 「7% 미만 불가(자사 기준)」)</td>
-</tr>
-<tr>
-  <td><code>invite_point</code></td>
-  <td style="text-align:right">1,000</td>
-  <td>친구 추천 양방 각 포인트</td>
-</tr>
-<tr>
-  <td><code>invite_cap</code></td>
-  <td style="text-align:right"><strong>3</strong></td>
-  <td>친구 추천 적립 상한 (<strong>정책 원안 월 20회 · 시연용 3회</strong>)</td>
-</tr>
-<tr>
-  <td><code>withdraw_unit</code></td>
-  <td style="text-align:right">1,000</td>
-  <td>출금 단위(P)</td>
-</tr>
-<tr>
-  <td><code>withdraw_min</code></td>
-  <td style="text-align:right">10,000</td>
-  <td>출금 최소 신청액(P)</td>
-</tr>
-<tr>
-  <td><code>withdraw_max_once</code></td>
-  <td style="text-align:right">100,000</td>
-  <td>출금 1회 한도(P)</td>
-</tr>
-<tr>
-  <td><code>expire_days</code></td>
-  <td style="text-align:right">365</td>
-  <td>포인트 소멸 기간(일)</td>
-</tr>
-<tr>
-  <td><code>max_users</code></td>
-  <td style="text-align:right">0</td>
-  <td>가입 가능 인원 (0 = 제한 없음)</td>
-</tr>
-<tr>
-  <td><code>draw_base_rate</code></td>
-  <td style="text-align:right">1</td>
-  <td>예약 기본 적립 요율(%)</td>
-</tr>
-<tr>
-  <td><code>draw_expire_days</code></td>
-  <td style="text-align:right"><strong>30</strong></td>
-  <td>뽑기 가능 기간(일) — <strong>적립완료일 + 30일</strong> · 0 = 무기한 <code>[PO 확정 2026-10-27]</code></td>
-</tr>
-<tr>
-  <td><code>admin_pw</code></td>
-  <td style="text-align:right">—</td>
-  <td>어드민 비밀번호</td>
-</tr>
-</tbody>
-</table>
+<p>| 키 | 현재 값 | 뜻 |
+|---|---:|---|
+| <code>attend_point</code> | 10 | 출석 1회 적립 포인트 |
+| <code>attend_card_size</code> | 6 | 출석 카드 칸 수 |
+| <code>quiz_count</code> | 3 | 1일 출제 문항 수 |
+| <code>quiz_point</code> | 10 | 퀴즈 문항당 포인트 |
+| <code>quiz_allow_repeat</code> | 0 | <strong>푼 문제 다시 출제 허용</strong> — 고르기 「끔 — 푼 문항은 다시 내지 않음」/「켬 — 푼 문항도 다시 출제」 (「적립」 묶음) |
+| <code>offer_point</code> | 10 | 오퍼월 클릭 기본 포인트 — <strong>새 혜택 등록 창의 「적립 포인트」 기본값</strong>(광고마다 넣은 값이 우선) <em>(10-28 크로스체크 — 대화창4)</em> Q5 |
+| <code>offer_dwell</code> | 3 | 오퍼월 체류 조건(초) — <strong>새 혜택 등록 창의 「체류(초)」 기본값</strong> <em>(10-28 크로스체크 — 대화창4)</em> Q5 |
+| <code>draw_w1</code> | 45 | 출석 보너스 10~20P 비중(%) |
+| <code>draw_w2</code> | 30 | 출석 보너스 21~40P 비중(%) |
+| <code>draw_w3</code> | 18 | 출석 보너스 41~70P 비중(%) |
+| <code>draw_w4</code> | <strong>7</strong> | 출석 보너스 71~100P 비중(%) — <strong>하한</strong> (설명 「7% 미만 불가(자사 기준)」) |
+| <code>invite_point</code> | 1,000 | 친구 추천 양방 각 포인트 |
+| <code>invite_cap</code> | <strong>3</strong> | 친구 추천 적립 상한 (<strong>정책 원안 월 20회 · 시연용 3회</strong>) |
+| <code>withdraw_unit</code> | 1,000 | 출금 단위(P) |
+| <code>withdraw_min</code> | 10,000 | 출금 최소 신청액(P) |
+| <code>withdraw_max_once</code> | 100,000 | 출금 1회 한도(P) |
+| <del><code>expire_days</code></del> | 365 | 포인트 소멸 기간(일) — <strong>설정 화면에서 숨김</strong>. 약관 9-6 「12개월」로 정한 값이라 운영자가 화면에서 바꾸면 약관과 어긋난다(바꾸려면 약관 개정) <em>(10-28 크로스체크 — 대화창4)</em> | <code>[PO 확정 2026-10-28]</code> Q5 |
+| <code>max_users</code> | 0 | 가입 가능 인원 (0 = 제한 없음) |
+| <code>draw_base_rate</code> | 1 | 예약 기본 적립 요율(%) |
+| <code>draw_expire_days</code> | <strong>30</strong> | 뽑기 가능 기간(일) — <strong>적립완료일 + 30일</strong> · 0 = 무기한 <code>[PO 확정 2026-10-27]</code> |
+| <code>admin_pw</code> | — | 어드민 비밀번호 |</p>
 <h3 id="s12-1">12-1. 출석 보너스 하한 7%</h3>
 <p>최고 구간(71~100P)의 비중을 <strong>7% 미만으로 내리지 못하게</strong> 막아 두었다.</p>
 <blockquote>
