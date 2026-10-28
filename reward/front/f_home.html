@@ -79,9 +79,10 @@
   </div>
   <div class="box wrapx"><table class="t">
     <tr><th>요청</th><th>언제</th><th>받는 값 (화면에 쓰는 것)</th></tr>
-    <tr><td><code>GET /api/earn/home</code></td><td>홈을 열 때 · 적립 후</td><td><code>balance</code> 잔액 · <code>attend_done</code> 오늘 출석 · <code>attend</code>(도장 수·연속 일수) · <code>quiz_done</code> · <code>offers_left</code> 남은 혜택 수 · <code>phone_verified</code></td></tr>
+    <tr><td><code>GET /api/earn/home</code></td><td>홈을 열 때 · 적립 후</td><td><code>balance</code> 잔액 · <code>month_earn</code> 이번 달 적립(B 보조 문구 "이번 달 +NP") · <code>attend_done</code> 오늘 출석 · <code>attend</code>(도장 수·연속 일수) · <code>quiz_solved</code> 오늘 답한 수 · <code>quiz_done</code> · <code>pending</code> 적립대기 여부 · <code>phone_verified</code></td></tr>
+    <tr><td><code>GET /api/earn/config</code></td><td>앱을 열 때</td><td>설정값 — 출석·퀴즈·추천 포인트, 현금 전환 최소액 등 (안내 문구의 숫자)</td></tr>
+    <tr><td><code>GET /api/earn/offers</code></td><td>홈을 열 때</td><td>혜택 목록 → <b>아직 참여하지 않은 혜택 수를 화면이 셈</b> (혜택 카드 숫자)</td></tr>
     <tr><td><code>GET /api/noti/unread</code></td><td>홈을 열 때 · 5초마다</td><td>안 읽은 알림 수 → 알림 종 배지</td></tr>
-    <tr><td colspan="3"><b>부족한 값 (구현 시 추가)</b> — ①<b>이번 달 적립 합계</b>(B 보조 문구 "이번 달 +NP") — 지금은 앱 안의 시연용 값 ②<b>오늘 퀴즈 답한 수</b>(E 퀴즈 카드) — 지금은 퀴즈 화면을 열어야 채워지고, 서버 <code>quiz_done</code>은 「전부 정답」 기준이라 쓸 수 없음 ③<b>설정값</b>(현금 전환 최소·지급액들)</td></tr>
   </table></div>
 </section>
 
@@ -296,7 +297,7 @@
       <ul><li>제목 "혜택 보고 적립하기".</li>
           <li>로그인: "아직 N개 남았어요 · 클릭만 해도 적립" / 비로그인: "클릭만 해도 쌓이는 제휴 혜택".</li>
           <li>누르면 <b>혜택 탭</b>(하단 탭 ③과 같은 화면)으로 갑니다.</li></ul>
-      <div class="data"><b>데이터</b> ← <code>offers_left</code> (아직 참여하지 않은 혜택 수)</div>
+      <div class="data"><b>데이터</b> ← <code>/api/earn/offers</code> 목록에서 아직 참여하지 않은 혜택 수를 화면이 셉니다</div>
       <div class="rule"><b>근거</b> 혜택(오퍼월) 정책서 없음 — 제안서 v0.5 3-5 예시값 <span class="tag open">미결</span> (혜택 묶음에서 정함)</div></div>
   </div></div>
   </div>
@@ -343,7 +344,7 @@
   <div class="sec-hd"><h2>예외 케이스</h2></div>
   <div class="box wrapx"><table class="t">
     <tr><th>상황</th><th>화면 동작</th></tr>
-    <tr><td>서버에 연결하지 못함</td><td>지금은 토스트 "서버에 연결하지 못했어요" → 홈 숫자 자리에 [다시 시도]가 있는 안내 (<a href="../common/c_layer.html#R3">C-LAYER R3</a>) <span class="tag proto">구현 시 반영</span></td></tr>
+    <tr><td>서버에 연결하지 못함</td><td>지금은 <b>안내 없이 0P 화면</b>으로 보입니다 → 홈 숫자 자리에 [다시 시도]가 있는 안내 (<a href="../common/c_layer.html#R3">C-LAYER R3</a>) <span class="tag proto">구현 시 반영</span></td></tr>
     <tr><td>잔액이 목표를 넘음 (A안)</td><td>막대는 100%에서 멈춤 · 칩 「목표 달성률 100%」 · [꺼내기] 켜짐</td></tr>
     <tr><td>B안에서 살 수 있는 상품이 없음</td><td>칩 「교환 가능 0개」 · [픽샵 쇼핑]은 그대로 켜짐(상품 구경 가능)</td></tr>
     <tr><td>다른 곳에서 적립 후 홈으로 돌아옴</td><td>홈 진입 시 서버 값으로 갱신</td></tr>

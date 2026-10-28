@@ -79,7 +79,7 @@
     <tr><td><code>PUT /api/admin/quiz/{id}</code></td><td>수정 [저장] · 노출 스위치</td><td>→ 바뀐 값만 (스위치는 <code>active</code>만)</td></tr>
     <tr><td><code>GET /api/admin/quiz/template</code></td><td>[양식 내려받기]</td><td>← 엑셀 양식(.xlsx, 예시 2건·작성 안내)</td></tr>
     <tr><td><code>POST /api/admin/quiz/upload</code></td><td>엑셀 [업로드]</td><td>→ 파일 / ← <code>added</code> 등록 수 · <code>skipped[]</code> 건너뛴 줄과 이유</td></tr>
-    <tr><td colspan="3">오류: "문항을 입력해 주세요" · "정답은 O 또는 X 예요" · "해설을 입력해 주세요" · 엑셀 "파일을 선택해 주세요" · "엑셀 파일(.xlsx)을 올려 주세요" · "엑셀 파일을 읽지 못했어요" — 모두 빨간 토스트</td></tr>
+    <tr><td colspan="3">오류: "문항을 입력해 주세요" · "정답은 O 또는 X 예요" · "해설을 입력해 주세요 (정답 공개 후 항상 보여줘요)" · 엑셀 "파일을 선택해 주세요" · "엑셀 파일(.xlsx)을 올려 주세요" · "엑셀 파일을 읽지 못했어요" — 모두 빨간 토스트 · 엑셀에서 문항이 빈 줄은 결과(건너뛴 줄)에 나오지 않고 조용히 넘어갑니다</td></tr>
   </table></div>
 </section>
 
@@ -240,7 +240,7 @@
     <tr><td>문항·해설을 비우고 저장</td><td>빨간 토스트 — 저장 안 됨</td></tr>
     <tr><td>정답이 O/X가 아님</td><td>"정답은 O 또는 X 예요"</td></tr>
     <tr><td>틀린 문항을 발견</td><td>노출 스위치를 바로 끔 → 다음 출제부터 빠짐 · 감점이 없으므로 보상 없음 (<a href="../policy/pol_earn.html#s3-8">3-8절 E4</a>)</td></tr>
-    <tr><td>「출제함」 문항이 3개보다 적음</td><td>고객 화면 "출제할 문제가 없어요". 회원별 60일 제외 후 3개 미만이면 <b>가장 오래전에 푼 문항부터 다시 사용</b> (<a href="../policy/pol_earn.html#s3-6">3-6절</a>) — 문항 수 목표 100(현재 55)</td></tr>
+    <tr><td>「출제함」 문항이 적음</td><td><b>0개일 때만</b> 고객 화면 토스트 "출제할 문제가 없어요" · 1~2개면 있는 만큼 출제. 회원이 <b>이미 푼 문항은 기간 없이 제외</b>하고, 남은 문항이 3개 미만이면 <b>가장 오래전에 푼 문항부터 다시 사용</b> (<a href="../policy/pol_earn.html#s3-6">3-6절</a>) — 문항 수 목표 100(현재 55)</td></tr>
     <tr><td>오늘 이미 나간 문항을 수정</td><td>오늘 그 문항을 받은 회원은 <b>수정된 내용</b>으로 채점·해설을 받습니다 — 오늘 출제 중인 문항의 정답은 바꾸지 않도록 운영 <span class="tag open">미결</span> 잠금 여부</td></tr>
     <tr><td>문항 삭제</td><td>삭제 기능 없음 — 「출제 안 함」으로만 관리(풀이 기록 보존) <span class="tag proto">프로토 기준</span></td></tr>
   </table></div>

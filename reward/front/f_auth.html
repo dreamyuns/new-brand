@@ -37,7 +37,8 @@
 <!-- 변경이력: 개발자 공유 이후부터 노출 — 내용은 계속 기록 -->
 <div class="box hist"><h3>변경이력</h3>
   <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
-    <tr><td>v0.1</td><td>2026-10-27</td><td>최초 작성 — 캡처 17장(가입 직후 권유 팝업 P92 포함), 리워드 회원 정책서 v0.1 기준</td></tr></table></div>
+    <tr><td>v0.1</td><td>2026-10-27</td><td>최초 작성 — 캡처 17장(가입 직후 권유 팝업 P92 포함), 리워드 회원 정책서 v0.1 기준</td></tr>
+    <tr><td>v0.2</td><td>2026-10-28</td><td>리워드 회원 정책서 v0.2 기준으로 갱신 — 간편 로그인(S7)·계정 통합(S8)·연결 해제 · 본인인증 진입에 아웃링크 추가</td></tr></table></div>
 
 <div class="sec-policy">
   <h3>⚙ 공통 정책 — 가입·로그인·본인인증 전체</h3>
@@ -79,7 +80,7 @@
     <div class="flow" style="margin-top:8px"><i>신규 회원:</i><span>S2</span><i>→</i><span>S3 약관·추천코드</span><i>→</i><span>[가입 완료]</span><i>→</i><span>S4 환영 (1.7초)</span><i>→</i><span>S5 본인인증 권유 (선택)</span><i>→</i><span>[다음에 하기] 보던 화면 / [본인인증하기] S6</span></div>
     <div class="flow" style="margin-top:8px"><i>간편 로그인:</i><span>S1 [카카오·네이버로 시작하기]</span><i>→</i><span>S7 「인증 중…」 → 소셜 로그인 화면(흉내) · 이메일 입력</span><i>→</i><span>넣은 이메일로 네 갈래 — 통합(S8) · 연결 · 기존 계정 로그인 + 자동 연결 · 신규 가입(S3)</span></div>
     <div class="flow" style="margin-top:8px"><i>네 갈래 · 연결 해제 흐름도:</i><span><a href="f_acc.html#flowchart">F-ACC ⑥ 로그인 수단 흐름도</a></span></div>
-    <div class="flow" style="margin-top:8px"><i>본인인증 (로그인 · 미인증):</i><span>첫 적립 · 홈 띠 · 계정관리</span><i>→</i><span>S6 통신사 → 정보 → 인증번호</span><i>→</i><span>하려던 참여를 이어서</span></div>
+    <div class="flow" style="margin-top:8px"><i>본인인증 (로그인 · 미인증):</i><span>첫 적립 · 홈 띠 · 계정관리 · 포인트 내역 · 아웃링크</span><i>→</i><span>S6 통신사 → 정보 → 인증번호</span><i>→</i><span>하려던 참여를 이어서</span></div>
   </div>
   <div class="box wrapx"><table class="t">
     <tr><th>요청</th><th>언제</th><th>받는 값 (화면에 쓰는 것)</th></tr>
@@ -239,7 +240,7 @@
         <ul><li>S4 가입 완료가 닫힌 <b>직후</b> 한 번 뜹니다. 추천코드를 넣고 가입해도 문구는 같습니다.</li></ul></div>
       <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>[다음에 하기]</div>
         <ul><li>닫히고 보던 화면 그대로. 가입은 이미 끝났으므로 아무것도 취소되지 않습니다.</li>
-            <li>나중에 본인인증하는 곳: 첫 적립 때(출석 [받기]·퀴즈 열기 등) · 홈 안내 띠 · 계정관리 · 포인트 내역.</li></ul></div>
+            <li>나중에 본인인증하는 곳: 첫 적립 때(출석 [받기]·퀴즈 열기 등) · 홈 안내 띠 · 계정관리 · 포인트 내역 · 아웃링크 화면 「본인인증을 해야 예약 적립을 받을 수 있어요 [인증하기]」.</li></ul></div>
       <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>[본인인증하기]</div>
         <ul><li>본인인증 시트(S6)가 열립니다 → 마치면 적립대기가 있으면 지급하고 닫힘.</li>
             <li>시트에서 [✕]를 누르면 "언제든 다시 할 수 있어요…" 확인창(④ X5).</li></ul></div>
@@ -255,7 +256,7 @@
 <section class="sec zsec" id="zS6">
   <div class="unit">
   <div class="zone-hd"><span class="zl">S6</span><h2>본인인증 — 첫 적립 때 · 권유 수락</h2><span class="tag ok">확정</span></div>
-  <p class="sec-sub">로그인했지만 본인인증 전인 회원이 <b>출석 [받기] · 퀴즈 열기 · 혜택 나가기 전 · 예약 뽑기</b>를 하거나, 가입 직후 권유(S5)·홈 안내 띠·계정관리·포인트 내역의 [본인인증하기]를 누르면 뜹니다. 같은 시트 틀(A~D)을 씁니다.</p>
+  <p class="sec-sub">로그인했지만 본인인증 전인 회원이 <b>출석 [받기] · 퀴즈 열기 · 혜택 나가기 전 · 예약 뽑기</b>를 하거나, 가입 직후 권유(S5)·홈 안내 띠·계정관리·포인트 내역의 [본인인증하기]·아웃링크 화면의 [인증하기]를 누르면 뜹니다. 같은 시트 틀(A~D)을 씁니다.</p>
   <div class="shots-row">
     <div class="sw"><div class="lb">F-AUTH-E1 <small>① 통신사</small></div><figure class="shot" data-id="F-AUTH-E1" data-base="../"></figure></div>
     <div class="sw"><div class="lb">F-AUTH-E2 <small>② 정보 입력</small></div><figure class="shot" data-id="F-AUTH-E2" data-base="../"></figure></div>

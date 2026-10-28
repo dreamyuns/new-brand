@@ -69,9 +69,10 @@
   </div>
   <div class="box wrapx"><table class="t">
     <tr><th>요청</th><th>언제</th><th>받는 값 · 보내는 값</th></tr>
-    <tr><td><code>GET /api/use/withdraw/info</code></td><td>현금 전환을 열 때</td><td>잔액 · 단위 · 최소 · 1회 한도 · 저장한 계좌(인증 여부)</td></tr>
+    <tr><td><code>GET /api/earn/config</code></td><td>앱을 열 때</td><td>출금 <b>단위 · 최소 · 1회 한도 · 월 한도</b> (안내 문구의 숫자)</td></tr>
+    <tr><td><code>GET /api/use/withdraw/info</code></td><td>현금 전환을 열 때</td><td>잔액 · <b>이번 달 신청 합계</b>(반려 제외 → 「이번 달 남은 한도」) · 저장한 계좌(인증 여부)</td></tr>
     <tr><td><code>POST /api/use/account</code></td><td>A2 [계좌 인증 완료]</td><td>은행 · 계좌번호 · 예금주 → 저장</td></tr>
-    <tr><td><code>POST /api/use/withdraw</code></td><td>확인창 [신청하기]</td><td><code>amount</code> · 계좌 → 출금 신청 1건 · 차감 · 잔액</td></tr>
+    <tr><td><code>POST /api/use/withdraw</code></td><td>확인창 [신청하기]</td><td><code>amount</code> · 계좌 · <b>신청 번호</b>(같은 번호가 두 번 오면 한 번만 처리) → 출금 신청 1건 · 차감 · 잔액</td></tr>
     <tr><td><code>GET /api/use/shop</code></td><td>앱을 열 때(상품 목록)</td><td>판매 중 상품 · 잔액</td></tr>
     <tr><td><code>POST /api/use/shop/order</code></td><td>확인창 [구매하기]</td><td><code>item_id</code> → 쿠폰번호 · 유효기간 · 잔액</td></tr>
   </table></div>
@@ -90,7 +91,9 @@
     <div class="sw"><div class="lb">F-JAR-A2 <small>입력 완료</small></div><figure class="shot" data-id="F-JAR-A2" data-base="../"></figure></div>
   </div>
   <div class="detail"><div class="ann">
-    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「현금으로 꺼내기」 (계좌 변경 중이면 「계좌 변경」)</div></div>
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「현금으로 꺼내기」 (계좌 변경 중이면 「계좌 변경」)</div>
+      <ul><li>계좌 등록 전: "계좌를 먼저 등록해 주세요" / "포인트를 보낼 내 계좌가 필요해요".</li>
+          <li>계좌 변경 중: "바꿀 계좌를 입력해 주세요" / "인증을 마쳐야 계좌가 바뀌어요".</li></ul></div>
     <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>"계좌를 먼저 등록해 주세요 · 포인트를 보낼 내 계좌가 필요해요"</div></div>
     <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>단계 표시</div><ul><li>지금 단계만 파랗게.</li></ul></div>
     <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>은행 선택</div>
@@ -116,7 +119,7 @@
       <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>단계 표시 — 2단계</div></div>
       <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>입금자명 뒤 4자리</div>
         <ul><li>숫자 4자리. 그 아래 파란 띠 "시연용 — 통장에 찍힌 숫자는 NNNN 입니다"는 <b>시연 장치</b>입니다.</li></ul>
-        <div class="case">실제 1원 송금·예금주 대조가 없습니다 — 계좌 인증 업체 연동이 개발 대상 <span class="tag open">미결</span> R-U5</div></div>
+        <div class="case">실제 1원 송금·예금주 대조가 없습니다 — 계좌 인증 업체 연동이 개발 대상 <span class="tag open">미결</span> R-U5. 화면 아래 시연 안내 "시연용 화면입니다. 실제 1원 송금·예금주 대조는 일어나지 않아요." · "금액·한도·계좌는 시연용 가상 데이터입니다."는 <b>시연 장치</b>라 개발 대상이 아닙니다.</div></div>
       <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>"통장·앱 거래내역에서 1원 입금 건을 찾아 입금자명 끝 4자리를 넣어 주세요."</div></div>
       <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>[계좌 인증 완료]</div>
         <ul><li>4자리가 차야 켜집니다. 맞으면 계좌 저장 → 토스트 "계좌가 등록됐어요. 다음부터는 바로 신청할 수 있어요" → A3. 틀리면 토스트 "숫자가 달라요. 입금자명을 다시 확인해 주세요".</li></ul></div>
@@ -175,7 +178,7 @@
     <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>안내</div>
       <ul><li>X1 "신청 후에는 <b>취소할 수 없어요</b>." · X2 "신청하신 금액은 영업일 기준 5일 이내에 등록하신 계좌로 입금돼요." · X3 "계좌를 바꾸려면 <b>1원 인증을 다시</b> 해야 해요. 인증을 마치기 전까지는 현재 계좌가 그대로 쓰여요."</li></ul></div>
     <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>버튼</div>
-      <ul><li>X1 [취소] [신청하기] → 서버 검사(본인인증 · 계좌 · 단위 · 최소 · 1회 한도 · 잔액) → <b>바로 차감</b> · 알림 「출금 신청이 접수됐어요」 → X2.</li>
+      <ul><li>X1 [취소] [신청하기] → 서버 검사(본인인증 · 계좌 · 단위 · 최소 · 1회 한도 · <b>월 한도</b> · 잔액 · <b>같은 신청 번호 중복</b>) → <b>바로 차감</b> · 알림 「출금 신청이 접수됐어요」 → X2.</li>
           <li>X2 [확인] — <b>화면은 이동하지 않습니다</b>(현금 전환 화면 유지).</li>
           <li>X3 [취소] [변경하기] → A1 「계좌 변경」. 거기서 [←]를 누르면 원래 계좌로 돌아갑니다.</li>
           <li>서버 실패 → 확인창 "신청하지 못했어요" + [다시 시도].</li></ul>
