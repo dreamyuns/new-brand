@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="../wf-reward.css">
 <!-- 근거: 구현물 pickoq_demo static/app.js 가입·로그인 시트(openAuth~doJoin) · 본인인증 시트(openCert~certVerify) · api_auth.py (2026-10-27 수정분)
      캡처는 화면 상태만 바꿔 찍었다 — [가입 완료]·본인인증 [확인]은 누르지 않음. 시연용 코드 안내(.au-demo)는 숨김.
-     간편 가입(카카오·네이버)·계정 통합은 PO 결정(2026-10-27)으로 다음 단계 — 이 페이지에 없음 -->
+     간편 로그인(카카오·네이버)은 시연 흉내(S7) · 계정 통합은 없음(PO 2026-10-28 · 1명 1계정) — 같은 명의는 S8 확인창만 찍음([옮기고 로그인]은 누르지 않음) -->
 </head>
 <body data-key="f_auth" data-base="../">
 <script src="../wf-nav.js"></script>
@@ -38,7 +38,7 @@
 <div class="box hist"><h3>변경이력</h3>
   <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
     <tr><td>v0.1</td><td>2026-10-27</td><td>최초 작성 — 캡처 17장(가입 직후 권유 팝업 P92 포함), 리워드 회원 정책서 v0.1 기준</td></tr>
-    <tr><td>v0.2</td><td>2026-10-28</td><td>리워드 회원 정책서 v0.2 기준으로 갱신 — 간편 로그인(S7)·계정 통합(S8)·연결 해제 · 본인인증 진입에 아웃링크 추가</td></tr></table></div>
+    <tr><td>v0.2</td><td>2026-10-28</td><td>리워드 회원 정책서 v0.2 기준으로 갱신 — 간편 로그인(S7)·연결 해제 · 계정 통합 폐지 → 같은 명의 적립대기 옮기기(S8) · 본인인증 진입에 아웃링크 추가</td></tr></table></div>
 
 <div class="sec-policy">
   <h3>⚙ 공통 정책 — 가입·로그인·본인인증 전체</h3>
@@ -48,7 +48,7 @@
     <li><b>계정은 [가입 완료]를 누른 순간 만들어집니다.</b> 약관에 동의하기 전에 시트를 닫으면 아무것도 남지 않습니다. (<a href="../policy/pol_member.html#s1-3">1-3절</a>)</li>
     <li>로그인은 <b>30일</b> 유지됩니다. 로그인·가입이 끝나면 <b>보던 화면에 그대로</b> 남습니다. <span class="tag open">미결</span> 앱 출시 때 무기한 여부 R-M7 (<a href="../policy/pol_member.html#s1-4">1-4절</a>)</li>
     <li>시트는 아래에서 올라오는 <b>단계형 바텀시트</b>입니다 — 배경을 눌러도 닫히지 않고 [✕]로만 닫습니다(<a href="../common/c_layer.html#L-SHEET-STEP">C-LAYER L-SHEET-STEP</a>).</li>
-    <li><b>카카오·네이버 간편 가입과 계정 통합은 다음 단계</b>에서 다룹니다(PO 2026-10-27). <span class="tag open">미결</span> R-M1·R-M2</li>
+    <li><b>계정 통합은 없습니다 — 1명 1계정</b>(PO 2026-10-28). 같은 사람인지는 <b>본인인증 명의</b>로만 판단하고, 같은 명의의 두 번째 계정은 본인인증 때 S8에서 정리합니다. 카카오·네이버 간편 로그인은 시연용 흉내입니다(S7). (<a href="../policy/pol_member.html#s3-2">3-2</a> · <a href="../policy/pol_member.html#s3-3">3-3절</a>)</li>
   </ul>
   <div class="src">기준: 리워드 회원 정책서 v0.2 · 0 · 1-1~1-4 · 2절 / 참여형 적립 v0.8 · 1-6절</div>
 </div>
@@ -65,7 +65,7 @@
   <a class="z" href="#zS5"><b>S5</b>본인인증 권유(선택)</a>
   <a class="z" href="#zS6"><b>S6</b>본인인증</a>
   <a class="z" href="#zS7"><b>S7</b>간편 로그인</a>
-  <a class="z" href="#zS8"><b>S8</b>계정 통합</a>
+  <a class="z" href="#zS8"><b>S8</b>같은 명의 계정</a>
   <span class="toc-sep"></span>
   <a href="#over"><b>④</b>화면 위에 뜨는 것</a>
   <a href="#exc">예외 케이스</a>
@@ -78,7 +78,8 @@
     <div class="flow"><i>들어오는 곳:</i><span>홈·마이페이지 [로그인]</span><span>비로그인이 참여 버튼</span><span>초대 링크 <code>/signup?ref=코드</code></span></div>
     <div class="flow" style="margin-top:8px"><span>S1 이메일</span><i>→</i><span>[인증코드 받기]</span><i>→</i><span>S2 인증코드 6자리</span><i>→ 기존 회원 →</i><span>로그인 완료 · 시트 닫힘</span></div>
     <div class="flow" style="margin-top:8px"><i>신규 회원:</i><span>S2</span><i>→</i><span>S3 약관·추천코드</span><i>→</i><span>[가입 완료]</span><i>→</i><span>S4 환영 (1.7초)</span><i>→</i><span>S5 본인인증 권유 (선택)</span><i>→</i><span>[다음에 하기] 보던 화면 / [본인인증하기] S6</span></div>
-    <div class="flow" style="margin-top:8px"><i>간편 로그인:</i><span>S1 [카카오·네이버로 시작하기]</span><i>→</i><span>S7 「인증 중…」 → 소셜 로그인 화면(흉내) · 이메일 입력</span><i>→</i><span>넣은 이메일로 네 갈래 — 통합(S8) · 연결 · 기존 계정 로그인 + 자동 연결 · 신규 가입(S3)</span></div>
+    <div class="flow" style="margin-top:8px"><i>간편 로그인:</i><span>S1 [카카오·네이버로 시작하기]</span><i>→</i><span>S7 「인증 중…」 → 소셜 로그인 화면(흉내) · 이메일 입력</span><i>→</i><span>넣은 이메일로 네 갈래 — 연결 · 연결 불가(다른 회원) · 기존 계정 로그인 + 자동 연결 · 신규 가입(S3)</span></div>
+    <div class="flow" style="margin-top:8px"><i>같은 명의:</i><span>S6 본인인증 [확인]</span><i>→</i><span>같은 명의로 이미 인증한 계정이 있음</span><i>→</i><span>S8 확인창</span><i>→</i><span>[옮기고 로그인] — 적립대기·예약을 그 계정으로 · 그 계정으로 로그인 · 지금 계정 삭제</span></div>
     <div class="flow" style="margin-top:8px"><i>네 갈래 · 연결 해제 흐름도:</i><span><a href="f_acc.html#flowchart">F-ACC ⑥ 로그인 수단 흐름도</a></span></div>
     <div class="flow" style="margin-top:8px"><i>본인인증 (로그인 · 미인증):</i><span>첫 적립 · 홈 띠 · 계정관리 · 포인트 내역 · 아웃링크</span><i>→</i><span>S6 통신사 → 정보 → 인증번호</span><i>→</i><span>하려던 참여를 이어서</span></div>
   </div>
@@ -88,8 +89,8 @@
     <tr><td><code>POST /api/auth/verify</code></td><td>S2 6자리가 차는 순간 — <code>email</code> · <code>code</code></td><td>기존 회원: <code>user</code> + 로그인 쿠키(30일) / 신규: <code>need_signup</code></td></tr>
     <tr><td><code>POST /api/auth/signup</code></td><td>S3 [가입 완료] — <code>email</code> · <code>marketing_agree</code></td><td><code>user</code>(임시 이름 = 이메일 앞부분) + 로그인 쿠키</td></tr>
     <tr><td><code>POST /api/auth/invite-code</code></td><td>가입 직후, 조회를 마친 추천코드가 있을 때</td><td>지급 결과 · 본인인증 전이면 적립대기 (<a href="f_invite.html#entry">F-INV ⑤</a>)</td></tr>
-    <tr><td><code>POST /api/auth/merge</code></td><td>S8 [통합하기] — 로그인한 상태일 때만 · <code>gone_email</code> · <code>gone_joined</code> · <code>point</code> · <code>waiting</code> · <code>social</code></td><td>통합 기록 1건(어드민 5-5) + 이관 포인트를 원장에 「계정 통합 이관」 한 줄. 사라지는 계정을 실제로 지우지는 않음(시연)</td></tr>
-    <tr><td><code>POST /api/auth/phone</code></td><td>S6 본인인증 [확인] — <code>phone</code> · <code>name</code></td><td><code>released</code> 지급된 적립대기 금액 · 이름이 실명으로 바뀜</td></tr>
+    <tr><td><code>POST /api/auth/move-dup</code></td><td>S8 [옮기고 로그인] / [그 계정으로 로그인]</td><td><code>released</code> 옮겨서 지급된 적립대기 · 그 계정 로그인 쿠키 · 지금 계정 삭제 · 옮긴 기록 1건(어드민 5-5)</td></tr>
+    <tr><td><code>POST /api/auth/phone</code></td><td>S6 본인인증 [확인] — <code>phone</code> · <code>name</code></td><td><code>released</code> 지급된 적립대기 금액 · 이름이 실명으로 바뀜 / 같은 명의면 <code>409 dup_cert</code> + <code>target</code>(가린 이메일) · <code>movable</code>(옮길 것이 있는지) → S8</td></tr>
     <tr><td colspan="3">오류: 이메일 형식 → "이메일 주소를 확인해 주세요" · 코드 6자리 아님 → "인증번호 6자리를 입력해 주세요" · 이미 가입 → "이미 가입된 이메일이에요" · 가입 인원 초과(시연 설정) → 거절 · 휴대폰 번호 → "휴대폰 번호를 확인해 주세요"</td></tr>
   </table></div>
   <div class="note open"><h4>시연용으로 다르게 둔 것 — 개발 대상</h4>인증코드는 실제로 보내지 않고 <b>아무 6자리나 통과</b>합니다. 유효시간 5분·다시 받기·시도 횟수 제한, 본인인증의 실제 본인확인기관 연동은 개발해야 합니다(<a href="../policy/pol_member.html#s1-2">1-2절</a> · <a href="../policy/pol_earn.html#s1-6">참여형 1-6 개발 요건</a>).</div>
@@ -306,15 +307,15 @@
   </div><div class="ann">
     <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>이메일 입력칸</div></div>
     <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>[계속]</div>
-      <ul><li>이메일 형식이 맞아야 켜집니다(G2 회색 → G3 검정). 누르면 「확인 중…」 → <b>서버가 넣은 이메일을 찾아</b> 네 갈래로 나눕니다(대표 이메일 → 없으면 통합 때 남긴 옛 이메일).</li></ul></div>
+      <ul><li>이메일 형식이 맞아야 켜집니다(G2 회색 → G3 검정). 누르면 「확인 중…」 → <b>서버가 넣은 이메일로 회원을 찾아</b> 네 갈래로 나눕니다.</li></ul></div>
     <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>시연 안내</div>
-      <ul><li>"시연용 화면이에요. 실제 OO 로그인 창이 아니에요." + 어떤 주소가 어떤 결과인지 한 줄 — 로그인 전 "가입한 이메일 → 그 계정으로 로그인 · 그 밖의 주소 → 신규 가입" / 로그인 중 "{내 이메일} → 내 계정에 연결 · old.pickoq@naver.com 또는 다른 회원 이메일 → 계정 통합 · 그 밖의 주소 → 연결".</li></ul></div>
+      <ul><li>"시연용 화면이에요. 실제 OO 로그인 창이 아니에요." + 어떤 주소가 어떤 결과인지 한 줄 — 로그인 전 "가입한 이메일 → 그 계정으로 로그인 · 그 밖의 주소 → 신규 가입" / 로그인 중 "{내 이메일} 또는 픽콕에 없는 주소 → 내 계정에 연결 · 다른 회원 이메일 → 연결할 수 없어요".</li></ul></div>
   </div></div>
   <div class="box wrapx"><table class="t">
     <tr><th>넣은 이메일</th><th>결과</th></tr>
-    <tr><td>픽콕의 <b>다른 회원</b> (로그인 중)</td><td><b>S8 계정 통합 확인</b> — 시연 더미 old.pickoq@naver.com 도 여기</td></tr>
+    <tr><td>픽콕의 <b>다른 회원</b> (로그인 중)</td><td><b>연결할 수 없음</b> — 토스트 "다른 계정에서 쓰는 이메일이라 연결할 수 없어요" (계정 통합 없음)</td></tr>
     <tr><td><b>내 계정</b>과 같음 (로그인 중)</td><td><b>연결</b> — 토스트 "OO가 연결됐어요"</td></tr>
-    <tr><td><b>이미 가입된 주소</b> (로그인 전) — 어느 회원이든 대표 이메일 또는 <b>통합 때 남긴 옛 이메일</b></td><td>그 계정으로 <b>로그인 + 소셜 자동 연결</b> — 통합이 아님(합칠 상대 없음). 연결을 해제했던 소셜로 다시 들어온 경우도 여기(<a href="../policy/pol_member.html#s3-5">3-5절</a>)<div class="case" style="margin-top:6px">서버에 로그인하고 그 소셜을 연결합니다(통합 확인은 뜨지 않음). 시연 더미 old.pickoq@naver.com 을 로그인 전에 넣으면 토스트 "통합 시연용 주소예요. 로그인한 뒤 계정관리 [연결]에서 넣어 주세요"</div></td></tr>
+    <tr><td><b>이미 가입된 주소</b> (로그인 전) — 어느 회원의 이메일이든</td><td>그 계정으로 <b>로그인 + 소셜 자동 연결</b>. 연결을 해제했던 소셜로 다시 들어온 경우도 여기(<a href="../policy/pol_member.html#s3-5">3-5절</a>)<div class="case" style="margin-top:6px">서버에 로그인하고 그 소셜을 연결합니다 → 토스트 "{이메일} 계정으로 로그인했어요"</div></td></tr>
     <tr><td>픽콕에 <b>없음</b></td><td>로그인 중 → <b>연결</b> / 로그인 전 → <b>신규 가입</b>(S3 약관부터 · 본인인증은 첫 적립 때) — 가입하면 그 소셜이 연결되고 「현재 로그인」이 됨</td></tr>
   </table></div>
   <div class="rule" style="margin-top:8px"><b>근거</b> 간편 로그인 · 네 갈래 (PO 확정 2026-10-27 · <a href="../policy/pol_member.html#s1-5">회원 1-5절</a>) · 그림으로 보기 <a href="f_acc.html#flowchart">F-ACC ⑥ 흐름도</a></div>
@@ -323,34 +324,31 @@
 
 <section class="sec zsec" id="zS8">
   <div class="unit">
-  <div class="zone-hd"><span class="zl">S8</span><h2>계정 통합 — 확인 · 완료</h2><span class="tag ok">확정</span></div>
-  <p class="sec-sub">소셜에 넣은 이메일이 <b>픽콕의 다른 회원</b>일 때 뜹니다. 로그인한 회원이 계정관리에서 [연결]을 누른 경우에는 <b>재인증(<a href="f_acc.html#over">F-ACC R3</a>)을 먼저</b> 거칩니다. <b>되돌릴 수 없고</b>, 고객·어드민 어디에도 「통합 해제」는 없습니다.</p>
-  <div class="shots-row">
-    <div class="sw"><div class="lb">F-AUTH-H1 <small>확인 · 체크 전</small></div><figure class="shot" data-id="F-AUTH-H1" data-base="../"></figure></div>
-    <div class="sw"><div class="lb">F-AUTH-H2 <small>확인 · 체크 후</small></div><figure class="shot" data-id="F-AUTH-H2" data-base="../"></figure></div>
-    <div class="sw"><div class="lb">F-AUTH-H3 <small>통합 완료</small></div><figure class="shot" data-id="F-AUTH-H3" data-base="../"></figure></div>
+  <div class="zone-hd"><span class="zl">S8</span><h2>같은 명의 계정 — 적립대기 옮기기</h2><span class="tag ok">확정</span></div>
+  <p class="sec-sub"><b>계정 통합은 없습니다</b>(1명 1계정 · PO 2026-10-28). 같은 사람이 다른 이메일로 두 번째 계정을 만들었다면, 그 계정으로 <b>본인인증(S6)을 할 때</b> 같은 명의가 걸려 이 확인창이 뜹니다. 이 계정은 인증하지 않고, 쌓인 적립대기·예약을 이미 인증된 계정으로 옮긴 뒤 그 계정으로 로그인합니다.</p>
+  <div class="two-col" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div class="shots-row">
+      <div class="sw"><div class="lb">F-AUTH-K1 <small>옮길 것이 있을 때</small></div><figure class="shot" data-id="F-AUTH-K1" data-base="../"></figure></div>
+      <div class="sw"><div class="lb">F-AUTH-K2 <small>옮길 것이 없을 때</small></div><figure class="shot" data-id="F-AUTH-K2" data-base="../"></figure></div>
+    </div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「이미 인증한 계정이 있어요」</div>
+        <ul><li>K1: "<b>abc****@abc.com</b> 계정이 같은 명의로 인증돼 있어요. 이 계정에 쌓인 적립대기 포인트와 예약을 그 계정으로 옮기고, 그 계정으로 로그인할까요? 지금 계정은 삭제돼요."</li>
+            <li>K2(옮길 것 없음): "… 같은 명의로 인증돼 있어요. 그 계정으로 로그인할까요? 지금 계정은 삭제돼요."</li>
+            <li>이메일은 <b>앞 3글자 + **** + @도메인</b>. 본인인증을 통과한 뒤에만 보이므로 보는 사람이 그 명의의 주인입니다.</li>
+            <li><b>금액은 보여 주지 않습니다</b> — 인증 전 금액 비공개 원칙. 옮긴 뒤 받는 계정에서 적립 연출로 보여 줍니다.</li></ul></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>[닫기]</div>
+        <ul><li>아무것도 바뀌지 않습니다 — 이 계정은 미인증 그대로이고 적립대기도 지급되지 않습니다.</li></ul></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>[옮기고 로그인] / [그 계정으로 로그인]</div>
+        <ul><li>추가 확인 없이 진행 — 본인인증으로 같은 사람임이 확인됐습니다.</li>
+            <li>옮기는 것: <b>적립대기 · 예약</b>(적립예정 포함 — 나중에 확정돼도 그 계정으로). 옮기지 않는 것: <b>친구 추천 몫</b>(같은 사람이 새 계정으로 추천 보상을 받지 않게).</li>
+            <li>→ 그 계정으로 로그인 · 지금 계정 <b>삭제</b> · 옮긴 적립대기는 바로 지급 → 적립 연출 "NP 적립! · 다른 계정의 적립대기를 옮겨 지급했어요"(옮길 것이 없었으면 토스트 "{이메일} 계정으로 로그인했어요").</li>
+            <li>하려던 참여(출석 등)는 이어 하지 않습니다 — 계정이 바뀌었기 때문입니다.</li>
+            <li>어드민에는 받은 계정에 「옮겨 옴」 기록이 남습니다(<a href="../admin/a_user.html#merge">A-USER ⑥</a>) — 예약 정산이 지운 계정 번호로 와도 이 기록으로 찾습니다.</li></ul>
+        <div class="case">프로토는 CI 대신 <b>휴대폰 번호</b>로 같은 명의를 흉내 냅니다. 시연 계정은 옮기는 쪽이 될 수 없습니다.</div>
+        <div class="rule"><b>근거</b> 계정 통합 하지 않음 · 같은 명의 → 적립대기 옮기기 (PO 결정 2026-10-28 · <a href="../policy/pol_member.html#s3-2">회원 3-2</a> · <a href="../policy/pol_member.html#s3-3">3-3절</a> · <a href="../policy/pol_admin.html#s5-5">어드민 5-5</a>) · 회원번호 매핑 R-M8</div></div>
+    </div>
   </div>
-  <div class="detail"><div class="ann">
-    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「계정을 통합할까요?」 / 완료 ✓ (H3)</div></div>
-    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>"{OO}가 이미 다른 픽콕 계정에 연결돼 있어요." / 「계정을 통합했어요」 (H3)</div></div>
-    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>대표 이메일 · 합쳐질 계정 (각 가입일)</div>
-      <ul><li><b>대표 계정 = 지금 로그인한 계정</b>(구현) — 대표 이메일·가입일도 로그인한 계정 것을 보여 줍니다. 합쳐지는 계정의 이메일은 <b>로그인 별칭</b>으로 남아 그 이메일로도 들어올 수 있습니다.</li>
-          <li>H3: 대표 이메일 · 합친 뒤 포인트.</li></ul>
-      <div class="case">정책 3-2절은 <b>「먼저 가입한 계정」이 대표</b> — 구현은 로그인한 계정이 대표라 어긋납니다. 어느 쪽으로 맞출지 <span class="tag open">PO 확인</span></div></div>
-    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>포인트 — 적립 완료 · 적립대기 · 합계 / 안내 3줄 (H3)</div>
-      <ul><li><b>전액 합산</b>. 「적립대기」 줄 = 지금 계정 NP + 상대 계정 NP(서버 값). 「※ 각 포인트 소멸일은 그대로 유지돼요」 — 합쳤다고 소멸일을 다시 계산하지 않습니다.</li>
-          <li>H3 안내: 앞으로 안내 메일은 대표 이메일로 · "ℹ {넣은 이메일}으로도 로그인할 수 있어요" · <b>통합된 계정은 다시 나눌 수 없어요</b>.</li></ul></div>
-  </div><div class="ann">
-    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>"※ 각 포인트 소멸일은 그대로 유지돼요" / [확인] (H3)</div></div>
-    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>경고 3줄</div>
-      <ul><li>⚠ 통합 후에는 <b>되돌릴 수 없어요</b> · ⚠ {합쳐질 이메일} 계정은 사라져요 · ℹ {합쳐질 이메일}로도 계속 로그인할 수 있어요.</li></ul></div>
-    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>[필수] "위 내용을 확인했습니다"</div><ul><li>체크해야 [통합하기]가 켜집니다(H1 → H2).</li></ul></div>
-    <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>[취소] [통합하기]</div>
-      <ul><li>[취소] = 시트 닫힘(아무것도 바뀌지 않음).</li>
-          <li>[통합하기] → 포인트 합산 · 그 소셜을 로그인 수단으로 연결 · 통합 이력 1건(계정관리 「계정 통합 N건」) · 어드민에 통합 기록(<a href="../admin/a_user.html#merge">A-USER ⑥</a>) → H3. <b>세션은 유지</b>(다시 로그인하지 않음) · <b>지금 로그인 수단도 그대로</b>라 통합한 소셜은 계정관리에서 [해제]할 수 있습니다.</li>
-          <li>실제 회원끼리 합치면 <b>상대 계정은 삭제</b>됩니다. 시연 계정끼리는 서버가 거절 — "시연 계정끼리는 통합하지 않아요…".</li></ul>
-      <div class="rule"><b>근거</b> 계정 통합 · 안전장치 4가지 (<a href="../policy/pol_member.html#s3-2">회원 3-2절</a> · <a href="../policy/pol_admin.html#s5-5">어드민 5-5</a>) · 회원번호 매핑 미결 R-M8</div></div>
-  </div></div>
   </div>
 </section>
 
@@ -409,7 +407,7 @@
     <tr><td>E3</td><td>이미 가입된 이메일로 가입 요청</td><td>"이미 가입된 이메일이에요" — 정상 흐름에서는 S2에서 기존 회원으로 분기되므로 생기지 않음</td></tr>
     <tr><td>E4</td><td>탈퇴 후 7일 안에 같은 이메일로 가입</td><td>가입 거절 — 토스트 "탈퇴한 이메일은 M월 D일부터 다시 가입할 수 있어요"</td></tr>
     <tr><td>E5</td><td>가입 도중 시트를 닫음</td><td>확인창 → 닫으면 계정을 만들지 않음 (약관 동의 전)</td></tr>
-    <tr><td>E6</td><td>본인인증 정보가 이미 다른 계정에 쓰임</td><td>토스트 "이 명의로 이미 본인인증한 픽콕 계정이 있어요 (abc****@…). 그 계정으로 로그인해 주세요" · 시트는 그대로(미인증) · 지급 없음. [두 계정 합치기]는 아직 없음 — 다음 단계로 계정 통합 흐름에 잇는다(방향만 PO 확정) <span class="tag open">미결</span> R-M2</td></tr>
+    <tr><td>E6</td><td>본인인증 정보가 이미 다른 계정에 쓰임</td><td>S8 확인창 — 적립대기·예약을 그 계정으로 옮기고 그 계정으로 로그인 · 지금 계정 삭제 (<a href="../policy/pol_member.html#s3-3">3-3절</a>)</td></tr>
     <tr><td>E7</td><td>만 14세 미만 · 외국인(국내 휴대폰 없음) · 정지 회원</td><td>정책 없음 <span class="tag open">미결</span> R-M3~R-M5</td></tr>
     <tr><td>E8</td><td>[인증코드 받기]가 서버에서 실패</td><td>확인창 "인증코드를 보내지 못했어요" + [다시 시도] — 다음 단계로 넘어가지 않음</td></tr>
     <tr><td>E9</td><td>초대 링크로 들어와 로그인·가입을 마침</td><td>링크의 추천코드는 그때 지움(같은 창에서 다시 열어도 자동으로 채우지 않음)</td></tr>
