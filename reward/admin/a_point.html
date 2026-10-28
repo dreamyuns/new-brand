@@ -96,6 +96,19 @@
   </div><div class="ann">
     <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>"전체 N건 · 포인트가 움직인 모든 기록"</div><ul><li>N = 지금 조건에 걸린 건수.</li></ul></div>
   </div></div>
+  <div class="two-col unit sub-item" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">A-POINT-B2 <small style="font-weight:400">[하루 처리 지금 실행]</small></div><figure class="shot pc" data-id="A-POINT-B2" data-base="../"></figure>
+      <div class="lb" style="font-weight:700;margin:14px 0 6px">A-POINT-X1 <small style="font-weight:400">하루 처리 모달</small></div><figure class="shot pc" data-id="A-POINT-X1" data-base="../"></figure></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>제목 / 모달 안내 (X1)</div>
+        <ul><li>X1: "실제 서비스에서 하루 1회 도는 처리를 지금 실행합니다. 시연용이에요." — ① 소멸일이 지난 포인트를 「포인트 소멸」로 차감 ② 소멸 예정 알림(다음 달 요약 · 7일 안 임박 — 시연은 요일과 관계없이 · 같은 안내는 한 번만) ③ 90일 지난 알림과 소멸일이 지난 소멸 안내 정리.</li></ul></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>설명 / [취소] [실행] (X1)</div>
+        <ul><li>[실행] → 토스트 "소멸 NP · 소멸 예정 알림 N건 · 지난 알림 정리 N건" → 전체 포인트 내역 다시 열림.</li></ul></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>[하루 처리 지금 실행] — 시연용</div>
+        <ul><li>실제 서비스는 서버가 하루 1회 자동으로 돌립니다(시연은 화면을 열 때 10분에 한 번도 돎). 실서비스에서는 이 버튼을 두지 않습니다.</li></ul>
+        <div class="rule"><b>근거</b> 소멸·소멸 예정 알림·알림 정리 (#41 #45 #46 · 10-28 · <a href="../policy/pol_point.html#s6">포인트 6절</a> · <a href="../policy/pol_noti.html#s3">알림 3절</a>)</div></div>
+    </div>
+  </div>
   </div>
 </section>
 
@@ -160,7 +173,7 @@
     <tr><th>상황</th><th>동작</th></tr>
     <tr><td>걸리는 기록이 없음</td><td>빈 표 · 건수 0</td></tr>
     <tr><td>쪽이 12를 넘음</td><td>버튼은 12쪽까지만 — 그 뒤는 기간·검색으로 좁혀서 봄 (구현 기준)</td></tr>
-    <tr><td>소멸 예정일이 지난 기록</td><td>「포인트 소멸」 −NP가 쌓여야 하지만 구현물에 소멸 처리가 없음 <span class="tag proto">프로토 수정 #41</span></td></tr>
+    <tr><td>소멸 예정일이 지난 기록</td><td>하루 처리가 「포인트 소멸」 −NP를 남김 — 소멸일이 가까운 적립분부터 쓴 것으로 보고 남은 금액만 (#41 · R-P5 · 10-28)</td></tr>
   </table></div>
 </section>
 

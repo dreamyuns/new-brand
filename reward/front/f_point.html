@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="../wf-reward.css">
 <!-- 근거: 구현물 pickoq_demo static/app.js viewHistory·histCard·openBookingDraw·openBookingGift · api.js loadHistory · api_booking.py (2026-10-27)
      캡처: 카드 종류를 모두 보이려고 화면을 연 뒤 내역을 예시 행으로 바꿔 그렸다(카드 모양은 구현 코드 그대로).
-     「적립예정」 카드는 구현 코드에 있으나 지금 데이터로는 생기지 않는다 — PO 결정(체크아웃+7일)에 따라 예시로 보임.
+     「적립예정」은 10-28 프로토 수정(#37)으로 실제로 생긴다 — 캡처는 카드 종류를 다 보이려고 예시 행을 넣었다.
      뽑기 결과 연출은 구현과 같은 함수에 값만 넣어 띄웠다(서버에 뽑기 요청 안 함). 소멸 예정일 표시는 구현 없음 — 캡처에 없음 -->
 </head>
 <body data-key="f_point" data-base="../">
@@ -44,8 +44,8 @@
   <ul>
     <li><b>1P = 1원.</b> 잔액은 저장하지 않고 <b>포인트가 움직인 기록을 더해서</b> 계산합니다. 기록은 고치거나 지우지 않습니다. (<a href="../policy/pol_point.html#s1-2">1-2절</a>)</li>
     <li>맨 위 「사용 가능 포인트」 = <b>적립완료된 포인트의 합</b>. 적립예정·적립대기는 넣지 않습니다. (<a href="../policy/pol_point.html#s1-2">1-2절</a>)</li>
-    <li><b>예약 적립은 체크아웃 + 7일에 확정</b>됩니다. 그 전에는 「적립예정」으로 보이고, 확정된 뒤에 뽑기를 할 수 있습니다. (<a href="../policy/pol_point.html#s3-2">3-2절</a> · PO 확정 2026-10-27) <span class="tag proto">프로토 수정 #37</span> 지금 구현은 예약 즉시 적립완료</li>
-    <li>포인트는 <b>적립일 + 1년</b>에 소멸합니다. 적립 카드에 소멸 예정일을 <b>눈에 띄지 않게</b> 보여줍니다. (<a href="../policy/pol_point.html#s6">6절</a> · PO 확정 2026-10-27) <span class="tag proto">프로토 수정 #38</span></li>
+    <li><b>예약 적립은 체크아웃 + 7일에 확정</b>됩니다. 그 전에는 「적립예정」으로 보이고, 확정된 뒤에 뽑기를 할 수 있습니다. (<a href="../policy/pol_point.html#s3-2">3-2절</a> · PO 확정 2026-10-27) 적립예정일이 지나면 서버가 확정하고 알림 「예약 적립 +NP」를 보냅니다(본인인증 전이면 적립대기). (#37 · 10-28)</li>
+    <li>포인트는 <b>적립일 + 1년</b>에 소멸합니다. 적립 카드에 소멸 예정일을 <b>눈에 띄지 않게</b> 보여줍니다. (<a href="../policy/pol_point.html#s6">6절</a> · PO 확정 2026-10-27)</li>
     <li><b>취소된 예약은 목록에 보이지 않습니다</b> — 적립되지 않은 건이라 남길 이유가 없습니다. (<a href="../policy/pol_point.html#s3-3">3-3절</a>)</li>
     <li>로그인 회원만 들어옵니다. 2뎁스 화면이라 하단 탭이 없습니다.</li>
   </ul>
@@ -92,7 +92,7 @@
         <tr><th>영역</th><th>들어가는 요소</th><th>상태에 따라 바뀌는 것</th></tr>
         <tr class="zrow" data-n="A"><td><b>A</b> 잔액</td><td>[←] · 「포인트 내역」 · 알림 종 · 공작새 · 사용 가능 포인트</td><td>숫자</td></tr>
         <tr><td><b>V</b> 본인인증 전</td><td>자물쇠 · 안내 · [본인인증하기]</td><td><b>본인인증 전 회원만</b> A와 B 사이</td></tr>
-        <tr class="zrow" data-n="B"><td><b>B</b> 필터</td><td>전체 · 예약 적립 · 참여 적립 · 사용(→ 사용·차감)</td><td>고른 필터 검정</td></tr>
+        <tr class="zrow" data-n="B"><td><b>B</b> 필터</td><td>전체 · 예약 적립 · 참여 적립 · 사용·차감</td><td>고른 필터 검정</td></tr>
         <tr class="zrow" data-n="C"><td><b>C</b> 내역 카드</td><td>카드 목록 — 최신이 위</td><td>카드 종류·상태 · 빈 상태</td></tr>
         <tr class="zrow" data-n="D"><td><b>D</b> 안내</td><td>예약 적립 확정 · 소멸 안내 2줄</td><td>바뀌지 않음</td></tr>
       </table></div>
@@ -152,18 +152,17 @@
 
 <section class="sec zsec" id="zB">
   <div class="unit">
-  <div class="zone-hd"><span class="zl">B</span><h2>필터</h2><span class="tag proto">대화창2 제안 · PO 확인</span></div>
+  <div class="zone-hd"><span class="zl">B</span><h2>필터</h2><span class="tag ok">확정</span></div>
   <div class="shots-row"><div class="sw"><div class="lb">F-POINT-B1</div><figure class="shot" data-id="F-POINT-B1" data-base="../"></figure></div></div>
   <div class="detail"><div class="ann">
     <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>전체</div><ul><li>처음 들어오면 이것. 고른 필터는 검정 바탕.</li></ul></div>
     <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>예약 적립</div><ul><li>예약 기본 적립 · 예약 뽑기.</li></ul></div>
     <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>참여 적립</div><ul><li>출석 · 출석 보너스 · 퀴즈 · 친구 추천 · 혜택 · <b>관리자 지급</b>.</li></ul></div>
   </div><div class="ann">
-    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>사용 → <b>「사용·차감」</b>으로 이름 변경</div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>「사용·차감」</div>
       <ul><li>픽샵 교환 · 출금 신청 · 관리자 회수 · <b>포인트 소멸</b> · <b>환불</b>(신청 취소 환불 · 픽샵 구매 취소 환불 — 사용을 되돌린 것이라 같은 묶음, + 로 표시).</li>
           <li>사용자는 「어디서 생겼나」「어디로 나갔나」 둘로 보므로, 소멸·회수처럼 사용이 아니지만 줄어든 기록을 함께 묶습니다.</li></ul>
-      <div class="case">지금 구현: 이름 「사용」 · 환불은 「참여 적립」에 들어감 <span class="tag proto">프로토 수정 #39</span></div>
-      <div class="rule"><b>근거</b> 필터 재분류 — 대화창2 제안(PO 위임 2026-10-27) (<a href="../policy/pol_point.html#s5-2">5-2절</a>)</div></div>
+      <div class="rule"><b>근거</b> 필터 재분류 — 대화창2 제안(PO 위임 2026-10-27) · 구현 반영(#39 · 10-28) (<a href="../policy/pol_point.html#s5-2">5-2절</a>)</div></div>
   </div></div>
   </div>
 </section>
@@ -181,15 +180,15 @@
   <div class="shots-row">
     <div class="sw"><div class="lb">F-POINT-C4 <small>참여 적립</small></div><figure class="shot" data-id="F-POINT-C4" data-base="../"></figure></div>
     <div class="sw"><div class="lb">F-POINT-C5 <small>관리자 지급</small></div><figure class="shot" data-id="F-POINT-C5" data-base="../"></figure></div>
-    <div class="sw"><div class="lb">F-POINT-C6 <small>사용 (픽샵 교환)</small></div><figure class="shot" data-id="F-POINT-C6" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-POINT-C6 <small>사용 (픽샵 구매)</small></div><figure class="shot" data-id="F-POINT-C6" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-POINT-C10 <small>환불 (구매 취소)</small></div><figure class="shot" data-id="F-POINT-C10" data-base="../"></figure></div>
     <div class="sw"><div class="lb">F-POINT-C7 <small>소멸</small></div><figure class="shot" data-id="F-POINT-C7" data-base="../"></figure></div>
   </div>
   <div class="detail"><div class="ann">
     <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>아이콘</div>
-      <ul><li>예약 🏨 · 참여 🎯.</li></ul>
-      <div class="case">사용·차감 기록도 🎯로 나옵니다(C6·C7) → 사용·소멸·회수에 맞는 아이콘으로 <span class="tag proto">프로토 수정 #40</span></div></div>
+      <ul><li>예약 🏨 · 참여 🎯 · 픽샵 🛍️ · 현금 전환 💸 · 소멸 ⏳ · 회수 ↩️ · 환불 💰 (#40 · 10-28).</li></ul></div>
     <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>제목</div>
-      <ul><li>기록 이름 — 출석 보너스 · 관리자 지급 · 픽샵 교환 · 포인트 소멸 등.</li>
+      <ul><li>기록 이름 — 출석 보너스 · 관리자 지급 · 픽샵 구매 · 픽샵 구매 취소 · 포인트 소멸 등.</li>
           <li><b>예약은 예약처(공급사명)</b> — 아고다 · 부킹닷컴 등. 호텔명·상품가·요율은 카드에 넣지 않습니다(P93). 뽑기 결과·알림·토스트에는 호텔명을 그대로 씁니다.</li></ul>
       <div class="rule"><b>근거</b> 기록 이름표 (<a href="../policy/pol_point.html#s2">2절</a>)</div></div>
     <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>부제</div>
@@ -198,13 +197,12 @@
     <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>일시 줄</div>
       <ul><li>적립·사용 일시 "YYYY.MM.DD HH:MM". 적립예정이면 <b>"적립예정일 YYYY.MM.DD"</b>(= 체크아웃 + 7일).</li>
           <li><b>소멸 예정일</b> — 적립 카드는 이 줄 끝에 <b>흐린 작은 글씨</b>로 "· 소멸 예정 YYYY.MM.DD"를 붙입니다. 색·굵기·배지로 강조하지 않습니다. 적립예정·적립대기·사용·차감 카드에는 붙이지 않습니다.</li></ul>
-      <div class="case">소멸 예정일 표시는 구현물에 없습니다(데이터 <code>expire_at</code>는 있음) — 캡처에도 없음 <span class="tag proto">프로토 수정 #38</span></div>
       <div class="rule"><b>근거</b> 소멸 예정일 약하게 표시 (PO 확정 2026-10-27 · <a href="../policy/pol_point.html#s5-3">5-3절</a>)</div></div>
   </div><div class="ann">
     <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>금액</div><ul><li>적립 +NP(노랑 계열) · 사용·차감 −NP(빨강).</li></ul></div>
     <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>상태 배지</div>
-      <ul><li>적립예정(노랑) · 적립완료(초록) · 적립대기 · 차감대기 · 사용(회색).</li></ul>
-      <div class="case">소멸·회수도 「사용」으로 나옵니다(C7) → 「소멸」「회수」로 <span class="tag proto">프로토 수정 #40</span></div></div>
+      <ul><li>적립예정(노랑) · 적립완료(초록) · 적립대기 · 차감대기 · 사용 · <b>소멸 · 회수 · 환불</b>(회색) (#40 · 10-28).</li>
+          <li>소멸 카드(C7)의 부제는 "{적립 이름} (YYYY-MM-DD 적립분)" — <b>쓰고 남은 금액만</b> 소멸합니다.</li></ul></div>
     <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>예약 카드 아래 줄 — 상태별</div>
       <ul><li><b>적립예정</b>(C1): "적립이 완료되면 추가 포인트를 받을 수 있어요" — 누를 수 없음.</li>
           <li><b>적립완료</b>(C2): [🎁 뽑기하고 <b>최대 N%</b> 더 받기 ›] 노란 줄 — 누르면 선물상자(④ X1). N = 예약처 요율 − 기본 1%.</li>
@@ -234,7 +232,7 @@
     <div class="shots-row"><div class="sw"><div class="lb">F-POINT-D1</div><figure class="shot" data-id="F-POINT-D1" data-base="../"></figure></div></div>
     <div class="ann">
       <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>안내 2줄</div>
-        <ul><li>"<b>예약 적립</b>은 체크아웃 후 확정되며, 예약이 취소되면 적립되지 않아요."</li>
+        <ul><li>"<b>예약 적립</b>은 체크아웃 7일 뒤 확정되며, 예약이 취소되면 적립되지 않아요."</li>
             <li>"포인트는 적립일로부터 <b>1년</b> 뒤 소멸돼요."</li></ul>
         <div class="rule"><b>근거</b> <a href="../policy/pol_point.html#s3-2">3-2</a> · <a href="../policy/pol_point.html#s6">6절</a></div></div>
     </div>
@@ -285,7 +283,7 @@
     <tr><td>E4</td><td>뽑기 처리 실패</td><td>상자 닫힘 → 확인창 + [다시 시도]</td></tr>
     <tr><td>E5</td><td>본인인증 전 예약</td><td>「적립대기」 카드 · 인증하면 지급 · 그 뒤 뽑기</td></tr>
     <tr><td>E6</td><td>뽑기를 오래 하지 않음</td><td>적립완료일 + 30일이 지나면 「뽑기 기간이 지났어요」(C9) · 뽑기 몫 미지급 · 기본 적립은 유지 (PO 확정 2026-10-27 · 포인트 v0.2 4절)</td></tr>
-    <tr><td>E7</td><td>소멸 예정일이 지남</td><td>「포인트 소멸」 −NP 기록이 쌓여야 함 — 구현물에 소멸 처리 없음 <span class="tag proto">프로토 수정 #41</span></td></tr>
+    <tr><td>E7</td><td>소멸 예정일이 지남</td><td>하루 처리(서버)가 「포인트 소멸」 −NP를 남김 — <b>소멸일이 가까운 적립분부터 쓴 것으로 보고 남은 금액만</b> (R-P5 해소 · #41 · 10-28)</td></tr>
   </table></div>
 </section>
 

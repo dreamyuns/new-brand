@@ -83,10 +83,10 @@
   <div class="box wrapx"><table class="t">
     <tr><th>분류</th><th>보내는 때 → 제목</th><th>[포인트 내역 보기]</th></tr>
     <tr><td>출석 · 퀴즈 · 친구 추천 · 혜택</td><td>적립할 때 → 「출석 적립 +NP」 · 「퀴즈 +NP」 · 「친구가 가입했어요 +NP」 · 「혜택 적립 +NP」 등</td><td>있음</td></tr>
-    <tr><td>예약</td><td><b>적립완료일</b> → 「예약 적립 +NP」 · 뽑기 → 「뽑기 NP 추가 적립」 <span class="tag proto">#37 구현은 예약 즉시</span></td><td>있음</td></tr>
+    <tr><td>예약</td><td><b>적립완료일</b> → 「예약 적립 +NP」(예약할 때는 알림 없음 · 본인인증 전이면 확정 때 적립대기) · 뽑기 → 「뽑기 NP 추가 적립」</td><td>있음</td></tr>
     <tr><td>본인인증</td><td>인증 완료 → 「본인인증이 완료됐어요」 · 적립대기 지급 → 「적립대기 포인트 +NP」</td><td>지급 알림만</td></tr>
-    <tr><td>관리자 지급·회수</td><td>「포인트가 지급됐어요 (+NP)」 · 미인증 회원은 알림 없음</td><td>있어야 함 <span class="tag proto">#47</span></td></tr>
-    <tr><td>소멸 예정</td><td>매달 1일 「다음 달 소멸 예정 NP」 · 임박 「7일 안에 NP가 소멸돼요」 <span class="tag proto">#46 구현 없음</span> <span class="tag open">R-N1·R-N2</span></td><td>있음</td></tr>
+    <tr><td>관리자 지급·회수</td><td>「포인트가 지급됐어요 (+NP)」 · 미인증 회원은 알림 없음</td><td>있음</td></tr>
+    <tr><td>소멸 예정</td><td>매달 1일 「다음 달 소멸 예정 NP」 · <b>매주 월요일</b> 「7일 안에 NP가 소멸돼요」 · 본문 "포인트 내역에서 소멸 예정일을 확인할 수 있어요." · 본인인증 전 회원·0P는 보내지 않음 · 같은 안내는 한 번만 <span class="tag open">R-N2</span> 최소 금액</td><td>있음</td></tr>
     <tr><td>현금 전환 · 픽샵</td><td>출금 접수·완료·반려 · 쿠폰 발행·재발행·지연 · 구매 취소 환불 (포인트 사용 묶음에서 자세히)</td><td>있음</td></tr>
     <tr><td>공지</td><td>관리자가 보냄 (<a href="../admin/a_noti.html">A-NOTI</a>)</td><td>없음</td></tr>
   </table></div>
@@ -201,7 +201,6 @@
       <ul><li>본문 전체.</li></ul></div>
     <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>[포인트 내역 보기]</div>
       <ul><li>포인트가 움직인 알림에만 붙습니다 → <a href="f_point.html">F-POINT</a>. 공지(C4)는 없습니다.</li></ul>
-      <div class="case">구현은 <b>관리자 지급·회수</b> 알림을 공지로 분류해 버튼이 없습니다 → 포인트 알림으로 <span class="tag proto">#47</span></div>
       <div class="rule"><b>근거</b> 목록·읽음·펼친 내용 (<a href="../policy/pol_noti.html#s4-2">4-2</a> · <a href="../policy/pol_noti.html#s4-3">4-3</a> · <a href="../policy/pol_noti.html#s4-4">4-4절</a>)</div></div>
   </div></div>
   </div>
@@ -210,7 +209,7 @@
 <section class="sec zsec" id="zD">
   <div class="unit">
   <div class="zone-hd"><span class="zl">D</span><h2>안내</h2><span class="tag ok">확정</span></div>
-  <p class="sec-sub">"알림은 <b>90일</b> 동안 보관돼요. 소멸 예정 알림은 소멸일이 지나면 사라져요." · "적립·소멸 내역은 <b>포인트 내역</b>에서 언제든 다시 볼 수 있어요." — 구현은 90일이 지나도 지우지 않고(<span class="tag proto">#45</span>), 둘째 줄이 옛 이름 「적립 내역」입니다(<span class="tag proto">#47</span>). 근거 <a href="../policy/pol_noti.html#s4-6">4-6절</a>.</p>
+  <p class="sec-sub">"알림은 <b>90일</b> 동안 보관돼요. 소멸 예정 알림은 소멸일이 지나면 사라져요." · "적립·소멸 내역은 <b>포인트 내역</b>에서 언제든 다시 볼 수 있어요." — 하루 처리(서버)가 <b>90일 지난 알림과 소멸일이 지난 소멸 안내를 지웁니다</b>(시연은 화면을 열 때 10분에 한 번 + 어드민 [하루 처리 지금 실행]). 근거 <a href="../policy/pol_noti.html#s4-6">4-6절</a>.</p>
   </div>
 </section>
 

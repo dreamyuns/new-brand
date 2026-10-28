@@ -6,7 +6,7 @@
 <title>A-NOTI 알림 발송 — 픽콕 리워드 화면기획서</title>
 <link rel="stylesheet" href="../wf-reward.css">
 <!-- _양식.html 기반 · 어드민 1440 · 근거: pickoq_demo admin/admin2.js PAGES.notify·notiSend·ntKindChange · api_admin2.py noti_list·notify2 (2026-10-27)
-     광고성 알림은 이번 범위에서 빼기로 해서(PO 2026-10-27) 캡처에서 「마케팅」 칩·유형 선택지를 가렸다 — 프로토 숨김 요청 A18. [발송]은 누르지 않았다 -->
+     광고성 알림은 이번 범위에서 빼기로 해서(PO 2026-10-27) 구현에서도 「마케팅」 유형을 없앴다(A18 · 10-28). [발송]은 누르지 않았다 -->
 </head>
 <body data-key="a_noti" data-base="../">
 <script src="../wf-nav.js"></script>
@@ -36,7 +36,7 @@
 <div class="sec-policy">
   <h3>⚙ 공통 정책 — 알림 발송</h3>
   <ul>
-    <li>보내는 알림은 <b>공지사항(정보성)만</b>입니다. <b>광고성(마케팅) 알림은 이번에 넣지 않습니다</b> — 구현의 「마케팅」 유형은 숨깁니다. (<a href="../policy/pol_noti.html#s1-2">1-2절</a> · PO 확정 2026-10-27 · <span class="tag proto">A18</span>)</li>
+    <li>보내는 알림은 <b>공지사항(정보성)만</b>입니다. <b>광고성(마케팅) 알림은 이번에 넣지 않습니다</b> — 「마케팅」 유형은 없습니다. (<a href="../policy/pol_noti.html#s1-2">1-2절</a> · PO 확정 2026-10-27 · <span class="tag proto">A18</span>)</li>
     <li>보낸 알림은 고객 앱 <b>알림함에 쌓이고 배지가 올라갑니다</b>. 앱을 켜 둔 고객에게는 새 알림 토스트가 뜹니다. 휴대폰 푸시는 앱 출시 때. (<a href="../policy/pol_noti.html#s1-1">1-1절</a>)</li>
     <li>보내면 <b>관리자 로그</b>에 남습니다(<a href="a_log.html">A-LOG</a>). 보낸 알림을 고치거나 취소하는 기능은 없습니다.</li>
     <li>모달 버튼은 [취소][실행] 순서, 입력이 있는 모달은 배경을 눌러도 닫히지 않습니다. (<a href="../common/c_layer.html?side=admin#admin">C-LAYER 8절</a>)</li>
@@ -105,14 +105,13 @@
 <section class="sec zsec" id="zC">
   <div class="unit">
   <div class="zone-hd"><span class="zl">C</span><h2>유형</h2><span class="tag ok">확정</span></div>
-  <div class="shots-row"><div class="sw pc"><div class="lb">A-NOTI-C1 <small>「마케팅」 칩 가림</small></div><figure class="shot" data-id="A-NOTI-C1" data-base="../"></figure></div></div>
+  <div class="shots-row"><div class="sw pc"><div class="lb">A-NOTI-C1 <small>「마케팅」 없음</small></div><figure class="shot" data-id="A-NOTI-C1" data-base="../"></figure></div></div>
   <div class="detail"><div class="ann">
     <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>전체</div></div>
     <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>공지사항</div><ul><li>관리자가 보낸 알림.</li></ul></div>
   </div><div class="ann">
     <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>시스템(자동)</div>
       <ul><li>서버가 자동으로 만든 알림 — 출석·퀴즈·예약 적립·본인인증·출금·쿠폰 등(<a href="../policy/pol_noti.html#s2">2절</a>).</li></ul>
-      <div class="case">구현에는 「마케팅」 칩이 공지사항과 시스템 사이에 있습니다 → 이번 범위에서 빼므로 숨김 <span class="tag proto">A18</span></div>
       <div class="rule"><b>근거</b> 유형 (<a href="../policy/pol_noti.html#s6">6절</a>)</div></div>
   </div></div>
   </div>
@@ -125,8 +124,7 @@
   <div class="detail"><div class="ann">
     <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「이 화면에서 이번 버전에 들어가지 않은 것 3가지」</div>
       <ul><li>휴대폰 푸시(앱 출시 때) · 예약 발송·조건별 대상(다음 버전) · 수신 동의 연동(광고성 — 이번에 제외).</li>
-          <li>접혀 있다가 누르면 펼침 · [자세히 — 기능정책서에서 보기 ↗].</li></ul>
-      <div class="case">셋째 줄은 광고성 알림을 뺐으므로 "광고성 알림은 이번 버전에 없어요"로 고칩니다 <span class="tag proto">A18</span></div></div>
+          <li>접혀 있다가 누르면 펼침 · [자세히 — 기능정책서에서 보기 ↗].</li></ul></div>
   </div><div class="ann">
     <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>검색어 — 제목 · 내용 · 받는 회원</div></div>
     <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>유형 — 전체 · 공지사항 · 시스템(자동)</div>
@@ -155,11 +153,11 @@
 <section class="sec major" id="over">
   <div class="sec-hd"><h2>④ 발송 모달</h2><span class="tag ok">확정</span></div>
   <div class="pc-layout unit">
-    <div><div class="lb" style="font-weight:700;margin-bottom:6px">A-NOTI-X1 <small style="font-weight:400">알림 발송 — 「마케팅」 유형 가림</small></div><figure class="shot pc" data-id="A-NOTI-X1" data-base="../"></figure></div>
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">A-NOTI-X1 <small style="font-weight:400">알림 발송 — 공지사항만</small></div><figure class="shot pc" data-id="A-NOTI-X1" data-base="../"></figure></div>
     <div class="ann">
       <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>유형 — 「공지사항 — 전체 또는 개별」</div>
         <ul><li>이번 범위에서는 이것 하나입니다.</li></ul>
-        <div class="case">구현에는 「마케팅 — 수신 동의한 회원에게만」이 있습니다. 고르면 받는 사람 칸이 숨고 동의자 전원에게 갑니다 → 숨김 <span class="tag proto">A18</span>. 마케팅 동의가 서버에 저장되지 않는 문제(<span class="tag proto">#44</span> — PO 제외)도 광고성 알림을 넣을 때 함께 고칩니다(<span class="tag open">미결</span> R-N4).</div></div>
+        </div>
       <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>받는 사람</div>
         <ul><li>「전체」(처음 값) 또는 회원 1명 — 「이름 · 이메일」 목록에서 고릅니다.</li></ul></div>
       <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>제목 — 필수</div>
