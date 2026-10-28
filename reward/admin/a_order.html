@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A-ORDER 픽샵 구매내역 — 픽콕 리워드 화면기획서</title>
+<link rel="stylesheet" href="../wf-reward.css">
+<!-- _양식.html 기반 · 어드민 1440 · 근거: pickoq_demo admin/admin3.js PAGES.orders·reissue · api_admin2.py orders · api_admin3.py reissue (2026-10-27)
+     PO 지시(10-27): 포인트 사용은 "지금 화면의 기능"만 적는다. [재발행]은 누르지 않았다 -->
+</head>
+<body data-key="a_order" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page">
+
+<div class="top"><span class="sid">A-ORDER</span><h1>픽샵 구매내역 (어드민)</h1></div>
+<div class="meta">
+  <span>기준 정책서 <b><a href="../policy/pol_use.html#s6">리워드 포인트 사용 v0.1 · 6절</a></b></span>
+  <span>기준 구현물 <b>pickoq_demo</b> <code>admin/admin3.js</code> (2026-10-27)</span>
+  <span>캡처 <b>2026-10-28</b> · PC 1440</span>
+  <span>최종수정 <b>2026-10-28</b></span>
+</div>
+<p class="lead">고객이 픽샵에서 포인트로 산 쿠폰을 모아 보고, <b>발행이 실패하거나 다시 보내야 하는 쿠폰을 재발행</b>하는 화면입니다. 구매는 승인 절차 없이 바로 발행되므로 여기서 승인하지 않습니다.</p>
+
+<div class="box">
+  <h3>읽는 법</h3>
+  <div class="legend">
+    <span><b style="color:var(--zone)">붉은 점선 상자 A~E</b> 화면의 영역</span>
+    <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능</span>
+    <span>「N-N절」을 누르면 그 절만 팝업으로 열립니다</span>
+    <span><span class="tag ok">확정</span> 정책서 근거 있음</span>
+    <span><span class="tag open">미결</span> 바뀔 수 있음</span>
+  </div>
+</div>
+
+<div class="sec-policy">
+  <h3>⚙ 공통 정책 — 픽샵 구매내역</h3>
+  <ul>
+    <li>포인트로 사면 <b>승인 없이 바로 발행</b>됩니다(PO 2026-10-07). 이 화면은 보기 + 재발행만 합니다. (<a href="../policy/pol_use.html#s3">3절</a> · <a href="../policy/pol_use.html#s6">6절</a>)</li>
+    <li>상태는 주문 상태 하나로 정하지 않습니다 — 고객이 <b>사용 완료</b>로 표시하면 「사용완료」, <b>구매를 취소</b>하면 「구매취소」로 보여 줍니다. 그래야 이미 쓴 쿠폰이 「구매완료」로 남지 않습니다. (<a href="../policy/pol_use.html#s6">6절</a>)</li>
+    <li>쿠폰 발행 업체가 정해지지 않아 쿠폰번호를 <b>자사에서 만들어</b> 보여 줍니다. 상품·가격·재고를 등록하는 어드민 화면도 없습니다(<span class="tag open">미결</span> R-U2 · R-U6).</li>
+  </ul>
+  <div class="src">기준: 리워드 포인트 사용 정책서 v0.1 · 3 · 6 · 8절</div>
+</div>
+
+<nav class="toc" aria-label="이 페이지 바로가기">
+  <span class="toc-lb">바로가기</span>
+  <a href="#flow"><b>①</b>화면 흐름·데이터</a>
+  <a href="#layout"><b>②</b>페이지 구성</a>
+  <span class="toc-sep"></span>
+  <a class="z" href="#zC"><b>B·C</b>머리·요약</a>
+  <a class="z" href="#zE"><b>E</b>목록</a>
+  <span class="toc-sep"></span>
+  <a href="#over"><b>④</b>재발행 모달</a>
+</nav>
+
+<section class="sec major" id="flow">
+  <div class="sec-hd"><h2>① 화면 흐름 · 데이터</h2></div>
+  <div class="box">
+    <div class="flow"><span>고객 픽샵 구매 (<a href="../front/f_jar.html#shop">F-JAR B</a>)</span><i>→</i><span>바로 발행 · 구매완료</span><i>→</i><span>고객이 사용 완료 표시 → 사용완료 / 구매 취소 → 구매취소</span></div>
+    <div class="flow" style="margin-top:8px"><span>발행 실패 · 다시 보내야 함</span><i>→</i><span>[재발행] / [쿠폰 발행]</span><i>→</i><span>새 쿠폰번호 · 고객 알림 「쿠폰이 재발행됐어요」</span></div>
+  </div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>요청</th><th>언제</th><th>받는 값</th></tr>
+    <tr><td><code>GET /api/admin/orders</code></td><td>화면을 열 때</td><td>구매 목록(최근 300건) · 총 구매·사용완료·미사용·취소 합계와 건수</td></tr>
+    <tr><td><code>POST /api/admin/order/{번호}/reissue</code></td><td>재발행 모달 [재발행]</td><td>새 쿠폰번호 · 알림 · 관리자 로그</td></tr>
+  </table></div>
+</section>
+
+<section class="sec major" id="layout">
+  <div class="sec-hd"><span class="sid">A-ORDER-L</span><h2>② 페이지 구성</h2></div>
+  <p class="sec-sub">캡처의 목록은 8행만 남겼습니다.</p>
+  <div class="pc-layout unit">
+    <figure class="shot pc" data-id="A-ORDER-L" data-base="../"></figure>
+    <div class="box wrapx" style="margin:0"><table class="t">
+      <tr><th>영역</th><th>들어가는 요소</th><th>상태에 따라 바뀌는 것</th></tr>
+      <tr class="zrow" data-n="A"><td><b>A</b> 공통 틀</td><td>왼쪽 메뉴(「픽샵 구매내역」 강조)</td><td>—</td></tr>
+      <tr class="zrow" data-n="B"><td><b>B</b> 머리</td><td>제목 · 설명</td><td>—</td></tr>
+      <tr class="zrow" data-n="C"><td><b>C</b> 요약</td><td>총 구매 포인트 · 사용완료 · 미사용</td><td>숫자</td></tr>
+      <tr class="zrow" data-n="D"><td><b>D</b> 안내·찾기</td><td>「이번 버전에 없는 것 2가지」(발행사 연동 · 재고·정산) · 날짜 기준(구매일/사용·취소일)·기간 · 처리 상태 · 검색어(회원·상품명·쿠폰번호)</td><td>건수</td></tr>
+      <tr class="zrow" data-n="E"><td><b>E</b> 목록</td><td>9열 표</td><td>상태별 관리 버튼</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<section class="sec major" id="detail" style="margin-bottom:0"><div class="major-hd"><h2>③ 영역별 상세 — 기능 · 정의 · 정책</h2></div></section>
+
+<section class="sec zsec" id="zC">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">B·C</span><h2>머리 · 요약</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row"><div class="sw pc"><div class="lb">A-ORDER-C1</div><figure class="shot" data-id="A-ORDER-C1" data-base="../"></figure></div></div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>총 구매 포인트 "N건 — 쿠폰으로 바꾼 포인트" (취소 N건 NP 제외)</div>
+      <ul><li>취소한 구매는 포인트를 돌려줬으므로 빼고 따로 적습니다.</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>사용완료 "N건 — 고객이 실제로 쓴 쿠폰"</div></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>미사용 "N건 — 아직 안 쓴 쿠폰"</div>
+      <ul><li><b>총 구매 = 사용완료 + 미사용</b>이 되도록 맞춥니다.</li></ul>
+      <div class="rule"><b>근거</b> <a href="../policy/pol_use.html#s6">6절</a></div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zE">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">E</span><h2>목록</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row"><div class="sw pc"><div class="lb">A-ORDER-E1</div><figure class="shot" data-id="A-ORDER-E1" data-base="../"></figure></div></div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>#</div><ul><li>주문 번호.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>상태</div>
+      <ul><li>구매완료(초록) · 사용완료(회색) · 구매취소(빨강) · 발행실패(빨강) · 발행중(노랑).</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>회원 (이름 · 이메일)</div></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>상품 (아이콘 · 이름)</div></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>사용 포인트</div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>쿠폰번호</div><ul><li>발행이 안 됐으면 빨간 글씨로 실패 사유(없으면 「미발행」).</li></ul></div>
+    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>구매일시</div></div>
+    <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>사용·취소일시</div><ul><li>사용 일시 · 「취소 일시」 · 둘 다 없으면 「—」.</li></ul></div>
+    <div class="cn" data-n="9"><div class="cn-hd"><span class="no">9</span>관리</div>
+      <ul><li>사용·취소된 건 「처리 끝」 · 쿠폰이 있으면 [재발행] · 발행 실패면 [쿠폰 발행](초록) → 모달(④).</li></ul>
+      <div class="rule"><b>근거</b> <a href="../policy/pol_use.html#s6">6절</a></div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec major" id="over">
+  <div class="sec-hd"><h2>④ 재발행 모달</h2><span class="tag ok">확정</span></div>
+  <div class="pc-layout unit sub-item">
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">A-ORDER-X1 <small style="font-weight:400">쿠폰 재발행</small></div><figure class="shot pc" data-id="A-ORDER-X1" data-base="../"></figure></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>"쿠폰을 새로 발행합니다. 고객에게 알림이 갑니다."</div></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>[취소] [재발행]</div>
+        <ul><li>[재발행] → 새 쿠폰번호 · 토스트 "발행 완료 · {쿠폰번호}" · 고객 알림 「쿠폰이 재발행됐어요」 · 관리자 로그.</li></ul>
+        <div class="rule"><b>근거</b> <a href="../policy/pol_use.html#s6">6절</a> · <a href="../common/c_layer.html?side=admin#admin">C-LAYER 8절</a></div></div>
+    </div>
+  </div>
+</section>
+
+</main>
+<script src="../shots/markers.js"></script>
+<script src="../policy/pol_use_data.js"></script>
+<script src="../wf-reward.js"></script>
+</body>
+</html>

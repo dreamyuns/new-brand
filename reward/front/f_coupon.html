@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>F-COUPON 내 쿠폰함 — 픽콕 리워드 화면기획서</title>
+<link rel="stylesheet" href="../wf-reward.css">
+<!-- 근거: 구현물 pickoq_demo static/app.js viewCoupon·couponCard·askUseCoupon·askCancelCoupon · api_use.py coupons·cancel_coupon·use_coupon (2026-10-27)
+     PO 지시(10-27): 포인트 사용은 "지금 화면의 기능"만 적는다.
+     캡처 계정에 쿠폰이 없어 예시 쿠폰 4개를 화면 값으로 넣어 찍었다(카드 모양은 구현 코드). [취소하기]·[사용 완료]는 누르지 않았다 -->
+</head>
+<body data-key="f_coupon" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page">
+
+<div class="top"><span class="sid">F-COUPON</span><h1>내 쿠폰함</h1></div>
+<div class="meta">
+  <span>기준 정책서 <b><a href="../policy/pol_use.html#s4">리워드 포인트 사용 v0.1 · 4절</a></b></span>
+  <span>기준 구현물 <b>pickoq_demo</b> <code>static/app.js</code> · <code>api_use.py</code> (2026-10-27)</span>
+  <span>캡처 <b>2026-10-28</b> · 390×844</span>
+  <span>최종수정 <b>2026-10-28</b></span>
+</div>
+<p class="lead">픽샵에서 포인트로 산 쿠폰을 모아 보는 화면입니다. 마이페이지 › 내 쿠폰함, 또는 구매 완료창의 [쿠폰함 열기]로 들어옵니다. 쿠폰을 펼쳐 바코드·쿠폰번호를 보여 주고, <b>사용 전이면 구매를 취소하고 포인트를 돌려받을</b> 수 있습니다.</p>
+
+<div class="box">
+  <h3>읽는 법</h3>
+  <div class="legend">
+    <span><b style="color:var(--zone)">붉은 점선 상자 A~D</b> 화면의 영역</span>
+    <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능 — 마우스를 올리면 설명과 함께 강조</span>
+    <span>「N-N절」을 누르면 그 절만 팝업으로 열립니다</span>
+    <span><span class="tag ok">확정</span> 정책서 근거 있음</span>
+    <span><span class="tag open">미결</span> 바뀔 수 있음</span>
+  </div>
+</div>
+
+<div class="sec-policy">
+  <h3>⚙ 공통 정책 — 내 쿠폰함</h3>
+  <ul>
+    <li>로그인 회원만 · 2뎁스 화면(하단 탭 없음). 쿠폰은 <b>구매일 + 1년</b> 동안 쓸 수 있습니다. (<a href="../policy/pol_use.html#s4">4절</a>)</li>
+    <li><b>사용 전 · 유효기간 안</b>인 쿠폰만 구매를 취소할 수 있고, 취소하면 <b>포인트를 바로 돌려줍니다</b>(포인트 내역 「픽샵 구매 취소」 +NP · 알림). (<a href="../policy/pol_use.html#s4">4절</a>)</li>
+    <li>「사용 완료」는 지금 <b>고객이 직접 누르는 시연 방식</b>입니다. 실제로는 발행 업체가 사용 여부를 알려 줘야 합니다(<span class="tag open">미결</span> R-U7). 쿠폰번호·바코드도 시연용으로 자사에서 만든 값입니다(R-U2).</li>
+  </ul>
+  <div class="src">기준: 리워드 포인트 사용 정책서 v0.1 · 4 · 7 · 8절</div>
+</div>
+
+<nav class="toc" aria-label="이 페이지 바로가기">
+  <span class="toc-lb">바로가기</span>
+  <a href="#flow"><b>①</b>화면 흐름·데이터</a>
+  <a href="#layout"><b>②</b>페이지 구성</a>
+  <span class="toc-sep"></span>
+  <a class="z" href="#zA"><b>A</b>위쪽</a>
+  <a class="z" href="#zB"><b>B</b>탭</a>
+  <a class="z" href="#zC"><b>C</b>쿠폰 카드</a>
+  <a class="z" href="#zD"><b>D</b>안내</a>
+  <span class="toc-sep"></span>
+  <a href="#over"><b>④</b>확인창</a>
+  <a href="#exc">예외 케이스</a>
+</nav>
+
+<section class="sec major" id="flow">
+  <div class="sec-hd"><h2>① 화면 흐름 · 데이터</h2></div>
+  <div class="box">
+    <div class="flow"><i>들어오는 곳:</i><span>마이페이지 › 내 쿠폰함</span><span>픽샵 구매 완료 [쿠폰함 열기]</span></div>
+    <div class="flow" style="margin-top:8px"><span>카드 누르기</span><i>→</i><span>펼침 (바코드 · 쿠폰번호)</span><i>→</i><span>[쿠폰번호 복사] · [사용 완료] · [구매 취소하고 NP 돌려받기]</span></div>
+  </div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>요청</th><th>언제</th><th>받는 값</th></tr>
+    <tr><td><code>GET /api/use/coupons</code></td><td>쿠폰함을 열 때 · 취소·사용 표시 뒤</td><td><code>coupons[]</code> — 상품·브랜드·가격·쿠폰번호·바코드 14자리·구매일·유효기간·<code>status</code>(able/used/cancelled)·<code>can_cancel</code></td></tr>
+    <tr><td><code>POST /api/use/coupons/{번호}/use</code></td><td>사용 완료 확인</td><td>성공 여부</td></tr>
+    <tr><td><code>POST /api/use/coupons/{번호}/cancel</code></td><td>구매 취소 확인</td><td><code>refund</code> 돌려준 포인트 · 잔액</td></tr>
+  </table></div>
+</section>
+
+<section class="sec major" id="layout">
+  <div class="sec-hd"><span class="sid">F-COUPON-L</span><h2>② 페이지 구성</h2></div>
+  <p class="sec-sub">사용가능 2장 · 사용완료 1장 · 취소 1장 예시입니다.</p>
+  <div class="two-col unit">
+    <div><figure class="shot" data-id="F-COUPON-L" data-base="../"></figure></div>
+    <div>
+      <div class="box wrapx" style="margin-bottom:12px"><table class="t">
+        <tr><th>영역</th><th>들어가는 요소</th><th>상태에 따라 바뀌는 것</th></tr>
+        <tr class="zrow" data-n="A"><td><b>A</b> 위쪽</td><td>제목 · 알림 종 · 공작새 · 쓸 수 있는 쿠폰 수</td><td>장수</td></tr>
+        <tr class="zrow" data-n="B"><td><b>B</b> 탭</td><td>사용가능 · 사용완료 · 취소 (각 장수)</td><td>고른 탭</td></tr>
+        <tr class="zrow" data-n="C"><td><b>C</b> 쿠폰 카드</td><td>고른 탭의 쿠폰 · 최신 구매순</td><td>접힘 / 펼침 · 없으면 빈 상태</td></tr>
+        <tr class="zrow" data-n="D"><td><b>D</b> 안내</td><td>사용 방법 · 유효기간 · 취소 안내</td><td>쿠폰이 없으면 안 보임</td></tr>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec major" id="detail" style="margin-bottom:0">
+  <div class="major-hd"><h2>③ 영역별 상세 — 기능 · 정의 · 정책</h2></div>
+</section>
+
+<section class="sec zsec" id="zA">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">A</span><h2>위쪽</h2><span class="tag ok">확정</span></div>
+  <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-COUPON-A1</div><figure class="shot" data-id="F-COUPON-A1" data-base="../"></figure></div></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「내 쿠폰함」</div></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>「N장」</div><ul><li>사용가능 쿠폰 수.</li></ul></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>"쓸 수 있는 쿠폰이에요"</div></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zB">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">B</span><h2>탭</h2><span class="tag ok">확정</span></div>
+  <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-COUPON-B1</div><figure class="shot" data-id="F-COUPON-B1" data-base="../"></figure></div></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>사용가능 N</div><ul><li>처음 들어오면 선택됨.</li></ul></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>사용완료 N</div></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>취소 N</div>
+        <ul><li>탭을 바꾸면 펼친 쿠폰은 접힙니다.</li></ul></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zC">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">C</span><h2>쿠폰 카드</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-COUPON-C1 <small>사용가능 · 접힘</small></div><figure class="shot" data-id="F-COUPON-C1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-COUPON-C2 <small>사용가능 · 펼침</small></div><figure class="shot" data-id="F-COUPON-C2" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-COUPON-C3 <small>사용완료</small></div><figure class="shot" data-id="F-COUPON-C3" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-COUPON-C4 <small>취소</small></div><figure class="shot" data-id="F-COUPON-C4" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>상품 아이콘</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>상품명</div></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>"브랜드 · NP"</div><ul><li>산 가격.</li></ul></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>상태 배지</div><ul><li>사용가능(초록) · 사용완료 · 취소(회색).</li></ul></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>오른쪽 작은 글씨</div>
+      <ul><li>사용가능 「쿠폰 보기」/「접기」 · 사용완료 「MM.DD 사용」 · 취소 「MM.DD 취소」.</li>
+          <li>사용완료·취소 카드는 흐리게, 펼쳐지지 않습니다.</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>바코드 · 바코드 숫자</div><ul><li>사용가능 카드를 누르면 펼쳐집니다. 바코드는 쿠폰번호로 만든 <b>시연용 표현</b>입니다.</li></ul></div>
+    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>쿠폰번호</div></div>
+    <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>구매일 · 유효기간 (구매일 + 1년)</div></div>
+    <div class="cn" data-n="9"><div class="cn-hd"><span class="no">9</span>[쿠폰번호 복사]</div><ul><li>토스트 "쿠폰번호를 복사했어요".</li></ul></div>
+    <div class="cn" data-n="10"><div class="cn-hd"><span class="no">10</span>[사용 완료]</div>
+      <ul><li>확인창(④ X2) → 그 쿠폰은 사용완료 탭으로 옮겨집니다.</li></ul>
+      <div class="case">고객이 직접 누르는 시연 방식 — 실제는 발행 업체가 사용 여부를 알려 줌 <span class="tag open">미결</span> R-U7</div></div>
+    <div class="cn" data-n="11"><div class="cn-hd"><span class="no">11</span>[구매 취소하고 NP 돌려받기]</div>
+      <ul><li><b>사용 전 · 유효기간 안</b>인 쿠폰에만. 확인창(④ X1).</li></ul>
+      <div class="rule"><b>근거</b> 구매 취소·환불 (PO 2026-10-07 · <a href="../policy/pol_use.html#s4">4절</a>)</div></div>
+  </div></div>
+  </div>
+  <div class="two-col unit sub-item" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-COUPON-E1 <small>빈 상태</small></div><figure class="shot" data-id="F-COUPON-E1" data-base="../"></figure></div></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>"아직 쿠폰이 없어요. 픽샵에서 포인트로 교환해 보세요!"</div></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>[🛍️ 픽샵 가기]</div><ul><li>→ 픽샵(<a href="f_jar.html#shop">F-JAR B</a>).</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zD">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">D</span><h2>안내</h2><span class="tag ok">확정</span></div>
+  <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-COUPON-D1</div><figure class="shot" data-id="F-COUPON-D1" data-base="../"></figure></div></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>안내 4줄</div>
+        <ul><li>쿠폰번호를 매장 직원에게 보여주거나 바코드를 스캔 · 구매일로부터 1년 안에 사용 · 사용 전이면 유효기간 안에 취소하고 포인트 환불.</li>
+            <li>넷째 줄 "이 화면의 쿠폰번호는 시연용 가상 번호입니다"는 시연 안내라 실제 서비스에서는 뺍니다.</li></ul></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="sec major" id="over">
+  <div class="sec-hd"><h2>④ 확인창</h2><span class="tag ok">확정</span></div>
+  <div class="unit">
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-COUPON-X1 <small>구매 취소</small></div><figure class="shot" data-id="F-COUPON-X1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-COUPON-X2 <small>사용 완료</small></div><figure class="shot" data-id="F-COUPON-X2" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「구매를 취소할까요?」 / 「사용 완료로 표시할까요?」</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>상품 · 돌려받는 포인트 / 상품</div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>안내</div>
+      <ul><li>X1 "취소하면 쿠폰번호를 쓸 수 없게 되고 <b>포인트를 바로 돌려드려요</b>." · X2 "표시한 뒤에는 되돌릴 수 없어요".</li></ul></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>버튼</div>
+      <ul><li>X1 [그만두기] [취소하기] → 환불(포인트 내역 「픽샵 구매 취소」 +NP) · 재고 +1 · 알림 「구매를 취소했어요 · NP 환불」 → 토스트 "구매를 취소하고 NP를 돌려드렸어요" · 그 쿠폰은 사용가능 목록에서 빠지고 취소 탭에 들어갑니다(탭은 그대로).</li>
+          <li>X2 [취소] [사용 완료] → 토스트 "사용 완료로 표시했어요" · 사용완료 탭으로 옮겨집니다(탭은 그대로).</li>
+          <li>서버 실패 → 확인창 "취소하지 못했어요 / 사용 완료로 표시하지 못했어요" + [다시 시도].</li></ul>
+      <div class="rule"><b>근거</b> <a href="../policy/pol_use.html#s4">4절</a> · <a href="../common/c_layer.html">C-LAYER</a></div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="exc">
+  <div class="sec-hd"><h2>예외 케이스</h2><span class="tag ok">확정</span></div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>#</th><th>상황</th><th>동작</th></tr>
+    <tr><td>E1</td><td>이미 쓴 쿠폰을 취소</td><td>"이미 사용한 쿠폰은 취소할 수 없어요" (화면에는 취소 버튼이 없음)</td></tr>
+    <tr><td>E2</td><td>유효기간이 지난 쿠폰을 취소</td><td>"유효기간이 지나 취소할 수 없어요" · 그 뒤 처리(환불·소멸)는 <span class="tag open">미결</span> R-U9</td></tr>
+    <tr><td>E3</td><td>이미 취소한 쿠폰</td><td>"이미 취소한 쿠폰이에요"</td></tr>
+    <tr><td>E4</td><td>예전에 산 쿠폰에 유효기간이 없음</td><td>구매일 + 1년으로 봄</td></tr>
+  </table></div>
+</section>
+
+</main>
+<script src="../shots/markers.js"></script>
+<script src="../policy/pol_use_data.js"></script>
+<script src="../wf-reward.js"></script>
+</body>
+</html>
