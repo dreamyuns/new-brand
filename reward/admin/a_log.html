@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A-LOG 관리자 로그 — 픽콕 리워드 화면기획서</title>
+<link rel="stylesheet" href="../wf-reward.css">
+<!-- _양식.html 기반 · 어드민 1440 · 근거: pickoq_demo admin/admin.js PAGES.logs · api_admin.py logs · admin_log() 호출 지점 (2026-10-27)
+     캡처 속 날짜가 뒤섞인 줄은 시연 데이터를 나중에 한꺼번에 넣은(demo-bulk) 것이다 — 목록은 기록된 순서로 정렬된다 -->
+</head>
+<body data-key="a_log" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page">
+
+<div class="top"><span class="sid">A-LOG</span><h1>관리자 로그 (어드민)</h1></div>
+<div class="meta">
+  <span>기준 정책서 <b><a href="../policy/pol_noti.html#s7">리워드 알림 v0.1 · 7절</a></b> · <a href="../policy/pol_admin.html#s13">리워드 어드민 v0.3 · 제13조</a></span>
+  <span>기준 구현물 <b>pickoq_demo</b> <code>admin/admin.js</code> (2026-10-27)</span>
+  <span>캡처 <b>2026-10-27</b> · PC 1440</span>
+  <span>최종수정 <b>2026-10-27</b></span>
+</div>
+<p class="lead">관리자가 어드민에서 한 일을 <b>한 줄씩 남겨 보는</b> 화면입니다. 보기만 하고, 고치거나 지울 수 없습니다.</p>
+
+<div class="box">
+  <h3>읽는 법</h3>
+  <div class="legend">
+    <span><b style="color:var(--zone)">붉은 점선 상자 A~E</b> 화면의 영역</span>
+    <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능</span>
+    <span>「N-N절」을 누르면 그 절만 팝업으로 열립니다</span>
+    <span><span class="tag ok">확정</span> 정책서 근거 있음</span>
+    <span><span class="tag proto">프로토 기준</span> 정책서에 아직 없음</span>
+    <span><span class="tag open">미결</span> 바뀔 수 있음</span>
+  </div>
+</div>
+
+<div class="sec-policy">
+  <h3>⚙ 공통 정책 — 관리자 로그</h3>
+  <ul>
+    <li><b>조회 전용</b> — 기록은 고치거나 지우지 않습니다. (<a href="../policy/pol_noti.html#s7">7절</a>)</li>
+    <li>남는 일: 알림 발송 · 포인트 지급·회수 · 본인인증 처리 · 예약 적립 만들기 · 출금 처리 · 쿠폰 재발행 · 설정 변경 · 혜택 수정 등 <b>관리자가 한 일</b>. 서버가 자동으로 한 일(적립 등)은 남지 않습니다.</li>
+    <li>지금은 비밀번호 하나로 들어와 <b>누가 했는지 구분하지 않습니다</b> — 권한 체계와 함께 정합니다. (<a href="../policy/pol_admin.html#s13">어드민 제13조</a>)</li>
+  </ul>
+  <div class="src">기준: 리워드 알림 정책서 v0.1 · 7절 / 리워드 어드민 정책서 v0.3 · 제13조</div>
+</div>
+
+<nav class="toc" aria-label="이 페이지 바로가기">
+  <span class="toc-lb">바로가기</span>
+  <a href="#flow"><b>①</b>화면 흐름·데이터</a>
+  <a href="#layout"><b>②</b>페이지 구성</a>
+  <span class="toc-sep"></span>
+  <a class="z" href="#zE"><b>C~E</b>안내·찾기·목록</a>
+</nav>
+
+<section class="sec major" id="flow">
+  <div class="sec-hd"><h2>① 화면 흐름 · 데이터</h2></div>
+  <div class="box">
+    <div class="flow"><span>왼쪽 메뉴 「관리자 로그」</span><i>→</i><span>목록</span><i>→</i><span>기간·검색어로 찾기</span></div>
+  </div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>요청</th><th>언제</th><th>받는 값 (화면에 쓰는 것)</th></tr>
+    <tr><td><code>GET /admin/logs</code></td><td>화면을 열 때</td><td><code>logs[]</code> — 일시 · 관리자 · 작업 · 대상 회원 이름 · 내용 · <b>최근 200건</b></td></tr>
+  </table></div>
+</section>
+
+<section class="sec major" id="layout">
+  <div class="sec-hd"><span class="sid">A-LOG-L</span><h2>② 페이지 구성</h2></div>
+  <p class="sec-sub">어드민 공통 틀 안에 머리 → 「이번 버전에 없는 것」 띠 → 찾기 → 목록. 캡처의 목록은 8행만 남겼습니다.</p>
+  <div class="pc-layout unit">
+    <figure class="shot pc" data-id="A-LOG-L" data-base="../"></figure>
+    <div class="box wrapx" style="margin:0"><table class="t">
+      <tr><th>영역</th><th>들어가는 요소</th><th>상태에 따라 바뀌는 것</th></tr>
+      <tr class="zrow" data-n="A"><td><b>A</b> 공통 틀</td><td>왼쪽 메뉴(「관리자 로그」 강조) · 위 막대</td><td>출금 대기 배지</td></tr>
+      <tr class="zrow" data-n="B"><td><b>B</b> 머리</td><td>제목 「관리자 로그」 · "누가 무엇을 했는지 기록됩니다"</td><td>바뀌지 않음</td></tr>
+      <tr class="zrow" data-n="C"><td><b>C</b> 안내 띠</td><td>「이번 버전에 들어가지 않은 것 1가지 — 처리자 구분」</td><td>접힘 / 펼침</td></tr>
+      <tr class="zrow" data-n="D"><td><b>D</b> 찾기</td><td>전체 N건 · 일시 기간 · 검색어(작업 내용·대상) · [조회] [초기화]</td><td>건수</td></tr>
+      <tr class="zrow" data-n="E"><td><b>E</b> 목록</td><td>5열 표</td><td>—</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<section class="sec major" id="detail" style="margin-bottom:0"><div class="major-hd"><h2>③ 영역별 상세 — 기능 · 정의 · 정책</h2></div></section>
+
+<section class="sec zsec" id="zE">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">C~E</span><h2>안내 · 목록</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row"><div class="sw pc"><div class="lb">A-LOG-E1</div><figure class="shot" data-id="A-LOG-E1" data-base="../"></figure></div></div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>일시</div>
+      <ul><li><b>기록된 순서</b>로 최신이 위 · 최근 200건. 캡처에서 날짜가 뒤섞인 줄은 시연 데이터를 나중에 한꺼번에 넣은 것입니다.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>관리자</div>
+      <ul><li>지금은 로그인 계정 하나라 모두 같은 값입니다(「admin」 / 「admin@pickoq.demo」).</li></ul>
+      <div class="case">처리자를 사람마다 구분하는 것은 권한 체계와 함께 정합니다 <span class="tag open">미결</span> (C 안내 띠 · <a href="../policy/pol_admin.html#s13">어드민 제13조</a>)</div></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>작업</div>
+      <ul><li>구현은 <b>코드 그대로</b> 보여 줍니다 — 예: <code>notify</code> 알림 발송 · <code>point_grant</code> 포인트 지급 · <code>reject_wd</code> 출금 반려 · <code>setting</code> 설정 변경 · <code>offer_edit</code> 혜택 수정 · <code>verify</code> 본인인증 처리.</li></ul>
+      <div class="case">관리자가 읽을 수 있게 <b>한글 이름</b>으로 바꿉니다 <span class="tag proto">A17</span></div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>대상</div>
+      <ul><li>그 작업을 받은 회원 이름 · 회원이 없는 작업(설정 변경·전체 공지 등)은 「—」.</li></ul></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>내용</div>
+      <ul><li>금액·사유·제목 등 짧은 설명 — 예: "19,000P · 고객 요청으로 취소" · "전체 · {공지 제목}".</li></ul>
+      <div class="rule"><b>근거</b> 관리자 로그 (<a href="../policy/pol_noti.html#s7">7절</a>)</div></div>
+  </div></div>
+  </div>
+</section>
+
+</main>
+<script src="../shots/markers.js"></script>
+<script src="../policy/pol_noti_data.js"></script>
+<script src="../policy/pol_admin_data.js"></script>
+<script src="../wf-reward.js"></script>
+</body>
+</html>

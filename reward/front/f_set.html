@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>F-SET 설정·FAQ·약관 — 픽콕 리워드 화면기획서</title>
+<link rel="stylesheet" href="../wf-reward.css">
+<!-- 근거: 구현물 pickoq_demo static/app.js viewSetting·toggleMkt · viewFaq·toggleFaq · viewTerms·openTermDoc · data.js FAQS·TERMS_DOCS (2026-10-27)
+     캡처는 마케팅 토글을 누르지 않고 화면 상태(state)만 바꿔 찍었다. FAQ·약관은 PO 지시로 "기능만" 설명한다 — 문구·조항은 나중에 -->
+</head>
+<body data-key="f_set" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page">
+
+<div class="top"><span class="sid">F-SET</span><h1>설정 · FAQ · 약관·정책</h1></div>
+<div class="meta">
+  <span>기준 정책서 <b><a href="../policy/pol_my.html#s2">리워드 마이페이지 v0.1 · 2~4절</a></b></span>
+  <span>기준 구현물 <b>pickoq_demo</b> <code>static/app.js</code> (2026-10-27)</span>
+  <span>캡처 <b>2026-10-27</b> · 390×844</span>
+  <span>최종수정 <b>2026-10-27</b></span>
+</div>
+<p class="lead">마이페이지 「지원·정보」의 세 화면입니다. 모두 <b>2뎁스</b>(하단 탭 없음 · [←]로 마이페이지)이고 <b>로그인·비로그인 모두</b> 들어올 수 있습니다. FAQ와 약관은 <b>화면 기능만</b> 적었습니다 — 질문·답변 문구와 약관 조항은 나중에 정리합니다.</p>
+
+<div class="box">
+  <h3>읽는 법</h3>
+  <div class="legend">
+    <span><b style="color:var(--zone)">붉은 점선 상자 A~C</b> 화면의 영역</span>
+    <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능 — 마우스를 올리면 설명과 함께 강조</span>
+    <span>「N-N절」을 누르면 그 절만 팝업으로 열립니다</span>
+    <span><span class="tag ok">확정</span> 정책서 근거 있음</span>
+    <span><span class="tag proto">프로토 기준</span> 정책서에 아직 없음</span>
+    <span><span class="tag open">미결</span> 바뀔 수 있음</span>
+  </div>
+</div>
+
+<div class="sec-policy">
+  <h3>⚙ 공통 정책 — 설정·FAQ·약관 전체</h3>
+  <ul>
+    <li>세 화면 모두 <b>2뎁스</b> — 하단 탭이 없고 위쪽 [←]로 마이페이지에 돌아갑니다. 알림 종은 로그인 회원만 보입니다. (<a href="../policy/pol_my.html#s1-1">1-1절</a>)</li>
+    <li><b>마케팅 수신 동의는 설정에서만</b> 켜고 끕니다(계정관리에 없음). 로그인 회원만 보이고, <b>동의·철회 일시</b>를 함께 보여 줍니다. (<a href="../policy/pol_my.html#s2-3">2-3절</a>)</li>
+    <li>기기 알림 권한은 <b>보여 주기만</b> 합니다 — 켜고 끄는 것은 휴대폰 설정에서. (<a href="../policy/pol_my.html#s2-2">2-2절</a>)</li>
+    <li>언어·통화는 한국어·KRW <b>고정 표시</b>입니다(누를 수 없음). (<a href="../policy/pol_my.html#s2-4">2-4절</a>)</li>
+    <li>FAQ 문구·약관 조항은 <b>나중에 정리</b>합니다(PO 2026-10-27) — 이 화면기획서는 기능만 다룹니다. (<a href="../policy/pol_my.html#s3">3절</a> · <a href="../policy/pol_my.html#s4">4절</a>)</li>
+  </ul>
+  <div class="src">기준: 리워드 마이페이지 정책서 v0.1 · 2 · 3 · 4절</div>
+</div>
+
+<nav class="toc" aria-label="이 페이지 바로가기">
+  <span class="toc-lb">바로가기</span>
+  <a href="#flow"><b>①</b>화면 흐름·데이터</a>
+  <a href="#set"><b>②</b>설정</a>
+  <a class="z" href="#zA"><b>A</b>알림</a>
+  <a class="z" href="#zB"><b>B</b>지역</a>
+  <a class="z" href="#zC"><b>C</b>정보</a>
+  <span class="toc-sep"></span>
+  <a href="#faq"><b>③</b>FAQ</a>
+  <a href="#terms"><b>④</b>약관·정책</a>
+  <a href="#exc">예외 케이스</a>
+</nav>
+
+<section class="sec major" id="flow">
+  <div class="sec-hd"><h2>① 화면 흐름 · 데이터</h2></div>
+  <div class="box">
+    <div class="flow"><span>마이페이지 › 설정</span><i>→</i><span>마케팅 토글</span><i>→</i><span>토스트 · 동의/철회 일시 갱신</span></div>
+    <div class="flow" style="margin-top:8px"><span>마이페이지 › FAQ</span><i>→</i><span>분류 칩</span><i>→</i><span>질문 누르기</span><i>→</i><span>답 펼침 (한 번에 하나)</span></div>
+    <div class="flow" style="margin-top:8px"><span>마이페이지 › 약관·정책</span><i>→</i><span>문서 3종 목록</span><i>→</i><span>문서 화면 (조문)</span><i>→ [←] →</i><span>목록</span></div>
+  </div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>값</th><th>어디서</th><th>화면에 쓰는 곳</th></tr>
+    <tr><td>마케팅 동의 · 마지막 처리 일시</td><td>회원 계정(서버 <code>marketing_agree</code>) — 가입 때 고른 값에서 시작</td><td>설정 A ③ · ④ <span class="tag proto">#44 PO 제외</span></td></tr>
+    <tr><td>기기 알림 권한</td><td>휴대폰 OS</td><td>설정 A ①</td></tr>
+    <tr><td>앱 버전 · 새 버전</td><td>앱 · 스토어</td><td>설정 C</td></tr>
+    <tr><td>FAQ 분류·질문·답</td><td>구현은 앱에 들어 있음(어드민 없음) <span class="tag open">미결</span> R-Y1</td><td>FAQ</td></tr>
+    <tr><td>약관 문서·조문</td><td>구현은 앱에 들어 있음(조문 제목만) <span class="tag open">미결</span> R-Y2</td><td>약관·정책</td></tr>
+  </table></div>
+</section>
+
+<!-- ═════ ② 설정 ═════ -->
+<section class="sec major" id="set">
+  <div class="sec-hd"><span class="sid">F-SET-L</span><h2>② 설정</h2></div>
+  <p class="sec-sub">로그인 회원 · 알림 권한 허용 · 마케팅 동의 상태입니다.</p>
+  <div class="two-col unit">
+    <div><figure class="shot" data-id="F-SET-L" data-base="../"></figure></div>
+    <div>
+      <div class="box wrapx" style="margin-bottom:12px"><table class="t">
+        <tr><th>영역</th><th>들어가는 요소</th><th>로그인 / 비로그인</th></tr>
+        <tr class="zrow" data-n="A"><td><b>A</b> 알림</td><td>기기 알림 권한 · 마케팅 정보 수신 동의 · 동의/철회 일시</td><td>비로그인은 권한 행만</td></tr>
+        <tr class="zrow" data-n="B"><td><b>B</b> 지역</td><td>언어 · 통화 · 안내</td><td>같음</td></tr>
+        <tr class="zrow" data-n="C"><td><b>C</b> 정보</td><td>앱 버전 · [업데이트]</td><td>같음</td></tr>
+      </table></div>
+      <div class="cn"><div class="cn-hd">화면 공통 규칙</div>
+        <ul><li><b>2뎁스</b> — 하단 탭 없음 · 위쪽 [←] 「설정」 · 알림 종(로그인만).</li>
+            <li>토글은 누르면 <b>바로 적용</b>됩니다([저장] 버튼 없음).</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zA">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">A</span><h2>알림</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-SET-A1 <small>동의 · 권한 허용</small></div><figure class="shot" data-id="F-SET-A1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-SET-A2 <small>권한 꺼짐</small></div><figure class="shot" data-id="F-SET-A2" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-SET-A3 <small>철회</small></div><figure class="shot" data-id="F-SET-A3" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-SET-A4 <small>비로그인</small></div><figure class="shot" data-id="F-SET-A4" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>기기 알림 권한</div>
+      <ul><li>허용: "알림을 받을 수 있어요" + 「✓ 허용됨」.</li>
+          <li>꺼짐: "꺼져 있어 앱 알림을 받을 수 없어요"(빨간 글씨) + ⑤ [설정 열기](A2).</li>
+          <li>로그인과 상관없이 늘 보입니다(A4). <b>토글은 만들지 않습니다</b> — 권한은 휴대폰 설정에서만 바뀝니다.</li></ul>
+      <div class="rule"><b>근거</b> 권한 안내만 (<a href="../policy/pol_my.html#s2-2">2-2절</a>)</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>마케팅 정보 수신 동의 — "이벤트·혜택 소식을 받아요"</div>
+      <ul><li>로그인 회원만. 이메일 + 앱 푸시를 <b>하나로</b> 묶은 동의입니다(채널별로 나누지 않음).</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>토글</div>
+      <ul><li>켜기 → 토스트 "마케팅 수신에 동의했어요".</li>
+          <li>끄기 → 토스트 "마케팅 수신을 철회했어요 · 예약된 광고성 알림은 취소돼요" — 보내기로 예약된 광고성 알림을 <b>모두 취소</b>합니다(A3).</li>
+          <li>처음 값은 <b>가입 때 고른</b> [선택] 마케팅 동의값입니다.</li></ul>
+      <div class="case">구현은 토글이 <b>화면에서만</b> 바뀌고 서버에 저장되지 않습니다 — 다시 로그인하면 늘 켜짐으로 보이고, <b>철회해도 어드민 광고 발송 대상에 그대로 남습니다</b> → 서버 저장 <span class="tag proto">#44</span> — <b>PO 제외(2026-10-27)</b>: 광고성 알림을 이번 범위에서 뺐으므로 그때 함께 고칩니다</div>
+      <div class="rule"><b>근거</b> 마케팅 동의 (<a href="../policy/pol_my.html#s2-3">2-3절</a> · <a href="../policy/pol_member.html#s1-3">회원 1-3절</a>)</div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>「동의 YYYY.MM.DD HH:MM」 / 「철회 …」</div>
+      <ul><li><b>마지막으로 처리한 일시</b>입니다. 동의 = 초록 바탕, 철회 = 회색 바탕(A3).</li>
+          <li>광고성 정보를 보낼 수 있었는지 증명하는 기록이라 <b>철회도 남깁니다</b>.</li></ul>
+      <div class="case">구현은 일시가 고정값(2026.09.15 14:22)에서 시작합니다 → 서버에 저장한 일시 <span class="tag proto">#44</span></div></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>[설정 열기] — 권한이 꺼졌을 때</div>
+      <ul><li>휴대폰 설정 › 알림 › 픽콕 화면으로 이동합니다(시연은 토스트).</li></ul></div>
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>"기기 알림이 꺼져 있어 앱 푸시는 오지 않아요. 이메일은 계속 받아요."</div>
+      <ul><li>마케팅 동의가 켜져 있는데 권한이 꺼져 있을 때만 나옵니다.</li></ul></div>
+    <div class="cn"><div class="cn-hd">마케팅 약관 전문</div>
+      <ul><li>설정에는 없습니다 — 마이페이지 › 약관·정책 › 「마케팅 정보 수신 동의」(④)에서 봅니다.</li></ul></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zB">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">B</span><h2>지역</h2><span class="tag ok">확정</span></div>
+  <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-SET-B1</div><figure class="shot" data-id="F-SET-B1" data-base="../"></figure></div></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>언어 「한국어」</div></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>통화 「KRW」</div>
+        <ul><li>둘 다 <b>회색 글씨 · 누를 수 없음</b>. 눌러도 아무 일도 일어나지 않습니다.</li></ul></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>"지금은 한국어·KRW로만 제공돼요."</div>
+        <div class="rule"><b>근거</b> 고정 표시 (<a href="../policy/pol_my.html#s2-4">2-4절</a>)</div></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zC">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">C</span><h2>정보</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-SET-C1 <small>최신</small></div><figure class="shot" data-id="F-SET-C1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-SET-C2 <small>새 버전 있음</small></div><figure class="shot" data-id="F-SET-C2" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>앱 버전</div>
+      <ul><li>최신: 「1.0.0」 + "최신 버전이에요"(초록).</li>
+          <li>새 버전 있음: 「새 버전 N 이 나왔어요」(빨간 글씨) + ②.</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>[업데이트]</div>
+      <ul><li>앱 스토어로 이동합니다(시연은 토스트).</li>
+          <li>앱을 막는 강제 업데이트와는 별개입니다 — 여기는 사용자가 찾아와 누르는 확인입니다.</li></ul>
+      <div class="rule"><b>근거</b> 앱 버전 (<a href="../policy/pol_my.html#s2-5">2-5절</a>)</div></div>
+  </div></div>
+  </div>
+</section>
+
+<!-- ═════ ③ FAQ ═════ -->
+<section class="sec major" id="faq">
+  <div class="sec-hd"><span class="sid">F-FAQ</span><h2>③ FAQ</h2><span class="tag open">문구 나중에</span></div>
+  <p class="sec-sub">화면 기능만 적습니다. 캡처 속 질문·답변은 <b>지금 구현물 문구</b>이고, 리워드 기준과 맞지 않는 곳이 있어 나중에 정리합니다(<a href="../policy/pol_my.html#s6">미결 R-Y1</a>).</p>
+  <div class="two-col unit">
+    <div class="shots-row">
+      <div class="sw"><div class="lb">F-FAQ-L <small>처음</small></div><figure class="shot" data-id="F-FAQ-L" data-base="../"></figure></div>
+      <div class="sw"><div class="lb">F-FAQ-1 <small>질문 펼침</small></div><figure class="shot" data-id="F-FAQ-1" data-base="../"></figure></div>
+    </div>
+    <div>
+      <div class="box wrapx" style="margin-bottom:12px"><table class="t">
+        <tr><th>영역</th><th>들어가는 요소</th></tr>
+        <tr class="zrow" data-n="A"><td><b>A</b> 분류</td><td>분류 칩 — 옆으로 넘겨 봅니다</td></tr>
+        <tr class="zrow" data-n="B"><td><b>B</b> 안내</td><td>필독 안내 한 줄</td></tr>
+        <tr class="zrow" data-n="C"><td><b>C</b> 질문 목록</td><td>선택한 분류의 질문</td></tr>
+      </table></div>
+      <div class="ann">
+        <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>선택된 분류 칩</div>
+          <ul><li>처음 들어오면 <b>첫 분류</b>가 선택돼 있습니다. 메뉴에서 다시 들어와도 첫 분류부터.</li></ul></div>
+        <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>다른 분류 칩</div>
+          <ul><li>누르면 그 분류의 질문만 보이고, 펼친 답은 접힙니다.</li></ul></div>
+        <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>필독 안내</div>
+          <ul><li>"찾는 답이 없으면 화면 우측 아래 [💸 필독]도 확인해 보세요."</li></ul></div>
+        <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>펼친 질문</div>
+          <ul><li>질문을 누르면 아래에 답이 펼쳐지고 화살표가 위로 바뀝니다. 다시 누르면 접힙니다.</li></ul></div>
+        <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>답</div>
+          <ul><li>굵은 글씨·줄바꿈을 쓸 수 있습니다.</li></ul></div>
+        <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>접힌 질문</div>
+          <ul><li>다른 질문을 누르면 앞의 답은 접힙니다 — <b>한 번에 하나만</b> 펼쳐집니다.</li></ul></div>
+        <div class="cn"><div class="cn-hd">넣지 않는 것</div>
+          <ul><li>1:1 문의 화면 · 고객센터 연락처.</li></ul>
+          <div class="rule"><b>근거</b> FAQ 기능 (<a href="../policy/pol_my.html#s3">3절</a>)</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ ④ 약관·정책 ═════ -->
+<section class="sec major" id="terms">
+  <div class="sec-hd"><span class="sid">F-TERM</span><h2>④ 약관·정책</h2><span class="tag open">조항 나중에</span></div>
+  <p class="sec-sub">화면 기능만 적습니다. 캡처 속 이용약관은 메타서치 픽콕 v0.10 목차라 리워드 조항이 없습니다 — 나중에 정리합니다(<a href="../policy/pol_my.html#s6">미결 R-Y2</a>).</p>
+  <div class="two-col unit">
+    <div class="shots-row">
+      <div class="sw"><div class="lb">F-TERM-1 <small>목록</small></div><figure class="shot" data-id="F-TERM-1" data-base="../"></figure></div>
+      <div class="sw"><div class="lb">F-TERM-2 <small>문서</small></div><figure class="shot" data-id="F-TERM-2" data-base="../"></figure></div>
+    </div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>이용약관</div></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>개인정보 처리방침</div></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>마케팅 정보 수신 동의</div>
+        <ul><li>행마다 아래에 「버전 · N개 항목」. 누르면 그 문서 화면(F-TERM-2)이 열립니다.</li></ul></div>
+      <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>[←] (문서 화면)</div>
+        <ul><li>마이페이지가 아니라 <b>약관 목록</b>으로 돌아갑니다.</li></ul></div>
+      <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>문서 제목 · 버전</div></div>
+      <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>조문</div>
+        <ul><li>구현은 <b>조문 제목만</b> 싣습니다. 실제 서비스는 법무가 확정한 전문을 보여 줍니다.</li></ul>
+        <div class="rule"><b>근거</b> 약관 기능 (<a href="../policy/pol_my.html#s4">4절</a>)</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="exc">
+  <div class="sec-hd"><h2>예외 케이스</h2><span class="tag ok">확정</span></div>
+  <p class="sec-sub">정책서 <a href="../policy/pol_my.html#s5">5절</a>을 화면 동작 기준으로 옮겼습니다.</p>
+  <div class="box wrapx"><table class="t">
+    <tr><th>#</th><th>상황</th><th>화면 동작</th></tr>
+    <tr><td>E1</td><td>비로그인이 설정에 들어옴</td><td>마케팅 동의 행·일시가 없음 · 권한·지역·정보는 같음</td></tr>
+    <tr><td>E2</td><td>권한이 꺼진 채 마케팅 동의</td><td>앱 푸시는 오지 않고 이메일만 — 안내 문구(A ⑥)</td></tr>
+    <tr><td>E3</td><td>FAQ에서 분류를 바꿈</td><td>펼친 답이 접히고 새 분류의 질문만</td></tr>
+  </table></div>
+</section>
+
+</main>
+<script src="../shots/markers.js"></script>
+<script src="../policy/pol_my_data.js"></script>
+<script src="../policy/pol_member_data.js"></script>
+<script src="../wf-reward.js"></script>
+</body>
+</html>

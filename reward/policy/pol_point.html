@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>픽콕 리워드 포인트 정책서 v0.2</title>
+<link rel="stylesheet" href="../wf-reward.css"></head>
+<body data-key="pol_point" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page pol">
+<div class="note diff"><h4>이 페이지는 생성물입니다</h4>
+원본: <code>context/신규서비스_리워드/02_정책서/리워드_포인트_정책서_v0.2.md</code> · 변환일 2026-10-27. 내용을 고칠 때는 <b>원본 md를 고친 뒤</b> <code>_capture/build_policy.py</code>를 다시 실행합니다.</div>
+<div class="box"><h3>목차</h3><div class="pol-toc"><a href="#s0">0. 결정 요약</a><a href="#s1">1. 포인트 기본</a><a href="#s1-1">1-1. 성격</a><a href="#s1-2">1-2. 잔액</a><a href="#s1-3">1-3. 본인인증 전 회원</a><a href="#s2">2. 포인트 유형 (원장)</a><a href="#s3">3. 예약 적립</a><a href="#s3-1">3-1. 구조</a><a href="#s3-2">3-2. 상태 흐름 [PO 확정 2026-10-27]</a><a href="#s3-3">3-3. 취소</a><a href="#s3-4">3-4. 데이터 출처</a><a href="#s4">4. 예약 뽑기</a><a href="#s5">5. 포인트 내역 화면</a><a href="#s5-1">5-1. 구성</a><a href="#s5-2">5-2. 필터 [제안] (PO 위임 2026-10-27)</a><a href="#s5-3">5-3. 카드 표기</a><a href="#s6">6. 소멸</a><a href="#s7">7. 어드민</a><a href="#s8">8. 예외</a><a href="#s9">9. 미결</a></div></div>
+<h1>픽콕 리워드 포인트 정책서</h1>
+<table>
+<thead>
+<tr>
+  <th>항목</th>
+  <th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>문서 버전</td>
+  <td><strong>v0.2</strong></td>
+</tr>
+<tr>
+  <td>작성일</td>
+  <td>2026-10-27</td>
+</tr>
+<tr>
+  <td>작성</td>
+  <td>대화창2 — 역할외(대화창1 정책) 대행 · PO 논의 확정 기반</td>
+</tr>
+<tr>
+  <td>기준 구현물</td>
+  <td><code>context/신규정책/prototype/pickoq_demo/</code> — 정책서와 구현이 다르면 구현을 기준으로 맞추되, <strong>이 문서에서 PO가 따로 정한 것(예약 적립 시점 등)은 정책이 우선</strong>하고 구현을 고친다(프로토 수정 요청)</td>
+</tr>
+<tr>
+  <td>함께 보는 문서</td>
+  <td><code>참여형적립_기능정책서_v0.8.md</code>(출석·퀴즈·친구 추천·적립대기 1-6) · <code>리워드_회원_정책서_v0.1.md</code> · <code>리워드_어드민_정책서_v0.2.md</code> 제6조(원장)·제9조(예약 적립)</td>
+</tr>
+<tr>
+  <td>기존 문서와의 관계</td>
+  <td>메타서치 MVP의 <code>신규정책/포인트 관리/포인트_정책서_v0.1.md</code>는 <strong>참고만</strong> 한다. 리워드는 적립 종류·뽑기·사용처가 완전히 달라 <strong>이 문서가 리워드 포인트의 기준</strong>이다 (PO 결정 2026-10-27)</td>
+</tr>
+<tr>
+  <td>화면기획서</td>
+  <td><code>04_화면기획서/front/f_point.html</code> · <code>admin/a_point.html</code> · <code>admin/a_book.html</code></td>
+</tr>
+<tr>
+  <td>범위</td>
+  <td>포인트 기본 규칙 · 원장 유형 · 예약 적립 · 예약 뽑기 · 포인트 내역 화면 · 소멸 · 어드민 원장·예약 적립</td>
+</tr>
+<tr>
+  <td>범위 밖</td>
+  <td>포인트 사용처(현금 전환·픽샵·쿠폰) — 포인트 사용 묶음에서 / 혜택(오퍼월) 적립 — 혜택 묶음에서</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>근거 표기:</strong> <code>[구현]</code> 구현물에서 확인 · <code>[PO 확정]</code> PO 결정(날짜) · <code>[제안]</code> 대화창2 제안 — PO 확인 · <code>[분석·의견]</code> 사실이 아닌 제안 · <code>[참고]</code> 메타서치 포인트 정책서 v0.1</p>
+</blockquote>
+<h2>변경 이력</h2>
+<table>
+<thead>
+<tr>
+  <th>버전</th>
+  <th>날짜</th>
+  <th>내용</th>
+  <th>결정</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>v0.2</td>
+  <td>2026-10-27</td>
+  <td><strong>뽑기 기한 확정(R-P2 해소)</strong> — <strong>적립완료일 + 30일</strong>, 기한이 지나면 뽑기 몫 미지급(기본 적립은 유지). 뽑기 버튼 줄에 <strong>남은 날짜 <code>D-7</code>·「오늘까지」</strong> 표시, 지나면 <strong>「뽑기 기간이 지났어요」</strong>. 어드민 <code>draw_expire_days</code> <strong>기본 30</strong>. 7일이 아니라 30일로 한 이유 — 적립 자체가 체크아웃+7일에 확정되므로 7일을 더하면 <strong>여행 후 2주 안에 앱을 열어야</strong> 하고, 놓친 고객의 불만이 커진다</td>
+  <td>PO 확정</td>
+</tr>
+<tr>
+  <td>v0.1 (같은 날 추가)</td>
+  <td>2026-10-27</td>
+  <td>미결 R-P4 소멸 사전 안내 → 알림 정책서 3절로 확정(매달 1일 요약 + 임박 안내) · 6절 표 갱신</td>
+  <td>PO</td>
+</tr>
+<tr>
+  <td>v0.1</td>
+  <td>2026-10-27</td>
+  <td>최초 작성 — 구현물(10-27) 기준 정리 + PO 결정 3건: <strong>예약 적립 = 체크아웃 + 7일에 확정, 그 전 「적립예정」</strong>(구현은 즉시 지급 → 수정 요청) · <strong>리워드 정책 문서는 전부 새로</strong> · <strong>소멸 예정일을 카드에 약하게 표시</strong>. 내역 필터 4개 재분류는 대화창2 제안(PO 위임)</td>
+  <td>PO 확정 · 제안 1건</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="s0">0. 결정 요약</h1>
+<table>
+<thead>
+<tr>
+  <th>#</th>
+  <th>쟁점</th>
+  <th>결정</th>
+  <th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>1</td>
+  <td>포인트 단위</td>
+  <td><strong>1P = 1원 (KRW)</strong></td>
+  <td><code>[구현]</code> <code>[참고]</code></td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>잔액</td>
+  <td>저장하지 않고 <strong>원장(움직임 기록)을 더해서</strong> 계산 · 기록은 지우지 않음</td>
+  <td><code>[구현]</code> 어드민 6-1</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>예약 적립 시점</td>
+  <td><strong>체크아웃 + 7일에 확정 지급.</strong> 그 전에는 「적립예정」</td>
+  <td><code>[PO 확정 2026-10-27]</code> — 구현은 즉시 지급(#37)</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>예약 뽑기</td>
+  <td>예약당 1회 · <strong>적립완료 뒤에만</strong> · 뽑기 몫의 30~100% · 꽝 없음</td>
+  <td><code>[구현]</code> <code>[PO 확정 2026-09-21]</code></td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>소멸</td>
+  <td><strong>적립일 + 1년</strong> · 카드에 「소멸 예정일」을 <strong>눈에 띄지 않게</strong> 표시</td>
+  <td><code>[구현]</code> <code>[PO 확정 2026-10-27]</code></td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>내역 필터</td>
+  <td>전체 · 예약 적립 · 참여 적립 · <strong>사용·차감</strong></td>
+  <td><code>[제안]</code> 5-2</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="s1">1. 포인트 기본</h1>
+<h2 id="s1-1">1-1. 성격</h2>
+<ul>
+<li>리워드 포인트(픽포인트)는 <strong>1P = 1원</strong>이다. 통화는 원(KRW)만 쓴다. <code>[구현]</code></li>
+<li>적립 재원은 둘로 나뉜다 — <strong>참여형 적립</strong>(출석·퀴즈·친구 추천·혜택)은 자사 비용, <strong>예약 적립·뽑기</strong>는 예약처가 주는 캐시백. <code>[구현]</code> 참여형 1-1</li>
+</ul>
+<h2 id="s1-2">1-2. 잔액</h2>
+<ul>
+<li>회원별 잔액을 숫자로 들고 있지 않고 <strong>원장의 증감을 더해 계산</strong>한다. 원장 한 줄 = 포인트가 움직인 사건 하나. <code>[구현]</code> 어드민 6-1</li>
+<li><strong>원장은 고치거나 지우지 않는다.</strong> 바로잡아야 하면 관리자 지급·회수로 새 줄을 쌓는다. <code>[구현]</code> 어드민 6-1</li>
+<li>고객 화면의 「사용 가능 포인트」 = <strong>적립완료된 포인트의 합</strong>. 적립예정·적립대기는 넣지 않는다. <code>[구현]</code> 참여형 1-6</li>
+</ul>
+<h2 id="s1-3">1-3. 본인인증 전 회원</h2>
+<ul>
+<li>본인인증 전에 생긴 예약 적립·친구 추천·관리자 지급은 <strong>「적립대기」</strong>로 두고, 인증하면 한꺼번에 지급한다. 상세는 <strong>참여형 1-6절</strong>. <code>[구현]</code></li>
+<li>본인인증 전 회원은 원장에 포인트가 있어도 고객 화면 잔액이 <strong>0P</strong>다. <code>[구현]</code></li>
+</ul>
+<hr />
+<h1 id="s2">2. 포인트 유형 (원장)</h1>
+<table>
+<thead>
+<tr>
+  <th>유형</th>
+  <th>고객 화면 이름</th>
+  <th style="text-align:center">증감</th>
+  <th style="text-align:center">소멸일 부여</th>
+  <th>고객 필터</th>
+  <th>어드민 묶음</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>attend</code></td>
+  <td>출석체크</td>
+  <td style="text-align:center">+</td>
+  <td style="text-align:center">○</td>
+  <td>참여 적립</td>
+  <td>출석체크</td>
+</tr>
+<tr>
+  <td><code>attend_bonus</code></td>
+  <td>출석 보너스</td>
+  <td style="text-align:center">+</td>
+  <td style="text-align:center">○</td>
+  <td>참여 적립</td>
+  <td>출석체크</td>
+</tr>
+<tr>
+  <td><code>quiz</code></td>
+  <td>여행상식 퀴즈</td>
+  <td style="text-align:center">+</td>
+  <td style="text-align:center">○</td>
+  <td>참여 적립</td>
+  <td>퀴즈</td>
+</tr>
+<tr>
+  <td><code>invite_out</code> · <code>invite_in</code></td>
+  <td>친구 추천</td>
+  <td style="text-align:center">+</td>
+  <td style="text-align:center">○</td>
+  <td>참여 적립</td>
+  <td>친구추천</td>
+</tr>
+<tr>
+  <td><code>offer</code></td>
+  <td>혜택 참여</td>
+  <td style="text-align:center">+</td>
+  <td style="text-align:center">○</td>
+  <td>참여 적립</td>
+  <td>혜택참여</td>
+</tr>
+<tr>
+  <td><code>booking</code></td>
+  <td>여행 예약 적립 (카드 제목 = 호텔명)</td>
+  <td style="text-align:center">+</td>
+  <td style="text-align:center">○</td>
+  <td>예약 적립</td>
+  <td>숙소예약</td>
+</tr>
+<tr>
+  <td><code>booking_draw</code></td>
+  <td>예약 뽑기</td>
+  <td style="text-align:center">+</td>
+  <td style="text-align:center">○</td>
+  <td>예약 적립</td>
+  <td>숙소예약</td>
+</tr>
+<tr>
+  <td><code>admin_grant</code></td>
+  <td>관리자 지급</td>
+  <td style="text-align:center">+</td>
+  <td style="text-align:center">○</td>
+  <td>참여 적립</td>
+  <td>관리자처리</td>
+</tr>
+<tr>
+  <td><code>admin_revoke</code></td>
+  <td>관리자 회수</td>
+  <td style="text-align:center">−</td>
+  <td style="text-align:center">—</td>
+  <td><strong>사용·차감</strong></td>
+  <td>관리자처리</td>
+</tr>
+<tr>
+  <td><code>shop</code></td>
+  <td>픽샵 교환</td>
+  <td style="text-align:center">−</td>
+  <td style="text-align:center">—</td>
+  <td><strong>사용·차감</strong></td>
+  <td>픽샵구매</td>
+</tr>
+<tr>
+  <td><code>withdraw</code></td>
+  <td>출금 신청</td>
+  <td style="text-align:center">−</td>
+  <td style="text-align:center">—</td>
+  <td><strong>사용·차감</strong></td>
+  <td>출금</td>
+</tr>
+<tr>
+  <td><code>cancel_refund</code></td>
+  <td>신청 취소 환불</td>
+  <td style="text-align:center">+</td>
+  <td style="text-align:center">○</td>
+  <td><strong>사용·차감</strong> <code>[제안]</code></td>
+  <td>관리자처리</td>
+</tr>
+<tr>
+  <td><code>shop_cancel</code></td>
+  <td>픽샵 구매 취소 환불</td>
+  <td style="text-align:center">+</td>
+  <td style="text-align:center">—</td>
+  <td><strong>사용·차감</strong> <code>[제안]</code></td>
+  <td>—</td>
+</tr>
+<tr>
+  <td><code>expire</code></td>
+  <td>포인트 소멸</td>
+  <td style="text-align:center">−</td>
+  <td style="text-align:center">—</td>
+  <td><strong>사용·차감</strong></td>
+  <td>소멸</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>「소멸일 부여」 = 적립 성격 기록에 <strong>적립일 + 365일</strong>을 소멸 예정일로 붙인다. <code>[구현]</code> db <code>EARN_TYPES</code></li>
+<li>⚠ 구현과 다른 곳: 환불 2종이 「참여 적립」(또는 분류 없음)으로 들어가 있다 → 프로토 수정 요청 #39 <code>[제안]</code></li>
+</ul>
+<hr />
+<h1 id="s3">3. 예약 적립</h1>
+<h2 id="s3-1">3-1. 구조</h2>
+<table>
+<thead>
+<tr>
+  <th>몫</th>
+  <th>값</th>
+  <th>지급</th>
+  <th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>기본 적립</td>
+  <td>예약 금액 × <strong>기본 요율 1%</strong>(어드민 설정 <code>draw_base_rate</code>) · 원 단위 버림</td>
+  <td><strong>체크아웃 + 7일</strong>에 확정 지급</td>
+  <td><code>[구현]</code> 계산 · <code>[PO 확정 2026-10-27]</code> 시점</td>
+</tr>
+<tr>
+  <td>뽑기 몫</td>
+  <td>예약 금액 × (예약처 요율 − 기본 요율)</td>
+  <td>고객이 뽑기를 해야 지급 (4절)</td>
+  <td><code>[구현]</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>예약처 요율이 기본 요율 이하이면 뽑기 몫이 없다 — 기본 적립만. <code>[구현]</code></li>
+<li>재원은 예약처 캐시백이므로 <strong>뽑기는 자사 추가 비용이 아니다.</strong> 뽑지 않은 몫은 지급되지 않는다. <code>[구현]</code> 어드민 9-1</li>
+</ul>
+<h2 id="s3-2">3-2. 상태 흐름 <code>[PO 확정 2026-10-27]</code></h2>
+<table>
+<thead>
+<tr>
+  <th>상태</th>
+  <th>언제</th>
+  <th>고객 화면</th>
+  <th>뽑기</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>적립예정</strong></td>
+  <td>예약 기록 ~ 체크아웃 + 7일 전</td>
+  <td>「적립예정」 배지 · &quot;적립예정일 YYYY.MM.DD&quot; · 아래 &quot;적립이 완료되면 추가 포인트를 받을 수 있어요&quot;</td>
+  <td>아직 불가</td>
+</tr>
+<tr>
+  <td><strong>적립완료</strong></td>
+  <td>체크아웃 + 7일 (일 1회 배치)</td>
+  <td>「적립완료」 배지 · [뽑기하고 최대 N% 더 받기]</td>
+  <td>가능 (1회)</td>
+</tr>
+<tr>
+  <td><strong>적립대기</strong></td>
+  <td>본인인증 전 회원의 예약</td>
+  <td>「적립대기」 배지 · &quot;🔒 본인인증하면 적립되고 뽑기를 할 수 있어요&quot;</td>
+  <td>인증 후</td>
+</tr>
+<tr>
+  <td><strong>취소</strong></td>
+  <td>예약처에서 취소</td>
+  <td><strong>목록에 보이지 않음</strong> (적립되지 않은 건)</td>
+  <td>—</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>적립예정일 = <strong>체크아웃일 + 7일</strong>. 이유: 예약처의 취소·노쇼 확정을 기다려야 이미 준 포인트를 회수하는 일이 없다. <code>[참고]</code> 메타서치 포인트 정책서 v0.1 · <code>[분석·의견]</code></li>
+<li>적립이 확정되면 알림 「NP 적립 완료」 1건 + 뽑기 안내. <code>[구현]</code> 시연 흐름의 알림</li>
+<li>⚠ <strong>구현물은 예약 즉시 「적립완료」로 지급한다</strong>(시연용 [예약 완료 처리하고 적립받기] 버튼 · 어드민 「예약 적립 만들기」). 화면 안내에는 이미 &quot;실제로는 체크아웃 +7일에 확정돼요&quot;라고 쓰고 있다 → 프로토 수정 요청 #37. 시연 버튼은 남기되 「적립예정」으로 쌓고 「체크아웃 처리」로 넘기는 방식 권장 <code>[분석·의견]</code></li>
+</ul>
+<h2 id="s3-3">3-3. 취소</h2>
+<table>
+<thead>
+<tr>
+  <th>경우</th>
+  <th>처리</th>
+  <th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>적립 확정 <strong>전</strong> 취소</td>
+  <td>적립하지 않음 · 목록에서 숨김</td>
+  <td><code>[구현]</code> 취소 건 숨김(PO 2026-09-21)</td>
+</tr>
+<tr>
+  <td>적립 확정 <strong>후</strong> 취소</td>
+  <td>미정 — 회수할지(기본 적립·뽑기 포함)</td>
+  <td>미결 R-P1 · <code>[참고]</code> 메타서치 v0.1은 회수(<code>booking_clawback</code>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="s3-4">3-4. 데이터 출처</h2>
+<ul>
+<li>실제 서비스: KAYAK 리포팅의 예약 데이터(예약처·금액·요율·<code>bookingStartDate</code>·<code>bookingEndDate</code>)로 자동으로 쌓인다. 시연은 화면·어드민에서 직접 만든다. <code>[구현]</code> 어드민 예약 적립 만들기 안내</li>
+</ul>
+<hr />
+<h1 id="s4">4. 예약 뽑기</h1>
+<table>
+<thead>
+<tr>
+  <th>항목</th>
+  <th>규칙</th>
+  <th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>대상</td>
+  <td><strong>적립완료</strong>된 예약 중 뽑기 몫이 있는 것 (요율 &gt; 기본 요율)</td>
+  <td><code>[구현]</code> <code>[PO 확정 2026-09-21]</code></td>
+</tr>
+<tr>
+  <td>횟수</td>
+  <td><strong>예약당 1회</strong> — 이미 뽑았으면 &quot;이미 뽑으셨어요&quot;</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>본인인증</td>
+  <td>필요 — 미인증이면 선물상자를 누를 때 본인인증 시트(참여형 1-6)</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>당첨액</td>
+  <td>뽑기 몫의 <strong>30~100% 중 무작위</strong>, <strong>10P 단위 버림</strong>, <strong>최소 10P</strong> (꽝 없음), 뽑기 몫을 넘지 않음</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>결정</td>
+  <td><strong>서버가 정한다</strong> (화면은 결과만 받음)</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>화면 표기</td>
+  <td>버튼 &quot;뽑기하고 <strong>최대 N%</strong> 더 받기&quot;(N = 요율 − 기본 요율) · 상자 안내 &quot;최대 N% · NP · 예약당 1회 · 꽝 없음&quot;</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>결과</td>
+  <td>적립 연출 &quot;🎉 뽑기 추가 NP&quot; + 「기본 적립 +NP」「뽑기 추가 +NP」 나눠 보기 · 카드 아래 「🎁 뽑기 추가 적립 +NP」 · 알림 「뽑기 NP 추가 적립」 1건</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>실패</td>
+  <td>서버 처리 실패 → 상자를 닫고 확인창 &quot;뽑지 못했어요&quot; + [다시 시도](상자를 다시 띄움)</td>
+  <td><code>[구현]</code> C-LAYER R3</td>
+</tr>
+<tr>
+  <td>확률 공시</td>
+  <td>확률은 보여주지 않고 「꽝 없음」만 — 공시 방식은 법무 검토</td>
+  <td>미결 R-P3</td>
+</tr>
+<tr>
+  <td><strong>뽑기 기한</strong></td>
+  <td><strong>적립완료일 + 30일</strong> — 그 안에 뽑지 않으면 뽑을 수 없고 <strong>뽑기 몫은 지급되지 않는다</strong>(기본 적립은 그대로 남는다). 어드민 설정 <code>draw_expire_days</code> <strong>기본 30</strong> · 0으로 두면 무기한</td>
+  <td><code>[PO 확정 2026-10-27]</code> · 프로토 수정 #42</td>
+</tr>
+<tr>
+  <td><strong>남은 기간 표시</strong></td>
+  <td>뽑기 버튼 줄에 <strong>남은 날짜를 함께 보여준다</strong> — <code>D-7</code> 꼴 · 당일은 <strong>「오늘까지」</strong> · 기한이 지나면 버튼 대신 <strong>「뽑기 기간이 지났어요」</strong>(누를 수 없음)</td>
+  <td><code>[PO 확정 2026-10-27]</code></td>
+</tr>
+<tr>
+  <td>기한 안내</td>
+  <td>상자 안내 줄에 <strong>「적립완료 후 30일 안에 뽑아 주세요」</strong> 추가</td>
+  <td><code>[PO 확정 2026-10-27]</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="s5">5. 포인트 내역 화면</h1>
+<h2 id="s5-1">5-1. 구성</h2>
+<table>
+<thead>
+<tr>
+  <th>영역</th>
+  <th>규칙</th>
+  <th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>들어오는 곳</td>
+  <td>마이페이지 › 포인트 내역 · 적립 알림을 눌렀을 때 · 친구 추천 「언제 적립됐는지 포인트 내역에서 보기」 · 예약(아웃링크) 완료 직후</td>
+  <td><code>[구현]</code> — 로그인 필요</td>
+</tr>
+<tr>
+  <td>맨 위</td>
+  <td>「포인트 내역」 · <strong>사용 가능 포인트</strong>(적립완료 합)</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>본인인증 전</td>
+  <td>목록 위 본인인증 섹션 — &quot;본인인증을 해야 포인트가 적립돼요&quot; · &quot;아래 「적립대기」 내역은 본인인증을 마치면 바로 적립돼요.&quot; · [본인인증하기]</td>
+  <td><code>[구현]</code> 참여형 1-6</td>
+</tr>
+<tr>
+  <td>필터</td>
+  <td>5-2</td>
+  <td><code>[제안]</code></td>
+</tr>
+<tr>
+  <td>목록</td>
+  <td>최신이 위 · 카드 한 장 = 원장 한 줄(예약은 호텔 한 건) · <strong>최근 300건까지</strong> 한 번에(쪽 나눔 없음) — 그보다 오래된 기록 보기는 미정</td>
+  <td><code>[구현]</code> · 미결 R-P6</td>
+</tr>
+<tr>
+  <td>맨 아래 안내</td>
+  <td>&quot;예약 적립은 체크아웃 후 확정되며, 예약이 취소되면 적립되지 않아요.&quot; · &quot;포인트는 적립일로부터 1년 뒤 소멸돼요.&quot;</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>빈 상태</td>
+  <td>&quot;해당 내역이 없어요. 호텔을 예약하고 첫 포인트를 받아보세요!&quot;</td>
+  <td><code>[구현]</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="s5-2">5-2. 필터 <code>[제안]</code> (PO 위임 2026-10-27)</h2>
+<table>
+<thead>
+<tr>
+  <th>필터</th>
+  <th>들어가는 기록</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>전체</td>
+  <td>모두</td>
+</tr>
+<tr>
+  <td>예약 적립</td>
+  <td><code>booking</code> · <code>booking_draw</code></td>
+</tr>
+<tr>
+  <td>참여 적립</td>
+  <td>출석·출석 보너스·퀴즈·친구 추천·혜택 · <strong>관리자 지급</strong></td>
+</tr>
+<tr>
+  <td><strong>사용·차감</strong></td>
+  <td>픽샵 교환 · 출금 신청 · 관리자 회수 · <strong>포인트 소멸</strong> · <strong>환불</strong>(신청 취소 환불 · 픽샵 구매 취소 환불 — 사용을 되돌린 것이라 같은 묶음, + 로 표시)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>이유: 사용자는 「어디서 생겼나」와 「어디로 나갔나」 둘로 본다. 소멸·회수는 사용이 아니지만 줄어든 것이라 함께 묶는다. <code>[분석·의견]</code></li>
+<li>구현과 다른 점: 필터 이름 「사용」 · 환불이 「참여 적립」 → #39</li>
+</ul>
+<h2 id="s5-3">5-3. 카드 표기</h2>
+<table>
+<thead>
+<tr>
+  <th>칸</th>
+  <th>규칙</th>
+  <th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>아이콘</td>
+  <td>예약 🏨 · 참여 🎯 — ⚠ 사용·차감도 🎯로 나온다 → 종류에 맞게</td>
+  <td><code>[구현]</code> · #40</td>
+</tr>
+<tr>
+  <td>제목</td>
+  <td>원장 이름(2절) · 예약은 <strong>호텔명</strong></td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>부제</td>
+  <td>예약 = &quot;예약처 · 금액원 · 요율%&quot; · 그 밖 = 기록 문구</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>일시</td>
+  <td>적립·사용 일시 &quot;YYYY.MM.DD HH:MM&quot; · 적립예정 = &quot;적립예정일 YYYY.MM.DD&quot;</td>
+  <td><code>[구현]</code> · 3-2</td>
+</tr>
+<tr>
+  <td>금액</td>
+  <td>적립 +NP · 사용·차감 −NP(빨강)</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>상태 배지</td>
+  <td>적립예정 · 적립완료 · 적립대기 · 차감대기 · 사용 — ⚠ 소멸·회수도 「사용」 → 「소멸」「회수」로</td>
+  <td><code>[구현]</code> · #40</td>
+</tr>
+<tr>
+  <td><strong>소멸 예정일</strong></td>
+  <td>적립 카드의 일시 줄 끝에 <strong>흐린 작은 글씨</strong>로 &quot;· 소멸 예정 YYYY.MM.DD&quot; — 색·굵기·배지로 강조하지 않는다. 적립예정·적립대기·사용 카드에는 없음</td>
+  <td><code>[PO 확정 2026-10-27]</code> · 구현 없음(#38)</td>
+</tr>
+<tr>
+  <td>예약 카드 아래 줄</td>
+  <td>상태별 — 적립예정 &quot;적립이 완료되면 추가 포인트를 받을 수 있어요&quot; / 적립완료 [뽑기하고 최대 N% 더 받기] / 뽑은 뒤 「🎁 뽑기 추가 적립 +NP」 / 적립대기 &quot;🔒 본인인증하면 적립되고 뽑기를 할 수 있어요&quot;</td>
+  <td><code>[구현]</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="s6">6. 소멸</h1>
+<table>
+<thead>
+<tr>
+  <th>항목</th>
+  <th>규칙</th>
+  <th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>기간</td>
+  <td><strong>적립일 + 1년</strong>(365일) — 적립 성격 기록마다 따로</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>순서</td>
+  <td>쓸 때 어느 적립분부터 쓰는지(먼저 쌓인 것부터 등)</td>
+  <td>미결 R-P5 — 구현은 기록별 소멸일만 둠</td>
+</tr>
+<tr>
+  <td>처리</td>
+  <td>소멸일이 지나면 남은 금액을 「포인트 소멸」(−)로 원장에 쌓는다</td>
+  <td>⚠ <strong>구현물에 소멸 처리가 없다</strong> → #41</td>
+</tr>
+<tr>
+  <td>사전 안내</td>
+  <td>30일 안에 사라질 포인트 — 서버가 합계를 계산하지만 화면에 쓰지 않는다</td>
+  <td><strong>알림으로 안내 — 매달 1일 「다음 달 소멸 예정」 + 임박 안내</strong> (PO 확정 2026-10-27 · <code>리워드_알림_정책서_v0.1</code> 3절) · 화면 표시는 하지 않음</td>
+</tr>
+<tr>
+  <td>화면</td>
+  <td>카드별 소멸 예정일(5-3) · 맨 아래 안내 한 줄</td>
+  <td><code>[PO 확정]</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="s7">7. 어드민</h1>
+<table>
+<thead>
+<tr>
+  <th>화면</th>
+  <th>규칙</th>
+  <th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>전체 포인트 내역</td>
+  <td>조회 전용 · 요약 3칸(총 적립 · 총 사용 · 현재 잔액) · 유형 묶음 칩 9개 + 전체 · 날짜 기준(적립일/소멸예정일) · 기간 · 검색 · 50건 쪽 나눔 · 열: # · 유형 · 회원 · 증감 · 잔액 · 내용 · 소멸예정 · 일시</td>
+  <td><code>[구현]</code> 어드민 제6조</td>
+</tr>
+<tr>
+  <td>예약 적립</td>
+  <td>요약 3칸(총 적립 · 뽑기로 지급 · 미수령 뽑기) · 칩(전체 · 뽑기 완료 · 미수령) · 찾기(숙박일/적립일 · 뽑기) · 열: # · 회원 · 호텔 · OTA · 예약금액 · 요율 · 기본적립 · 뽑기 · 총 적립 · 체크인/체크아웃 · 적립일시</td>
+  <td><code>[구현]</code> 어드민 제9조</td>
+</tr>
+<tr>
+  <td>상태</td>
+  <td>「적립완료」「취소」「적립대기」 + <strong>「적립예정」 추가</strong>(3-2) — 어드민 정책서 9-5 「적립예정 단계를 두지 않는다」와 달라짐</td>
+  <td><code>[PO 확정 2026-10-27]</code> → 어드민 정책서 갱신 필요</td>
+</tr>
+<tr>
+  <td>「총 적립·총 사용」 셈법</td>
+  <td>환불·소멸을 어디에 넣을지 — 대시보드 정책 재수립 때 함께</td>
+  <td>미결 (대시보드 A14)</td>
+</tr>
+<tr>
+  <td>시연용 예약 만들기</td>
+  <td>실제 서비스에서는 쓰지 않음(KAYAK 자동)</td>
+  <td><code>[구현]</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="s8">8. 예외</h1>
+<table>
+<thead>
+<tr>
+  <th>#</th>
+  <th>상황</th>
+  <th>처리</th>
+  <th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>E1</td>
+  <td>적립예정 중 예약 취소</td>
+  <td>적립 안 함 · 목록에서 숨김</td>
+  <td>3-3</td>
+</tr>
+<tr>
+  <td>E2</td>
+  <td>적립완료 후 예약 취소</td>
+  <td>미정</td>
+  <td>R-P1</td>
+</tr>
+<tr>
+  <td>E3</td>
+  <td>이미 뽑은 예약을 다시 뽑기</td>
+  <td>서버 거절 &quot;이미 뽑으셨어요&quot;</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>E4</td>
+  <td>적립완료가 아닌 예약을 뽑기</td>
+  <td>서버 거절 &quot;적립이 완료된 예약만 뽑을 수 있어요&quot;</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>E5</td>
+  <td>뽑기 몫이 없는 예약</td>
+  <td>뽑기 버튼 없음 · 서버 거절 &quot;이 예약은 뽑기 대상이 아니에요&quot;</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>E6</td>
+  <td>뽑기 처리 실패</td>
+  <td>확인창 + [다시 시도]</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>E7</td>
+  <td>본인인증 전 예약</td>
+  <td>적립대기 · 인증 순간 지급 (적립예정일이 지났으면 그때 적립완료)</td>
+  <td>참여형 1-6 · <code>[분석·의견]</code> 순서</td>
+</tr>
+<tr>
+  <td>E8</td>
+  <td>탈퇴</td>
+  <td>보유·적립예정·적립대기 모두 소멸</td>
+  <td>회원 5-2</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="s9">9. 미결</h1>
+<table>
+<thead>
+<tr>
+  <th>#</th>
+  <th>항목</th>
+  <th>현재</th>
+  <th>다음</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>R-P1</td>
+  <td>적립 확정 후 예약 취소</td>
+  <td>정책 없음</td>
+  <td>회수 여부·범위(뽑기 포함) — 메타서치 v0.1은 회수</td>
+</tr>
+<tr>
+  <td><del>R-P2</del></td>
+  <td><del>뽑기 가능 기간</del></td>
+  <td><strong>해소 2026-10-27 — 적립완료일 + 30일 · D-day 표시</strong>(4절)</td>
+  <td>남은 것: 만료 전 알림 시점·문구(알림 묶음에서 · R-P4와 함께)</td>
+</tr>
+<tr>
+  <td>R-P3</td>
+  <td>뽑기 확률 공시</td>
+  <td>「꽝 없음」만</td>
+  <td>법무 검토 (참여형 2-5 표시광고법 유의와 함께)</td>
+</tr>
+<tr>
+  <td><del>R-P4</del></td>
+  <td><del>소멸 사전 안내</del></td>
+  <td>✅ 2026-10-27 알림 정책서 3절로 확정(ㄷ안) — 임박 안내 방식만 R-N1</td>
+  <td>—</td>
+</tr>
+<tr>
+  <td>R-P5</td>
+  <td>사용 순서</td>
+  <td>정책 없음</td>
+  <td>먼저 쌓인 적립분부터 쓰는지 — 소멸 계산과 함께</td>
+</tr>
+<tr>
+  <td>R-P6</td>
+  <td>오래된 내역 보기</td>
+  <td>최근 300건만</td>
+  <td>기간 선택·더보기 등</td>
+</tr>
+<tr>
+  <td>—</td>
+  <td>어드민 정책서 9-5 갱신</td>
+  <td>「적립예정 없음」</td>
+  <td>이 문서 3-2 기준으로 갱신(대화창4·1)</td>
+</tr>
+</tbody>
+</table>
+
+</main></body></html>

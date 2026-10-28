@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>F-AUTH 가입·로그인·본인인증 — 픽콕 리워드 화면기획서</title>
+<link rel="stylesheet" href="../wf-reward.css">
+<!-- 근거: 구현물 pickoq_demo static/app.js 가입·로그인 시트(openAuth~doJoin) · 본인인증 시트(openCert~certVerify) · api_auth.py (2026-10-27 수정분)
+     캡처는 화면 상태만 바꿔 찍었다 — [가입 완료]·본인인증 [확인]은 누르지 않음. 시연용 코드 안내(.au-demo)는 숨김.
+     간편 가입(카카오·네이버)·계정 통합은 PO 결정(2026-10-27)으로 다음 단계 — 이 페이지에 없음 -->
+</head>
+<body data-key="f_auth" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page">
+
+<div class="top"><span class="sid">F-AUTH</span><h1>가입·로그인·본인인증</h1></div>
+<div class="meta">
+  <span>기준 정책서 <b><a href="../policy/pol_member.html#s1">리워드 회원 v0.2 · 1·2절</a></b> · <a href="../policy/pol_earn.html#s1-6">참여형 적립 v0.8 · 1-6절</a></span>
+  <span>기준 구현물 <b>pickoq_demo</b> <code>static/app.js</code> · <code>api_auth.py</code> (2026-10-27)</span>
+  <span>캡처 <b>2026-10-27</b> · 390×844</span>
+  <span>최종수정 <b>2026-10-27</b></span>
+</div>
+<p class="lead">이메일 하나로 <b>가입과 로그인을 같은 시트에서</b> 처리합니다. 비밀번호는 없고 이메일로 받은 6자리 코드로 확인합니다. 가입 때는 본인인증을 받지 않고, <b>처음 포인트를 받으려 할 때</b> 본인인증 시트가 따로 뜹니다(이 페이지 S6). 가입을 마친 직후에는 <b>선택으로</b> 본인인증을 권유합니다(S5).</p>
+
+<div class="box">
+  <h3>읽는 법</h3>
+  <div class="legend">
+    <span><b style="color:var(--zone)">붉은 점선 상자 A~D</b> 시트의 영역 — 단계가 바뀌어도 자리는 같음</span>
+    <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능 — 마우스를 올리면 설명과 함께 강조</span>
+    <span>「N-N절」을 누르면 그 절만 팝업으로 열립니다</span>
+    <span><span class="tag ok">확정</span> 정책서 근거 있음</span>
+    <span><span class="tag proto">프로토 기준</span> 정책서에 아직 없음</span>
+    <span><span class="tag open">미결</span> 바뀔 수 있음</span>
+  </div>
+</div>
+
+<!-- 변경이력: 개발자 공유 이후부터 노출 — 내용은 계속 기록 -->
+<div class="box hist"><h3>변경이력</h3>
+  <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
+    <tr><td>v0.1</td><td>2026-10-27</td><td>최초 작성 — 캡처 17장(가입 직후 권유 팝업 P92 포함), 리워드 회원 정책서 v0.1 기준</td></tr></table></div>
+
+<div class="sec-policy">
+  <h3>⚙ 공통 정책 — 가입·로그인·본인인증 전체</h3>
+  <ul>
+    <li><b>로그인 수단은 이메일 + 인증코드 하나</b>입니다. 비밀번호가 없고, 가입과 로그인을 따로 고르지 않습니다 — 이메일을 보내면 <b>서버가 회원인지 판단</b>해 다음 단계를 정합니다. (<a href="../policy/pol_member.html#s1-2">1-2절</a>)</li>
+    <li><b>가입 때 본인인증을 받지 않습니다.</b> 가입 직후 이름은 이메일 앞부분(예: newbie@… → 「newbie」)이고, 본인인증을 하면 실명으로 바뀝니다. (<a href="../policy/pol_member.html#s0">0절</a> · <a href="../policy/pol_earn.html#s1-6">참여형 1-6절</a>)</li>
+    <li><b>계정은 [가입 완료]를 누른 순간 만들어집니다.</b> 약관에 동의하기 전에 시트를 닫으면 아무것도 남지 않습니다. (<a href="../policy/pol_member.html#s1-3">1-3절</a>)</li>
+    <li>로그인은 <b>30일</b> 유지됩니다. 로그인·가입이 끝나면 <b>보던 화면에 그대로</b> 남습니다. <span class="tag open">미결</span> 앱 출시 때 무기한 여부 R-M7 (<a href="../policy/pol_member.html#s1-4">1-4절</a>)</li>
+    <li>시트는 아래에서 올라오는 <b>단계형 바텀시트</b>입니다 — 배경을 눌러도 닫히지 않고 [✕]로만 닫습니다(<a href="../common/c_layer.html#L-SHEET-STEP">C-LAYER L-SHEET-STEP</a>).</li>
+    <li><b>카카오·네이버 간편 가입과 계정 통합은 다음 단계</b>에서 다룹니다(PO 2026-10-27). <span class="tag open">미결</span> R-M1·R-M2</li>
+  </ul>
+  <div class="src">기준: 리워드 회원 정책서 v0.2 · 0 · 1-1~1-4 · 2절 / 참여형 적립 v0.8 · 1-6절</div>
+</div>
+
+<nav class="toc" aria-label="이 페이지 바로가기">
+  <span class="toc-lb">바로가기</span>
+  <a href="#flow"><b>①</b>화면 흐름·데이터</a>
+  <a href="#layout"><b>②</b>시트 구성</a>
+  <span class="toc-sep"></span>
+  <a class="z" href="#zS1"><b>S1</b>이메일</a>
+  <a class="z" href="#zS2"><b>S2</b>인증코드</a>
+  <a class="z" href="#zS3"><b>S3</b>약관·추천코드</a>
+  <a class="z" href="#zS4"><b>S4</b>가입 완료</a>
+  <a class="z" href="#zS5"><b>S5</b>본인인증 권유(선택)</a>
+  <a class="z" href="#zS6"><b>S6</b>본인인증</a>
+  <a class="z" href="#zS7"><b>S7</b>간편 로그인</a>
+  <a class="z" href="#zS8"><b>S8</b>계정 통합</a>
+  <span class="toc-sep"></span>
+  <a href="#over"><b>④</b>화면 위에 뜨는 것</a>
+  <a href="#exc">예외 케이스</a>
+</nav>
+
+<!-- ═════ ① 화면 흐름 · 데이터 ═════ -->
+<section class="sec major" id="flow">
+  <div class="sec-hd"><h2>① 화면 흐름 · 데이터</h2></div>
+  <div class="box">
+    <div class="flow"><i>들어오는 곳:</i><span>홈·마이페이지 [로그인]</span><span>비로그인이 참여 버튼</span><span>초대 링크 <code>/signup?ref=코드</code></span></div>
+    <div class="flow" style="margin-top:8px"><span>S1 이메일</span><i>→</i><span>[인증코드 받기]</span><i>→</i><span>S2 인증코드 6자리</span><i>→ 기존 회원 →</i><span>로그인 완료 · 시트 닫힘</span></div>
+    <div class="flow" style="margin-top:8px"><i>신규 회원:</i><span>S2</span><i>→</i><span>S3 약관·추천코드</span><i>→</i><span>[가입 완료]</span><i>→</i><span>S4 환영 (1.7초)</span><i>→</i><span>S5 본인인증 권유 (선택)</span><i>→</i><span>[다음에 하기] 보던 화면 / [본인인증하기] S6</span></div>
+    <div class="flow" style="margin-top:8px"><i>간편 로그인:</i><span>S1 [카카오·네이버로 시작하기]</span><i>→</i><span>S7 「인증 중…」 → 소셜 로그인 화면(흉내) · 이메일 입력</span><i>→</i><span>넣은 이메일로 네 갈래 — 통합(S8) · 연결 · 기존 계정 로그인 + 자동 연결 · 신규 가입(S3)</span></div>
+    <div class="flow" style="margin-top:8px"><i>네 갈래 · 연결 해제 흐름도:</i><span><a href="f_acc.html#flowchart">F-ACC ⑥ 로그인 수단 흐름도</a></span></div>
+    <div class="flow" style="margin-top:8px"><i>본인인증 (로그인 · 미인증):</i><span>첫 적립 · 홈 띠 · 계정관리</span><i>→</i><span>S6 통신사 → 정보 → 인증번호</span><i>→</i><span>하려던 참여를 이어서</span></div>
+  </div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>요청</th><th>언제</th><th>받는 값 (화면에 쓰는 것)</th></tr>
+    <tr><td><code>POST /api/auth/send-code</code></td><td>S1 [인증코드 받기] — <code>email</code></td><td><code>is_member</code> 기존 회원인지 · (시연) 안내용 코드</td></tr>
+    <tr><td><code>POST /api/auth/verify</code></td><td>S2 6자리가 차는 순간 — <code>email</code> · <code>code</code></td><td>기존 회원: <code>user</code> + 로그인 쿠키(30일) / 신규: <code>need_signup</code></td></tr>
+    <tr><td><code>POST /api/auth/signup</code></td><td>S3 [가입 완료] — <code>email</code> · <code>marketing_agree</code></td><td><code>user</code>(임시 이름 = 이메일 앞부분) + 로그인 쿠키</td></tr>
+    <tr><td><code>POST /api/auth/invite-code</code></td><td>가입 직후, 조회를 마친 추천코드가 있을 때</td><td>지급 결과 · 본인인증 전이면 적립대기 (<a href="f_invite.html#entry">F-INV ⑤</a>)</td></tr>
+    <tr><td><code>POST /api/auth/merge</code></td><td>S8 [통합하기] — 로그인한 상태일 때만 · <code>gone_email</code> · <code>gone_joined</code> · <code>point</code> · <code>waiting</code> · <code>social</code></td><td>통합 기록 1건(어드민 5-5) + 이관 포인트를 원장에 「계정 통합 이관」 한 줄. 사라지는 계정을 실제로 지우지는 않음(시연)</td></tr>
+    <tr><td><code>POST /api/auth/phone</code></td><td>S6 본인인증 [확인] — <code>phone</code> · <code>name</code></td><td><code>released</code> 지급된 적립대기 금액 · 이름이 실명으로 바뀜</td></tr>
+    <tr><td colspan="3">오류: 이메일 형식 → "이메일 주소를 확인해 주세요" · 코드 6자리 아님 → "인증번호 6자리를 입력해 주세요" · 이미 가입 → "이미 가입된 이메일이에요" · 가입 인원 초과(시연 설정) → 거절 · 휴대폰 번호 → "휴대폰 번호를 확인해 주세요"</td></tr>
+  </table></div>
+  <div class="note open"><h4>시연용으로 다르게 둔 것 — 개발 대상</h4>인증코드는 실제로 보내지 않고 <b>아무 6자리나 통과</b>합니다. 유효시간 5분·다시 받기·시도 횟수 제한, 본인인증의 실제 본인확인기관 연동은 개발해야 합니다(<a href="../policy/pol_member.html#s1-2">1-2절</a> · <a href="../policy/pol_earn.html#s1-6">참여형 1-6 개발 요건</a>).</div>
+</section>
+
+<!-- ═════ ② 시트 구성 ═════ -->
+<section class="sec major" id="layout">
+  <div class="sec-hd"><span class="sid">F-AUTH-L</span><h2>② 시트 구성</h2></div>
+  <p class="sec-sub">S1 이메일 단계입니다. <b>모든 단계가 같은 네 칸(A~D)</b>을 쓰고, 단계마다 안의 내용만 바뀝니다.</p>
+  <div class="two-col unit">
+    <div><figure class="shot" data-id="F-AUTH-L" data-base="../"></figure></div>
+    <div>
+      <div class="box wrapx" style="margin-bottom:12px"><table class="t">
+        <tr><th>영역</th><th>들어가는 요소</th><th>배치·동작</th><th>단계에 따라 바뀌는 것</th></tr>
+        <tr class="zrow" data-n="A"><td><b>A</b> 손잡이·닫기</td><td>위쪽 회색 막대 · [✕]</td><td>시트 맨 위 · [✕]는 오른쪽</td><td>S4 가입 완료에서는 [✕] 없음</td></tr>
+        <tr class="zrow" data-n="B"><td><b>B</b> 제목·안내</td><td>굵은 제목 · 회색 안내 한두 줄</td><td>왼쪽 정렬</td><td>단계마다 문구</td></tr>
+        <tr class="zrow" data-n="C"><td><b>C</b> 입력</td><td>입력칸 · 6자리 칸 · 체크 목록 · 통신사 버튼</td><td>가로 꽉 채움</td><td>단계마다 종류</td></tr>
+        <tr class="zrow" data-n="D"><td><b>D</b> 버튼·보조</td><td>검은 큰 버튼 · 보조 안내 상자 · 글자 버튼 · (S1) 「또는」 + 카카오·네이버 버튼</td><td>맨 아래</td><td>조건이 맞아야 버튼이 켜짐(회색 → 검정)</td></tr>
+      </table></div>
+      <div class="cn"><div class="cn-hd">화면 공통 규칙</div>
+        <ul><li>뒤 화면(홈 등) 위에 어둡게 깔리고 아래에서 올라옵니다 — <b>처음 열 때 한 번만</b> 올라오는 움직임(체크할 때마다 다시 올라오지 않음).</li>
+            <li>배경을 눌러도 닫히지 않습니다. [✕] → 확인창(④ X1·X2).</li>
+            <li>버튼을 누르면 「보내는 중…」「가입하는 중…」「확인 중…」으로 바뀌고 잠깁니다(<a href="../common/c_layer.html#R7">R7</a>).</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ ③ 단계별 상세 ═════ -->
+<section class="sec major" id="detail" style="margin-bottom:0">
+  <div class="major-hd"><h2>③ 단계별 상세 — 기능 · 정의 · 정책</h2></div>
+  <p class="sec-sub">단계마다 상태별 캡처를 나란히 놓았습니다. 같은 단계 안에서는 상태가 달라도 같은 번호가 같은 요소입니다.</p>
+</section>
+
+<section class="sec zsec" id="zS1">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">S1</span><h2>이메일</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-AUTH-A1 <small>처음</small></div><figure class="shot" data-id="F-AUTH-A1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-AUTH-A2 <small>이메일 입력</small></div><figure class="shot" data-id="F-AUTH-A2" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「회원가입 / 로그인」</div><ul><li>가입인지 로그인인지 고르지 않게 한 제목입니다.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>"이메일만 있으면 돼요. 비밀번호는 없어요."</div></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>이메일 입력칸</div>
+      <ul><li>앞뒤 빈칸은 지웁니다. 서버에서는 소문자로 바꿔 비교합니다.</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>[인증코드 받기]</div>
+      <ul><li>이메일 형식(<code>□@□.□</code>)이 맞아야 켜집니다(A1 회색 → A2 검정).</li>
+          <li>누르면 「보내는 중…」 → 서버가 회원인지 알려 주고 S2로 넘어갑니다.</li></ul>
+      <div class="data"><b>데이터</b> → <code>POST /api/auth/send-code</code> ← <code>is_member</code></div></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>"시연용이에요. 실제 카카오·네이버 로그인은 연결되어 있지 않아요."</div>
+      <div class="case">간편 로그인은 <b>실제로 연동하지 않는 시연용 흉내</b>입니다 — 카카오 심사·CI 권한 조건 때문(<a href="../policy/pol_member.html#s1-5">1-5절</a> · <span class="tag open">미결</span> R-M9 실연동 시점)</div></div>
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>[✕]</div><ul><li>이 단계에서는 확인창 "닫을까요?"(④ X1).</li></ul></div>
+    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>「또는」 구분선</div></div>
+    <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>[카카오로 시작하기]</div></div>
+    <div class="cn" data-n="9"><div class="cn-hd"><span class="no">9</span>[네이버로 시작하기]</div>
+      <ul><li>이메일 칸 아래 가로 2개. 누르면 S7 간편 로그인(소셜 로그인 화면 흉내)으로 갑니다.</li></ul>
+      <div class="rule"><b>근거</b> 간편 로그인 위치·표기 (PO 확정 2026-10-27 · <a href="../policy/pol_member.html#s1-5">회원 1-5절</a>)</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zS2">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">S2</span><h2>인증코드</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-AUTH-B1 <small>처음</small></div><figure class="shot" data-id="F-AUTH-B1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-AUTH-B2 <small>입력 중</small></div><figure class="shot" data-id="F-AUTH-B2" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-AUTH-B3 <small>틀림</small></div><figure class="shot" data-id="F-AUTH-B3" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「인증코드를 입력해 주세요」</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>"{이메일}로 6자리 코드를 보냈어요. 유효시간 5분"</div>
+      <div class="rule"><b>근거</b> 유효시간 5분 · 다시 받기 횟수 제한 없음 (<a href="../policy/pol_member.html#s1-2">1-2절</a>)</div></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>6자리 칸</div>
+      <ul><li>숫자만 들어갑니다. 다음에 넣을 칸이 파란 테두리로 표시됩니다(B2).</li>
+          <li><b>6자리가 차면 버튼 없이 자동으로 확인</b>합니다.</li>
+          <li>기존 회원이면 시트가 닫히고 토스트 "로그인 완료 · 내 저금통이 열렸어요" — 보던 화면에 그대로 남습니다.</li>
+          <li>신규 회원이면 S3으로 넘어갑니다.</li></ul>
+      <div class="data"><b>데이터</b> → <code>POST /api/auth/verify</code> ← <code>need_signup</code> / <code>user</code></div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>[인증코드 다시 받기]</div><ul><li>새 코드를 보내고 칸을 비웁니다. 횟수 제한 없음.</li></ul></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>틀렸을 때 빨간 글씨</div>
+      <ul><li>"인증코드가 일치하지 않아요. 다시 입력해 주세요." — 입력한 칸을 <b>모두 비웁니다</b>.</li></ul>
+      <div class="case">코드가 만료되거나 여러 번 틀리면 어떻게 할지는 구현물에 없습니다(시연은 아무 6자리 통과) — 개발 시 문구·횟수 결정 <span class="tag open">미결</span></div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zS3">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">S3</span><h2>약관·추천코드 (신규 회원)</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-AUTH-C1 <small>처음</small></div><figure class="shot" data-id="F-AUTH-C1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-AUTH-C2 <small>필수 동의 완료</small></div><figure class="shot" data-id="F-AUTH-C2" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「거의 다 됐어요」</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>"약관에 동의하면 가입이 끝나요."</div>
+      <div class="case">캡처는 앞에 「님,」이 붙어 있습니다 — 본인인증을 가입에서 빼면서 이름 자리가 빈 흔적입니다. 이름 없이 이 문장만 씁니다.</div></div>
+    <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>「✓ 휴대폰 본인인증 완료 · 번호」 — <b>삭제</b></div>
+      <ul><li>가입 때 본인인증을 받지 않으므로 이 줄은 <b>두지 않습니다</b>. 캡처에 남아 있는 것은 구현물 흔적입니다.</li></ul>
+      <div class="rule"><b>근거</b> 가입 때 본인인증 없음 (<a href="../policy/pol_earn.html#s1-6">참여형 1-6절</a>)</div></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>[필수] 서비스 이용약관 동의</div>
+      <ul><li>줄 어디를 눌러도 체크/해제. 오른쪽 [보기] = 약관 전문(지금은 토스트로 위치 안내 — 개발 시 전문 화면).</li></ul></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>[필수] 개인정보 수집·이용 동의</div></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>[선택] 마케팅 정보 수신 동의</div>
+      <ul><li>고른 값이 그대로 계정의 마케팅 수신 설정이 됩니다.</li></ul>
+      <div class="rule"><b>근거</b> 필수 2 · 선택 1 · 동의 시점에 계정 생성 (<a href="../policy/pol_member.html#s1-3">1-3절</a>)</div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>「🎁 친구 추천코드가 있나요?」</div>
+      <ul><li>접힌 칸 · 선택 입력. 펼침·[조회]·자동 채움 규칙은 <a href="f_invite.html#entry">F-INV ⑤ 코드 입력하는 곳</a>.</li></ul></div>
+    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>[가입 완료]</div>
+      <ul><li><b>필수 2개를 체크</b>해야 켜집니다(C1 회색 → C2 검정). 추천코드를 적었다면 [조회]까지 마쳐야 켜집니다.</li>
+          <li>누르면 「가입하는 중…」 → 계정 생성 → (추천코드가 있으면) 코드 적용 → S4.</li>
+          <li>추천코드로 포인트를 받았으면 S4 전에 적립 연출이 먼저 나옵니다. 본인인증 전이라 적립대기가 되면 연출 없이 넘어갑니다.</li></ul>
+      <div class="data"><b>데이터</b> → <code>POST /api/auth/signup</code> → (선택) <code>POST /api/auth/invite-code</code></div>
+      <div class="case"><b>실패하면</b> 확인창 "가입하지 못했어요" + [다시 시도](④ X3). 계정은 만들어졌는데 추천코드 적용만 실패했으면 [다시 시도]는 코드만 다시 적용합니다.</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zS4">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">S4</span><h2>가입 완료</h2><span class="tag ok">확정</span></div>
+  <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-AUTH-D1</div><figure class="shot" data-id="F-AUTH-D1" data-base="../"></figure></div></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>축하하는 공작새</div></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>「가입을 환영해요!」</div></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>"이제 포인트를 모을 수 있어요"</div>
+        <ul><li>추천코드로 받았으면 "추천코드로 <b>1,000P</b>가 저금통에 들어왔어요".</li></ul></div>
+      <div class="cn"><div class="cn-hd">동작</div>
+        <ul><li>[✕]가 없고 <b>약 1.7초 뒤 저절로 닫힙니다</b> → 토스트 "회원가입을 완료했어요 · 내 저금통이 열렸어요"(추천코드로 받았으면 "회원가입 완료 · 추천코드로 1,000P 받았어요").</li>
+            <li>보던 화면에 그대로 남습니다. 가입한 회원은 아직 본인인증 전이므로 홈에 본인인증 안내 띠가 나옵니다(<a href="f_home.html#zV">F-HOME V</a>).</li>
+            <li><b>이어서 S5 본인인증 권유</b>가 뜹니다. 단, 출석 카드 [로그인하고 출석하기] · 퀴즈 [로그인하고 시작하기]로 가입했으면 <b>띄우지 않습니다</b> — 그 버튼을 다시 누를 때 본인인증을 묻기 때문에 두 번 묻지 않게.</li></ul></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zS5">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">S5</span><h2>본인인증 권유 — 가입 직후 (선택)</h2><span class="tag ok">확정</span></div>
+  <p class="sec-sub">가입의 <b>마지막 단계</b>입니다. 본인인증은 <b>하지 않아도 가입이 끝난 상태</b>이고, 여기서는 할지 말지만 고릅니다. 시트가 아니라 확인창으로 뜹니다(④ <a href="#over">X4</a>와 같은 화면).</p>
+  <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-AUTH-X4 <small>가입 직후 권유</small></div><figure class="shot" data-id="F-AUTH-X4" data-base="../"></figure></div></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>"본인인증을 해야 포인트 적립이 가능해요" — "지금 하지 않아도 돼요. 적립할 때 다시 안내해 드려요."</div>
+        <ul><li>S4 가입 완료가 닫힌 <b>직후</b> 한 번 뜹니다. 추천코드를 넣고 가입해도 문구는 같습니다.</li></ul></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>[다음에 하기]</div>
+        <ul><li>닫히고 보던 화면 그대로. 가입은 이미 끝났으므로 아무것도 취소되지 않습니다.</li>
+            <li>나중에 본인인증하는 곳: 첫 적립 때(출석 [받기]·퀴즈 열기 등) · 홈 안내 띠 · 계정관리 · 포인트 내역.</li></ul></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>[본인인증하기]</div>
+        <ul><li>본인인증 시트(S6)가 열립니다 → 마치면 적립대기가 있으면 지급하고 닫힘.</li>
+            <li>시트에서 [✕]를 누르면 "언제든 다시 할 수 있어요…" 확인창(④ X5).</li></ul></div>
+      <div class="cn"><div class="cn-hd">띄우지 않는 경우</div>
+        <ul><li>출석 카드 [로그인하고 출석하기] · 퀴즈 화면 [로그인하고 시작하기]로 가입했을 때 — 그 버튼을 다시 누를 때 본인인증을 묻기 때문에 두 번 묻지 않게.</li>
+            <li>기존 회원 로그인 · 이미 본인인증한 회원.</li></ul>
+        <div class="rule"><b>근거</b> 가입 직후 권유 (PO 확정 2026-10-27 · <a href="../policy/pol_member.html#s1-2">회원 1-2절</a> · <a href="../policy/pol_earn.html#s1-6">참여형 1-6절</a>)</div></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zS6">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">S6</span><h2>본인인증 — 첫 적립 때 · 권유 수락</h2><span class="tag ok">확정</span></div>
+  <p class="sec-sub">로그인했지만 본인인증 전인 회원이 <b>출석 [받기] · 퀴즈 열기 · 혜택 나가기 전 · 예약 뽑기</b>를 하거나, 가입 직후 권유(S5)·홈 안내 띠·계정관리·포인트 내역의 [본인인증하기]를 누르면 뜹니다. 같은 시트 틀(A~D)을 씁니다.</p>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-AUTH-E1 <small>① 통신사</small></div><figure class="shot" data-id="F-AUTH-E1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-AUTH-E2 <small>② 정보 입력</small></div><figure class="shot" data-id="F-AUTH-E2" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-AUTH-E3 <small>③ 인증번호</small></div><figure class="shot" data-id="F-AUTH-E3" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>제목 — 「휴대폰 본인인증」 → 「{통신사} 본인인증」 → 「인증번호 입력」</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>안내 문구</div>
+      <ul><li>① "포인트를 받으려면 본인인증이 한 번 필요해요. 통신사를 선택해 주세요." — 가입 때가 아니라 지금 묻는 이유를 첫 줄에 씁니다.</li>
+          <li>② "주민등록상 정보와 같아야 해요." · ③ "{번호}로 문자를 보냈어요."</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>① 통신사 4개 / ② 이름 / ③ 인증번호 6자리</div>
+      <ul><li>①은 누르면 바로 ②로. ②의 생년월일·번호는 숫자만(6자리 · 최대 11자리).</li></ul></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>① 보조 안내 / ② 생년월일 / ③ [확인]</div>
+      <ul><li>① "본인확인기관을 통해 진행돼요. 픽콕은 인증 결과만 받아요."</li>
+          <li>③ [확인]은 6자리가 차야 켜지고, 누르면 「확인 중…」.</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>① [✕] / ② 휴대폰 번호</div>
+      <ul><li>[✕] → "본인인증을 그만둘까요?" 확인창. 안내 문구는 <b>어디서 열었는지</b>에 따라 둘 — 적립 버튼에서 열었으면 "지금 닫으면 이번 참여는 하지 않은 상태로 남아요."(<a href="f_attend.html#over">F-ATT X5</a>), 그 밖(권유 팝업·홈 띠·계정관리·포인트 내역)은 "언제든 다시 할 수 있어요. 인증 전에 받은 포인트는 적립대기로 남아요."(④ X5).</li></ul></div>
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>② [인증번호 받기]</div><ul><li>이름·생년월일 6자리·번호 10자리 이상을 모두 채워야 켜집니다.</li></ul></div>
+    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>② "입력하신 정보는 본인확인기관에만 전달돼요."</div></div>
+    <div class="cn"><div class="cn-hd">인증을 마치면</div>
+      <ul><li>이름이 <b>실명으로</b> 바뀌고 번호가 계정에 저장됩니다(계정관리에 「✓ 인증완료」).</li>
+          <li>적립대기가 있었으면 적립 연출 "NP 적립! · 적립대기 포인트가 지급됐어요", 없었으면 토스트 "본인인증이 완료됐어요" → <b>하려던 참여를 이어서</b> 처리.</li>
+          <li>알림함에 "본인인증이 완료됐어요" 1건(적립대기가 지급됐으면 「적립대기 포인트 +NP」도 1건).</li>
+          <li>서버 처리 실패 → 확인창 "본인인증을 마치지 못했어요" + [다시 시도].</li></ul>
+      <div class="data"><b>데이터</b> → <code>POST /api/auth/phone</code> ← <code>released</code></div>
+      <div class="case">②·③은 실제로는 <b>본인확인기관이 띄우는 외부 화면</b>입니다. 픽콕이 만드는 것은 ① 진입 안내와 결과 처리입니다(시연은 아무 6자리 통과).</div>
+      <div class="rule"><b>근거</b> 본인인증 시점·적립대기·이어서 참여 (<a href="../policy/pol_earn.html#s1-6">참여형 1-6절</a>) · 시트 단계·마친 뒤 처리 (<a href="../policy/pol_member.html#s2-2">2-2</a> · <a href="../policy/pol_member.html#s2-3">2-3절</a>)</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zS7">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">S7</span><h2>간편 로그인 — 카카오·네이버 (시연용 흉내)</h2><span class="tag ok">확정</span></div>
+  <p class="sec-sub">실제 카카오·네이버 로그인은 연결하지 않습니다. 버튼 위치와 흐름만 보여 주려고, <b>소셜 로그인 화면을 흉내 내 이메일(아이디)을 직접 넣게</b> 했습니다 — 넣은 이메일에 따라 결과가 갈리므로 시연 중에 바꿔 보일 수 있습니다.</p>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-AUTH-G1 <small>인증 중 (약 1초)</small></div><figure class="shot" data-id="F-AUTH-G1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-AUTH-G2 <small>소셜 로그인 화면 (흉내)</small></div><figure class="shot" data-id="F-AUTH-G2" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-AUTH-G3 <small>이메일 입력</small></div><figure class="shot" data-id="F-AUTH-G3" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>소셜 아이콘</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>「{카카오/네이버} 인증 중…」 → 「{카카오/네이버} 로그인」</div>
+      <ul><li>약 1초 뒤 저절로 다음 화면.</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>안내 — "{OO} 화면으로 이동해 인증을 진행해요." / "{OO} 계정 이메일(아이디)을 입력해 주세요."</div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>이메일 입력칸</div></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>[계속]</div>
+      <ul><li>이메일 형식이 맞아야 켜집니다(G2 회색 → G3 검정). 누르면 <b>넣은 이메일로 네 갈래</b>로 나뉩니다.</li></ul></div>
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>시연 안내</div>
+      <ul><li>"시연용 화면이에요. 실제 OO 로그인 창이 아니에요." + 어떤 주소가 어떤 결과인지 한 줄(내 계정 → 연결 · old.pickoq@naver.com → 통합 · 그 밖 → 신규 가입).</li></ul></div>
+  </div></div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>넣은 이메일</th><th>결과</th></tr>
+    <tr><td>픽콕의 <b>다른 회원</b></td><td><b>S8 계정 통합 확인</b></td></tr>
+    <tr><td><b>내 계정</b>과 같음 (로그인 중)</td><td><b>연결</b> — 토스트 "OO가 연결됐어요"</td></tr>
+    <tr><td><b>이미 가입된 주소</b> (로그인 전) — 대표 이메일 또는 <b>통합 때 남긴 옛 이메일</b></td><td>그 계정으로 <b>로그인 + 소셜 자동 연결</b> — 통합이 아님(합칠 상대 없음). 연결을 해제했던 소셜로 다시 들어온 경우도 여기(<a href="../policy/pol_member.html#s3-5">3-5절</a>)<div class="case" style="margin-top:6px">구현은 옛 이메일을 아직 「다른 회원」으로 보고 통합 확인을 다시 띄웁니다 <span class="tag proto">프로토 수정 #49</span></div></td></tr>
+    <tr><td>픽콕에 <b>없음</b></td><td>로그인 중 → <b>연결</b> / 로그인 전 → <b>신규 가입</b>(S3 약관부터 · 본인인증은 첫 적립 때)</td></tr>
+  </table></div>
+  <div class="rule" style="margin-top:8px"><b>근거</b> 간편 로그인 · 네 갈래 (PO 확정 2026-10-27 · <a href="../policy/pol_member.html#s1-5">회원 1-5절</a>) · 그림으로 보기 <a href="f_acc.html#flowchart">F-ACC ⑥ 흐름도</a></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zS8">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">S8</span><h2>계정 통합 — 확인 · 완료</h2><span class="tag ok">확정</span></div>
+  <p class="sec-sub">소셜에 넣은 이메일이 <b>픽콕의 다른 회원</b>일 때 뜹니다. 로그인한 회원이 계정관리에서 [연결]을 누른 경우에는 <b>재인증(<a href="f_acc.html#over">F-ACC R3</a>)을 먼저</b> 거칩니다. <b>되돌릴 수 없고</b>, 고객·어드민 어디에도 「통합 해제」는 없습니다.</p>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-AUTH-H1 <small>확인 · 체크 전</small></div><figure class="shot" data-id="F-AUTH-H1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-AUTH-H2 <small>확인 · 체크 후</small></div><figure class="shot" data-id="F-AUTH-H2" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-AUTH-H3 <small>통합 완료</small></div><figure class="shot" data-id="F-AUTH-H3" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「계정을 통합할까요?」 / 완료 ✓ (H3)</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>"{OO}가 이미 다른 픽콕 계정에 연결돼 있어요." / 「계정을 통합했어요」 (H3)</div></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>대표 이메일 · 합쳐질 계정 (각 가입일)</div>
+      <ul><li><b>대표 계정 = 먼저 가입한 계정</b> — 묻지 않습니다. 합쳐지는 계정의 이메일은 <b>로그인 별칭</b>으로 남아 그 이메일로도 들어올 수 있습니다.</li>
+          <li>H3: 대표 이메일 · 합친 뒤 포인트.</li></ul>
+      <div class="case">구현은 대표 계정 칸에 <b>로그인한 계정이 아니라 고정값</b>(dreamyuns@allmytour.com · 2026.01.15)을 보여 주고, 완료 화면의 합쳐진 이메일도 소셜 고정 더미를 씁니다(카카오면 빈칸) <span class="tag proto">프로토 수정 #50</span></div></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>포인트 — 적립 완료 · 적립 예정 · 합계 / 안내 3줄 (H3)</div>
+      <ul><li><b>전액 합산</b>. 「적립 예정」 줄 = 양쪽의 적립예정. 「※ 각 포인트 소멸일은 그대로 유지돼요」 — 합쳤다고 소멸일을 다시 계산하지 않습니다.</li>
+          <li>H3 안내: 앞으로 안내 메일은 대표 이메일로 · 합쳐진 이메일로도 로그인 가능 · <b>통합된 계정은 다시 나눌 수 없어요</b>.</li></ul>
+      <div class="case">「적립 예정」의 지금 계정 쪽이 0P 고정입니다 <span class="tag proto">#50</span></div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>"※ 각 포인트 소멸일은 그대로 유지돼요" / [확인] (H3)</div></div>
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>경고 3줄</div>
+      <ul><li>⚠ 통합 후에는 <b>되돌릴 수 없어요</b> · ⚠ {합쳐질 이메일} 계정은 사라져요 · ℹ {합쳐질 이메일}로도 계속 로그인할 수 있어요.</li></ul></div>
+    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>[필수] "위 내용을 확인했습니다"</div><ul><li>체크해야 [통합하기]가 켜집니다(H1 → H2).</li></ul></div>
+    <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>[취소] [통합하기]</div>
+      <ul><li>[취소] = 시트 닫힘(아무것도 바뀌지 않음).</li>
+          <li>[통합하기] → 포인트 합산 · 그 소셜을 로그인 수단으로 연결 · 통합 이력 1건(계정관리 「계정 통합 N건」) · 어드민에 통합 기록(<a href="../admin/a_user.html#merge">A-USER ⑥</a>) → H3. <b>세션은 유지</b>(다시 로그인하지 않음).</li></ul>
+      <div class="rule"><b>근거</b> 계정 통합 · 안전장치 4가지 (<a href="../policy/pol_member.html#s3-2">회원 3-2절</a> · <a href="../policy/pol_admin.html#s5-5">어드민 5-5</a>) · 회원번호 매핑 미결 R-M8</div></div>
+  </div></div>
+  </div>
+</section>
+
+<!-- ═════ ④ 화면 위에 뜨는 것 ═════ -->
+<section class="sec major" id="over">
+  <div class="sec-hd"><h2>④ 화면 위에 뜨는 것</h2></div>
+  <p class="sec-sub">전체 화면을 덮으므로 자르지 않습니다. 공통 동작은 <a href="../common/c_layer.html">C-LAYER</a>를 따릅니다.</p>
+  <div class="two-col unit sub-item">
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-AUTH-X1 <small style="font-weight:400">S1에서 [✕]</small></div><figure class="shot" data-id="F-AUTH-X1" data-base="../"></figure></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>"닫을까요? — 언제든 다시 열 수 있어요."</div>
+        <ul><li>[계속하기] [닫기]. 아직 입력한 것이 거의 없으므로 가벼운 문구입니다.</li></ul></div>
+    </div>
+  </div>
+  <div class="two-col unit sub-item">
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-AUTH-X2 <small style="font-weight:400">S2·S3에서 [✕]</small></div><figure class="shot" data-id="F-AUTH-X2" data-base="../"></figure></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>"가입을 그만둘까요? — 지금 닫으면 입력한 내용이 사라지고 처음부터 다시 해야 해요."</div>
+        <ul><li>[계속하기] = 시트로 돌아감 · [닫기] = 시트 닫힘, 계정은 만들지 않음.</li></ul>
+        <div class="rule"><b>근거</b> 진행 중인 입력을 버리는 이탈 확인 (<a href="../common/c_layer.html#L-DIALOG">L-DIALOG</a>)</div></div>
+    </div>
+  </div>
+  <div class="two-col unit sub-item">
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-AUTH-X3 <small style="font-weight:400">가입 서버 처리 실패</small></div><figure class="shot" data-id="F-AUTH-X3" data-base="../"></figure></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>"잠시 후 다시 시도해 주세요" — "가입하지 못했어요" + 이유</div></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>[다시 시도]</div>
+        <ul><li>가입 요청을 다시 보냅니다. 「이미 가입된 이메일」 같은 규칙상 거절은 토스트입니다(<a href="../common/c_layer.html#R3">R3</a>).</li></ul></div>
+    </div>
+  </div>
+  <div class="two-col unit sub-item">
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-AUTH-X4 <small style="font-weight:400">가입 직후 — 본인인증 권유</small></div><figure class="shot" data-id="F-AUTH-X4" data-base="../"></figure></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>권유 문구</div></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>[다음에 하기]</div></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>[본인인증하기]</div>
+        <ul><li>가입 마지막 단계라 기능·조건은 <a href="#zS5">③ S5</a>에 적었습니다.</li></ul></div>
+    </div>
+  </div>
+  <div class="two-col unit sub-item">
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-AUTH-X5 <small style="font-weight:400">본인인증 시트 [✕] — 적립 버튼이 아닌 곳에서 열었을 때</small></div><figure class="shot" data-id="F-AUTH-X5" data-base="../"></figure></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>"본인인증을 그만둘까요? — 언제든 다시 할 수 있어요. 인증 전에 받은 포인트는 적립대기로 남아요."</div>
+        <ul><li>[계속하기] = 시트로 돌아감 · [닫기] = 닫힘. 적립 버튼에서 열었을 때의 문구는 <a href="f_attend.html#over">F-ATT X5</a>.</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="exc">
+  <div class="sec-hd"><h2>예외 케이스</h2><span class="tag ok">확정</span></div>
+  <p class="sec-sub">정책서 <a href="../policy/pol_member.html#s8">8절</a>을 화면 동작 기준으로 옮겼습니다.</p>
+  <div class="box wrapx"><table class="t">
+    <tr><th>#</th><th>상황</th><th>화면·서버 동작</th></tr>
+    <tr><td>E1</td><td>인증코드 6자리가 아님</td><td>"인증번호 6자리를 입력해 주세요"</td></tr>
+    <tr><td>E2</td><td>인증코드 불일치</td><td>칸 비움 + 빨간 글씨 (S2 ⑤)</td></tr>
+    <tr><td>E3</td><td>이미 가입된 이메일로 가입 요청</td><td>"이미 가입된 이메일이에요" — 정상 흐름에서는 S2에서 기존 회원으로 분기되므로 생기지 않음</td></tr>
+    <tr><td>E4</td><td>탈퇴 후 7일 안에 같은 이메일로 가입</td><td>가입 거절 + 다시 가입할 수 있는 날짜 안내 — 구현물에 없음(서버 탈퇴 처리와 함께 개발) <span class="tag open">문구 미정</span></td></tr>
+    <tr><td>E5</td><td>가입 도중 시트를 닫음</td><td>확인창 → 닫으면 계정을 만들지 않음 (약관 동의 전)</td></tr>
+    <tr><td>E6</td><td>본인인증 정보가 이미 다른 계정에 쓰임</td><td>다음 단계 — <b>계정 통합 흐름으로 잇는다</b>(방향만 PO 확정). 그 전까지 지급하지 않고 기존 계정 안내 <span class="tag open">미결</span> R-M2</td></tr>
+    <tr><td>E7</td><td>만 14세 미만 · 외국인(국내 휴대폰 없음) · 정지 회원</td><td>정책 없음 <span class="tag open">미결</span> R-M3~R-M5</td></tr>
+  </table></div>
+</section>
+
+</main>
+<script src="../shots/markers.js"></script>
+<script src="../policy/pol_member_data.js"></script>
+<script src="../policy/pol_earn_data.js"></script>
+<script src="../wf-reward.js"></script>
+</body>
+</html>

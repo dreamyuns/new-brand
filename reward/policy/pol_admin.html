@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>픽콕 리워드 어드민 기능정책서 v0.2 v0.3</title>
+<link rel="stylesheet" href="../wf-reward.css"></head>
+<body data-key="pol_admin" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page pol">
+<div class="note diff"><h4>이 페이지는 생성물입니다</h4>
+원본: <code>context/신규서비스_리워드/02_정책서/리워드_어드민_정책서_v0.3.md</code> · 변환일 2026-10-27. 내용을 고칠 때는 <b>원본 md를 고친 뒤</b> <code>_capture/build_policy.py</code>를 다시 실행합니다.</div>
+<div class="box"><h3>목차</h3><div class="pol-toc"><a href="#s1">제1조 (목적과 범위)</a><a href="#s2">제2조 (로그인과 권한)</a><a href="#s3">제3조 (모든 화면에 공통인 규칙)</a><a href="#s4">제4조 (대시보드)</a><a href="#s5">제5조 (회원 관리)</a><a href="#s6">제6조 (전체 포인트 내역 — 원장)</a><a href="#s7">제7조 (출금 신청)</a><a href="#s8">제8조 (픽샵 구매내역)</a><a href="#s9">제9조 (예약 적립)</a><a href="#s10">제10조 (적립 운영 — 혜택 · 퀴즈 · 광고주)</a><a href="#s11">제11조 (알림)</a><a href="#s12">제12조 (설정)</a><a href="#s13">제13조 (관리자 로그)</a><a href="#s14">제14조 (미결 사항 모아보기)</a></div></div>
+<h1>픽콕 리워드 어드민 기능정책서 v0.2</h1>
+<blockquote>
+<p><strong>문서 성격</strong> — 리워드(포인트) 운영을 위한 <strong>어드민 기준 문서</strong>다.
+기존 <code>신규_mvp_어드민_v0.9.md</code>는 <strong>메타서치 어드민</strong>(회원·예약내역·이메일 템플릿)을 다루며,
+리워드 메뉴(출금·픽샵·혜택·광고주·퀴즈·알림)는 그 문서에 <strong>한 건도 없다.</strong>
+이 문서가 리워드 어드민의 기준이다.</p>
+</blockquote>
+<blockquote>
+<p><strong>작성 근거</strong> — 이 문서의 메뉴·열·상태값·설정값·제외 항목은
+<strong>2026-10-12 시점 구현물에서 직접 뽑았다.</strong> 기억이나 추정으로 적은 값은 없다.
+아직 정해지지 않은 것은 <code>미결</code>로 표시했고, 값을 적지 않았다.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+  <th>항목</th>
+  <th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>기준 구현</td>
+  <td>시연용 프로토타입 (<code>prototype/pickoq_demo</code>) · 2026-10-12 상태</td>
+</tr>
+<tr>
+  <td>함께 보는 문서</td>
+  <td><code>참여형적립_기능정책서_v0.6.md</code> (고객 기능) · <code>포인트_정책서_v0.1.md</code> (포인트 원칙)</td>
+</tr>
+<tr>
+  <td>시연 설명본</td>
+  <td><code>prototype/설명서/admin.html</code> — 같은 내용을 <strong>읽히기 위한 글</strong>로 쓴 것</td>
+</tr>
+<tr>
+  <td>성격</td>
+  <td><strong>시연용 구현 기준.</strong> 상용 운영 기준이 아니다</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>변경 이력</h2>
+<table>
+<thead>
+<tr>
+  <th>날짜</th>
+  <th>버전</th>
+  <th>변경 내용</th>
+  <th>작성</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>2026-10-27</td>
+  <td>v0.2</td>
+  <td><strong>구현물 2026-10-26~27 수정분 반영</strong> (프로토 수정 요청 A1~A13 · 본인인증 첫 적립 때). ①<strong>3-5 모달 공통 규칙 신설</strong> — 버튼 [취소][실행] · 실행 즉시 잠금 「처리 중…」 · 입력 모달은 배경 클릭으로 안 닫힘 · 브라우저 기본 확인창 금지(지급·재발행 자체 모달) ②<strong>적립대기</strong> — 5-1 목록·5-2 상세 표시, 5-3 관리자 수동 지급·회수는 미인증 회원이면 적립대기(알림 없음 · 회수는 원장+대기 안에서), <strong>5-4 관리자 본인인증 처리 = 적립대기 지급</strong> 신설, 9-5 예약 상태에 <code>적립대기</code> ③<strong>10-2 퀴즈</strong> — 같은 문장 거절 · 광고 「사용」이면 링크 필수 · 등록 때도 광고 저장 · 해설 「정답 공개 후 항상」 · 재출제 허용 스위치 구현 반영 ④<strong>12 설정</strong> — 저장 검사(12-3: 하나라도 틀리면 전부 저장 안 함 · 칸별 범위 · 출석 보너스 비중 합계 100 · 출금 최소≥단위 · 1회 한도≥최소) · <code>draw_w4</code> 설명 「자사 기준」 · 합계 실시간 표시 ⑤13-1 로그에 <code>verify</code></td>
+  <td>대화창4</td>
+</tr>
+<tr>
+  <td>2026-10-12</td>
+  <td>v0.1</td>
+  <td>최초 작성. 2026-10-12 구현 상태를 기준으로 12개 메뉴·공통 규칙·설정값·미결을 정리</td>
+  <td>대화창4</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="s1">제1조 (목적과 범위)</h2>
+<h3 id="s1-1">1-1. 목적</h3>
+<p>고객이 <strong>출석·퀴즈·혜택·친구 추천·숙소 예약</strong>으로 쌓은 포인트를
+운영자가 <strong>확인·조정·지급</strong>하고, 적립 거리를 <strong>개발자 없이</strong> 넣고 뺄 수 있게 한다.</p>
+<h3 id="s1-2">1-2. 메뉴 구조 (1뎁스 12개)</h3>
+<table>
+<thead>
+<tr>
+  <th style="text-align:center">#</th>
+  <th>메뉴</th>
+  <th>화면 키</th>
+  <th>하는 일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:center">1</td>
+  <td>대시보드</td>
+  <td><code>dash</code></td>
+  <td>전체 현황과 처리 대기 건을 한눈에 본다</td>
+</tr>
+<tr>
+  <td style="text-align:center">2</td>
+  <td>회원 목록</td>
+  <td><code>users</code></td>
+  <td>회원 조회·상세·포인트 수동 처리</td>
+</tr>
+<tr>
+  <td style="text-align:center">3</td>
+  <td>전체 포인트 내역</td>
+  <td><code>ledger</code></td>
+  <td>포인트가 움직인 <strong>모든 기록</strong>(원장)</td>
+</tr>
+<tr>
+  <td style="text-align:center">4</td>
+  <td>출금 신청</td>
+  <td><code>withdrawals</code></td>
+  <td>현금 출금 신청을 지급하거나 반려</td>
+</tr>
+<tr>
+  <td style="text-align:center">5</td>
+  <td>픽샵 구매내역</td>
+  <td><code>orders</code></td>
+  <td>포인트로 바꾼 쿠폰 내역</td>
+</tr>
+<tr>
+  <td style="text-align:center">6</td>
+  <td>예약 적립</td>
+  <td><code>bookings</code></td>
+  <td>숙소 예약으로 생긴 적립</td>
+</tr>
+<tr>
+  <td style="text-align:center">7</td>
+  <td>혜택(오퍼월)</td>
+  <td><code>offers</code></td>
+  <td>광고 등록·노출 관리</td>
+</tr>
+<tr>
+  <td style="text-align:center">8</td>
+  <td>퀴즈 관리</td>
+  <td><code>quiz</code></td>
+  <td>문항 등록·출제 관리</td>
+</tr>
+<tr>
+  <td style="text-align:center">9</td>
+  <td>광고주 관리</td>
+  <td><code>advertisers</code></td>
+  <td>광고를 올릴 수 있는 주체 등록</td>
+</tr>
+<tr>
+  <td style="text-align:center">10</td>
+  <td>알림</td>
+  <td><code>notify</code></td>
+  <td>고객 앱 알림 발송·이력</td>
+</tr>
+<tr>
+  <td style="text-align:center">11</td>
+  <td>설정</td>
+  <td><code>settings</code></td>
+  <td>적립·출금 정책값 변경</td>
+</tr>
+<tr>
+  <td style="text-align:center">12</td>
+  <td>관리자 로그</td>
+  <td><code>logs</code></td>
+  <td>운영자가 한 일의 기록</td>
+</tr>
+</tbody>
+</table>
+<h3 id="s1-3">1-3. 이번 버전에 넣지 않은 것</h3>
+<p>화면마다 <strong>안내 띠</strong>로 운영자에게 직접 알린다 (3-2 참조). 아래가 전부다.</p>
+<table>
+<thead>
+<tr>
+  <th>메뉴</th>
+  <th>빠진 것</th>
+  <th>왜</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>회원</td>
+  <td>회원 등급·세그먼트</td>
+  <td>멤버십 정책 확정 후</td>
+</tr>
+<tr>
+  <td>회원</td>
+  <td>탈퇴 회원 조회</td>
+  <td>탈퇴 시 즉시 삭제 정책이라 목록에 남기지 않음</td>
+</tr>
+<tr>
+  <td>회원</td>
+  <td>엑셀 내려받기</td>
+  <td><strong>개인정보 반출 기준</strong>을 먼저 정해야 함</td>
+</tr>
+<tr>
+  <td>출금</td>
+  <td>자동 송금(펌뱅킹)</td>
+  <td>현재는 운영자가 확인 후 [지급하기]</td>
+</tr>
+<tr>
+  <td>출금</td>
+  <td>금액 한도·승인 단계</td>
+  <td>일정 금액 이상 승인 여부 <strong>미결</strong></td>
+</tr>
+<tr>
+  <td>출금</td>
+  <td>원천징수·세무 처리</td>
+  <td>현금 지급이라 <strong>세무 기준 미결</strong></td>
+</tr>
+<tr>
+  <td>픽샵</td>
+  <td>쿠폰 발행사 연동</td>
+  <td><strong>발행 업체 미정</strong> — 현재 쿠폰번호를 자사에서 생성</td>
+</tr>
+<tr>
+  <td>픽샵</td>
+  <td>재고·정산 연동</td>
+  <td>업체 확정 후</td>
+</tr>
+<tr>
+  <td>혜택</td>
+  <td>성과 리포트(노출·클릭·전환)</td>
+  <td>다음 버전</td>
+</tr>
+<tr>
+  <td>혜택</td>
+  <td>정산 연동</td>
+  <td>요율·회계 기준 확정 후</td>
+</tr>
+<tr>
+  <td>광고주</td>
+  <td>정산·과금(CPC/CPA·세금계산서)</td>
+  <td>요율·회계 기준 <strong>미결</strong></td>
+</tr>
+<tr>
+  <td>광고주</td>
+  <td>광고주 직접 접속 계정</td>
+  <td>다음 단계</td>
+</tr>
+<tr>
+  <td>광고주</td>
+  <td>계약 기간 관리</td>
+  <td>현재는 혜택의 노출기간으로 대신함</td>
+</tr>
+<tr>
+  <td>알림</td>
+  <td>휴대폰 푸시</td>
+  <td>앱 출시와 함께</td>
+</tr>
+<tr>
+  <td>알림</td>
+  <td>예약 발송·세그먼트</td>
+  <td>다음 버전</td>
+</tr>
+<tr>
+  <td>알림</td>
+  <td>수신 동의 연동</td>
+  <td>광고성 알림 발송 규칙 <strong>미결</strong></td>
+</tr>
+<tr>
+  <td>로그</td>
+  <td>처리자 구분</td>
+  <td>비밀번호 1개 방식이라 <strong>누가 했는지 구분 못 함</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="s2">제2조 (로그인과 권한)</h2>
+<h3 id="s2-1">2-1. 로그인</h3>
+<ul>
+<li><strong>비밀번호 하나</strong>로 들어간다. 계정 구분이 없다.</li>
+<li>비밀번호는 설정(<code>admin_pw</code>)에서 바꾼다.</li>
+</ul>
+<h3 id="s2-2">2-2. 권한 — 현재 없음</h3>
+<table>
+<thead>
+<tr>
+  <th>항목</th>
+  <th>현재</th>
+  <th>정해야 할 것</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>계정 구분</td>
+  <td>없음 (단일 비밀번호)</td>
+  <td>운영자별 계정 발급 여부</td>
+</tr>
+<tr>
+  <td>권한 등급</td>
+  <td>없음 (들어오면 전부 가능)</td>
+  <td>조회 전용 / 처리 가능 구분</td>
+</tr>
+<tr>
+  <td>처리자 기록</td>
+  <td><strong>남지 않음</strong></td>
+  <td>관리자 로그에 처리자를 남기는 방식</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><code>미결</code> — <strong>포인트 수동 지급·회수와 출금 지급은 돈이 움직이는 행위</strong>인데
+지금은 <strong>누가 했는지 알 수 없다.</strong> 권한 체계와 함께 정해야 한다.</p>
+</blockquote>
+<h3 id="s2-3">2-3. 로그인 직후 안내</h3>
+<p>로그인하면 <strong>안내 팝업</strong>이 한 번 뜬다 (탭마다 1회).
+이번 버전의 성격(시연용·가상 데이터)과 빠진 기능이 있다는 점을 먼저 알리고,
+<strong>기능정책서로 가는 링크</strong>를 둔다.</p>
+<blockquote>
+<p><strong>왜</strong> — 운영자가 완성된 어드민으로 알고 들어오면
+빠진 기능마다 문의가 발생한다. <strong>미리 알리는 편이 싸다.</strong></p>
+</blockquote>
+<hr />
+<h2 id="s3">제3조 (모든 화면에 공통인 규칙)</h2>
+<blockquote>
+<p>2026-10-12 CPO 피드백으로 <strong>12개 화면의 모양을 하나로 맞췄다.</strong>
+화면마다 다르면 운영자가 화면마다 다시 배워야 한다.</p>
+</blockquote>
+<h3 id="s3-1">3-1. 찾기 (9개 화면)</h3>
+<p>적용: 회원 · 포인트 내역 · 출금 · 픽샵 · 예약 적립 · 혜택 · 퀴즈 · 알림 · 로그
+(대시보드 · 광고주 · 설정은 <strong>찾을 대상이 아니라서</strong> 두지 않는다)</p>
+<table>
+<thead>
+<tr>
+  <th>규칙</th>
+  <th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>자리</td>
+  <td><strong>왼쪽에 전체 건수</strong>, 오른쪽에 찾는 칸</td>
+</tr>
+<tr>
+  <td>칸 이름</td>
+  <td>칸마다 이름을 <strong>작게 위에</strong> 붙인다</td>
+</tr>
+<tr>
+  <td>구분</td>
+  <td><strong>쳐서 찾는 칸</strong>(입력)과 <strong>골라서 거르는 칸</strong>(선택)을 나눈다</td>
+</tr>
+<tr>
+  <td>날짜</td>
+  <td>날짜가 둘 이상이면 <strong>어느 날짜로 찾을지 먼저 고른 뒤</strong> 달력을 연다</td>
+</tr>
+<tr>
+  <td>실행</td>
+  <td>조건을 다 고른 뒤 <strong>[조회]</strong> 를 눌러야 걸린다. [초기화]로 전부 푼다</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>왜 [조회] 버튼인가</strong> — 고를 때마다 즉시 걸면 <strong>중간 단계마다 화면이 다시 그려진다.</strong>
+조건을 다 고르기 전의 결과는 볼 이유가 없다. (CPO 제안 · 2026-10-12 확정)</p>
+</blockquote>
+<h3 id="s3-2">3-2. 안내 띠</h3>
+<ul>
+<li>자리: <strong>페이지 제목·설명 바로 아래</strong></li>
+<li>두 종류: <code>ℹ️ 이번 버전에 들어가지 않은 것</code> / <code>📌 이 화면을 읽는 법</code></li>
+<li>접혀 있다가 눌러서 펼친다. 끝에 <strong>기능정책서 링크</strong>가 붙는다</li>
+<li><strong>공지·참고 사항도 같은 모양으로 통일</strong>한다</li>
+</ul>
+<h3 id="s3-3">3-3. 요약 세 칸</h3>
+<p>요약이 있는 화면은 <strong>총 누적 · 사용(나간 것) · 잔여(남은 것)</strong> 틀로 읽는다.</p>
+<table>
+<thead>
+<tr>
+  <th>화면</th>
+  <th>칸1</th>
+  <th>칸2</th>
+  <th>칸3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>포인트 내역</td>
+  <td>총 적립 포인트</td>
+  <td>총 사용 포인트</td>
+  <td>현재 잔액</td>
+</tr>
+<tr>
+  <td>출금 신청</td>
+  <td>누적 송금액</td>
+  <td>반려 환불액</td>
+  <td>대기 금액</td>
+</tr>
+<tr>
+  <td>픽샵 구매내역</td>
+  <td>총 구매 포인트</td>
+  <td>사용완료</td>
+  <td>미사용</td>
+</tr>
+<tr>
+  <td>예약 적립</td>
+  <td>총 적립 포인트</td>
+  <td>뽑기로 지급</td>
+  <td>미수령 뽑기</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>요약은 거르기와 무관하게 항상 전체 기준</strong>이다</li>
+<li>픽샵의 「총 구매」는 <strong>취소분을 뺀 값</strong>이다</li>
+</ul>
+<blockquote>
+<p><strong>왜 미사용을 따로 보나</strong> — 픽샵의 미사용 금액은
+<strong>앞으로 쿠폰 업체에 정산해야 할 채무</strong>다. 쓴 것과 섞으면 남은 채무를 알 수 없다.</p>
+</blockquote>
+<h3 id="s3-4">3-4. 불러오는 중</h3>
+<ul>
+<li>자료를 가져오는 데 <strong>0.22초를 넘길 때만</strong> 자리를 잡는 회색 틀이 나온다</li>
+<li>그보다 빠르면 <strong>아무것도 보이지 않는다</strong></li>
+<li>못 가져온 경우에는 <strong>사유와 [다시 시도] 버튼</strong>이 나온다</li>
+</ul>
+<blockquote>
+<p><strong>왜 지연 방식인가</strong> — 실측 결과 화면 전환이 <strong>29~101ms</strong>였다.
+무조건 띄우면 번쩍거려 오히려 지저분하다.</p>
+</blockquote>
+<h3 id="s3-5">3-5. 모달(팝업) 공통 규칙 <em>(v0.2 신설 · 화면기획서 C-LAYER R9·R10)</em></h3>
+<table>
+<thead>
+<tr>
+  <th>규칙</th>
+  <th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>버튼 순서</td>
+  <td>두 버튼이 나란히 있으면 <strong>[취소] [실행]</strong> — 왼쪽이 취소(회색), 오른쪽이 실행(강조색). 위험한 실행(반려·초기화)은 빨간색</td>
+</tr>
+<tr>
+  <td>실행 버튼 잠금</td>
+  <td>실행을 누르면 <strong>팝업의 버튼이 모두 잠기고</strong> 글자가 <strong>「처리 중…」</strong> 으로 바뀐다. 서버 응답이 오면 풀린다 — 두 번 눌러 두 번 처리되는 것을 막는다</td>
+</tr>
+<tr>
+  <td>배경 클릭</td>
+  <td><strong>입력칸이 있는 팝업은 배경을 눌러도 닫히지 않는다</strong> (적던 내용이 사라지므로). 입력칸이 없는 팝업은 배경을 누르면 닫힌다</td>
+</tr>
+<tr>
+  <td>확인창</td>
+  <td>브라우저 기본 확인창(confirm·prompt)을 쓰지 않는다 — 출금 <strong>[지급하기]</strong> 는 「지급 처리」 팝업(회원·금액·입금 계좌 + 「실제로 송금을 마치셨나요? 지급완료로 기록됩니다.」), 쿠폰 <strong>[재발행]</strong> 은 「쿠폰 재발행」 팝업(「쿠폰을 새로 발행합니다. 고객에게 알림이 갑니다.」)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="s4">제4조 (대시보드)</h2>
+<h3 id="s4-1">4-1. 구성</h3>
+<table>
+<thead>
+<tr>
+  <th>묶음</th>
+  <th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>전체 현황</td>
+  <td>전체 회원 · 총 보유 포인트 · 누적 적립 · 누적 사용</td>
+</tr>
+<tr>
+  <td>기간별 현황</td>
+  <td><strong>오늘 / 최근 7일 / 최근 30일</strong> — 가입 · 적립 · 사용 · 건수</td>
+</tr>
+<tr>
+  <td>처리 대기</td>
+  <td>출금·픽샵 신청 중 아직 처리하지 않은 건</td>
+</tr>
+<tr>
+  <td>최근 목록</td>
+  <td>포인트 내역 · 예약 적립 · 픽샵 구매 — <strong>각 8건</strong></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>왼쪽 메뉴 「출금 신청」에 <strong>대기 건수가 빨간 숫자</strong>로 붙는다</li>
+<li>각 목록 끝에 해당 메뉴로 가는 버튼이 있다</li>
+</ul>
+<blockquote>
+<p><strong>왜 기간을 고르게 했나</strong> — 하루치만 보면 <strong>그날이 많은 날인지 적은 날인지 알 수 없다.</strong>
+비교할 기준이 있어야 숫자가 뜻을 갖는다.</p>
+</blockquote>
+<hr />
+<h2 id="s5">제5조 (회원 관리)</h2>
+<h3 id="s5-1">5-1. 목록</h3>
+<p>열: 선택 · <strong>회원ID(이메일)</strong> · 이름 · 본인인증 · 추천코드 · 추천한 친구 · 보유 포인트 · 가입일 · 관리</p>
+<ul>
+<li>찾기: <strong>가입일</strong>(달력) · 본인인증(전체/완료/미완료) · 검색어(이메일·이름·추천코드)</li>
+<li>회원 ID는 <strong>이메일 주소</strong>다. 별도 아이디를 두지 않는다</li>
+<li><strong>보유 포인트 — 적립대기 표시</strong> <em>(v0.2)</em>: <strong>미인증 회원</strong>인데 (원장 잔액 + 적립대기)가 <strong>1 이상</strong>이면 그 합계를 보여주고 오른쪽에 작은 <strong>「적립대기」</strong> 를 붙인다 (예: 「500P 적립대기」). 인증 회원·0P 는 원장 잔액 그대로</li>
+</ul>
+<blockquote>
+<p><strong>적립대기</strong> — 로그인했지만 <strong>본인인증 전</strong>인 회원에게 생긴 적립(예약 적립 · 친구 추천 · 관리자 지급). 원장에 넣지 않고 기다렸다가 <strong>본인인증하는 순간 한꺼번에 지급</strong>한다(기한 없음 · 적립일 = 지급일). 상세는 참여형적립 기능정책서 1-6절</p>
+</blockquote>
+<h3 id="s5-2">5-2. 상세</h3>
+<p>좌우 두 단으로 <strong>기본 정보</strong>와 <strong>포인트 내역</strong>을 함께 본다.</p>
+<ul>
+<li><strong>미인증 회원</strong> <em>(v0.2)</em> — 포인트 요약의 「사용 가능」 대신 <strong>「보유 NP 적립대기」</strong> 를 보여주고, 그 아래 안내
+<strong>「본인인증 전이에요. 아래 포인트는 고객 화면에 보이지 않고, 본인인증을 하면 그때 지급돼요.」</strong> 와
+내역 칩(<strong>예약 · 친구 추천 · 관리자 지급·회수 · 이전에 쌓인 포인트</strong> — 각 금액·건수)을 둔다</li>
+</ul>
+<h3 id="s5-3">5-3. 포인트 수동 지급·회수</h3>
+<ul>
+<li>목록에서 <strong>회원을 골라 한 번에</strong> 처리할 수 있다</li>
+<li><strong>금액과 사유</strong>를 적어야 한다. 사유는 원장에 그대로 남는다</li>
+<li>처리하면 <strong>원장에 한 줄로 쌓이고</strong>, 관리자 로그에도 남는다(<code>point_grant</code>)</li>
+<li><strong>미인증 회원</strong> <em>(v0.2 · PO 확정 2026-10-27)</em> — 지급·회수할 수 있다. 다만 <strong>적립대기로 들어가고</strong>, 본인인증을 해야 고객 화면에 보이고 실제로 적립된다<ul>
+<li>미인증 회원에게는 지급·회수 <strong>알림을 보내지 않는다</strong> (금액이 드러나므로). 인증으로 지급될 때 「적립대기 포인트 +NP」 1건</li>
+<li>회수는 <strong>(원장 잔액 + 적립대기) 안에서만</strong> — 넘으면 「회수할 포인트가 모자라요 (적립대기 포함)」</li>
+<li>결과 안내: 단건 「본인인증 전 회원이라 적립대기로 넣었어요 · 인증하면 지급돼요」 / 일괄 「N명 처리 완료 · 그중 N명은 본인인증 전이라 적립대기」</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><code>미결</code> — <strong>권한·한도·처리자 기록</strong>이 정해지지 않았다.
+지금은 누구나 금액 제한 없이 지급·회수할 수 있다. (2-2 참조)</p>
+</blockquote>
+<h3 id="s5-4">5-4. 본인인증 처리 <em>(v0.2 신설)</em></h3>
+<ul>
+<li>회원 상세에서 관리자가 본인인증 상태를 <strong>완료</strong>로 바꿀 수 있다 (시연용)</li>
+<li>완료로 바꾸면 <strong>고객이 직접 인증한 것과 같이 적립대기를 지급</strong>한다 · 관리자 로그에 「본인인증 완료 · 적립대기 NP 지급」</li>
+</ul>
+<hr />
+<h3 id="s5-5">5-5. 계정 통합 <em>(v0.3 신설)</em></h3>
+<blockquote>
+<p><strong>왜 어드민에 남기나</strong> — 통합은 <strong>되돌릴 수 없고 포인트가 합쳐진다.</strong> 고객 화면에는 간단한 이력만 보이므로,
+분쟁·문의 때 답할 수 있는 근거는 어드민 기록뿐이다. (앱 정책 01-3 1-6-8 안전장치 3 · 회원 정책 v0.2 3-2)</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+  <th>자리</th>
+  <th>보여주는 것</th>
+  <th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>목록 — 이메일 칸</strong></td>
+  <td>통합한 회원은 이메일 옆에 <strong>「통합 N」</strong> 배지, 그 아래 <strong>합쳐져 사라진 이메일</strong>(↳ 표시)</td>
+  <td><code>[PO 확정 2026-10-27]</code></td>
+</tr>
+<tr>
+  <td><strong>목록 — 찾기</strong></td>
+  <td><strong>사라진 이메일로도 찾아진다.</strong> CS 문의는 대개 <strong>예전 이메일</strong>로 들어오는데, 그 주소는 고객 화면에서 사라져 그냥 두면 「그런 회원 없음」이 된다</td>
+  <td><code>[PO 확정 2026-10-27]</code></td>
+</tr>
+<tr>
+  <td><strong>상세 — 「계정 통합 N건」</strong></td>
+  <td>통합 일시 · 통합에 쓴 수단 · <strong>합쳐진 계정(이메일·회원번호·가입일)</strong> · <strong>이관 포인트</strong>(적립완료 / 적립예정) · 여러 번이면 전부(최신순)</td>
+  <td>01-3 1-6-8</td>
+</tr>
+<tr>
+  <td><strong>상세 — 안내</strong></td>
+  <td>「되돌릴 수 없어요. 합쳐진 이메일로도 계속 로그인할 수 있고, 이관된 포인트는 아래 원장에 「계정 통합 이관」으로 남아 있어요.」</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td><strong>포인트 원장</strong></td>
+  <td>이관 포인트가 <strong>「계정 통합 이관」</strong> 유형으로 한 줄 쌓이고, 사유에 <strong>「OO 계정에서 이관」</strong> 이 남는다</td>
+  <td>01-3 1-6-8(각 포인트의 원 소속)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>남기는 항목</strong> (<code>account_merges</code>)</p>
+<table>
+<thead>
+<tr>
+  <th>항목</th>
+  <th>쓰임</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>남는 계정 · 사라진 계정(회원번호·이메일·가입일)</td>
+  <td>누가 누구와 합쳐졌는지</td>
+</tr>
+<tr>
+  <td>이관 포인트 · 이관 적립예정</td>
+  <td>금액 분쟁</td>
+</tr>
+<tr>
+  <td>통합에 쓴 수단 · 통합 일시</td>
+  <td>경위 확인</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><code>미결</code> — <strong>회원번호 매핑 조회 화면</strong>은 넣지 않았다. 예약 적립은 <strong>체크아웃 + 7일</strong>에 들어오므로, 그 사이 통합되면
+<strong>옛 회원번호로 리포팅이 도착</strong>한다. 기록(<code>gone_user_id</code>)은 남기지만 <strong>찾아보는 화면과 자동 귀속은 다음 단계</strong>다.
+회원 정책 v0.2 R-M8 · 01-3 1-6-8 안전장치 4</p>
+</blockquote>
+<hr />
+<h2 id="s6">제6조 (전체 포인트 내역 — 원장)</h2>
+<h3 id="s6-1">6-1. 원칙 — 잔액을 저장하지 않는다</h3>
+<ul>
+<li>포인트가 움직인 <strong>모든 사건이 한 줄씩</strong> 쌓인다</li>
+<li>잔액은 <strong>그 줄들을 더한 결과</strong>다</li>
+<li>이 화면은 <strong>보기만 하고 고치지 않는다</strong></li>
+</ul>
+<blockquote>
+<p><strong>왜</strong> — 기록을 고칠 수 있으면 기록이 아니다.
+포인트를 바꿔야 하면 <strong>회원 상세에서 사유를 적어 처리</strong>하고,
+그 행위 자체가 또 한 줄로 쌓인다. <strong>지우는 길을 만들지 않는 것</strong>이 핵심이다.</p>
+</blockquote>
+<h3 id="s6-2">6-2. 열</h3>
+<p><code>#</code> · 유형 · 회원 · 증감 · 잔액 · 내용 · 소멸예정 · 일시</p>
+<h3 id="s6-3">6-3. 포인트 유형</h3>
+<table>
+<thead>
+<tr>
+  <th>유형</th>
+  <th>뜻</th>
+  <th style="text-align:center">증감</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>attend</code></td>
+  <td>출석체크</td>
+  <td style="text-align:center">+</td>
+</tr>
+<tr>
+  <td><code>quiz</code></td>
+  <td>퀴즈</td>
+  <td style="text-align:center">+</td>
+</tr>
+<tr>
+  <td><code>offer</code></td>
+  <td>혜택(오퍼월) 참여</td>
+  <td style="text-align:center">+</td>
+</tr>
+<tr>
+  <td><code>booking</code></td>
+  <td>숙소 예약 기본 적립</td>
+  <td style="text-align:center">+</td>
+</tr>
+<tr>
+  <td><code>booking_draw</code></td>
+  <td>예약 뽑기</td>
+  <td style="text-align:center">+</td>
+</tr>
+<tr>
+  <td><code>invite_out</code></td>
+  <td>친구 추천 — 추천한 사람</td>
+  <td style="text-align:center">+</td>
+</tr>
+<tr>
+  <td><code>invite_in</code></td>
+  <td>친구 추천 — 가입한 사람</td>
+  <td style="text-align:center">+</td>
+</tr>
+<tr>
+  <td><code>shop</code></td>
+  <td>픽샵 구매</td>
+  <td style="text-align:center">−</td>
+</tr>
+<tr>
+  <td><code>shop_cancel</code></td>
+  <td>픽샵 구매 취소 환불</td>
+  <td style="text-align:center">+</td>
+</tr>
+<tr>
+  <td><code>withdraw</code></td>
+  <td>출금 신청 차감</td>
+  <td style="text-align:center">−</td>
+</tr>
+<tr>
+  <td><code>cancel_refund</code></td>
+  <td>출금 반려 환불</td>
+  <td style="text-align:center">+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="s6-4">6-4. 찾기</h3>
+<ul>
+<li>유형 칩(출석체크·숙소예약·혜택참여·퀴즈·친구추천 …) — <strong>칩마다 건수 표시</strong></li>
+<li><strong>날짜 기준</strong>: 적립일 / 소멸예정일 중 선택 → 기간(달력)</li>
+<li>검색어: 회원·내용</li>
+</ul>
+<hr />
+<h2 id="s7">제7조 (출금 신청)</h2>
+<h3 id="s7-1">7-1. 흐름</h3>
+<ol>
+<li>고객이 신청하면 <strong>포인트가 즉시 차감</strong>된다 (<code>withdraw</code>)</li>
+<li>운영자가 회원·금액·계좌를 확인한다</li>
+<li>실제로 송금한 뒤 <strong>[지급하기]</strong> 를 누른다</li>
+<li>문제가 있으면 <strong>[반려]</strong> 를 누른다 → <strong>차감한 포인트가 바로 환불</strong>된다 (<code>cancel_refund</code>)</li>
+</ol>
+<ul>
+<li><strong>사전 승인 단계는 없다.</strong> 처리대기 건을 [지급하기] 또는 [반려] 둘 중 하나로 끝낸다</li>
+<li>지급·반려 모두 <strong>고객에게 알림이 간다</strong></li>
+</ul>
+<h3 id="s7-2">7-2. 반려 사유 (필수)</h3>
+<table>
+<thead>
+<tr>
+  <th>사유</th>
+  <th>성격</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>고객 요청으로 취소</td>
+  <td>고객 사정</td>
+</tr>
+<tr>
+  <td>예금주 이름이 계좌와 달라요</td>
+  <td>운영자 거절</td>
+</tr>
+<tr>
+  <td>계좌번호를 다시 확인해 주세요</td>
+  <td>운영자 거절</td>
+</tr>
+<tr>
+  <td>본인 명의 계좌가 아니에요</td>
+  <td>운영자 거절</td>
+</tr>
+<tr>
+  <td>(직접 입력)</td>
+  <td>—</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>고른 사유는 <strong>목록에 남고 고객에게 그대로 전달</strong>된다</li>
+</ul>
+<blockquote>
+<p><strong>왜 사유를 고르게 하나</strong> — <strong>고객이 취소를 요청한 것</strong>과
+<strong>운영자가 거절한 것</strong>은 성격이 다르다. 섞어 두면 나중에
+「반려가 많다」가 무슨 뜻인지 읽히지 않는다. (PO 지적 · 2026-10-12)</p>
+</blockquote>
+<h3 id="s7-3">7-3. 열과 찾기</h3>
+<p>열: 상태 · 회원 · 금액 · 입금 계좌 · 예금주 · 신청일시 · 지급일시 · 처리</p>
+<ul>
+<li>날짜 기준: <strong>신청일 / 지급일</strong> → 기간(달력)</li>
+<li>입금 은행(목록에 실제로 있는 은행만) · 처리 상태(처리대기/지급완료/반려) · 검색어</li>
+</ul>
+<h3 id="s7-4">7-4. 한도 (설정값)</h3>
+<table>
+<thead>
+<tr>
+  <th>항목</th>
+  <th>현재 값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>최소 신청액</td>
+  <td>10,000P</td>
+</tr>
+<tr>
+  <td>1회 한도</td>
+  <td>100,000P</td>
+</tr>
+<tr>
+  <td>신청 단위</td>
+  <td>1,000P</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><code>미결</code> — <strong>월 한도</strong>는 고객 화면에만 있고 <strong>서버가 검증하지 않는다.</strong>
+출금 수수료 부담 주체도 정해지지 않았다.</p>
+</blockquote>
+<hr />
+<h2 id="s8">제8조 (픽샵 구매내역)</h2>
+<h3 id="s8-1">8-1. 원칙 — 자금 이동이 없다</h3>
+<p>포인트로 쿠폰을 바꾸는 것이라 <strong>승인 절차를 두지 않는다.</strong>
+구매 즉시 <strong>쿠폰이 자동 발행</strong>된다.</p>
+<h3 id="s8-2">8-2. 운영자가 하는 일</h3>
+<ul>
+<li><strong>쿠폰번호 재발행</strong> — 고객의 쿠폰번호 분실이 실제로 잦다</li>
+<li>취소 건 확인 — 취소하면 <strong>포인트 환불 + 재고 복구</strong></li>
+<li>고객이 쿠폰을 쓰고 [사용 처리]를 누르면 <strong>사용완료</strong>로 바뀐다</li>
+</ul>
+<h3 id="s8-3">8-3. 상태</h3>
+<p><code>구매완료</code> · <code>사용완료</code> · <code>구매취소</code> · <code>발행실패</code></p>
+<h3 id="s8-4">8-4. 열</h3>
+<p><code>#</code> · 상태 · 회원 · 상품 · 사용 포인트 · 쿠폰번호 · 구매일시 · 사용·취소일시 · 관리</p>
+<blockquote>
+<p><code>미결</code> — <strong>쿠폰 발행 업체가 정해지지 않았다.</strong>
+현재 쿠폰번호는 <strong>자사에서 만들어 보여주는 것</strong>이다.</p>
+</blockquote>
+<hr />
+<h2 id="s9">제9조 (예약 적립)</h2>
+<h3 id="s9-1">9-1. 구조</h3>
+<p>숙소 예약으로 예약처가 지급하는 재원을 <strong>기본 적립</strong>과 <strong>뽑기</strong> 둘로 나눈다.</p>
+<table>
+<thead>
+<tr>
+  <th>몫</th>
+  <th>현재 값</th>
+  <th>지급 시점</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>기본 적립</td>
+  <td>예약금액의 <strong>1%</strong> (<code>draw_base_rate</code>)</td>
+  <td>예약 즉시</td>
+</tr>
+<tr>
+  <td>뽑기 몫</td>
+  <td>나머지</td>
+  <td>고객이 뽑기를 해야 지급</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>왜 나누나</strong> — 예약 적립은 <strong>자사 비용이 아니라 예약처가 주는 재원</strong>이다.
+뽑지 않은 금액은 <strong>비용 절감인 동시에 고객이 받지 못한 금액</strong>이다.
+이 수치가 계속 늘면 <strong>뽑기 안내가 부족하다는 뜻</strong>이다.</p>
+</blockquote>
+<h3 id="s9-2">9-2. 열</h3>
+<p><code>#</code> · 회원 · 호텔 · OTA · 예약금액 · 요율 · 기본적립 · 뽑기 · 총 적립 · <strong>체크인/체크아웃</strong> · 적립일시</p>
+<h3 id="s9-3">9-3. 숙박일을 함께 보는 이유</h3>
+<p>적립이 확정되는 시점은 <strong>예약한 날이 아니라 숙박을 마친 뒤</strong>다.
+예약처가 보내 주는 자료에도 체크인·체크아웃 날짜가 담겨 있어 <strong>대조 기준</strong>이 된다.</p>
+<h3 id="s9-4">9-4. 찾기</h3>
+<ul>
+<li>날짜 기준: <strong>숙박일 / 적립일</strong> → 기간(달력)</li>
+<li>뽑기: 전체 / 미수령 · 검색어</li>
+</ul>
+<h3 id="s9-5">9-5. 상태</h3>
+<p><code>적립완료</code> / <code>취소</code> <strong>둘로만</strong> 구분한다. <strong>「적립예정」 단계를 두지 않는다.</strong></p>
+<ul>
+<li>예외 — <strong><code>적립대기</code></strong> <em>(v0.2)</em>: 본인인증 전 회원의 예약. 예약은 기록하되 포인트는 지급 전이다.
+「총 적립」 칸에 <strong>「적립대기」 배지 + 「본인인증 전 · NP」</strong>, 위쪽 합계에서는 <strong>빠진다</strong>. 인증하면 <code>적립완료</code> 로 바뀌고 뽑기가 열린다</li>
+</ul>
+<blockquote>
+<p><del><code>미결</code></del> <strong>해소 2026-10-27</strong> — 뽑기 가능 기간 <strong>적립완료일 + 30일</strong>(<code>draw_expire_days=30</code>) · 포인트 정책서 v0.2 4절.
+정책상 30일 예정이나 확정되지 않았다.</p>
+</blockquote>
+<blockquote>
+<p>실제 운영에서는 <strong>호텔스컴바인이 예약 결과를 알려준다.</strong>
+시연에서는 고객이 아웃링크 화면에서 [예약 완료 처리]를 눌러 만든다.
+실연동 시에는 <strong>확정까지 수개월</strong>이 걸리고 <strong>누락되는 건도 있다.</strong></p>
+</blockquote>
+<hr />
+<h2 id="s10">제10조 (적립 운영 — 혜택 · 퀴즈 · 광고주)</h2>
+<h3 id="s10-1">10-1. 혜택(오퍼월)</h3>
+<p>열: 선택 · 노출 · 썸네일 · 제목 · 광고주 · 분류 · 적립 · 체류 · 노출기간 · 버튼명 · 아웃링크 · 참여수 · 관리</p>
+<ul>
+<li>고객이 버튼을 누르면 <strong>광고주 페이지로 이동</strong>하고, <strong>체류 시간을 채우면 적립</strong>된다</li>
+<li>여러 건을 골라 <strong>일괄 수정</strong>할 수 있다</li>
+</ul>
+<h3 id="s10-2">10-2. 퀴즈</h3>
+<p>열: 노출 · 문항 · 정답 · 해설 · 광고 · <strong>출제여부</strong> · 관리</p>
+<p><strong>출제여부 3단계</strong> (2026-10-12 확정)</p>
+<table>
+<thead>
+<tr>
+  <th>단계</th>
+  <th>뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>대기</strong></td>
+  <td>노출 ON · 아직 한 번도 안 나감</td>
+</tr>
+<tr>
+  <td><strong>출제중</strong></td>
+  <td>노출 ON · 나간 적 있음</td>
+</tr>
+<tr>
+  <td><strong>출제완료</strong></td>
+  <td>노출 OFF · 더 이상 출제하지 않음</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>왜 셋으로 나눴나</strong> — 켜짐/꺼짐 두 가지로는 <strong>「한 번이라도 나갔나」</strong>밖에 알 수 없다.
+운영자가 알고 싶은 것은 <strong>새 문항이 얼마나 남았는지</strong>와
+<strong>지금 도는 문항이 몇 개인지</strong>다.</p>
+</blockquote>
+<ul>
+<li>매일 켜져 있는 문항 중 <strong>3개를 무작위</strong>로 뽑는다 (<code>quiz_count</code>)</li>
+<li>이미 푼 문항은 <strong>기간 없이</strong> 제외된다. 설정 <strong>「푼 문제 다시 출제 허용」</strong> 을 켜면 제외를 풀고 모든 회원에게 다시 출제한다 <em>(2026-10-26 PO 확정 · v0.2 구현 완료 — <code>quiz_allow_repeat</code>)</em></li>
+<li>출제 근거는 <strong>선택 입력</strong> — 엑셀 근거 칸은 비어도 등록, 문항 창에는 근거 칸 없음 <em>(2026-10-26 PO 확정)</em></li>
+<li>문항마다 <strong>광고 링크</strong>를 붙일 수 있다 — 해설 아래 버튼으로 나온다. <strong>등록할 때도 광고가 함께 저장</strong>된다 <em>(v0.2)</em></li>
+<li>광고를 <strong>「사용」으로 두면 링크가 있어야</strong> 저장된다 — 없으면 「광고를 사용하려면 광고 링크를 입력해 주세요」 <em>(v0.2)</em></li>
+<li><strong>같은 문장의 문항은 등록·수정할 수 없다</strong> — 「이미 등록된 문항이에요」 <em>(v0.2 · 엑셀 등록은 이미 건너뛰고 있었음)</em></li>
+<li>문항 창의 해설 칸 이름 = <strong>「해설 (정답 공개 후 항상 보여줍니다)」</strong> — 고객 화면은 정답·오답 모두 해설을 보여준다 <em>(v0.2)</em></li>
+<li><strong>엑셀 일괄 등록</strong> 지원</li>
+</ul>
+<blockquote>
+<p><code>미결</code> — <strong>출제 근거를 무엇으로 담보할지</strong>. 근거 URL 입력란은 v0.6에서 없앴다.
+문항별 광고 표기 의무도 확인이 필요하다.</p>
+</blockquote>
+<h3 id="s10-3">10-3. 광고주</h3>
+<p>열: 사용 · 광고주명 · 사업자번호 · 담당자 · 정산방식 · 광고수 · 메모 · 관리</p>
+<ul>
+<li><strong>여기 등록된 광고주만</strong> 광고를 올릴 수 있다</li>
+</ul>
+<blockquote>
+<p><code>미결</code> — <strong>정산·과금(CPC/CPA 요율, 정산 주기, 세금계산서)</strong> 이 정해지지 않아
+이번 버전에서는 <strong>등록만</strong> 한다.</p>
+</blockquote>
+<hr />
+<h2 id="s11">제11조 (알림)</h2>
+<h3 id="s11-1">11-1. 발송</h3>
+<ul>
+<li>보낸 알림은 <strong>고객 앱 알림함에 쌓이고 배지가 올라간다</strong></li>
+<li>유형: <code>공지사항</code> / <code>마케팅</code> / <code>시스템(자동)</code></li>
+<li>열: 발송일시 · 유형 · 대상 · 내용 · 읽음</li>
+</ul>
+<h3 id="s11-2">11-2. 미결</h3>
+<table>
+<thead>
+<tr>
+  <th>항목</th>
+  <th>현재</th>
+  <th>정해야 할 것</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>휴대폰 푸시</td>
+  <td>없음 — <strong>앱을 켜 둔 동안에만</strong> 전달</td>
+  <td>포인트 소멸처럼 꼭 닿아야 할 알림의 전달 수단</td>
+</tr>
+<tr>
+  <td>예약 발송·세그먼트</td>
+  <td>없음</td>
+  <td>다음 버전</td>
+</tr>
+<tr>
+  <td>수신 동의 연동</td>
+  <td>없음</td>
+  <td><strong>광고성 알림은 동의자에게만</strong> 보내는 규칙</td>
+</tr>
+<tr>
+  <td>보관 기간</td>
+  <td>화면에는 「90일 보관」이나 <strong>지우는 기능이 없다</strong>(최근 100건 표시)</td>
+  <td>문구 수정 또는 삭제 기능</td>
+</tr>
+<tr>
+  <td>확인 주기</td>
+  <td><strong>5초마다</strong> 확인 (시연용)</td>
+  <td>회원 수만큼 서버 부담 — 주기 상향 또는 푸시 전환</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="s12">제12조 (설정)</h2>
+<p>값을 바꾸면 <strong>고객 화면에 바로 반영</strong>된다.</p>
+<table>
+<thead>
+<tr>
+  <th>키</th>
+  <th style="text-align:right">현재 값</th>
+  <th>뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>attend_point</code></td>
+  <td style="text-align:right">10</td>
+  <td>출석 1회 적립 포인트</td>
+</tr>
+<tr>
+  <td><code>attend_card_size</code></td>
+  <td style="text-align:right">6</td>
+  <td>출석 카드 칸 수</td>
+</tr>
+<tr>
+  <td><code>quiz_count</code></td>
+  <td style="text-align:right">3</td>
+  <td>1일 출제 문항 수</td>
+</tr>
+<tr>
+  <td><code>quiz_point</code></td>
+  <td style="text-align:right">10</td>
+  <td>퀴즈 문항당 포인트</td>
+</tr>
+<tr>
+  <td><code>quiz_allow_repeat</code></td>
+  <td style="text-align:right">0</td>
+  <td><strong>푼 문제 다시 출제 허용</strong> — 고르기 「끔 — 푼 문항은 다시 내지 않음」/「켬 — 푼 문항도 다시 출제」 (「적립」 묶음)</td>
+</tr>
+<tr>
+  <td><code>offer_point</code></td>
+  <td style="text-align:right">10</td>
+  <td>오퍼월 클릭 기본 포인트</td>
+</tr>
+<tr>
+  <td><code>offer_dwell</code></td>
+  <td style="text-align:right">3</td>
+  <td>오퍼월 체류 조건(초)</td>
+</tr>
+<tr>
+  <td><code>draw_w1</code></td>
+  <td style="text-align:right">45</td>
+  <td>출석 보너스 10~20P 비중(%)</td>
+</tr>
+<tr>
+  <td><code>draw_w2</code></td>
+  <td style="text-align:right">30</td>
+  <td>출석 보너스 21~40P 비중(%)</td>
+</tr>
+<tr>
+  <td><code>draw_w3</code></td>
+  <td style="text-align:right">18</td>
+  <td>출석 보너스 41~70P 비중(%)</td>
+</tr>
+<tr>
+  <td><code>draw_w4</code></td>
+  <td style="text-align:right"><strong>7</strong></td>
+  <td>출석 보너스 71~100P 비중(%) — <strong>하한</strong> (설명 「7% 미만 불가(자사 기준)」)</td>
+</tr>
+<tr>
+  <td><code>invite_point</code></td>
+  <td style="text-align:right">1,000</td>
+  <td>친구 추천 양방 각 포인트</td>
+</tr>
+<tr>
+  <td><code>invite_cap</code></td>
+  <td style="text-align:right"><strong>3</strong></td>
+  <td>친구 추천 적립 상한 (<strong>정책 원안 월 20회 · 시연용 3회</strong>)</td>
+</tr>
+<tr>
+  <td><code>withdraw_unit</code></td>
+  <td style="text-align:right">1,000</td>
+  <td>출금 단위(P)</td>
+</tr>
+<tr>
+  <td><code>withdraw_min</code></td>
+  <td style="text-align:right">10,000</td>
+  <td>출금 최소 신청액(P)</td>
+</tr>
+<tr>
+  <td><code>withdraw_max_once</code></td>
+  <td style="text-align:right">100,000</td>
+  <td>출금 1회 한도(P)</td>
+</tr>
+<tr>
+  <td><code>expire_days</code></td>
+  <td style="text-align:right">365</td>
+  <td>포인트 소멸 기간(일)</td>
+</tr>
+<tr>
+  <td><code>max_users</code></td>
+  <td style="text-align:right">0</td>
+  <td>가입 가능 인원 (0 = 제한 없음)</td>
+</tr>
+<tr>
+  <td><code>draw_base_rate</code></td>
+  <td style="text-align:right">1</td>
+  <td>예약 기본 적립 요율(%)</td>
+</tr>
+<tr>
+  <td><code>draw_expire_days</code></td>
+  <td style="text-align:right"><strong>30</strong></td>
+  <td>뽑기 가능 기간(일) — <strong>적립완료일 + 30일</strong> · 0 = 무기한 <code>[PO 확정 2026-10-27]</code></td>
+</tr>
+<tr>
+  <td><code>admin_pw</code></td>
+  <td style="text-align:right">—</td>
+  <td>어드민 비밀번호</td>
+</tr>
+</tbody>
+</table>
+<h3 id="s12-1">12-1. 출석 보너스 하한 7%</h3>
+<p>최고 구간(71~100P)의 비중을 <strong>7% 미만으로 내리지 못하게</strong> 막아 두었다.</p>
+<blockquote>
+<p>⚠️ <strong>이 7%는 법으로 정해진 수치가 아니다.</strong>
+표시광고법은 <strong>구체적인 비율을 규정하지 않는다.</strong>
+「최대 100P」라고 알리면서 그 확률이 지나치게 낮으면 문제가 될 수 있다는 판단에서
+<strong>자사 기준으로 정한 값</strong>이다. <code>미결</code> — 법무 검토 필요.</p>
+</blockquote>
+<h3 id="s12-2">12-2. 데이터 초기화 (시연 전용)</h3>
+<ul>
+<li><strong>포인트·기록만 초기화</strong> / <strong>전부 초기화(회원까지)</strong></li>
+<li>시연 반복을 위한 기능이다. <strong>상용에서는 제거한다.</strong></li>
+</ul>
+<h3 id="s12-3">12-3. 저장할 때 검사 <em>(v0.2 신설)</em></h3>
+<p><strong>하나라도 틀리면 아무것도 저장하지 않는다.</strong></p>
+<table>
+<thead>
+<tr>
+  <th>검사</th>
+  <th>거절 문구</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>숫자가 아님</td>
+  <td>「{항목} — 숫자로 입력해 주세요」</td>
+</tr>
+<tr>
+  <td>칸별 범위 밖 (아래 표)</td>
+  <td>「{항목} — {최소}~{최대} 사이로 입력해 주세요」</td>
+</tr>
+<tr>
+  <td>출석 보너스 네 칸 <strong>합계 ≠ 100</strong></td>
+  <td>「출석 보너스 비중 네 칸의 합이 100이어야 해요 (지금 N)」 — 서버는 합계 대비 비율로 뽑으므로, 다른 칸을 올리면 71~100P 실제 비중이 7% 밑으로 내려간다(예: 90·30·18·7 → 4.8%)</td>
+</tr>
+<tr>
+  <td>71~100P <strong>7% 미만</strong></td>
+  <td>「71~100P 구간은 7% 미만으로 낮출 수 없어요 (자사 기준 · 정책서 2-5절)」</td>
+</tr>
+<tr>
+  <td>출금 최소 &lt; 출금 단위</td>
+  <td>「출금 최소 신청액은 출금 단위보다 작을 수 없어요」</td>
+</tr>
+<tr>
+  <td>1회 한도 &lt; 최소</td>
+  <td>「출금 1회 한도는 최소 신청액보다 작을 수 없어요」</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>출석 보너스 묶음 아래에 <strong>합계를 입력할 때마다</strong> 보여준다 — 「합계 100 ✓」 / 「합계 N — 100이 되어야 저장돼요」(빨강)</li>
+</ul>
+<p><strong>칸별 허용 범위</strong> — 정책값이 아니라 <strong>「말이 안 되는 값」을 막는 울타리</strong>다 (대화창4 설정 · PO 확인 권장)</p>
+<table>
+<thead>
+<tr>
+  <th>키</th>
+  <th>범위</th>
+  <th>키</th>
+  <th>범위</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>attend_point</code></td>
+  <td>1~10,000</td>
+  <td><code>invite_point</code></td>
+  <td>1~1,000,000</td>
+</tr>
+<tr>
+  <td><code>attend_card_size</code></td>
+  <td>2~14</td>
+  <td><code>invite_cap</code></td>
+  <td>0~10,000</td>
+</tr>
+<tr>
+  <td><code>quiz_count</code></td>
+  <td>1~10</td>
+  <td><code>withdraw_unit</code></td>
+  <td>1~1,000,000</td>
+</tr>
+<tr>
+  <td><code>quiz_point</code></td>
+  <td>1~10,000</td>
+  <td><code>withdraw_min</code></td>
+  <td>1~10,000,000</td>
+</tr>
+<tr>
+  <td><code>quiz_allow_repeat</code></td>
+  <td>0~1</td>
+  <td><code>withdraw_max_once</code></td>
+  <td>1~100,000,000</td>
+</tr>
+<tr>
+  <td><code>offer_point</code></td>
+  <td>1~100,000</td>
+  <td><code>expire_days</code></td>
+  <td>1~3,650</td>
+</tr>
+<tr>
+  <td><code>offer_dwell</code></td>
+  <td>0~600</td>
+  <td><code>max_users</code></td>
+  <td>0~100,000,000</td>
+</tr>
+<tr>
+  <td><code>draw_w1</code>~<code>draw_w4</code></td>
+  <td>0~100</td>
+  <td><code>draw_base_rate</code></td>
+  <td>0~100</td>
+</tr>
+<tr>
+  <td></td>
+  <td></td>
+  <td><code>draw_expire_days</code></td>
+  <td>0~3,650</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="s13">제13조 (관리자 로그)</h2>
+<h3 id="s13-1">13-1. 기록되는 작업</h3>
+<table>
+<thead>
+<tr>
+  <th>코드</th>
+  <th>작업</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>point_grant</code></td>
+  <td>포인트 수동 지급·회수</td>
+</tr>
+<tr>
+  <td><code>withdraw_paid</code></td>
+  <td>출금 지급 처리</td>
+</tr>
+<tr>
+  <td><code>reject_wd</code></td>
+  <td>출금 반려</td>
+</tr>
+<tr>
+  <td><code>order_reissue</code></td>
+  <td>쿠폰 재발행</td>
+</tr>
+<tr>
+  <td><code>offer_edit</code></td>
+  <td>혜택 등록·수정</td>
+</tr>
+<tr>
+  <td><code>quiz_edit</code></td>
+  <td>퀴즈 등록·수정</td>
+</tr>
+<tr>
+  <td><code>adv_edit</code></td>
+  <td>광고주 등록·수정</td>
+</tr>
+<tr>
+  <td><code>notify</code></td>
+  <td>알림 발송</td>
+</tr>
+<tr>
+  <td><code>setting</code></td>
+  <td>설정값 변경</td>
+</tr>
+<tr>
+  <td><code>reset</code></td>
+  <td>데이터 초기화</td>
+</tr>
+<tr>
+  <td><code>verify</code></td>
+  <td>본인인증 처리 — 완료로 바꾸면 적립대기 지급액을 함께 남긴다 <em>(v0.2)</em></td>
+</tr>
+</tbody>
+</table>
+<p>열: 일시 · 관리자 · 작업 · 대상 · 내용</p>
+<h3 id="s13-2">13-2. 미결</h3>
+<blockquote>
+<p><strong>누가 했는지 구분되지 않는다.</strong> 비밀번호 하나로 들어오기 때문이다.
+권한 체계(2-2)와 함께 정해야 한다.</p>
+</blockquote>
+<hr />
+<h2 id="s14">제14조 (미결 사항 모아보기)</h2>
+<table>
+<thead>
+<tr>
+  <th style="text-align:center">#</th>
+  <th>항목</th>
+  <th>지금 상태</th>
+  <th>정해야 할 것</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:center">1</td>
+  <td><strong>어드민 권한·계정</strong></td>
+  <td>비밀번호 1개</td>
+  <td>계정 발급 · 등급 · <strong>처리자 기록</strong></td>
+</tr>
+<tr>
+  <td style="text-align:center">2</td>
+  <td><strong>포인트 수동 처리 통제</strong></td>
+  <td>제한 없음</td>
+  <td>권한 · 1회 한도 · 승인 절차</td>
+</tr>
+<tr>
+  <td style="text-align:center">3</td>
+  <td><strong>출금 승인 단계</strong></td>
+  <td>없음</td>
+  <td>일정 금액 이상 승인 여부</td>
+</tr>
+<tr>
+  <td style="text-align:center">4</td>
+  <td><strong>출금 월 한도</strong></td>
+  <td>고객 화면에만 존재</td>
+  <td>설정값으로 옮기고 <strong>서버 검증</strong></td>
+</tr>
+<tr>
+  <td style="text-align:center">5</td>
+  <td><strong>출금 수수료</strong></td>
+  <td>「정책 미확정」 노출 중</td>
+  <td>자사 부담 vs 신청액에서 차감</td>
+</tr>
+<tr>
+  <td style="text-align:center">6</td>
+  <td><strong>원천징수·세무</strong></td>
+  <td>없음</td>
+  <td>현금 지급의 세무 기준</td>
+</tr>
+<tr>
+  <td style="text-align:center">7</td>
+  <td><strong>쿠폰 발행사</strong></td>
+  <td>자사 생성</td>
+  <td>발행 업체 선정 · 재고·정산 연동</td>
+</tr>
+<tr>
+  <td style="text-align:center">8</td>
+  <td><strong>광고주 정산</strong></td>
+  <td>등록만</td>
+  <td>CPC/CPA 요율 · 주기 · 세금계산서</td>
+</tr>
+<tr>
+  <td style="text-align:center">9</td>
+  <td><strong>출석 보너스 7% 하한</strong></td>
+  <td>자사 기준</td>
+  <td><strong>법무 검토</strong></td>
+</tr>
+<tr>
+  <td style="text-align:center">10</td>
+  <td><strong>친구 추천 상한</strong></td>
+  <td>시연 3회</td>
+  <td>원안 월 20회로 되돌릴지</td>
+</tr>
+<tr>
+  <td style="text-align:center"><del>11</del></td>
+  <td><del>뽑기 가능 기간</del></td>
+  <td><strong>해소 2026-10-27 — 30일 확정</strong></td>
+  <td>포인트 정책서 v0.2 4절</td>
+</tr>
+<tr>
+  <td style="text-align:center">12</td>
+  <td><strong>퀴즈 출제 근거</strong></td>
+  <td>운영 기준으로 관리</td>
+  <td>사실 확인을 무엇으로 담보할지</td>
+</tr>
+<tr>
+  <td style="text-align:center">13</td>
+  <td><strong>퀴즈 문항별 광고 표기</strong></td>
+  <td>v0.6 신설</td>
+  <td>적립 화면 광고의 <strong>표기 의무</strong></td>
+</tr>
+<tr>
+  <td style="text-align:center">14</td>
+  <td><strong>알림 보관 90일</strong></td>
+  <td>문구만 있고 <strong>기능 없음</strong></td>
+  <td>문구 수정 또는 삭제 기능</td>
+</tr>
+<tr>
+  <td style="text-align:center">15</td>
+  <td><strong>알림 수신 동의 연동</strong></td>
+  <td>없음</td>
+  <td>광고성 알림 발송 규칙</td>
+</tr>
+<tr>
+  <td style="text-align:center">16</td>
+  <td><strong>개인정보 반출</strong></td>
+  <td>엑셀 내려받기 없음</td>
+  <td>반출 기준 수립 후 개방 여부</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>부록 A. 시연용으로 만든 것 — 상용 전 제거·전환 대상</h2>
+<table>
+<thead>
+<tr>
+  <th>대상</th>
+  <th>현재</th>
+  <th>상용에서</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>출금 지급</td>
+  <td>운영자가 [지급하기]</td>
+  <td><strong>펌뱅킹 자동 송금</strong></td>
+</tr>
+<tr>
+  <td>픽샵 쿠폰</td>
+  <td>자사 생성 번호</td>
+  <td><strong>발행 업체 연동</strong></td>
+</tr>
+<tr>
+  <td>예약 생성</td>
+  <td>고객이 [예약 완료 처리]</td>
+  <td><strong>호텔스컴바인 예약 결과 수신</strong></td>
+</tr>
+<tr>
+  <td>데이터 초기화</td>
+  <td>메뉴에 있음</td>
+  <td><strong>제거</strong></td>
+</tr>
+<tr>
+  <td>친구 추천 상한</td>
+  <td>3회</td>
+  <td>정책 원안 값</td>
+</tr>
+<tr>
+  <td>알림 확인 주기</td>
+  <td>5초</td>
+  <td>상향 또는 푸시</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>부록 B. 이 문서와 설명서의 관계</h2>
+<table>
+<thead>
+<tr>
+  <th>문서</th>
+  <th>성격</th>
+  <th>읽는 사람</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>이 문서</strong></td>
+  <td>개발·운영 <strong>기준</strong>. 절 번호·값·미결</td>
+  <td>개발자 · 기획</td>
+</tr>
+<tr>
+  <td><code>설명서/admin.html</code></td>
+  <td>같은 내용을 <strong>읽히기 위한 글</strong>로 쓴 것. 화면 캡처 중심</td>
+  <td>CPO · 대표 · 이해관계자</td>
+</tr>
+</tbody>
+</table>
+<p>어드민 각 화면의 안내 띠는 <strong>설명서</strong>(https://dreamyuns.github.io/new-brand/guide/admin.html)로 연결된다.
+<strong>두 문서의 내용이 어긋나면 이 문서를 기준으로 설명서를 고친다.</strong></p>
+
+</main></body></html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>F-MY 마이페이지 — 픽콕 리워드 화면기획서</title>
+<link rel="stylesheet" href="../wf-reward.css">
+<!-- 근거: 구현물 pickoq_demo static/app.js viewMy·myTap·doLogout · data.js MY_ACT·MY_SUP (2026-10-27)
+     캡처는 [로그아웃]을 누르지 않았다. 잔액 두 모습(전환까지 / 전환 가능)은 화면 값만 바꿔 찍었다(서버 값은 그대로) -->
+</head>
+<body data-key="f_my" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page">
+
+<div class="top"><span class="sid">F-MY</span><h1>마이페이지 (My 탭)</h1></div>
+<div class="meta">
+  <span>기준 정책서 <b><a href="../policy/pol_my.html#s1">리워드 마이페이지 v0.1 · 1절</a></b></span>
+  <span>기준 구현물 <b>pickoq_demo</b> <code>static/app.js</code> (2026-10-27)</span>
+  <span>캡처 <b>2026-10-27</b> · 390×844</span>
+  <span>최종수정 <b>2026-10-27</b></span>
+</div>
+<p class="lead">하단 탭 [My]로 들어오는 화면입니다. 로그인 회원은 <b>프로필 · 잔액 · 내 활동 메뉴</b>를, 비로그인은 <b>[회원가입 / 로그인]과 지원·정보 메뉴</b>만 봅니다. 메뉴 안쪽 화면(포인트 내역·설정 등)은 각 화면기획서에 있습니다.</p>
+
+<div class="box">
+  <h3>읽는 법</h3>
+  <div class="legend">
+    <span><b style="color:var(--zone)">붉은 점선 상자 A~E</b> 화면의 영역</span>
+    <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능 — 마우스를 올리면 설명과 함께 강조</span>
+    <span>「N-N절」을 누르면 그 절만 팝업으로 열립니다</span>
+    <span><span class="tag ok">확정</span> 정책서 근거 있음</span>
+    <span><span class="tag proto">프로토 기준</span> 정책서에 아직 없음</span>
+    <span><span class="tag open">미결</span> 바뀔 수 있음</span>
+  </div>
+</div>
+
+<div class="sec-policy">
+  <h3>⚙ 공통 정책 — 마이페이지 전체</h3>
+  <ul>
+    <li><b>1뎁스 화면</b>이라 하단 탭이 보입니다. 메뉴를 눌러 들어간 화면은 2뎁스라 하단 탭이 없고 [←]로 돌아옵니다. (<a href="../policy/pol_my.html#s1-1">1-1절</a>)</li>
+    <li>이름·이메일·잔액은 <b>서버 값</b>을 씁니다. 잔액은 <b>적립완료 포인트만</b> — 본인인증 전 회원은 0P입니다. (<a href="../policy/pol_my.html#s1-2">1-2절</a> · <a href="../policy/pol_earn.html#s1-6">참여형 1-6절</a>)</li>
+    <li>「내 활동」은 회원 전용이라 <b>비로그인에게는 그룹째 보이지 않습니다</b>. 알림 종도 로그인 회원만 보입니다. (<a href="../policy/pol_my.html#s1-5">1-5절</a>)</li>
+    <li>진행 막대는 <b>홈 저금통 카드와 같은 기준</b>입니다 — 현금 전환 방식이면 「목표 · 전환까지」, 픽샵 방식이면 「지금 NP · 교환」. (<a href="../policy/pol_my.html#s1-3">1-3절</a> · PO 확정 2026-10-27)</li>
+  </ul>
+  <div class="src">기준: 리워드 마이페이지 정책서 v0.1 · 1절 / 리워드 회원 v0.2 · 6절(로그아웃)</div>
+</div>
+
+<nav class="toc" aria-label="이 페이지 바로가기">
+  <span class="toc-lb">바로가기</span>
+  <a href="#flow"><b>①</b>화면 흐름·데이터</a>
+  <a href="#layout"><b>②</b>페이지 구성</a>
+  <span class="toc-sep"></span>
+  <a class="z" href="#zA"><b>A</b>위쪽 (프로필·잔액)</a>
+  <a class="z" href="#zB"><b>B</b>내 활동</a>
+  <a class="z" href="#zC"><b>C</b>지원·정보</a>
+  <a class="z" href="#zD"><b>D</b>로그아웃</a>
+  <a class="z" href="#zE"><b>E</b>하단 탭</a>
+  <span class="toc-sep"></span>
+  <a href="#exc">예외 케이스</a>
+</nav>
+
+<section class="sec major" id="flow">
+  <div class="sec-hd"><h2>① 화면 흐름 · 데이터</h2></div>
+  <div class="box">
+    <div class="flow"><span>하단 탭 [My]</span><i>→</i><span>로그인 회원: 프로필 · 잔액 · 메뉴 8개 · [로그아웃]</span></div>
+    <div class="flow" style="margin-top:8px"><i>비로그인:</i><span>[회원가입 / 로그인]</span><i>→</i><span>가입·로그인 시트 (<a href="f_auth.html">F-AUTH</a>)</span><i>→</i><span>로그인 회원 모습으로 다시 그림</span></div>
+    <div class="flow" style="margin-top:8px"><span>프로필</span><i>→</i><span>계정관리 (<a href="f_acc.html">F-ACC</a>)</span></div>
+    <div class="flow" style="margin-top:8px"><span>[로그아웃]</span><i>→</i><span>토스트 "로그아웃했어요"</span><i>→</i><span>이 화면(비로그인 모습)</span></div>
+  </div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>값</th><th>어디서</th><th>화면에 쓰는 곳</th></tr>
+    <tr><td>이름 · 이메일</td><td>로그인한 계정(서버 <code>PK.me</code>)</td><td>A ④ 프로필</td></tr>
+    <tr><td>잔액</td><td>서버 포인트(적립완료) · 비로그인 0</td><td>A ⑤ · ⑥ 막대</td></tr>
+    <tr><td>현금 전환 최소 금액</td><td>어드민 설정 <code>withdraw_min</code> (기본 10,000P)</td><td>A ⑥ 막대 · ⑦ 「목표 / 전환까지」</td></tr>
+    <tr><td>안 읽은 알림 수</td><td>서버 알림</td><td>A ② 알림 종 배지</td></tr>
+  </table></div>
+</section>
+
+<section class="sec major" id="layout">
+  <div class="sec-hd"><span class="sid">F-MY-L</span><h2>② 페이지 구성</h2></div>
+  <p class="sec-sub">왼쪽은 로그인 회원(본인인증 완료), 오른쪽은 비로그인입니다.</p>
+  <div class="two-col unit">
+    <div class="shots-row">
+      <div class="sw"><div class="lb">F-MY-L <small>로그인</small></div><figure class="shot" data-id="F-MY-L" data-base="../"></figure></div>
+      <div class="sw"><div class="lb">F-MY-L2 <small>비로그인</small></div><figure class="shot" data-id="F-MY-L2" data-base="../"></figure></div>
+    </div>
+    <div>
+      <div class="box wrapx" style="margin-bottom:12px"><table class="t">
+        <tr><th>영역</th><th>들어가는 요소</th><th>로그인 / 비로그인</th></tr>
+        <tr class="zrow" data-n="A"><td><b>A</b> 위쪽</td><td>제목 · 알림 종 · 공작새 · 프로필 · 잔액 · 진행 막대</td><td>비로그인은 안내 + [회원가입 / 로그인]</td></tr>
+        <tr class="zrow" data-n="B"><td><b>B</b> 내 활동</td><td>포인트 내역 · 내 쿠폰함 · 알림함 · 저금통 · 친구 추천</td><td>비로그인은 없음</td></tr>
+        <tr class="zrow" data-n="C"><td><b>C</b> 지원·정보</td><td>FAQ · 약관·정책 · 설정</td><td>같음</td></tr>
+        <tr class="zrow" data-n="D"><td><b>D</b> 로그아웃</td><td>[로그아웃]</td><td>비로그인은 없음</td></tr>
+        <tr class="zrow" data-n="E"><td><b>E</b> 하단 탭</td><td>홈 · 검색 · 혜택 · My</td><td>같음 (<a href="f_home.html#zG">F-HOME G</a>)</td></tr>
+      </table></div>
+      <div class="cn"><div class="cn-hd">화면 공통 규칙</div>
+        <ul><li>A~D가 함께 스크롤됩니다. 하단 탭(E)은 떠 있습니다.</li>
+            <li>로그인·로그아웃하면 이 화면을 그 자리에서 다시 그립니다.</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec major" id="detail" style="margin-bottom:0">
+  <div class="major-hd"><h2>③ 영역별 상세 — 기능 · 정의 · 정책</h2></div>
+  <p class="sec-sub">영역마다 상태별 캡처를 잘라 나란히 놓았습니다. 같은 영역 안에서는 상태가 달라도 같은 번호가 같은 요소입니다.</p>
+</section>
+
+<section class="sec zsec" id="zA">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">A</span><h2>위쪽 — 프로필 · 잔액</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-MY-A1 <small>로그인 · 전환까지</small></div><figure class="shot" data-id="F-MY-A1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-MY-A2 <small>로그인 · 전환 가능</small></div><figure class="shot" data-id="F-MY-A2" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-MY-A3 <small>비로그인</small></div><figure class="shot" data-id="F-MY-A3" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「My Page」</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>알림 종 — 로그인 회원만</div>
+      <ul><li>안 읽은 알림이 있으면 빨간 숫자(99 넘으면 「99+」). 누르면 알림함(알림 묶음에서 작성).</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>공작새</div>
+      <ul><li>로그인 = 축하하는 공작새 · 비로그인 = 누워 자는 공작새(A3).</li></ul></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>프로필 「{이름}님」 · 이메일 · [>]</div>
+      <ul><li>누르면 <b>계정관리</b>(<a href="f_acc.html">F-ACC</a>). [>]는 누를 수 있는 곳이라는 표시입니다.</li>
+          <li>가입 직후 본인인증 전에는 이름이 이메일 앞부분입니다(본인인증하면 실명).</li></ul>
+      <div class="rule"><b>근거</b> 프로필 → 계정관리 (<a href="../policy/pol_my.html#s1-2">1-2절</a>)</div></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>잔액 「N P」</div>
+      <ul><li><b>사용 가능 포인트</b> — 적립완료만 더합니다. 적립대기·적립예정은 넣지 않고, 본인인증 전 회원은 0P.</li></ul>
+      <div class="rule"><b>근거</b> 잔액 (<a href="../policy/pol_my.html#s1-2">1-2절</a> · <a href="../policy/pol_point.html#s5-1">포인트 5-1절</a>)</div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>진행 막대</div>
+      <ul><li>잔액 ÷ 현금 전환 최소 금액(어드민 설정, 기본 10,000P). 0P여도 3%는 칠해 둡니다. 다 모으면 100%(A2).</li></ul></div>
+    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>막대 아래 문구</div>
+      <ul><li><b>현금 전환 방식:</b> 왼쪽 「목표 10,000P」 · 오른쪽 「전환까지 NP」(A1) → 다 모으면 「전환 가능」(A2).</li>
+          <li><b>픽샵 방식:</b> 왼쪽 「지금 NP」 · 오른쪽 「기프티콘·상품권 교환」 — 홈 저금통 카드와 같게.</li></ul>
+      <div class="case">구현은 픽샵 방식이어도 <b>늘 현금 전환 문구</b>(A1·A2)를 보여 줍니다 → 홈과 같게 <span class="tag proto">프로토 수정 #43</span></div>
+      <div class="rule"><b>근거</b> 홈 저금통과 같은 기준 (PO 확정 2026-10-27 · <a href="../policy/pol_my.html#s1-3">1-3절</a>)</div></div>
+    <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>「로그인이 필요해요」 — 비로그인</div></div>
+    <div class="cn" data-n="9"><div class="cn-hd"><span class="no">9</span>"로그인하면 포인트를 모을 수 있어요"</div></div>
+    <div class="cn" data-n="10"><div class="cn-hd"><span class="no">10</span>[회원가입 / 로그인]</div>
+      <ul><li>누르면 가입·로그인 시트(<a href="f_auth.html">F-AUTH</a>). 마치면 이 화면이 로그인 모습으로 바뀝니다.</li></ul>
+      <div class="rule"><b>근거</b> 비로그인 구성 (<a href="../policy/pol_my.html#s1-4">1-4절</a>)</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zB">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">B</span><h2>내 활동 — 로그인 회원만</h2><span class="tag ok">확정</span></div>
+  <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-MY-B1</div><figure class="shot" data-id="F-MY-B1" data-base="../"></figure></div></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>포인트 내역 — "적립·사용 모두 보기"</div><ul><li>→ <a href="f_point.html">F-POINT</a> (필터 「전체」로 열림).</li></ul></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>내 쿠폰함 — "픽샵에서 구매한 쿠폰"</div><ul><li>→ 쿠폰함(포인트 사용 묶음에서 작성).</li></ul></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>알림함 — "적립·공지 알림"</div><ul><li>→ 알림함(알림 묶음에서 작성). 알림 종(A②)과 같은 화면.</li></ul></div>
+      <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>저금통 — "현금 전환 · 픽샵"</div><ul><li>현금 전환 방식이면 현금 전환 화면, 픽샵 방식이면 픽샵으로 바로 갑니다(포인트 사용 묶음에서 작성).</li></ul></div>
+      <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>친구 추천 — "내 코드 공유하고 양쪽 적립"</div><ul><li>→ <a href="f_invite.html">F-INV</a>.</li></ul></div>
+      <div class="cn"><div class="cn-hd">규칙</div>
+        <ul><li>행 전체를 누를 수 있습니다(오른쪽 [>]).</li>
+            <li>비로그인에게는 이 그룹이 없습니다. 다른 경로로 들어오면 로그인 시트가 뜹니다.</li>
+            <li>만들지 않는 메뉴: 계정관리 행(프로필로 들어감) · 알림 설정 · 언어·통화 변환(설정에 고정 표시) · 내 예약(예약은 예약처에서 관리).</li></ul>
+        <div class="rule"><b>근거</b> 메뉴 구성 (<a href="../policy/pol_my.html#s1-5">1-5절</a>)</div></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zC">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">C</span><h2>지원·정보</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-MY-C1 <small>로그인</small></div><figure class="shot" data-id="F-MY-C1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-MY-C2 <small>비로그인</small></div><figure class="shot" data-id="F-MY-C2" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>FAQ — "자주 묻는 질문"</div><ul><li>→ <a href="f_set.html#faq">F-SET FAQ</a>. 처음 분류가 선택된 채 열립니다.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>약관·정책 — "이용약관 · 개인정보 처리방침"</div><ul><li>→ <a href="f_set.html#terms">F-SET 약관·정책</a> 목록.</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>설정 — "마케팅 수신 · 언어·통화 · 앱 버전"</div><ul><li>→ <a href="f_set.html#set">F-SET 설정</a>. 비로그인은 마케팅 동의 행이 없습니다.</li></ul></div>
+    <div class="cn"><div class="cn-hd">규칙</div><ul><li>로그인·비로그인 모두 같은 세 메뉴입니다. 비로그인은 이 그룹이 맨 위에 옵니다.</li></ul></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zD">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">D</span><h2>로그아웃</h2><span class="tag ok">확정</span></div>
+  <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-MY-D1</div><figure class="shot" data-id="F-MY-D1" data-base="../"></figure></div></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>[로그아웃] — 로그인 회원만</div>
+        <ul><li>누르면 <b>확인창 없이</b> 바로 로그아웃 → 토스트 "로그아웃했어요" → 이 화면(비로그인 모습)에 남습니다.</li></ul>
+        <div class="case">구현은 화면만 비로그인으로 바꾸고 <b>서버 세션을 끊지 않습니다</b> → 세션 끊기 <span class="tag proto">프로토 수정 #34</span></div>
+        <div class="rule"><b>근거</b> 로그아웃 (<a href="../policy/pol_my.html#s1-6">1-6절</a> · <a href="../policy/pol_member.html#s6">회원 6절</a>)</div></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zE">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">E</span><h2>하단 탭</h2><span class="tag ok">확정</span></div>
+  <p class="sec-sub">앱 전체 공통입니다. [My]가 선택된 모습으로 보입니다. 규칙은 <a href="f_home.html#zG">F-HOME G 하단 탭</a>을 따릅니다 — 네 탭의 1뎁스 화면에만 보이고 2뎁스에서는 숨깁니다.</p>
+  </div>
+</section>
+
+<section class="sec zsec" id="exc">
+  <div class="sec-hd"><h2>예외 케이스</h2><span class="tag ok">확정</span></div>
+  <p class="sec-sub">정책서 <a href="../policy/pol_my.html#s5">5절</a>을 화면 동작 기준으로 옮겼습니다.</p>
+  <div class="box wrapx"><table class="t">
+    <tr><th>#</th><th>상황</th><th>화면 동작</th></tr>
+    <tr><td>E1</td><td>비로그인이 「내 활동」 화면으로 들어가려 함</td><td>메뉴가 보이지 않음 · 다른 경로로 들어오면 로그인 시트</td></tr>
+    <tr><td>E2</td><td>본인인증 전 회원</td><td>잔액 0P · 막대 3% · 이름은 이메일 앞부분</td></tr>
+    <tr><td>E3</td><td>잔액이 현금 전환 최소 금액 이상</td><td>막대 100% · 「전환 가능」(현금 전환 방식)</td></tr>
+  </table></div>
+</section>
+
+</main>
+<script src="../shots/markers.js"></script>
+<script src="../policy/pol_my_data.js"></script>
+<script src="../policy/pol_point_data.js"></script>
+<script src="../policy/pol_member_data.js"></script>
+<script src="../policy/pol_earn_data.js"></script>
+<script src="../wf-reward.js"></script>
+</body>
+</html>

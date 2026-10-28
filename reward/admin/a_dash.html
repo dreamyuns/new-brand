@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A-DASH 대시보드 — 픽콕 리워드 화면기획서</title>
+<link rel="stylesheet" href="../wf-reward.css">
+<!-- _양식.html 기반 · 어드민(PC). 홈 묶음의 어드민 짝. 목록의 회원 이름은 시연용 가상 데이터 -->
+</head>
+<body data-key="a_dash" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page">
+
+<div class="top"><span class="sid">A-DASH</span><h1>대시보드 (어드민)</h1></div>
+<div class="meta">
+  <span>기준 정책서 <b><a href="../policy/pol_admin.html#s4">리워드 어드민 v0.3 · 제4조</a></b></span>
+  <span>기준 구현물 <b>pickoq_demo</b> <code>admin/admin2.js</code> (2026-10-12)</span>
+  <span>캡처 <b>2026-10-27</b> · PC 1440</span>
+  <span>최종수정 <b>2026-10-26</b></span>
+</div>
+<div class="note open"><h4>정책은 맨 나중에 다시 세웁니다 (PO 2026-10-26)</h4>지금 내용은 구현물을 그대로 옮긴 것입니다. 숫자 정의(누적 적립·사용, 기간별 현황)와 구성은 다른 묶음을 마친 뒤 정책을 새로 세워 바꿉니다.</div>
+<p class="lead">어드민에 로그인하면 처음 보이는 화면입니다. 회원·포인트 전체 현황, 기간별 변화, 처리해야 할 신청, 최근 움직임을 한 화면에서 봅니다.</p>
+
+<div class="box">
+  <h3>읽는 법</h3>
+  <div class="legend">
+    <span><b style="color:var(--zone)">붉은 점선 상자 A~E</b> 화면의 영역</span>
+    <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능</span>
+    <span>「N-N절」을 누르면 그 절만 팝업으로 열립니다</span>
+    <span><span class="tag ok">확정</span> 정책서 근거 있음</span>
+    <span><span class="tag proto">프로토 기준</span> 정책서에 아직 없음</span>
+    <span><span class="tag open">미결</span> 바뀔 수 있음</span>
+  </div>
+</div>
+
+<!-- 변경이력: 개발자 공유 이후부터 노출 -->
+<div class="box hist"><h3>변경이력</h3>
+  <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
+    <tr><td>v0.1</td><td>2026-10-26</td><td>최초 작성 — 캡처 7장</td></tr></table></div>
+
+<div class="sec-policy">
+  <h3>⚙ 공통 정책 — 대시보드 전체</h3>
+  <ul>
+    <li>구성은 <b>전체 현황 · 기간별 현황 · 처리 대기 · 최근 목록(각 8건)</b> 네 묶음입니다. (<a href="../policy/pol_admin.html#s4-1">4-1절</a>)</li>
+    <li>기간은 <b>오늘 / 최근 7일 / 최근 30일</b> 중 고릅니다 — 하루치만 보면 많은 날인지 적은 날인지 알 수 없어서. (<a href="../policy/pol_admin.html#s4-1">4-1절</a>)</li>
+    <li>처리할 출금 신청이 있으면 왼쪽 메뉴 「출금 신청」에 <b>빨간 숫자</b>, 위 막대에 「송금 대기 N」이 붙습니다. (<a href="../policy/pol_admin.html#s4-1">4-1절</a>)</li>
+    <li>각 목록 끝의 버튼으로 해당 메뉴로 이동합니다. 대시보드에서는 아무것도 수정하지 않습니다(보기 전용).</li>
+    <li>숫자는 화면을 열 때마다 서버에서 다시 계산합니다. 자동 새로고침은 없습니다. <span class="tag proto">프로토 기준</span></li>
+  </ul>
+  <div class="src">기준: 리워드 어드민 정책서 v0.3 · 제4조</div>
+</div>
+
+<nav class="toc" aria-label="이 페이지 바로가기">
+  <span class="toc-lb">바로가기</span>
+  <a href="#flow"><b>①</b>화면 흐름·데이터</a>
+  <a href="#layout"><b>②</b>페이지 구성</a>
+  <span class="toc-sep"></span>
+  <a class="z" href="#zC"><b>C</b>전체 현황</a>
+  <a class="z" href="#zD"><b>D</b>기간별 현황</a>
+  <a class="z" href="#zE"><b>E</b>처리 대기·최근 목록</a>
+  <span class="toc-sep"></span>
+  <a href="#exc">예외</a>
+</nav>
+
+<section class="sec major" id="flow">
+  <div class="sec-hd"><h2>① 화면 흐름 · 데이터</h2></div>
+  <div class="box">
+    <div class="flow"><span>어드민 로그인</span><i>→</i><span>대시보드</span><i>→</i><span>목록의 [→] 버튼</span><i>→</i><span>출금 신청 · 전체 포인트 내역 · 예약 적립 · 픽샵 구매내역</span></div>
+  </div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>요청</th><th>받는 값 (화면에 쓰는 것)</th></tr>
+    <tr><td><code>GET /api/admin/stats</code></td><td><code>users</code> 전체 회원 · <code>verified</code> 본인인증 회원 · <code>total_balance</code> 총 보유 · <code>total_earned</code> 누적 적립 · <code>ledger_rows</code> 내역 건수 · <code>total_used</code> 누적 사용 · <code>periods.d1/d7/d30</code>(가입·적립·사용·예약·픽샵·출금 건수) · <code>today</code></td></tr>
+    <tr><td><code>GET /api/admin/requests</code></td><td>처리 대기 — 출금 신청·픽샵 처리 대기</td></tr>
+    <tr><td><code>GET /api/admin/ledger</code> · <code>/bookings</code> · <code>/orders</code></td><td>최근 포인트 변동 · 예약 적립 · 픽샵 구매 — 각 최신 8건만 표시</td></tr>
+  </table></div>
+</section>
+
+<section class="sec major" id="layout">
+  <div class="sec-hd"><span class="sid">A-DASH-L</span><h2>② 페이지 구성</h2></div>
+  <div class="pc-layout unit">
+    <figure class="shot pc" data-id="A-DASH-L" data-base="../"></figure>
+    <div class="box wrapx" style="margin:0"><table class="t">
+      <tr><th>영역</th><th>들어가는 요소</th><th>배치·동작</th></tr>
+      <tr class="zrow" data-n="A"><td><b>A</b> 공통 틀</td><td>왼쪽 메뉴(「대시보드」 강조 · 「출금 신청」 대기 숫자) · 위 막대(송금 대기 N · [고객 화면 ↗])</td><td>모든 어드민 화면 공통</td></tr>
+      <tr class="zrow" data-n="B"><td><b>B</b> 머리</td><td>제목 · "오늘 YYYY-MM-DD · 시연용 데이터"</td><td>「시연용 데이터」 문구는 상용에서 삭제</td></tr>
+      <tr class="zrow" data-n="C"><td><b>C</b> 전체 현황</td><td>숫자 카드 4개</td><td>기간과 무관한 누적 값</td></tr>
+      <tr class="zrow" data-n="D"><td><b>D</b> 기간별 현황</td><td>기간 버튼 3개 + 숫자 카드 4개</td><td>버튼을 누르면 카드 숫자가 그 기간으로 바뀜</td></tr>
+      <tr class="zrow" data-n="E"><td><b>E</b> 처리 대기 · 최근 목록</td><td>표 4개 (2×2)</td><td>각 최신 8건 · 끝에 해당 메뉴 버튼</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<section class="sec major" id="detail" style="margin-bottom:0">
+  <div class="major-hd"><h2>③ 영역별 상세 — 기능 · 정의 · 정책</h2></div>
+</section>
+
+<section class="sec zsec" id="zC">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">C</span><h2>전체 현황</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row"><div class="sw pc"><div class="lb">A-DASH-C1</div><figure class="shot" data-id="A-DASH-C1" data-base="../"></figure></div></div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>전체 회원</div><ul><li>가입 회원 수 · 아래 「본인인증 N명」.</li></ul><div class="data"><b>데이터</b> ← <code>users</code> · <code>verified</code></div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>총 보유 포인트</div><ul><li>지금 모든 회원 잔액의 합 — <b>회사가 앞으로 내줄 수 있는 포인트(부채 성격)</b>.</li></ul><div class="data"><b>데이터</b> ← <code>total_balance</code></div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>누적 적립</div><ul><li>지금까지 <b>적립으로 지급한</b> 포인트 합계(초록) · 아래 「포인트 내역 N건」.</li></ul><div class="data"><b>데이터</b> ← <code>total_earned</code> · <code>ledger_rows</code></div>
+      <div class="case"><b>보완</b> 지금 구현은 <b>포인트가 늘어난 모든 기록</b>을 더해, 출금 반려·픽샵 취소로 <b>돌려준 포인트(환불)까지 적립으로</b> 셉니다 → <b>적립 유형만</b> 더하도록 바꿉니다 <span class="tag proto">구현 시 반영</span></div></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>누적 사용</div><ul><li>출금·픽샵으로 나간 포인트 합계(빨강) — 카드 아래 "출금·픽샵 합계".</li></ul><div class="data"><b>데이터</b> ← <code>total_used</code></div>
+      <div class="case"><b>보완</b> 지금 구현은 <b>줄어든 모든 기록</b>을 더해 소멸·운영자 회수까지 섞이고, 취소·반려로 돌려준 건을 빼지 않습니다 → <b>사용 = 출금 + 픽샵 − 환불</b>로 계산하고, 소멸·회수는 따로 보여줄지 <span class="tag open">미결</span> <span class="tag proto">구현 시 반영</span></div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zD">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">D</span><h2>기간별 현황</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row"><div class="sw pc"><div class="lb">A-DASH-D1 <small>최근 7일 선택</small></div><figure class="shot" data-id="A-DASH-D1" data-base="../"></figure></div></div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>기간 버튼 [오늘] [최근 7일] [최근 30일]</div>
+      <ul><li>고른 버튼이 파랗게 채워지고 ②~⑤ 숫자가 바뀝니다. 처음 열면 「최근 7일」.</li></ul>
+      <div class="rule"><b>근거</b> <a href="../policy/pol_admin.html#s4-1">4-1절</a></div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>가입</div><ul><li>그 기간에 가입한 회원 수.</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>적립</div><ul><li>그 기간에 지급한 포인트(초록 +).</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>사용</div><ul><li>그 기간에 나간 포인트(빨강 −). ③·④도 전체 현황과 같은 계산 규칙(적립 유형만 / 출금+픽샵−환불)을 따릅니다.</li></ul></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>예약 · 픽샵 · 출금</div><ul><li>그 기간의 예약 적립 · 픽샵 구매 · 출금 신청 <b>건수</b>.</li></ul>
+      <div class="data"><b>데이터</b> ← <code>periods.{d1|d7|d30}</code> — <code>joined</code> · <code>earned</code> · <code>used</code> · <code>bookings</code> · <code>orders</code> · <code>withdrawals</code></div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zE">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">E</span><h2>처리 대기 · 최근 목록</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row">
+    <div class="sw" style="width:520px"><div class="lb">A-DASH-E1 <small>처리 대기</small></div><figure class="shot" data-id="A-DASH-E1" data-base="../" style="width:520px;border-radius:10px"></figure></div>
+    <div class="sw" style="width:520px"><div class="lb">A-DASH-E2 <small>최근 포인트 변동</small></div><figure class="shot" data-id="A-DASH-E2" data-base="../" style="width:520px;border-radius:10px"></figure></div>
+    <div class="sw" style="width:520px"><div class="lb">A-DASH-E3 <small>최근 예약 적립</small></div><figure class="shot" data-id="A-DASH-E3" data-base="../" style="width:520px;border-radius:10px"></figure></div>
+    <div class="sw" style="width:520px"><div class="lb">A-DASH-E4 <small>최근 픽샵 구매</small></div><figure class="shot" data-id="A-DASH-E4" data-base="../" style="width:520px;border-radius:10px"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>목록 제목</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>건수</div><ul><li>처리 대기 「N건」(전체) / 나머지 「최신 8건」.</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>바로가기 버튼</div>
+      <ul><li>처리 대기 → 출금 신청 · 최근 포인트 변동 → 전체 포인트 내역 · 최근 예약 적립 → 예약 적립 · 최근 픽샵 구매 → 픽샵 구매내역</li></ul>
+      <div class="case">처리 대기에는 <b>픽샵 처리 대기도 섞여</b> 들어오는데 버튼은 「출금 신청 →」 하나뿐입니다 → 픽샵 건은 행을 누르면 픽샵 구매내역으로 가게 하거나 버튼을 하나 더 둡니다 <span class="tag proto">구현 시 반영</span></div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>표 — 목록별 열</div>
+      <div class="wrapx"><table class="t" style="margin-top:4px">
+        <tr><th>목록</th><th>열</th><th>비어 있을 때</th></tr>
+        <tr><td>처리 대기</td><td>상태(처리대기) · 구분(출금/픽샵) · 회원 · 포인트 · 신청일시</td><td>"처리할 신청이 없어요"</td></tr>
+        <tr><td>최근 포인트 변동</td><td>회원 · 구분 · 증감(+초록/−빨강) · 잔액 · 일시</td><td>"내역이 없어요"</td></tr>
+        <tr><td>최근 예약 적립</td><td>회원 · 호텔 · 예약처 · 예약금액 · 적립(기본+뽑기) · 체크인</td><td>"예약 적립이 없어요"</td></tr>
+        <tr><td>최근 픽샵 구매</td><td>회원 · 상품 · 포인트 · 상태(구매완료/사용완료/구매취소) · 구매일시</td><td>"구매 내역이 없어요"</td></tr>
+      </table></div>
+      <div class="rule"><b>근거</b> 처리 대기 · 최근 목록 각 8건 · 목록 끝 메뉴 버튼 (<a href="../policy/pol_admin.html#s4-1">4-1절</a>)</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="exc">
+  <div class="sec-hd"><h2>예외</h2></div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>상황</th><th>동작</th></tr>
+    <tr><td>자료를 가져오는 데 0.22초를 넘김</td><td>자리를 잡는 회색 틀 표시 · 그보다 빠르면 아무것도 안 보임 (<a href="../policy/pol_admin.html#s3-4">3-4절</a>)</td></tr>
+    <tr><td>자료를 못 가져옴</td><td>사유와 [다시 시도] (<a href="../policy/pol_admin.html#s3-4">3-4절</a>)</td></tr>
+    <tr><td>처리 대기 0건</td><td>"처리할 신청이 없어요" · 메뉴 숫자·위 막대 「송금 대기」 숨김</td></tr>
+  </table></div>
+</section>
+
+</main>
+<script src="../shots/markers.js"></script>
+<script src="../policy/pol_admin_data.js"></script>
+<script src="../wf-reward.js"></script>
+</body>
+</html>

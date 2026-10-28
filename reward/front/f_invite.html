@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>F-INV 친구 추천 — 픽콕 리워드 화면기획서</title>
+<link rel="stylesheet" href="../wf-reward.css">
+<!-- _양식.html 기반. ⑤절(다른 화면의 코드 입력란)은 추천코드 규칙이 이 기능의 핵심이라 함께 실었다 —
+     가입 시트·계정관리 전체 구성은 회원·My 화면기획서에서 다룬다.
+     캡처의 추천 현황 숫자는 상태별 예시값(빈 상태·실적·상한 도달). 상한은 정책값 월 20회로 표시 -->
+</head>
+<body data-key="f_invite" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page">
+
+<div class="top"><span class="sid">F-INV</span><h1>친구 추천</h1></div>
+<div class="meta">
+  <span>기준 정책서 <b><a href="../policy/pol_earn.html#s4">참여형 적립 v0.8 · 1·4절</a></b></span>
+  <span>기준 구현물 <b>pickoq_demo</b> <code>static/app.js</code> (2026-10-08)</span>
+  <span>캡처 <b>2026-10-27</b> · 390×844</span>
+  <span>최종수정 <b>2026-10-27</b></span>
+</div>
+<p class="lead">내 추천코드를 친구에게 보내고, 친구가 가입할 때 그 코드를 넣으면 <b>친구와 나 모두 1,000P</b>를 받는 기능입니다. 친구 추천 화면에서는 코드 확인·공유와 실적을 보고, 코드 입력은 가입 시트와 계정관리에서 합니다(⑤절).</p>
+
+<div class="box">
+  <h3>읽는 법</h3>
+  <div class="legend">
+    <span><b style="color:var(--zone)">붉은 점선 상자 A~G</b> 화면의 영역</span>
+    <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능 — 마우스를 올리면 설명과 함께 강조</span>
+    <span>「N-N절」을 누르면 그 절만 팝업으로 열립니다</span>
+    <span><span class="tag ok">확정</span> 정책서 근거 있음</span>
+    <span><span class="tag proto">프로토 기준</span> 정책서에 아직 없음</span>
+    <span><span class="tag open">미결</span> 바뀔 수 있음</span>
+  </div>
+</div>
+
+<!-- 변경이력: 개발자 공유 이후부터 노출 — 내용은 계속 기록 -->
+<div class="box hist"><h3>변경이력</h3>
+  <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
+    <tr><td>v0.1</td><td>2026-10-26</td><td>최초 작성 — 캡처 21장, 정책서 v0.7 기준</td></tr></table></div>
+
+<div class="sec-policy">
+  <h3>⚙ 공통 정책 — 친구 추천 전체</h3>
+  <ul>
+    <li>보상은 <b>친구가 가입하면서 내 코드를 넣는 순간</b> 양쪽에 바로 지급합니다(예약·이용 조건 없음). (<a href="../policy/pol_earn.html#s4-1">4-1절</a>)</li>
+    <li><b>추천인 1,000P · 피추천인 1,000P.</b> 포인트 유효기간은 적립일 + 1년. (<a href="../policy/pol_earn.html#s4-3">4-3절</a>)</li>
+    <li>추천인의 적립은 <b>월 20회까지</b> — 「친구가 내 코드를 넣어 내가 적립받은 횟수」를 셉니다. <b>코드를 보내는 횟수는 제한이 없고</b>, 상한을 넘어도 <b>친구는 정상 지급</b>됩니다. 매월 1일 초기화. (<a href="../policy/pol_earn.html#s4-3">4-3절</a> · 무신사 참고)</li>
+    <li>추천코드는 가입할 때 <b>계정당 1개 자동 발급, 변경 불가</b>. 영문 대문자 + 숫자 9자리, 헷갈리는 글자(O·0·I·1·l)는 쓰지 않습니다. (<a href="../policy/pol_earn.html#s4-2">4-2절</a>)</li>
+    <li>코드는 <b>가입 화면에서 입력</b>(주 경로) · 못 넣었으면 <b>가입 후 7일 이내 계정관리</b>에서. 피추천인은 <b>하나의 코드만</b> 쓸 수 있고 바꿀 수 없습니다. (<a href="../policy/pol_earn.html#s4-2">4-2절</a>)</li>
+    <li>코드 확인은 <b>[조회] 버튼</b>으로 하고, <b>추천인 이름은 보여주지 않습니다</b>(이름이 바뀔 수 있어 혼란). 초대 링크로 들어오면 코드를 자동으로 채우고 [조회]까지 자동 실행합니다. (<a href="../policy/pol_earn.html#s4-2">4-2절</a> · <a href="../policy/pol_earn.html#s4-9">4-9절</a>)</li>
+    <li>추천 관계는 코드를 넣을 때 확정되고, <b>지급은 각자 본인인증을 마치면 각자</b> 받습니다 — 미인증 쪽 몫은 <b>「적립대기」</b>로 두었다가 인증하면 지급(기한 없음). 적립대기 금액은 화면에 보여주지 않습니다. <b>미인증 회원도 코드를 넣을 수 있고</b>, 이때는 연출·금액 없이 토스트 "추천코드를 등록했어요. 본인인증하면 적립돼요". 추천인 월 20회는 <b>실제로 지급한 달</b>로 세고, 적립대기였던 추천인 몫이 인증 때 그 달 상한을 넘으면 지급하지 않습니다. (<a href="../policy/pol_earn.html#s1-6">1-6절</a>)</li>
+    <li> 같은 사람·같은 명의·같은 기기 다계정, 탈퇴 후 재가입, 공개 배포, 제휴 파트너는 제외합니다. (<a href="../policy/pol_earn.html#s4-4">4-4절</a>)</li>
+    <li>로그인하지 않으면 코드를 보여주지 않고 로그인을 안내합니다. (<a href="../policy/pol_earn.html#s4-7">4-7절</a>)</li>
+    <li>지급액(1,000P)·월 상한(20회)은 <b>어드민 설정값</b>입니다. (A-SET 예정)</li>
+  </ul>
+  <div class="src">기준: 참여형 적립 기능정책서 v0.8 · 4-1~4-5 · 4-7~4-9절</div>
+</div>
+
+<nav class="toc" aria-label="이 페이지 바로가기">
+  <span class="toc-lb">바로가기</span>
+  <a href="#flow"><b>①</b>화면 흐름·데이터</a>
+  <a href="#layout"><b>②</b>페이지 구성</a>
+  <span class="toc-sep"></span>
+  <a class="z" href="#zA"><b>A</b>상단 바</a>
+  <a class="z" href="#zB"><b>B</b>상태</a>
+  <a class="z" href="#zC"><b>C</b>내 코드</a>
+  <a class="z" href="#zD"><b>D</b>추천 현황</a>
+  <a class="z" href="#zE"><b>E~G</b>안내</a>
+  <span class="toc-sep"></span>
+  <a href="#over"><b>④</b>화면 위에 뜨는 것</a>
+  <a href="#entry"><b>⑤</b>코드 입력하는 곳</a>
+  <a href="#exc">예외 케이스</a>
+</nav>
+
+<!-- ═════ ① 화면 흐름 · 데이터 ═════ -->
+<section class="sec major" id="flow">
+  <div class="sec-hd"><h2>① 화면 흐름 · 데이터</h2></div>
+  <div class="box">
+    <div class="flow"><i>나(추천인):</i><span>홈 · 오늘의 적립 [추천] 또는 My › 친구 추천</span><i>→</i><span>친구 추천 화면</span><i>→</i><span>[코드 복사] 또는 [카카오톡 공유]</span><i>→</i><span>친구에게 전달</span></div>
+    <div class="flow" style="margin-top:8px"><i>친구(피추천인):</i><span>초대 링크 또는 코드</span><i>→</i><span>가입 시트 · 추천코드 [조회] (R4)</span><i>→</i><span>[가입 완료]</span><i>→</i><span>양쪽 1,000P 즉시 지급</span><i>→</i><span>나에게 알림 1건</span></div>
+    <div class="flow" style="margin-top:8px"><i>가입 때 못 넣었으면:</i><span>가입 후 7일 이내 · My › 계정관리 (M1)</span><i>→</i><span>[조회] → [저장]</span><i>→</i><span>양쪽 지급</span></div>
+  </div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>요청</th><th>언제</th><th>받는 값 (화면에 쓰는 것)</th></tr>
+    <tr><td><code>GET /api/earn/invite</code></td><td>친구 추천 화면을 열 때</td><td><code>code</code> 내 추천코드 · <code>from_code</code> 내가 가입 때 넣은 코드 · <code>point</code> 지급액 · <code>cap</code> 월 상한 · <code>paid_count</code> 이번 달 적립 횟수 · <code>total_count</code> 누적 추천 수 · <code>earned</code> 추천으로 받은 포인트 · <code>cap_reached</code> · <code>can_enter_code</code><br><b>친구 목록(이름)은 내려주지 않습니다</b> — 다른 회원의 이름이 노출되므로</td></tr>
+    <tr><td><code>GET /api/auth/check-code?code=</code></td><td>[조회]를 누를 때 (가입 시트·계정관리)</td><td><code>valid</code> 쓸 수 있는 코드인지 · <code>message</code> 오류 문구 — <b>추천인 이름은 응답에도 싣지 않습니다</b>(화면에서 숨겨도 응답에 있으면 개발자 도구로 보이므로)</td></tr>
+    <tr><td><code>POST /api/auth/invite-code</code></td><td>가입 완료 시 / 계정관리 [저장] 시 — <code>code</code></td><td>지급 결과 · <code>balance</code> · 성공 메시지 "추천코드로 {N}P를 받았어요"(추천인 이름 없음) · 본인인증 전이면 지급 없이 "추천코드를 등록했어요. 본인인증하면 적립돼요"</td></tr>
+    <tr><td colspan="3">오류: "추천코드를 입력해 주세요" · "이미 추천코드를 입력했어요. 변경할 수 없어요" · "본인 코드는 사용할 수 없어요" · "없는 코드예요. 다시 확인해 주세요" · "추천코드는 가입 후 7일 이내에만 입력할 수 있어요" · 하루 횟수 초과(E4) "오늘은 더 조회할 수 없어요. 내일 다시 해 주세요" / "오늘은 추천코드를 더 넣을 수 없어요. 내일 다시 해 주세요"</td></tr>
+  </table></div>
+</section>
+
+<!-- ═════ ② 페이지 구성 ═════ -->
+<section class="sec major" id="layout">
+  <div class="sec-hd"><span class="sid">F-INV-L</span><h2>② 페이지 구성</h2></div>
+  <p class="sec-sub">예시는 로그인 · 아직 내 코드로 가입한 친구가 없는 상태입니다(긴 화면 전체).</p>
+  <div class="two-col unit">
+    <div><figure class="shot" data-id="F-INV-L" data-base="../"></figure></div>
+    <div>
+      <div class="box wrapx" style="margin-bottom:12px"><table class="t">
+        <tr><th>영역</th><th>들어가는 요소</th><th>배치·동작</th><th>상태에 따라 바뀌는 것</th></tr>
+        <tr class="zrow" data-n="A"><td><b>A</b> 상단 바</td><td>[←] · 제목 「친구 추천」 · 알림 종</td><td>화면 맨 위</td><td>비로그인이면 종 없음</td></tr>
+        <tr class="zrow" data-n="B"><td><b>B</b> 상태 영역</td><td>캐릭터 · 「1,000P」 · "친구도 나도 각각 받아요"</td><td>파란 배경 · A와 한 덩어리</td><td>비로그인이면 로그인 안내</td></tr>
+        <tr class="zrow" data-n="C"><td><b>C</b> 내 코드</td><td>추천코드 9자리 · [코드 복사] · [카카오톡 공유] · (있으면) 추천받은 코드</td><td>흰 카드 · B 아래쪽에 겹쳐 올라옴</td><td>비로그인이면 잠금 안내 카드</td></tr>
+        <tr class="zrow" data-n="D"><td><b>D</b> 추천 현황</td><td>숫자 3칸 · 빈 상태 안내 또는 포인트 내역 링크 · 이번 달 적립 막대</td><td>C 아래</td><td>빈 상태 / 실적 있음 / 상한 도달</td></tr>
+        <tr class="zrow" data-n="E"><td><b>E</b> 받는 방법</td><td>「이렇게 받아요」 3단계</td><td>흰 카드</td><td>바뀌지 않음</td></tr>
+        <tr class="zrow" data-n="F"><td><b>F</b> 적립 조건</td><td>고정 문구 6줄</td><td>흰 카드</td><td>상한·지급액은 설정값</td></tr>
+        <tr class="zrow" data-n="G"><td><b>G</b> 제외 조건</td><td>「이런 경우엔 적립되지 않아요」 7줄</td><td>흰 카드 · 맨 아래</td><td>바뀌지 않음</td></tr>
+      </table></div>
+      <div class="cn"><div class="cn-hd">화면 공통 규칙</div>
+        <ul>
+          <li><b>2뎁스 화면</b> — 하단 탭 없음. 들어오는 곳: 홈 「오늘의 적립」 [추천], My › 친구 추천.</li>
+          <li><b>A·B 고정</b>, C~G는 스크롤 — 이 화면은 화면보다 길어 스크롤이 생깁니다.</li>
+          <li>화면에 들어올 때마다 서버에서 추천 현황을 새로 받습니다(<code>GET /api/earn/invite</code>).</li>
+          <li>비로그인이면 B는 로그인 안내, C는 잠금 카드, D~G는 나오지 않습니다.</li>
+        </ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ ③ 영역별 상세 ═════ -->
+<section class="sec major" id="detail" style="margin-bottom:0">
+  <div class="major-hd"><h2>③ 영역별 상세 — 기능 · 정의 · 정책</h2></div>
+  <p class="sec-sub">영역마다 상태별 캡처를 잘라 나란히 놓았습니다. 같은 영역 안에서는 상태가 달라도 같은 번호가 같은 요소입니다.</p>
+</section>
+
+<section class="sec zsec" id="zA">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">A</span><h2>상단 바</h2><span class="tag ok">확정</span></div>
+  <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-INV-A2 <small>로그인</small></div><figure class="shot" data-id="F-INV-A2" data-base="../"></figure></div></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>[←] 뒤로</div><ul><li>직전 화면으로 돌아갑니다.</li></ul></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>제목 「친구 추천」</div></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>알림 종</div><ul><li>로그인일 때만 · 출석체크와 같음. 친구가 내 코드로 가입하면 여기에 알림이 쌓입니다.</li></ul></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zB">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">B</span><h2>상태 영역</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-INV-B1 <small>비로그인</small></div><figure class="shot" data-id="F-INV-B1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-INV-B2 <small>로그인</small></div><figure class="shot" data-id="F-INV-B2" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>캐릭터</div><ul><li>비로그인 = 잠든 모습 / 로그인 = 선물을 든 모습.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>「1,000P」</div>
+      <ul><li>한 번 추천에 받는 포인트. <b>어드민 설정값</b>을 그대로 보여줍니다.</li></ul>
+      <div class="data"><b>데이터</b> ← <code>point</code></div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>"친구도 나도 각각 받아요"</div>
+      <div class="rule"><b>근거</b> 양방 각 1,000P (<a href="../policy/pol_earn.html#s4-3">4-3절</a>)</div></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>로그인 안내 (비로그인)</div>
+      <ul><li>"로그인이 필요해요 / 로그인하면 내 추천코드가 만들어져요"</li></ul></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zC">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">C</span><h2>내 코드</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-INV-C2 <small>기본</small></div><figure class="shot" data-id="F-INV-C2" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-INV-C3 <small>내가 추천코드로 가입한 경우</small></div><figure class="shot" data-id="F-INV-C3" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-INV-C1 <small>비로그인 — 잠금 안내</small></div><figure class="shot" data-id="F-INV-C1" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「내 추천코드」</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>추천코드 9자리</div>
+      <ul><li>크게, 글자 사이를 넓혀 표시합니다. 가입할 때 자동으로 만들어지고 바뀌지 않습니다.</li></ul>
+      <div class="data"><b>데이터</b> ← <code>code</code></div>
+      <div class="rule"><b>근거</b> 계정당 1개 · 변경 불가 · 9자리 영문 대문자+숫자 · O·0·I·1·l 제외 (<a href="../policy/pol_earn.html#s4-2">4-2절</a>)</div></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>[코드 복사]</div>
+      <ul><li>누르면 코드가 복사되고 토스트 "추천코드를 복사했어요"(X1).</li>
+          <li>복사가 막힌 기기에서는 코드 자체를 토스트로 보여줍니다.</li></ul></div>
+    <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>잠금 안내 (비로그인)</div>
+      <ul><li>🔒 "로그인하고 코드를 받으세요 / 친구가 가입할 때 내 코드를 넣으면 둘 다 1,000P를 받아요" + [로그인하고 시작하기] → 로그인 시트</li></ul>
+      <div class="rule"><b>근거</b> 비로그인은 코드 미노출 + 로그인 유도 (<a href="../policy/pol_earn.html#s4-7">4-7절</a>)</div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>[카카오톡 공유]</div>
+      <ul><li>누르면 <b>카카오톡 공유창</b>이 열리고, 친구를 골라 메시지를 보냅니다.</li>
+          <li>메시지 버튼 링크 = <code>https://(픽콕 도메인)/signup?ref=내코드</code> → 친구가 누르면 가입 화면 추천코드 칸이 <b>자동으로 채워지고 [조회]까지 자동 실행</b>됩니다.</li>
+          <li>공유는 몇 번이든 할 수 있습니다. 공유 횟수로는 포인트를 주지 않습니다.</li>
+          <li>휴대폰 기본 공유창을 쓸 수 있는 기기에서는 [더보기 공유]를 함께 둘 수 있습니다.</li></ul>
+      <div class="case"><b>지금 구현</b>은 시연용이라 토스트("카카오톡 공유는 실제 앱에서 열려요")만 뜹니다. 위 동작이 실제 개발 대상입니다. 받는 쪽(<code>/signup?ref=코드</code> 주소로 들어왔을 때 자동 채움·자동 조회)은 구현되어 있습니다(⑤ R1 참고).</div>
+      <div class="rule"><b>근거</b> 1단계(모바일 웹) 카카오 SDK 공유 + <code>?ref=</code> 자동 채움 · 지급 기준은 공유가 아니라 가입+코드 확인 · 하루 3만 건 무료 · 카카오디벨로퍼스 앱 등록·도메인 등록 필요 (<a href="../policy/pol_earn.html#s4-9">4-9절</a>) · 앱 미설치 친구에게 코드 넘기기는 <span class="tag open">미결</span> R-A12</div></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>추천받은 코드 「🤝 OOO 코드로 가입했어요」</div>
+      <ul><li><b>내가 가입할 때 친구 코드를 넣은 경우에만</b> 나옵니다. 아래에 "가입할 때 1,000P를 받았어요".</li>
+          <li>추천인 이름이 아니라 <b>코드로</b> 표시합니다.</li></ul>
+      <div class="data"><b>데이터</b> ← <code>from_code</code></div>
+      <div class="rule"><b>근거</b> 이름은 바뀔 수 있어 혼란을 줌 — 코드로 표기 (PO 확정 2026-10-07 · <a href="../policy/pol_earn.html#s4-7">4-7절</a>)</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zD">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">D</span><h2>추천 현황</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-INV-D1 <small>아직 없음</small></div><figure class="shot" data-id="F-INV-D1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-INV-D2 <small>실적 있음 (이번 달 3회)</small></div><figure class="shot" data-id="F-INV-D2" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-INV-D3 <small>이번 달 상한 도달 (20회)</small></div><figure class="shot" data-id="F-INV-D3" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>이번 달 추천한 친구</div>
+      <ul><li><b>이번 달 내가 적립받은 횟수</b>(친구가 내 코드를 넣어 지급이 일어난 수). 매월 1일 0으로.</li></ul>
+      <div class="data"><b>데이터</b> ← <code>paid_count</code></div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>누적 추천한 친구</div>
+      <ul><li>지금까지 내 코드로 가입한 친구 수 — 상한 때문에 내가 적립받지 못한 건도 포함.</li></ul>
+      <div class="data"><b>데이터</b> ← <code>total_count</code></div></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>추천으로 받은 포인트</div>
+      <div class="data"><b>데이터</b> ← <code>earned</code></div></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>빈 상태 안내 (누적 0명)</div>
+      <ul><li>"아직 내 코드로 가입한 친구가 없어요. 위 코드를 공유하면 둘 다 1,000P를 받아요."</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>「언제 적립됐는지 포인트 내역에서 보기 ›」</div>
+      <ul><li>누적 1명 이상일 때 ④ 자리에 나옵니다. 누르면 포인트 내역으로 이동합니다.</li>
+          <li><b>친구 목록(이름)은 보여주지 않습니다.</b> 언제 적립됐는지는 포인트 내역에서 확인합니다.</li></ul>
+      <div class="rule"><b>근거</b> 다른 회원의 이름이 제3자에게 노출되므로 집계만 표시 (PO 확정 2026-10-07 · <a href="../policy/pol_earn.html#s4-7">4-7절</a>)</div></div>
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>이번 달 적립 막대 「이번 달 적립 N / 20회」</div>
+      <ul><li>오른쪽: "N회 더 적립받을 수 있어요" → 상한이면 "이번 달 적립 상한 도달"(막대 노랑으로 가득).</li>
+          <li>평소 안내: "<b>코드 공유는 횟수 제한이 없어요.</b> 다만 내 적립은 매월 20회까지예요. 친구가 받는 포인트에는 제한이 없어요."</li>
+          <li>상한 도달 안내: "이번 달 적립 상한에 도달했어요. <b>다음 달 1일</b>에 다시 적립돼요. 코드 공유는 계속할 수 있고, 내 코드로 가입한 친구는 상한과 무관하게 받아요."</li></ul>
+      <div class="data"><b>데이터</b> ← <code>cap</code> · <code>paid_count</code>(이번 달 지급 횟수) · <code>cap_reached</code>(서버 판정)</div>
+      <div class="case">「N / 20회」의 20은 <b>정책값을 화면에 고정 표기</b>하고, 「상한 도달」 여부는 <b>서버 판정</b>을 따릅니다. 시연 서버는 상한을 3회로 두었으므로 시연 중에는 「3 / 20회」에서 상한 도달로 보일 수 있습니다(시연용 — 실제 서비스는 20회).</div>
+      <div class="rule"><b>근거</b> 상한은 「적립 횟수」 기준 · 공유·발송 무제한 · 상한 도달 시 피추천인은 정상 지급 · 다음 달 초기화일 안내 (<a href="../policy/pol_earn.html#s4-3">4-3절</a> · <a href="../policy/pol_earn.html#s4-5">4-5절 E5</a> · <a href="../policy/pol_earn.html#s4-7">4-7절</a>)</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zE">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">E~G</span><h2>안내 (받는 방법 · 적립 조건 · 제외 조건)</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-INV-E1 <small>E 받는 방법</small></div><figure class="shot" data-id="F-INV-E1" data-base="../" data-only="-"></figure></div>
+    <div class="sw"><div class="lb">F-INV-F1 <small>F 적립 조건</small></div><figure class="shot" data-id="F-INV-F1" data-base="../" data-only="-"></figure></div>
+    <div class="sw"><div class="lb">F-INV-G1 <small>G 제외 조건</small></div><figure class="shot" data-id="F-INV-G1" data-base="../" data-only="-"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn"><div class="cn-hd">E 「이렇게 받아요」</div>
+      <ul><li>① 내 추천코드를 친구에게 공유해요. ② 친구가 가입할 때 코드를 입력해요. ③ 둘 다 1,000P가 바로 들어와요.</li></ul></div>
+    <div class="cn"><div class="cn-hd">F 「적립 조건」 — 고정 문구</div>
+      <ul><li>가입할 때 입력 · 못 했으면 가입 후 7일 이내</li><li>"나와 친구 모두 본인인증을 마쳐야 적립돼요" — 각자 인증하면 각자 받음, 미인증 쪽은 인증할 때까지 적립대기</li><li>입력과 동시에 양쪽 1,000P — 예약하지 않아도 됨</li>
+          <li>코드를 보내는 횟수는 제한 없음 · 내 적립은 매월 20회까지</li><li>상한을 넘어도 친구는 정상 지급</li><li>유효기간 적립일로부터 1년</li></ul>
+      <div class="case">지급액·월 상한은 <b>어드민 설정값으로 채워 넣습니다.</b></div>
+      <div class="rule"><b>근거</b> <a href="../policy/pol_earn.html#s4-1">4-1</a> · <a href="../policy/pol_earn.html#s4-2">4-2</a> · <a href="../policy/pol_earn.html#s4-3">4-3절</a></div></div>
+  </div><div class="ann">
+    <div class="cn"><div class="cn-hd">G 「이런 경우엔 적립되지 않아요」 — 고정 문구</div>
+      <ul><li>내 코드를 내가 입력</li><li>이미 가입한 적이 있는 계정(탈퇴 후 재가입 포함)</li><li>같은 명의·전화번호·이메일로 만든 여러 계정</li>
+          <li>한 기기에서 여러 계정으로 입력·추천</li><li>커뮤니티·쿠폰 사이트 공개 배포, 코드 홍보에 광고비 사용</li><li>친구는 하나의 코드만 — 이미 넣었으면 변경 불가</li><li>비정상 적립은 회수·참여 제한</li></ul>
+      <div class="rule"><b>근거</b> 어뷰징 방지 A1~A8 — 타사 약관 원문 채택 (<a href="../policy/pol_earn.html#s4-4">4-4절</a>) · 탈퇴 후 재가입 배제는 법무 검토 <span class="tag open">미결</span> R-A7</div></div>
+  </div></div>
+  </div>
+</section>
+
+<!-- ═════ ④ 화면 위에 뜨는 것 ═════ -->
+<section class="sec major" id="over">
+  <div class="sec-hd"><h2>④ 화면 위에 뜨는 것</h2></div>
+  <p class="sec-sub">공통 동작은 <a href="../common/c_layer.html">C-LAYER</a>를 따릅니다.</p>
+  <div class="two-col unit sub-item">
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-INV-X1 <small style="font-weight:400">[코드 복사] — 토스트</small></div><figure class="shot" data-id="F-INV-X1" data-base="../"></figure></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>"추천코드를 복사했어요"</div>
+        <ul><li>2초 뒤 사라짐 (<a href="../common/c_layer.html#L-TOAST">L-TOAST</a>).</li></ul></div>
+      <div class="cn"><div class="cn-hd">추천 적립이 일어났을 때 (내가 이 화면에 없을 때)</div>
+        <ul><li>친구가 내 코드로 가입하면 <b>나에게 알림 1건</b> — 앱을 쓰는 중이면 알림 토스트(<a href="../common/c_layer.html#L-NOTI">L-NOTI</a>), 알림함·포인트 내역에 기록.</li>
+            <li>친구(피추천인)는 가입 완료 순간 <b>적립 연출</b> 후 토스트 "회원가입 완료 · 추천코드로 1,000P 받았어요".</li></ul>
+        <div class="rule"><b>근거</b> 추천인에게 알림 1건 (<a href="../policy/pol_earn.html#s4-8">4-8절</a>)</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ ⑤ 코드 입력하는 곳 ═════ -->
+<section class="sec major" id="entry">
+  <div class="sec-hd"><h2>⑤ 코드를 입력하는 곳 (다른 화면)</h2><span class="tag ok">확정</span></div>
+  <div class="note"><h4>가입 때는 본인인증을 받지 않습니다</h4>가입 순서 = 이메일 → 인증코드 → <b>약관·추천코드</b> → 가입 완료. 휴대폰 본인인증 단계는 빠졌고 첫 적립 때 받습니다(<a href="../policy/pol_earn.html#s1-6">1-6절</a>). 아래 캡처는 약관·추천코드 단계의 추천코드 부분입니다. 가입 시트 전체는 회원 화면기획서에서 다룹니다.</div>
+  <p class="sec-sub">추천코드 입력 규칙만 여기서 정의합니다. 가입 시트·계정관리 화면 전체는 회원·My 화면기획서(예정)에서 다룹니다.</p>
+
+  <div class="unit sub-item">
+    <div class="zone-hd"><h2 style="font-size:16px">가입 시트 — 약관 동의 단계의 「친구 추천코드가 있나요?」</h2></div>
+    <div class="shots-row">
+      <div class="sw"><div class="lb">F-INV-R1 <small>접힘 (기본)</small></div><figure class="shot" data-id="F-INV-R1" data-base="../"></figure></div>
+      <div class="sw"><div class="lb">F-INV-R2 <small>펼침 · 입력 중 (5/9)</small></div><figure class="shot" data-id="F-INV-R2" data-base="../"></figure></div>
+      <div class="sw"><div class="lb">F-INV-R3 <small>9자리 · 조회 전</small></div><figure class="shot" data-id="F-INV-R3" data-base="../"></figure></div>
+      <div class="sw"><div class="lb">F-INV-R4 <small>조회 성공</small></div><figure class="shot" data-id="F-INV-R4" data-base="../"></figure></div>
+      <div class="sw"><div class="lb">F-INV-R5 <small>조회 실패</small></div><figure class="shot" data-id="F-INV-R5" data-base="../"></figure></div>
+    </div>
+    <div class="detail"><div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「🎁 친구 추천코드가 있나요? · 넣으면 둘 다 1,000P」</div>
+        <ul><li><b>기본은 접힌 상태</b>, 누르면 펼쳐집니다. 선택 입력이라 비워도 가입할 수 있습니다.</li>
+            <li><b>초대 링크(<code>/signup?ref=코드</code>)로 들어온 경우</b>: 로그인 전이면 가입 시트가 바로 열리고, 이 칸이 펼쳐진 상태로 코드가 채워져 [조회]까지 자동 실행 → 바로 R4 상태. 이미 로그인한 상태면 아무 일도 일어나지 않습니다.</li></ul>
+        <div class="rule"><b>근거</b> 선택·접힘·자동 채움 — 대다수에게는 안 보이게, 링크로 온 사람은 입력하지 않게 (<a href="../policy/pol_earn.html#s4-2">4-2절</a>)</div></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>코드 입력칸</div>
+        <ul><li>영문은 자동으로 대문자, 영문·숫자 외 글자는 지워짐, 최대 9자리.</li>
+            <li>코드를 고치면 조회 결과가 초기화되어 다시 [조회]해야 합니다.</li></ul></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>[조회]</div>
+        <ul><li><b>9자리를 다 넣어야 누를 수 있습니다.</b> 누르는 동안 "조회 중…".</li></ul>
+        <div class="data"><b>데이터</b> → <code>GET /api/auth/check-code?code=</code> ← <code>valid</code> · <code>message</code></div></div>
+    </div><div class="ann">
+      <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>안내 문구 (입력칸 아래)</div>
+        <div class="wrapx"><table class="t" style="margin-top:4px">
+          <tr><th>상태</th><th>문구</th></tr>
+          <tr><td>9자리 미만</td><td>"N/9자리 — 9자리를 모두 입력해 주세요" (회색)</td></tr>
+          <tr><td>9자리 · 조회 전</td><td>"[조회]를 눌러 주세요" (회색)</td></tr>
+          <tr><td>조회 중</td><td>"조회하고 있어요…"</td></tr>
+          <tr><td>조회 성공</td><td>"✓ 확인된 코드예요 · 가입하면 둘 다 1,000P" (초록) — <b>추천인 이름은 쓰지 않음</b></td></tr>
+          <tr><td>조회 실패</td><td>서버 문구 그대로 (빨강) — "없는 코드예요" · "본인 코드는 사용할 수 없어요"</td></tr>
+        </table></div>
+        <div class="rule"><b>근거</b> [조회] 버튼 방식 · 이름 미표시 (<a href="../policy/pol_earn.html#s4-2">4-2절</a> v0.7 · PO 지시 2026-10-07)</div></div>
+      <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>보조 안내</div>
+        <ul><li>"코드가 없으면 비워 두고 가입해도 돼요. 가입 후 7일 안에 마이페이지 > 계정관리에서 넣을 수 있어요."</li></ul></div>
+      <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>[가입 완료]</div>
+        <ul><li>필수 약관 2개에 동의해야 켜집니다.</li>
+            <li><b>코드를 적었는데 조회를 마치지 않았거나 실패했으면 꺼집니다</b>(R2·R3·R5) — 꺼진 이유는 ④ 안내 문구로 알 수 있습니다. 코드를 지우면 다시 켜집니다.</li></ul>
+        <div class="rule"><b>근거</b> 코드를 적었으면 조회를 마쳐야 가입 (<a href="../policy/pol_earn.html#s4-2">4-2절</a> v0.7 구현 기준)</div></div>
+    </div></div>
+  </div>
+
+  <div class="two-col unit sub-item" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-INV-M1 <small>계정관리 · 9자리 입력 · 조회 전</small></div><figure class="shot" data-id="F-INV-M1" data-base="../"></figure></div></div>
+    <div class="ann">
+      <div class="cn"><div class="cn-hd">계정관리 — 「친구추천」 묶음 (가입 때 못 넣은 경우)</div>
+        <ul><li>보이는 조건: <b>아직 코드를 넣지 않았고 가입 후 7일 이내</b>인 계정. 이미 넣었으면 「추천인 코드」를 읽기 전용으로 보여주고 "추천인은 한 번만 등록할 수 있어요".</li>
+            <li>입력칸·[조회]·안내 문구 규칙은 가입 시트와 같습니다(②~④).</li></ul></div>
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>코드 입력칸</div><ul><li>가입 시트와 같은 규칙(대문자 자동 · 9자리).</li></ul></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>[조회]</div><ul><li>9자리를 다 넣어야 켜집니다. 결과는 입력칸 아래에 표시(가입 시트 ④와 같은 문구).</li></ul></div>
+      <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>보조 안내</div>
+        <ul><li>"조회해서 확인된 코드는 아래 [저장]을 누를 때 함께 적용돼요. 친구 코드를 넣으면 둘 다 1,000P를 받아요. 가입 후 7일 안에만 넣을 수 있어요."</li></ul></div>
+      <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>[저장]</div>
+        <ul><li>바뀐 값이 있거나 <b>조회를 마친 코드</b>가 있을 때만 켜집니다. 누르면 코드가 적용되고 양쪽에 지급됩니다.</li>
+            <li>조회만 하고 저장하지 않으면 적용되지 않습니다.</li></ul>
+        <div class="case"><b>7일이 지난 회원</b>은 입력칸 대신 「친구추천만료」 배지와 안내 "가입 후 7일이 지나 추천코드를 넣을 수 없어요."만 보입니다(아래 M2). 서버가 계정관리 정보에 「입력 가능 여부」를 실어 보냅니다.</div>
+        <div class="rule"><b>근거</b> 폴백은 가입 후 7일 · 이후 입력란 미노출 · 저장 시 함께 적용 (<a href="../policy/pol_earn.html#s4-2">4-2절</a> · <a href="../policy/pol_earn.html#s4-5">4-5절 E1-1</a>)</div></div>
+    </div>
+  </div>
+
+  <div class="two-col unit sub-item" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-INV-M2 <small>계정관리 · 가입 후 7일 지남</small></div><figure class="shot" data-id="F-INV-M2" data-base="../"></figure></div></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>배지 「친구추천만료」</div>
+        <ul><li>라벨 「친구 추천코드」 옆 회색 배지 — 「✓ 인증완료」 배지와 같은 크기.</li></ul>
+        <div class="data"><b>데이터</b> ← 계정관리 정보의 <code>can_enter_code</code> = false</div></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>"가입 후 7일이 지나 추천코드를 넣을 수 없어요."</div>
+        <ul><li>입력칸·[조회]는 없습니다. 소급 입력은 할 수 없습니다(E1-1).</li></ul>
+        <div class="rule"><b>근거</b> PO 지시 2026-10-27 — 「추천코드는 가입 후 7일 안에만 넣을 수 있어요」를 대체 (<a href="../policy/pol_earn.html#s4-5">4-5절 E1-1</a>)</div></div>
+      <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>[저장]</div><ul><li>다른 칸(이름·국적 등)을 바꿨을 때만 켜집니다.</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ 예외 ═════ -->
+<section class="sec zsec" id="exc">
+  <div class="sec-hd"><h2>예외 케이스</h2><span class="tag ok">확정</span></div>
+  <p class="sec-sub">정책서 <a href="../policy/pol_earn.html#s4-5">4-5절</a>을 화면 동작 기준으로 옮겼습니다.</p>
+  <div class="box wrapx"><table class="t">
+    <tr><th>#</th><th>상황</th><th>화면·서버 동작</th></tr>
+    <tr><td>E1</td><td>가입 화면에서 코드를 안 넣음</td><td>가입 후 7일 이내 계정관리에서 입력 가능</td></tr>
+    <tr><td>E1-1</td><td>가입 후 7일 지남</td><td>계정관리에 입력칸이 나오지 않음. 소급 입력 불가</td></tr>
+    <tr><td>E1-2</td><td>초대 링크로 왔는데 자동 채움 실패</td><td>수동 입력 또는 계정관리 폴백으로 구제 — 폴백을 두는 주된 이유</td></tr>
+    <tr><td>E2</td><td>이미 다른 코드를 넣음</td><td>변경 불가 — "이미 추천코드를 입력했어요. 변경할 수 없어요"</td></tr>
+    <tr><td>E3</td><td>자기 코드를 넣음</td><td>"본인 코드는 사용할 수 없어요"</td></tr>
+    <tr><td>E4</td><td>없는 코드</td><td>"없는 코드예요" · 무차별 입력 방지 — <b>조회·입력 합쳐 하루 10회</b>. 넘으면 조회 "오늘은 더 조회할 수 없어요. 내일 다시 해 주세요" / 입력 "오늘은 추천코드를 더 넣을 수 없어요. 내일 다시 해 주세요". 로그인 전(가입 화면)은 접속 주소 기준으로 셉니다. (<a href="../policy/pol_earn.html#s4-5">4-5절 E4</a>)</td></tr>
+    <tr><td>E5</td><td>추천인이 이번 달 상한 도달</td><td>피추천인은 정상 지급, 추천인만 미지급 · 추천인 화면에 상한 도달 안내(D3)</td></tr>
+    <tr><td>E6</td><td>추천인이 탈퇴</td><td>이미 지급된 건은 회수하지 않음 · 그 코드는 사용 불가</td></tr>
+    <tr><td>E7</td><td>피추천인이 가입 직후 탈퇴</td><td>지급 포인트 소멸 · 추천인 지급분은 부정 판정 시 회수</td></tr>
+    <tr><td>E8</td><td>지급 중 오류</td><td>중복 지급 없음 — (추천인 + 피추천인) 조합은 한 번만</td></tr>
+  </table></div>
+</section>
+
+</main>
+<script src="../shots/markers.js"></script>
+<script src="../policy/pol_earn_data.js"></script>
+<script src="../wf-reward.js"></script>
+</body>
+</html>

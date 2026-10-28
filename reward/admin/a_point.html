@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A-POINT 전체 포인트 내역 — 픽콕 리워드 화면기획서</title>
+<link rel="stylesheet" href="../wf-reward.css">
+<!-- _양식.html 기반 · 어드민 1440 · 근거: pickoq_demo admin/admin2.js PAGES.ledger(admin3.js에서 일괄 지급·체크박스 제거 = 조회 전용) · api_admin2.py ledger2 · LEDGER_GROUPS (2026-10-27) -->
+</head>
+<body data-key="a_point" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page">
+
+<div class="top"><span class="sid">A-POINT</span><h1>전체 포인트 내역 (어드민)</h1></div>
+<div class="meta">
+  <span>기준 정책서 <b><a href="../policy/pol_admin.html#s6">리워드 어드민 v0.3 · 제6조</a></b> · <a href="../policy/pol_point.html#s2">리워드 포인트 v0.2 · 2절</a></span>
+  <span>기준 구현물 <b>pickoq_demo</b> <code>admin/admin2.js</code> · <code>admin3.js</code> (2026-10-27)</span>
+  <span>캡처 <b>2026-10-27</b> · PC 1440</span>
+  <span>최종수정 <b>2026-10-27</b></span>
+</div>
+<p class="lead">모든 회원의 포인트가 움직인 기록(원장)을 한곳에서 <b>보기만</b> 하는 화면입니다. 고치는 곳이 아닙니다 — 바로잡을 일이 있으면 회원 상세에서 사유를 적어 지급·회수하고, 그것도 한 줄로 쌓입니다.</p>
+
+<div class="box">
+  <h3>읽는 법</h3>
+  <div class="legend">
+    <span><b style="color:var(--zone)">붉은 점선 상자 A~E</b> 화면의 영역</span>
+    <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능</span>
+    <span>「N-N절」을 누르면 그 절만 팝업으로 열립니다</span>
+    <span><span class="tag ok">확정</span> 정책서 근거 있음</span>
+    <span><span class="tag proto">프로토 기준</span> 정책서에 아직 없음</span>
+    <span><span class="tag open">미결</span> 바뀔 수 있음</span>
+  </div>
+</div>
+
+<div class="box hist"><h3>변경이력</h3>
+  <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
+    <tr><td>v0.1</td><td>2026-10-27</td><td>최초 작성 — 캡처 5장</td></tr></table></div>
+
+<div class="sec-policy">
+  <h3>⚙ 공통 정책 — 전체 포인트 내역</h3>
+  <ul>
+    <li><b>잔액은 저장하지 않고 이 기록을 더해서</b> 계산합니다. <b>기록은 고치거나 지우지 않습니다</b> — 지우면 「왜 줄었는지」에 답할 수 없습니다. (<a href="../policy/pol_admin.html#s6-1">6-1절</a> · <a href="../policy/pol_point.html#s1-2">포인트 1-2절</a>)</li>
+    <li><b>조회 전용</b>입니다. 지급·회수는 회원 목록·상세에서 합니다(<a href="a_user.html">A-USER</a>).</li>
+    <li>적립 성격 기록에는 <b>적립일 + 1년</b>의 소멸 예정일이 붙습니다. (<a href="../policy/pol_point.html#s6">포인트 6절</a>)</li>
+    <li>본인인증 전 회원의 <b>적립대기는 원장에 없습니다</b>(지급 전) — 인증해서 지급되는 순간 한 줄이 생깁니다. 회원별 적립대기는 회원 목록·상세에서 봅니다.</li>
+  </ul>
+  <div class="src">기준: 리워드 어드민 정책서 v0.3 · 제6조 / 리워드 포인트 정책서 v0.2 · 1-2 · 2 · 6절</div>
+</div>
+
+<nav class="toc" aria-label="이 페이지 바로가기">
+  <span class="toc-lb">바로가기</span>
+  <a href="#flow"><b>①</b>화면 흐름·데이터</a>
+  <a href="#layout"><b>②</b>페이지 구성</a>
+  <span class="toc-sep"></span>
+  <a class="z" href="#zB"><b>B</b>머리</a>
+  <a class="z" href="#zC"><b>C</b>요약·읽는 법</a>
+  <a class="z" href="#zD"><b>D</b>유형·찾기</a>
+  <a class="z" href="#zE"><b>E</b>목록</a>
+  <span class="toc-sep"></span>
+  <a href="#exc">예외</a>
+</nav>
+
+<section class="sec major" id="flow">
+  <div class="sec-hd"><h2>① 화면 흐름 · 데이터</h2></div>
+  <div class="box"><div class="flow"><span>왼쪽 메뉴 「전체 포인트 내역」</span><i>→</i><span>유형 칩 · 기간 · 검색어</span><i>→</i><span>[조회]</span><i>→</i><span>목록 · 쪽 넘김</span></div></div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>요청</th><th>언제</th><th>받는 값</th></tr>
+    <tr><td><code>GET /api/admin/ledger2</code></td><td>열 때 · 칩 · [조회] · 쪽 — <code>group</code> · <code>q</code> · <code>from</code> · <code>to</code> · <code>col</code>(날짜 기준) · <code>page</code> · <code>size</code>=50</td><td><code>ledger</code>(행마다 #·유형 묶음·회원·증감·잔액·내용·소멸예정·일시) · <code>total</code> · <code>pages</code> · <code>groups</code> · <code>counts</code>(묶음별 건수) · <code>all_plus</code> · <code>all_minus</code></td></tr>
+  </table></div>
+</section>
+
+<section class="sec major" id="layout">
+  <div class="sec-hd"><span class="sid">A-POINT-L</span><h2>② 페이지 구성</h2></div>
+  <p class="sec-sub">어드민 공통 틀 안에 머리 → 읽는 법 띠 → 요약 → 유형·찾기 → 목록. 캡처의 목록은 8행만 남겼습니다.</p>
+  <div class="pc-layout unit">
+    <figure class="shot pc" data-id="A-POINT-L" data-base="../"></figure>
+    <div class="box wrapx" style="margin:0"><table class="t">
+      <tr><th>영역</th><th>들어가는 요소</th><th>상태에 따라 바뀌는 것</th></tr>
+      <tr class="zrow" data-n="A"><td><b>A</b> 공통 틀</td><td>왼쪽 메뉴(「전체 포인트 내역」 강조) · 위 막대</td><td>출금 대기 배지</td></tr>
+      <tr class="zrow" data-n="B"><td><b>B</b> 머리</td><td>제목 · "전체 N건 · 포인트가 움직인 모든 기록"</td><td>건수</td></tr>
+      <tr class="zrow" data-n="C"><td><b>C</b> 요약</td><td>총 적립 · 총 사용 · 현재 잔액 (그 위 「읽는 법」 띠)</td><td>숫자</td></tr>
+      <tr class="zrow" data-n="D"><td><b>D</b> 유형·찾기</td><td>유형 칩 10개 · 날짜 기준 · 기간 · 검색어 · [조회] [초기화]</td><td>고른 칩 · 건수</td></tr>
+      <tr class="zrow" data-n="E"><td><b>E</b> 목록</td><td>8열 표 · 아래 쪽 번호</td><td>증감 색(+ 초록 / − 빨강)</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<section class="sec major" id="detail" style="margin-bottom:0"><div class="major-hd"><h2>③ 영역별 상세 — 기능 · 정의 · 정책</h2></div></section>
+
+<section class="sec zsec" id="zB">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">B</span><h2>머리</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row"><div class="sw pc"><div class="lb">A-POINT-B1</div><figure class="shot" data-id="A-POINT-B1" data-base="../"></figure></div></div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>제목 「전체 포인트 내역」</div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>"전체 N건 · 포인트가 움직인 모든 기록"</div><ul><li>N = 지금 조건에 걸린 건수.</li></ul></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zC">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">C</span><h2>요약 · 읽는 법</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row"><div class="sw pc"><div class="lb">A-POINT-C1</div><figure class="shot" data-id="A-POINT-C1" data-base="../"></figure></div></div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>총 적립 포인트 "+NP · 지금까지 들어온 것 전부"</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>총 사용 포인트 "−NP · 출금 · 픽샵 · 회수 · 소멸"</div></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>현재 잔액 "NP · 전 회원이 아직 가지고 있는 것" (= ① + ②)</div>
+      <div class="case">세 숫자는 <b>모든 + 기록 / 모든 − 기록</b>을 더한 값이라, 환불(+)이 「적립」에, 소멸·회수(−)가 「사용」에 섞입니다. 어떻게 나눌지는 대시보드 숫자 정의와 함께 정합니다 <span class="tag open">미결</span></div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>「📌 이 화면을 읽는 법 — 잔액은 저장하지 않습니다」</div>
+      <ul><li>내역을 더해서 계산 · 기록은 지우지 않음 · 바꾸려면 회원 상세에서 사유를 적어 처리(그것도 한 줄로 쌓임).</li>
+          <li>접혀 있다가 누르면 펼침 · 맨 아래 [자세히 — 기능정책서에서 보기 ↗].</li></ul>
+      <div class="rule"><b>근거</b> <a href="../policy/pol_admin.html#s6-1">6-1절</a></div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zD">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">D</span><h2>유형 · 찾기</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row"><div class="sw pc"><div class="lb">A-POINT-D1</div><figure class="shot" data-id="A-POINT-D1" data-base="../"></figure></div></div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>칩 「전체」</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>유형 칩 9개 — 옆에 건수</div>
+      <ul><li>출석체크(출석·보너스) · 숙소예약(기본·뽑기) · 혜택참여 · 퀴즈 · 친구추천 · 픽샵구매 · 출금 · 관리자처리(지급·회수·신청 취소 환불) · 소멸.</li>
+          <li>누르면 바로 그 묶음만 — 1쪽으로 돌아갑니다.</li></ul>
+      <div class="case">고객 화면 필터(4개)와 묶는 법이 다릅니다 — 어드민은 기록 종류별, 고객은 「생긴 곳/나간 곳」별 (<a href="../policy/pol_point.html#s2">포인트 2절 표</a>). 「픽샵 구매 취소 환불」은 어느 묶음에도 들어 있지 않습니다 <span class="tag proto">프로토 수정 #39</span></div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>날짜 기준 — 적립일 / 소멸예정일</div><ul><li>소멸예정일로 고르면 「곧 사라질 포인트」를 기간으로 볼 수 있습니다.</li></ul></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>기간</div></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>검색어 "회원 이메일 · 이름 · 내용으로 찾기"</div><ul><li>Enter로도 조회.</li></ul></div>
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>[조회] · 옆 [초기화]</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zE">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">E</span><h2>목록</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row"><div class="sw pc"><div class="lb">A-POINT-E1 <small>열 제목에 번호 · 8행</small></div><figure class="shot" data-id="A-POINT-E1" data-base="../"></figure></div></div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>#</div><ul><li>기록 번호. 최신이 위.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>유형</div><ul><li>묶음 이름 꼬리표(②의 칩과 같은 이름).</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>회원</div><ul><li>이름 + 아래 작게 이메일.</li></ul></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>증감</div><ul><li>+NP 초록 / −NP 빨강.</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>잔액</div><ul><li>이 기록 직후 그 회원의 잔액.</li></ul></div>
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>내용</div><ul><li>기록 문구(예: "예약 적립 — 호텔명 (예약처)", 관리자 지급 사유).</li></ul></div>
+    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>소멸예정</div><ul><li>적립 성격 기록만 날짜 · 그 밖은 「—」.</li></ul></div>
+    <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>일시</div><ul><li>아래 쪽 번호 — 한 쪽 50건, 최대 12쪽 버튼.</li></ul></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="exc">
+  <div class="sec-hd"><h2>예외</h2></div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>상황</th><th>동작</th></tr>
+    <tr><td>걸리는 기록이 없음</td><td>빈 표 · 건수 0</td></tr>
+    <tr><td>쪽이 12를 넘음</td><td>버튼은 12쪽까지만 — 그 뒤는 기간·검색으로 좁혀서 봄 (구현 기준)</td></tr>
+    <tr><td>소멸 예정일이 지난 기록</td><td>「포인트 소멸」 −NP가 쌓여야 하지만 구현물에 소멸 처리가 없음 <span class="tag proto">프로토 수정 #41</span></td></tr>
+  </table></div>
+</section>
+
+</main>
+<script src="../shots/markers.js"></script>
+<script src="../policy/pol_admin_data.js"></script>
+<script src="../policy/pol_point_data.js"></script>
+<script src="../wf-reward.js"></script>
+</body>
+</html>

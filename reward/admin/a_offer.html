@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A-OFFER 혜택·광고주 관리 — 픽콕 리워드 화면기획서</title>
+<link rel="stylesheet" href="../wf-reward.css">
+<!-- _양식.html 기반 · 어드민 1440 · 근거: pickoq_demo admin/admin3.js PAGES.offers·offerEdit·PAGES.advertisers·advEdit · admin2.js offerBulk (2026-10-27)
+     PO 지시(10-27): 혜택은 정책이 정해지지 않아 "지금 화면의 기능"만 적는다. [저장]·[적용]·스위치는 누르지 않았다 -->
+</head>
+<body data-key="a_offer" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page">
+
+<div class="top"><span class="sid">A-OFFER</span><h1>혜택(오퍼월) 관리 · 광고주 관리 (어드민)</h1></div>
+<div class="meta">
+  <span>기준 정책서 <b><a href="../policy/pol_offer.html#s3">리워드 혜택 v0.1 · 3~4절</a></b> · <a href="../policy/pol_admin.html#s10">리워드 어드민 v0.3 · 제10조</a></span>
+  <span>기준 구현물 <b>pickoq_demo</b> <code>admin/admin3.js</code> (2026-10-27)</span>
+  <span>캡처 <b>2026-10-27</b> · PC 1440</span>
+  <span>최종수정 <b>2026-10-27</b></span>
+</div>
+<p class="lead">고객 혜택 탭에 나갈 <b>광고를 등록·노출</b>하고, 광고를 올릴 수 있는 <b>광고주를 관리</b>하는 두 화면입니다. 정산·성과 리포트는 아직 없고, 이 문서는 지금 화면의 기능만 다룹니다.</p>
+
+<div class="box">
+  <h3>읽는 법</h3>
+  <div class="legend">
+    <span><b style="color:var(--zone)">붉은 점선 상자 A~E</b> 화면의 영역</span>
+    <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능</span>
+    <span>「N-N절」을 누르면 그 절만 팝업으로 열립니다</span>
+    <span><span class="tag ok">확정</span> 정책서 근거 있음</span>
+    <span><span class="tag proto">프로토 기준</span> 정책서에 아직 없음</span>
+    <span><span class="tag open">미결</span> 바뀔 수 있음</span>
+  </div>
+</div>
+
+<div class="sec-policy">
+  <h3>⚙ 공통 정책 — 혜택·광고주 관리</h3>
+  <ul>
+    <li><b>광고주 관리에 등록되고 「사용」인 광고주만</b> 광고를 올릴 수 있습니다. (<a href="../policy/pol_offer.html#s4">4절</a>)</li>
+    <li>고객 화면에는 <b>노출 스위치가 켜져 있고 노출 기간 안인</b> 광고만 나갑니다. 기간을 비우면 제한 없음. (<a href="../policy/pol_offer.html#s3">3절</a>)</li>
+    <li>정산(CPC·CPA·월정액 요율)·성과 리포트·광고주 계정은 <b>다음 단계</b>입니다 — 지금은 정산 방식을 적어 두기만 합니다. (<span class="tag open">미결</span> R-O2 · R-O5)</li>
+    <li>모달 버튼은 [취소][실행] 순서, 입력이 있는 모달은 배경을 눌러도 닫히지 않습니다. (<a href="../common/c_layer.html?side=admin#admin">C-LAYER 8절</a>)</li>
+  </ul>
+  <div class="src">기준: 리워드 혜택 정책서 v0.1 · 3 · 4절 / 리워드 어드민 정책서 v0.3 · 제10조</div>
+</div>
+
+<nav class="toc" aria-label="이 페이지 바로가기">
+  <span class="toc-lb">바로가기</span>
+  <a href="#flow"><b>①</b>화면 흐름·데이터</a>
+  <a href="#layout"><b>②</b>혜택 관리 구성</a>
+  <a class="z" href="#zB"><b>B</b>머리</a>
+  <a class="z" href="#zE"><b>E</b>목록</a>
+  <a href="#over"><b>④</b>등록·일괄 수정 모달</a>
+  <span class="toc-sep"></span>
+  <a href="#adv"><b>⑤</b>광고주 관리</a>
+</nav>
+
+<section class="sec major" id="flow">
+  <div class="sec-hd"><h2>① 화면 흐름 · 데이터</h2></div>
+  <div class="box">
+    <div class="flow"><span>광고주 관리 [+ 광고주 등록]</span><i>→</i><span>혜택 관리 [+ 광고 등록] (광고주 고르기)</span><i>→</i><span>노출 스위치 · 노출 기간</span><i>→</i><span>고객 혜택 탭에 노출</span></div>
+  </div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>요청</th><th>언제</th><th>받는 값 · 보내는 값</th></tr>
+    <tr><td><code>GET /admin/offers</code> · <code>/admin/advertisers</code></td><td>혜택 관리를 열 때</td><td>광고 목록(참여수 포함) · 광고주 목록(모달의 광고주 고르기)</td></tr>
+    <tr><td><code>POST /admin/offers</code> · <code>PUT /admin/offers/{번호}</code></td><td>등록·수정 [저장]</td><td>제목 · 광고주 · 설명 · 링크 · 썸네일 · 버튼명 · 포인트 · 체류 초 · 분류 · 노출 기간</td></tr>
+    <tr><td><code>POST /admin/offers/bulk</code></td><td>일괄 수정 [적용]</td><td>번호 목록 + 바꿀 항목만 → <code>updated</code> 건수</td></tr>
+    <tr><td><code>POST /api/admin/upload</code></td><td>썸네일 [이미지 선택]</td><td>올린 이미지 주소</td></tr>
+    <tr><td><code>POST·PUT /admin/advertisers</code></td><td>광고주 등록·수정 · 사용 스위치</td><td>광고주명 · 사업자번호 · 정산방식 · 담당자 · 메모 · 사용</td></tr>
+  </table></div>
+</section>
+
+<section class="sec major" id="layout">
+  <div class="sec-hd"><span class="sid">A-OFFER-L</span><h2>② 혜택(오퍼월) 관리 — 페이지 구성</h2></div>
+  <p class="sec-sub">어드민 공통 틀 안에 머리 → 「이번 버전에 없는 것」 띠 → 찾기 → 목록. 캡처의 목록은 8행만 남겼습니다. 광고·광고주는 시연 데이터입니다.</p>
+  <div class="pc-layout unit">
+    <figure class="shot pc" data-id="A-OFFER-L" data-base="../"></figure>
+    <div class="box wrapx" style="margin:0"><table class="t">
+      <tr><th>영역</th><th>들어가는 요소</th><th>상태에 따라 바뀌는 것</th></tr>
+      <tr class="zrow" data-n="A"><td><b>A</b> 공통 틀</td><td>왼쪽 메뉴(「혜택(오퍼월)」 강조) · 위 막대</td><td>출금 대기 배지</td></tr>
+      <tr class="zrow" data-n="B"><td><b>B</b> 머리</td><td>제목 · 설명 · [선택 일괄 수정] [+ 광고 등록]</td><td>—</td></tr>
+      <tr class="zrow" data-n="C"><td><b>C</b> 안내 띠</td><td>「이번 버전에 들어가지 않은 것 2가지」 — 성과 리포트 · 정산 연동</td><td>접힘 / 펼침</td></tr>
+      <tr class="zrow" data-n="D"><td><b>D</b> 찾기</td><td>전체 N건 · 검색어(광고명·광고주·분류) · [조회] [초기화]</td><td>건수</td></tr>
+      <tr class="zrow" data-n="E"><td><b>E</b> 목록</td><td>13열 표</td><td>노출 스위치 · 노출기간 배지</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<section class="sec major" id="detail" style="margin-bottom:0"><div class="major-hd"><h2>③ 영역별 상세 — 기능 · 정의 · 정책</h2></div></section>
+
+<section class="sec zsec" id="zB">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">B</span><h2>머리</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row"><div class="sw pc"><div class="lb">A-OFFER-B1</div><figure class="shot" data-id="A-OFFER-B1" data-base="../"></figure></div></div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「혜택(오퍼월) 관리」</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>"목록에서 버튼을 누르면 광고주 페이지로 이동하고, 체류 시간이 지나면 적립됩니다"</div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>[선택 일괄 수정]</div>
+      <ul><li>목록에서 체크한 광고를 한 번에 고칩니다(④ X2). 체크가 없으면 토스트 "광고를 선택해 주세요".</li></ul></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>[+ 광고 등록]</div><ul><li>등록 모달(④ X1).</li></ul></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zE">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">E</span><h2>목록</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row"><div class="sw pc"><div class="lb">A-OFFER-E1</div><figure class="shot" data-id="A-OFFER-E1" data-base="../"></figure></div></div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>선택</div><ul><li>머리 칸 체크 = 모두 선택. 일괄 수정에 씁니다.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>노출 스위치</div>
+      <ul><li>누르면 바로 켜고 끕니다(확인창 없음) → 토스트 "노출합니다" / "중지했어요". 끄면 고객 화면에서 사라집니다.</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>썸네일</div></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>제목 (+ 한 줄 설명)</div></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>광고주</div></div>
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>분류</div></div>
+    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>적립</div><ul><li>광고 1건 참여 시 포인트.</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>체류</div><ul><li>광고주 페이지에 머물러야 하는 초.</li></ul></div>
+    <div class="cn" data-n="9"><div class="cn-hd"><span class="no">9</span>노출기간</div>
+      <ul><li>비면 「제한 없음」. 있으면 오늘 기준 배지 「예정」 · 「진행중」 · 「종료」 + 날짜.</li>
+          <li>기간을 벗어나면 스위치가 켜져 있어도 고객 화면에 안 보입니다.</li></ul></div>
+    <div class="cn" data-n="10"><div class="cn-hd"><span class="no">10</span>버튼명</div><ul><li>고객 카드의 버튼 글자.</li></ul></div>
+    <div class="cn" data-n="11"><div class="cn-hd"><span class="no">11</span>아웃링크</div><ul><li>없으면 빨간 「미설정」.</li></ul></div>
+    <div class="cn" data-n="12"><div class="cn-hd"><span class="no">12</span>참여수</div><ul><li>적립된 회원 수.</li></ul></div>
+    <div class="cn" data-n="13"><div class="cn-hd"><span class="no">13</span>[수정]</div><ul><li>그 광고 값이 채워진 수정 모달.</li></ul>
+      <div class="rule"><b>근거</b> 혜택 관리 (<a href="../policy/pol_offer.html#s3">3절</a>)</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec major" id="over">
+  <div class="sec-hd"><h2>④ 등록·일괄 수정 모달</h2><span class="tag ok">확정</span></div>
+  <div class="pc-layout unit sub-item">
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">A-OFFER-X1 <small style="font-weight:400">광고 등록·수정</small></div><figure class="shot pc" data-id="A-OFFER-X1" data-base="../"></figure></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>썸네일 · [이미지 선택]</div><ul><li>png·jpg·gif·webp·svg · 3MB 이하 · 정사각형 권장. 고르면 바로 올라가고 미리보기 + 토스트 "이미지를 올렸어요".</li></ul></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>광고주 (계약된 곳만 선택) — 필수 · [광고주 관리]</div><ul><li>「사용」인 광고주만 목록에 나옵니다(「이름 · 정산방식」). [광고주 관리]는 모달을 닫고 ⑤로 갑니다.</li></ul></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>제목</div></div>
+      <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>한 줄 설명 — 목록에서 제목 아래</div></div>
+      <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>아웃링크 — 필수</div></div>
+      <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>버튼명 (4자 이내) — 처음 값 「보러가기」</div></div>
+      <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>적립 포인트 — 처음 값 10</div></div>
+      <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>체류(초) — 처음 값 3</div></div>
+      <div class="cn" data-n="9"><div class="cn-hd"><span class="no">9</span>분류 — 여행 · 금융 · 쇼핑 · 생활 · 게임 (<span class="tag open">미결</span> R-O4)</div></div>
+      <div class="cn" data-n="10"><div class="cn-hd"><span class="no">10</span>노출 시작일 · 종료일</div></div>
+      <div class="cn" data-n="11"><div class="cn-hd"><span class="no">11</span>노란 안내 2개</div><ul><li>"노출기간을 비워 두면 제한 없이 노출됩니다…" · "고객 화면에는 썸네일 · 제목 · 광고주 · 버튼이 한 줄로 보입니다. 버튼을 누르면 새 창으로 이동하고 N초 뒤 적립됩니다."</li></ul></div>
+      <div class="cn" data-n="12"><div class="cn-hd"><span class="no">12</span>[취소] [저장]</div>
+        <ul><li>광고주가 없으면 "광고주를 선택해 주세요" · 아웃링크가 없으면 "아웃링크를 입력해 주세요" · 제목이 없으면 서버가 "제목과 광고주를 입력해 주세요"(빨간 토스트, 모달 그대로).</li>
+            <li>저장되면 토스트 "저장했어요" → 목록 새로고침.</li></ul>
+        <div class="case">포인트·체류 초의 범위 검사가 없습니다(음수도 저장 · 등록 때 0은 10P·3초로 바뀜) — 입력 범위는 정책이 정해지면 함께 정합니다 <span class="tag open">미결</span> R-O2</div></div>
+    </div>
+  </div>
+  <div class="pc-layout unit sub-item">
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">A-OFFER-X2 <small style="font-weight:400">선택 일괄 수정 (2건 체크)</small></div><figure class="shot pc" data-id="A-OFFER-X2" data-base="../"></figure></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>"비워 둔 항목은 바뀌지 않습니다."</div><ul><li>제목은 「선택한 광고 N건 일괄 수정」.</li></ul></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>적립 포인트</div></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>체류 조건(초)</div></div>
+      <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>분류</div></div>
+      <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>노출 — 노출 / 숨김</div><ul><li>모두 처음 값 「변경 안 함」.</li></ul></div>
+      <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>[취소] [적용]</div>
+        <ul><li>[적용] → 토스트 "N건 수정했어요" → 목록 새로고침.</li></ul>
+        <div class="rule"><b>근거</b> 등록·일괄 수정 (<a href="../policy/pol_offer.html#s3">3절</a> · <a href="../common/c_layer.html?side=admin#admin">C-LAYER 8절</a>)</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec major" id="adv">
+  <div class="sec-hd"><span class="sid">A-ADV</span><h2>⑤ 광고주 관리</h2><span class="tag ok">확정</span></div>
+  <p class="sec-sub">왼쪽 메뉴 「광고주 관리」. "여기 등록된 광고주만 광고를 올릴 수 있습니다". 캡처의 목록은 8행만 남겼습니다.</p>
+  <div class="pc-layout unit">
+    <figure class="shot pc" data-id="A-ADV-L" data-base="../"></figure>
+    <div class="box wrapx" style="margin:0"><table class="t">
+      <tr><th>영역</th><th>들어가는 요소</th></tr>
+      <tr class="zrow" data-n="A"><td><b>A</b> 공통 틀</td><td>왼쪽 메뉴(「광고주 관리」 강조)</td></tr>
+      <tr class="zrow" data-n="B"><td><b>B</b> 머리</td><td>제목 · 설명 · [+ 광고주 등록]</td></tr>
+      <tr class="zrow" data-n="C"><td><b>C</b> 안내 띠</td><td>「이번 버전에 들어가지 않은 것 3가지」 — 정산·과금 · 광고주 계정 · 계약 기간 관리(지금은 광고 노출기간으로 대신)</td></tr>
+      <tr class="zrow" data-n="E"><td><b>E</b> 목록</td><td>8열 표 · 찾기 칸 없음</td></tr>
+    </table></div>
+  </div>
+  <div class="unit sub-item">
+  <div class="shots-row"><div class="sw pc"><div class="lb">A-ADV-E1</div><figure class="shot" data-id="A-ADV-E1" data-base="../"></figure></div></div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>사용 스위치</div>
+      <ul><li>누르면 바로 바뀌고 토스트 "사용합니다" / "중지했어요". 중지하면 광고 등록 모달의 광고주 목록에서 빠집니다.</li></ul>
+      <div class="case">중지한 광고주의 <b>이미 노출 중인 광고</b>를 어떻게 할지는 구현에 없습니다(광고는 그대로 노출) <span class="tag open">미결</span> R-O5</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>광고주명</div></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>사업자번호</div></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>담당자</div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>정산방식 — CPC · CPA · 월정액</div><ul><li>적어 두기만 합니다(요율·정산 없음 · <span class="tag open">미결</span> R-O2).</li></ul></div>
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>광고수</div><ul><li>이 광고주로 등록된 광고 수.</li></ul></div>
+    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>메모</div></div>
+    <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>[수정]</div><ul><li>X1 모달.</li></ul></div>
+  </div></div>
+  </div>
+  <div class="pc-layout unit sub-item">
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">A-ADV-X1 <small style="font-weight:400">광고주 등록·수정</small></div><figure class="shot pc" data-id="A-ADV-X1" data-base="../"></figure></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>광고주명</div></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>사업자등록번호 — 예: 000-00-00000</div></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>정산방식 — 처음 값 CPC</div></div>
+      <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>담당자 · 연락처</div></div>
+      <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>메모 — 계약 조건 등</div><ul><li>아래 안내 "사업자정보·정산 조건은 추후 확장 예정입니다."</li></ul></div>
+      <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>[취소] [저장]</div>
+        <ul><li>저장 → 토스트 "저장했어요" → 목록 새로고침.</li></ul>
+        <ul><li>광고주명이 비면 "광고주명을 입력해 주세요" · 같은 이름이 있으면 "이미 등록된 광고주예요". 나머지 칸은 선택.</li></ul>
+        <div class="rule"><b>근거</b> 광고주 관리 (<a href="../policy/pol_offer.html#s4">4절</a>)</div></div>
+    </div>
+  </div>
+</section>
+
+</main>
+<script src="../shots/markers.js"></script>
+<script src="../policy/pol_offer_data.js"></script>
+<script src="../policy/pol_admin_data.js"></script>
+<script src="../wf-reward.js"></script>
+</body>
+</html>

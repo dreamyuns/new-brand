@@ -1,0 +1,200 @@
+/* 픽콕 리워드 화면기획서 공통 스타일
+   - 기존 B2C·앱 화면기획서의 색 약속을 이어받는다:
+     공통정책 = 녹색 / 정책 근거 = 노랑 / 데이터 출처 = 청록 / 진입·조건 = 파랑 / 번호 = 빨강
+   - 상태 배지 3종(확정·프로토 기준·미결)은 지난 기획서에 없던 것 — "무엇이 바뀔 수 있나"를 한눈에 */
+:root{
+  --bg:#f3f5f9; --panel:#fff; --ink:#1b2333; --ink2:#4a5568; --ink3:#8792a5; --line:#e3e7ef;
+  --accent:#2563eb; --accent-soft:#e8efff;
+  --marker:#e5383b; --zone:#ff2e63; --zone-fill:rgba(255,46,99,.20);
+  --pol-bg:#eefaf1; --pol-line:#2f9e55; --pol-ink:#1f6b3a;
+  --rule-bg:#fff8e1; --rule-line:#e0a800; --rule-ink:#7a5a00;
+  --data-bg:#e8f7f8; --data-ink:#0f6b73;
+  --case-bg:#eef4ff; --case-ink:#2b4fa8;
+  --ok:#2f9e55; --proto:#7c4dff; --open:#d9480f;
+  --nav-w:200px;
+  font-family:"Pretendard","Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6;word-break:keep-all}
+a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+code{font-family:Consolas,"D2Coding",monospace;font-size:12px;background:#f1f3f7;padding:1px 5px;border-radius:4px}
+
+/* ── 좌측 메뉴 ── */
+.nav{position:fixed;left:0;top:0;bottom:0;width:var(--nav-w);background:#151c2c;color:#c9d1e3;overflow-y:auto;padding:14px 0 30px;z-index:10}
+.nav-logo{display:block;padding:4px 16px 14px;color:#fff;font-weight:800;font-size:15px;border-bottom:1px solid #263049;margin-bottom:8px}
+.nav-logo small{display:block;font-weight:500;font-size:11px;color:#8b96ad}
+/* 묶음 제목 — 어두운 배경에 묻히지 않게 (PO 2026-10-26): 위 구분선 + 밝은 글씨 + 왼쪽 색 막대 + 옅은 띠 */
+.nav-grp{margin:14px 0 4px;padding:8px 16px 7px 13px;font-size:12.5px;font-weight:800;color:#fff;letter-spacing:.02em;
+  border-top:1px solid #2c3754;border-left:3px solid #60a5fa;background:#1c2540}
+.nav-grp:first-of-type{margin-top:6px}
+/* 묶음 접기/펼치기 (PO 2026-10-27) — 제목을 누르면 아래 항목이 접힌다. 오른쪽 화살표로 상태 표시 */
+button.nav-grp{display:block;width:100%;text-align:left;font-family:inherit;cursor:pointer;position:relative;
+  border-right:0;border-bottom:0}
+button.nav-grp:hover{background:#232e4d}
+button.nav-grp:focus-visible{outline:2px solid #60a5fa;outline-offset:-2px}
+button.nav-grp::after{content:"";position:absolute;right:16px;top:50%;width:6px;height:6px;margin-top:-5px;
+  border-right:1.5px solid #8b96ad;border-bottom:1.5px solid #8b96ad;transform:rotate(45deg);transition:transform .15s}
+button.nav-grp[aria-expanded="false"]::after{transform:rotate(-45deg);margin-top:-3px}
+.nav-items.shut{display:none}
+@media (prefers-reduced-motion:reduce){button.nav-grp::after{transition:none}}
+.nav a,.nav span.soon{display:block;padding:6px 16px 6px 20px;color:#d7deec;font-size:13px;line-height:1.35}
+.nav a small,.nav span.soon small{display:block;font-size:11px;color:#8b96ad}
+.nav a:hover{background:#1f2940;text-decoration:none}
+.nav a.on{background:var(--accent);color:#fff} .nav a.on small{color:#dce6ff}
+.nav span.soon{color:#5f6a82;cursor:default;position:relative} .nav span.soon::after{content:"예정";position:absolute;right:14px;top:8px;font-size:10px;border:1px solid #3a4560;border-radius:8px;padding:0 6px}
+
+/* ── 본문 ── */
+.page{margin-left:var(--nav-w);padding:28px 36px 80px;max-width:1500px}
+.top{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:baseline;margin-bottom:6px}
+.top h1{margin:0;font-size:24px}
+.top .sid{font-family:Consolas,monospace;font-size:14px;color:#fff;background:var(--ink);padding:2px 9px;border-radius:6px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 14px;color:var(--ink2);font-size:12.5px;margin-bottom:18px}
+.meta b{color:var(--ink)}
+.lead{font-size:14.5px;color:var(--ink2);max-width:900px;margin:0 0 18px}
+
+.box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:0 0 18px}
+.box h3{margin:0 0 10px;font-size:15px}
+
+/* 상태 배지 */
+.tag{display:inline-block;font-size:11px;font-weight:700;border-radius:10px;padding:1px 8px;vertical-align:2px;border:1px solid}
+.tag.ok{color:var(--ok);border-color:#b7e2c5;background:#effaf3}
+.tag.proto{color:var(--proto);border-color:#d6c8ff;background:#f5f1ff}
+.tag.open{color:var(--open);border-color:#ffd0b8;background:#fff3ec}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:12px;color:var(--ink2)}
+
+/* 변경이력 · 일반 표 */
+table.t{width:100%;border-collapse:collapse;font-size:13px}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+table.t th{background:#f7f8fb;font-weight:700;color:var(--ink2);white-space:nowrap}
+.wrapx{overflow-x:auto}
+
+/* 공통정책 블록 */
+.sec-policy{background:var(--pol-bg);border-left:4px solid var(--pol-line);border-radius:10px;padding:14px 18px;margin:0 0 18px}
+.sec-policy h3{margin:0 0 8px;color:var(--pol-ink);font-size:14.5px}
+.sec-policy ul{margin:0;padding-left:18px} .sec-policy li{margin:3px 0}
+.sec-policy .src{margin-top:8px;font-size:12px;color:var(--pol-ink)}
+
+/* 흐름 */
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13px}
+.flow span{background:#fff;border:1px solid var(--line);border-radius:8px;padding:4px 10px}
+.flow i{font-style:normal;color:var(--ink3)}
+
+/* 목차(바로가기) — 누를 수 있는 버튼으로 보이게 (PO 2026-10-26)
+   묶음: 큰 절 / 영역 A~D / 나머지. 스크롤하면 지금 보는 절이 채워진 색으로 강조된다 */
+.toc{display:flex;flex-wrap:wrap;align-items:center;gap:8px 6px;margin:0 0 22px;position:sticky;top:0;z-index:5;
+  background:#fff;padding:10px 14px;border:1px solid var(--line);border-radius:12px;box-shadow:0 6px 18px rgba(20,30,60,.10)}
+.toc .toc-lb{font-size:12px;font-weight:700;color:var(--ink3);margin-right:4px;letter-spacing:.02em}
+.toc .toc-sep{width:1px;height:22px;background:var(--line);margin:0 4px}
+.toc a{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink);
+  background:#f4f6fa;border:1px solid #d5dbe6;border-radius:8px;padding:6px 12px;transition:.12s;text-decoration:none}
+.toc a b{font-family:Consolas,monospace;font-weight:800;color:var(--accent)}
+.toc a.z b{color:#fff;background:var(--zone);border-radius:5px;padding:0 6px}
+.toc a::after{content:"↓";font-size:11px;color:var(--ink3)}
+.toc a:hover{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);text-decoration:none}
+.toc a.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.toc a.on b{color:#fff} .toc a.on::after{color:#dce6ff}
+
+/* 섹션 = 케이스 1개 */
+.sec{margin:0 0 34px;scroll-margin-top:60px}
+.sec-hd{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-bottom:4px}
+.sec-hd .sid{font-family:Consolas,monospace;font-size:13px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:6px}
+.sec-hd h2{margin:0;font-size:18px}
+.sec-sub{color:var(--ink2);margin:0 0 12px;font-size:13.5px}
+.two-col{display:grid;grid-template-columns:400px minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:1100px){.two-col{grid-template-columns:1fr}}
+
+/* 캡처 + 번호 */
+.shot{position:relative;margin:0;width:390px;border-radius:22px;overflow:hidden;box-shadow:0 6px 24px rgba(20,30,60,.16);background:#fff;border:1px solid #d9deea}
+.shot.pc{width:100%;border-radius:10px}
+.shot img{display:block;width:100%;height:auto}
+.mk{position:absolute;pointer-events:none}
+.mk .box-o{position:absolute;inset:0;border:2px solid transparent;border-radius:6px;transition:.15s}
+.mk .no{position:absolute;left:3px;top:3px;min-width:20px;height:20px;border-radius:10px;background:var(--marker);color:#fff;font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 5px;box-shadow:0 0 0 2px #fff;pointer-events:auto;cursor:pointer}
+.mk.hl .box-o{border-color:var(--marker);background:rgba(229,56,59,.08)}
+/* 영역 = 붉은 점선 상자 + 알파벳 꼬리표 — 파란 화면 위에서 잘 보이도록 붉은 계열 (PO 2026-10-26)
+   기능 번호(빨간 원)와는 모양(점선 사각형 + 꼬리표)으로 구분한다 */
+.mk.zone .box-o{border:2px dashed var(--zone);background:transparent;border-radius:8px;box-shadow:0 0 0 1px rgba(255,255,255,.55)}
+.mk.zone .no{left:0;top:0;border-radius:6px 0 8px 0;background:var(--zone);min-width:24px;height:22px;font-size:12.5px;box-shadow:none}
+.mk.zone.hl .box-o{border-style:solid;background:var(--zone-fill)}
+/* 잘라 낸 캡처를 상태별로 나란히 */
+.shots-row{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}
+.shots-row .sw{display:flex;flex-direction:column;gap:6px;width:300px}
+.shots-row .shot{width:300px;border-radius:14px}
+.shots-row .lb{font-size:12.5px;font-weight:700} .shots-row .lb small{font-weight:400;color:var(--ink2)}
+.detail{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start;margin-top:14px}
+@media (max-width:1250px){.detail{grid-template-columns:1fr}}
+/* 페이지 구성 표 */
+.zrow td:first-child b{display:inline-block;min-width:24px;text-align:center;background:var(--zone);color:#fff;border-radius:6px;font-family:Consolas,monospace}
+.zrow.hl td{background:#fff0f4}
+.zone-hd{display:flex;align-items:center;gap:10px;margin:0 0 4px}
+.zone-hd .zl{background:var(--zone);color:#fff;font-weight:800;font-family:Consolas,monospace;border-radius:6px;padding:1px 9px}
+.zone-hd h2{margin:0;font-size:18px}
+.shot-cap{font-size:11.5px;color:var(--ink3);margin-top:6px;width:390px}
+.shot-cap.ext{color:var(--open)}
+
+/* 주석 */
+.ann{display:flex;flex-direction:column;gap:10px}
+.cn{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px;transition:.15s}
+.cn.hl{border-color:var(--marker);box-shadow:0 0 0 3px rgba(229,56,59,.12)}
+.cn-hd{display:flex;gap:8px;align-items:center;font-weight:700;margin-bottom:4px}
+.cn-hd .no{width:22px;height:22px;flex:0 0 22px;border-radius:11px;background:var(--marker);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.cn ul{margin:2px 0 0;padding-left:18px;color:var(--ink)} .cn li{margin:2px 0}
+.cn .data,.cn .rule,.cn .case{margin-top:6px;font-size:12.5px;border-radius:6px;padding:5px 9px}
+.cn .data{background:var(--data-bg);color:var(--data-ink)}
+.cn .rule{background:var(--rule-bg);color:var(--rule-ink);border-left:3px solid var(--rule-line)}
+.cn .case{background:var(--case-bg);color:var(--case-ink)}
+.cn .data b,.cn .rule b,.cn .case b{font-weight:700}
+
+/* 프로토와 다른 점 · 미결 · 수정 요청 */
+.note{border-radius:10px;padding:12px 16px;margin:0 0 18px;font-size:13px}
+.note.diff{background:#f5f1ff;border:1px solid #ddd0ff}
+.note.open{background:#fff3ec;border:1px solid #ffd6c2}
+.note h4{margin:0 0 6px;font-size:13.5px}
+.note ul{margin:0;padding-left:18px}
+
+/* 정책서 HTML */
+.pol h1{font-size:24px} .pol h2{font-size:19px;border-bottom:2px solid var(--ink);padding-bottom:4px;margin-top:34px;scroll-margin-top:16px}
+.pol h3{font-size:16px;margin-top:24px;scroll-margin-top:16px} .pol h4{scroll-margin-top:16px}
+.pol table{border-collapse:collapse;width:100%;font-size:13px;margin:8px 0 14px;display:block;overflow-x:auto}
+.pol th,.pol td{border:1px solid var(--line);padding:6px 8px;vertical-align:top;text-align:left}
+.pol th{background:#f3f5f9}
+.pol blockquote{margin:10px 0;padding:8px 14px;background:#f7f8fb;border-left:4px solid #c3cad8;color:var(--ink2)}
+.pol pre{background:#f1f3f7;padding:10px;border-radius:8px;overflow-x:auto}
+.pol :target{background:#fff8d6}
+.pol-toc{columns:2;font-size:13px} .pol-toc a{display:block}
+
+/* 구분선 — 정보 계층에 맞춰 강도를 다르게 (PO 2026-10-26)
+   1단계 큰 절(①②③④): 굵은 진한 선 / 2단계 영역·항목: 가는 회색 선 / 3단계 같은 절 안의 항목: 점선 */
+.sec.major{border-top:3px solid var(--ink);padding-top:22px;margin-top:44px}
+.sec.zsec{border-top:1px solid #c9d0dd;padding-top:22px;margin-top:8px}
+.sub-item{border-top:1px dashed #d3d9e4;padding-top:20px;margin-top:20px}
+.sub-item:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.major-hd{display:flex;align-items:baseline;gap:10px;margin:0 0 6px}
+.major-hd h2{margin:0;font-size:20px}
+
+/* 정책 절 팝업 */
+.pp-ov{position:fixed;inset:0;background:rgba(15,20,35,.45);z-index:100;display:flex;align-items:center;justify-content:center;padding:24px}
+.pp-ov[hidden]{display:none}
+.pp{background:#fff;border-radius:14px;width:min(820px,100%);max-height:85vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.pp-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:16px 20px 12px;border-bottom:1px solid var(--line)}
+.pp-hd small{color:var(--pol-ink);font-weight:700;font-size:12px} .pp-hd h3{margin:2px 0 0;font-size:18px}
+.pp-x{border:0;background:#f1f3f7;border-radius:8px;width:32px;height:32px;font-size:15px;cursor:pointer}
+.pp-x:hover{background:#e3e7ef}
+.pp-b{padding:6px 20px 16px;overflow-y:auto}
+.pp-b h3{font-size:15px;margin-top:18px} .pp-b h4{font-size:14px}
+.pp-ft{padding:10px 20px;border-top:1px solid var(--line);text-align:right;font-size:13px}
+.box.hist{display:none}  /* 화면기획서 변경이력 — 개발자 공유 이후부터 노출 (PO 2026-10-26). 노출 시 이 줄 삭제 */
+
+/* 어드민(PC) 캡처 — 폭을 넓게, 페이지 구성은 1단(캡처 위 · 영역표 아래) */
+.pc-layout{display:flex;flex-direction:column;gap:16px}
+.pc-layout .shot{width:100%;max-width:1100px;border-radius:10px}
+.shots-row .sw.pc{width:100%;max-width:1100px}
+.shots-row .sw.pc .shot{width:100%;border-radius:10px}
+.pc-over .shot{width:100%;max-width:1000px;border-radius:10px}
+
+/* 프런트·어드민 분리 (PO 2026-10-26) — 어드민 메뉴는 보라 강조, 맨 아래 반대쪽 기획서로 가는 버튼 */
+.nav-admin .nav-grp{border-left-color:#a78bfa}
+.nav-admin a.on{background:#7c4dff}
+.nav-switch{display:block;margin:22px 14px 0;padding:9px 12px!important;border:1px solid #3a4560;border-radius:8px;text-align:center;font-weight:700;color:#fff!important}
+.nav-switch:hover{background:#26304a;text-decoration:none}
+.nav-switch.sub{margin-top:8px;border:0;font-weight:500;color:#8b96ad!important;font-size:12px}

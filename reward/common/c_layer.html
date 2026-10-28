@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>C-LAYER 팝업·알림 노출 규칙 — 픽콕 리워드 화면기획서</title>
+<link rel="stylesheet" href="../wf-reward.css">
+<!-- 근거: 구현물(pickoq_demo) 전수 조사 2026-10-26 — 토스트 호출 82건 · 확인창 6건 · 시트형 확인 4건 · 어드민 모달 12종.
+     규칙 R1~R10은 조사에서 드러난 흔들림을 정리한 것으로, PO가 추천안대로 시범 적용하기로 함(2026-10-26). -->
+<style>
+  .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px}
+  .gallery .g{display:flex;flex-direction:column;gap:6px}
+  .gallery .shot{width:250px;border-radius:16px}
+  .gallery .g b{font-size:13.5px} .gallery .g span{font-size:12px;color:var(--ink2)}
+  .rule-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:0 0 10px;scroll-margin-top:60px}
+  .rule-card h4{margin:0 0 6px;font-size:14px} .rule-card h4 .rid{font-family:Consolas,monospace;color:var(--accent);margin-right:6px}
+  .rule-card .now{font-size:12.5px;color:var(--ink2);margin-top:6px}
+  .z{display:flex;flex-direction:column-reverse;gap:3px;font-size:12.5px}
+  .z div{background:#fff;border:1px solid var(--line);border-radius:6px;padding:4px 10px;display:flex;justify-content:space-between}
+  .z div b{font-family:Consolas,monospace;color:var(--ink3);font-weight:600}
+</style>
+</head>
+<body data-key="c_layer" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page">
+
+<div class="top"><span class="sid">C-LAYER</span><h1>팝업·알림 노출 규칙</h1><span class="tag ok">확정 · 시범 적용</span></div>
+<div class="meta">
+  <span>적용 범위 <b>고객앱 전 화면 + 어드민</b></span>
+  <span>근거 <b>구현물 전수 조사</b> (pickoq_demo, 2026-10-26)</span>
+  <span>결정 <b>PO 2026-10-26</b> — 추천안 시범 적용, 어색하면 조정</span>
+  <span>최종수정 <b>2026-10-27</b></span>
+</div>
+<p class="lead">화면 위에 잠깐 뜨거나 화면을 덮는 모든 요소(토스트·확인창·바텀시트·연출·로딩·시스템 창)를 <b>언제 어떤 것을 쓰는지</b> 한곳에 정리했습니다. 각 화면기획서는 이 규칙을 따르고, 예외만 따로 적습니다.</p>
+
+<!-- 변경이력: 개발자 공유 이후부터 노출 (PO 2026-10-26) -->
+<div class="box hist">
+  <h3>변경이력</h3>
+  <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
+    <tr><td>v0.3</td><td>2026-10-27</td><td>프로토 수정 ①② 반영(화면기획서반영요청 P1~P24) — 규칙 R1·R2·R3·R5·R7·R9·R10 구현 완료로 표기 · 실패 확인창 19곳·문구·[다시 시도] 동작 · 확인창 아이콘·항목 상자·잠금 · 토스트 층 95·대기 3개 · 알림 토스트 144px·누르면 알림함 · 예시 캡처 C-FAIL·C-BUSY 추가</td></tr>
+    <tr><td>v0.2</td><td>2026-10-26</td><td>R5 로그아웃 = 확인 없이 바로(PO 확정) · 예시 캡처 번호를 안쪽에 표시(화면 밖으로 나가던 문제) · 강조 연동을 캡처별로 분리(한 번호를 가리키면 10장 모두 빨개지던 문제)</td></tr>
+    <tr><td>v0.1</td><td>2026-10-26</td><td>최초 작성 — 구현물 전수 조사 기반 · 규칙 R1~R10 시범 적용(PO 결정)</td></tr>
+  </table>
+</div>
+
+<nav class="toc" aria-label="이 페이지 바로가기">
+  <span class="toc-lb">바로가기</span>
+  <a href="#kinds"><b>1</b>종류</a>
+  <a href="#pick"><b>2</b>무엇을 쓰나</a>
+  <a href="#rules"><b>3</b>규칙 R1~R10</a>
+  <a href="#R-ORDER"><b>4</b>겹칠 때</a>
+  <a href="#copy"><b>5</b>문구</a>
+  <a href="#gallery"><b>6</b>예시 캡처</a>
+  <a href="#calls"><b>7</b>호출 목록</a>
+  <a href="#admin"><b>8</b>어드민</a>
+</nav>
+
+<!-- ═════════ 1 종류 ═════════ -->
+<section class="sec major" id="kinds">
+  <div class="sec-hd"><h2>1. 레이어 종류 (고객앱)</h2></div>
+  <p class="sec-sub">구현물에 실제로 있는 10종입니다. 브라우저 기본 경고창(alert·confirm)은 고객앱에서 <b>쓰지 않습니다</b>(현재 0건).</p>
+  <div class="box wrapx"><table class="t">
+    <tr><th>ID</th><th>종류</th><th>언제 쓰나</th><th>노출</th><th>닫기</th><th>배경</th></tr>
+    <tr id="L-TOAST"><td><code>L-TOAST</code></td><td><b>토스트</b></td><td>내 동작 직후의 가벼운 결과·안내 — 복사·저장·읽음 처리, 짧은 입력 오류</td><td>하단 중앙(아래에서 92px) · 한 줄 · <b>2초</b> · 여러 개면 차례로(R2)</td><td>자동</td><td>어둡게 하지 않음 · 누를 수 없음</td></tr>
+    <tr id="L-NOTI"><td><code>L-NOTI</code></td><td><b>알림 토스트</b></td><td><b>내가 하지 않은 일</b>이 생겼을 때 — 운영자 지급·출금 처리·쿠폰 발행·공지</td><td>하단(아래에서 <b>144px</b> — 일반 토스트와 겹치지 않게) · 아이콘+제목+본문 · <b>4.2초</b> · 서버를 5초마다 확인</td><td>자동 / <b>누르면 알림함이 열림</b></td><td>어둡게 하지 않음</td></tr>
+    <tr id="L-EARN"><td><code>L-EARN</code></td><td><b>적립 연출</b></td><td>포인트가 실제로 늘어나는 순간 — 출석·퀴즈·추천·혜택·뽑기. 연출이 알려주므로 <b>토스트는 생략</b></td><td>전체 화면 · <b>2.4초</b> (선물상자 결과 3초)</td><td>자동 (버튼·탭 닫기 없음)</td><td>전체를 덮음</td></tr>
+    <tr id="L-DIALOG"><td><code>L-DIALOG</code></td><td><b>중앙 확인창</b></td><td>① 포인트·돈·쿠폰이 움직이거나 되돌릴 수 없는 작업 <b>전 확인</b> ② 그 <b>결과 요약</b> ③ 진행 중인 작업을 버리는 <b>이탈 확인</b> ④ <b>처리 실패 + [다시 시도]</b> (R3)</td><td>화면 가운데 · 버튼 1~2개 · 아이콘은 <b>돈·포인트가 움직이는 확인만 💸</b>, 완료는 ✓, 그 외는 「?」 · 확인 항목이 없으면 회색 항목 상자를 그리지 않음 · [실행]을 누르면 두 버튼 모두 잠기고 「처리 중…」(R7)</td><td><b>버튼으로만</b></td><td>어둡게 (46%) · 배경 탭으로 닫히지 않음</td></tr>
+    <tr id="L-SHEET-PICK"><td><code>L-SHEET-PICK</code></td><td><b>바텀시트 (선택형)</b></td><td>목록에서 고르기(국적·정렬·필터), 긴 부가 정보(약관 요약·편의시설)</td><td>하단에서 올라옴</td><td>[확인] / 배경 탭 / 기기 뒤로가기</td><td>어둡게 (42%)</td></tr>
+    <tr id="L-SHEET-STEP"><td><code>L-SHEET-STEP</code></td><td><b>바텀시트 (단계형)</b></td><td>여러 단계를 이어서 입력 — 가입·로그인·재인증·탈퇴 · <b>첫 적립 때 본인인증</b></td><td>하단에서 올라옴 · 단계마다 내용 교체</td><td>[✕] → 입력 중이면 이탈 확인창</td><td>어둡게 (50%) · 배경 탭으로 닫히지 않음</td></tr>
+    <tr id="L-OVERLAY"><td><code>L-OVERLAY</code></td><td><b>전체화면 입력</b></td><td>키보드 입력이나 큰 선택 영역이 필요한 조건 입력 — 목적지·날짜·인원·AI 검색</td><td>화면 전체</td><td>[←] / 기기 뒤로가기</td><td>불투명</td></tr>
+    <tr id="L-LOADING"><td><code>L-LOADING</code></td><td><b>전체화면 로딩</b></td><td>화면이 통째로 바뀌는 대기 — 검색 결과 불러오기. 문구 2단계</td><td>화면 전체</td><td>자동</td><td>반투명</td></tr>
+    <tr id="L-INLINE"><td><code>L-INLINE</code></td><td><b>화면 안 로딩</b></td><td>화면은 그대로 두고 일부만 새로 받을 때 — 퀴즈 문제, 가격비교 보강, 버튼 문구 "보내는 중…"</td><td>해당 영역만</td><td>자동</td><td>없음</td></tr>
+    <tr id="L-OS"><td><code>L-OS</code></td><td><b>OS 시스템 창</b></td><td><b>권한 요청에만</b> 사용 — 알림 권한. 픽콕 권한 고지 카드 [확인] 직후 1회</td><td>OS가 그림</td><td>OS</td><td>OS</td></tr>
+  </table></div>
+</section>
+
+<!-- ═════════ 2 무엇을 쓰나 ═════════ -->
+<section class="sec major" id="pick">
+  <div class="sec-hd"><h2>2. 이런 상황엔 이것을 쓴다</h2></div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>상황</th><th>쓰는 것</th><th>예</th></tr>
+    <tr><td>포인트가 늘었다</td><td><b>L-EARN</b> (토스트 없음)</td><td>출석 10P · 퀴즈 결과 · 추천 1,000P</td></tr>
+    <tr><td>내가 누른 동작이 잘 끝났다 (화면 이동 없음)</td><td><b>L-TOAST</b></td><td>"추천코드를 복사했어요" · "저장했어요"</td></tr>
+    <tr><td>입력이 잘못됐다 (사용자가 고칠 수 있음)</td><td><b>L-TOAST</b> 또는 입력칸 아래 빨간 글씨</td><td>"인증번호 6자리를 입력해 주세요"</td></tr>
+    <tr><td>서버 처리가 실패했다 (사용자 잘못 아님)</td><td><b>L-DIALOG + [다시 시도]</b> (R3)</td><td>출석 실패 · 가입 실패 · 계좌 저장 실패</td></tr>
+    <tr><td>규칙상 할 수 없다</td><td><b>L-TOAST</b></td><td>"이미 적립한 혜택이에요" · "이번 달 적립 상한 도달"</td></tr>
+    <tr><td>돈·포인트·쿠폰이 움직이기 전 / 되돌릴 수 없다</td><td><b>L-DIALOG</b> (확인) → 끝나면 L-DIALOG (결과)</td><td>현금 전환 · 픽샵 구매 · 쿠폰 사용 완료</td></tr>
+    <tr><td>진행 중인 입력·결과를 버리고 나가려 한다</td><td><b>L-DIALOG</b> (이탈 확인)</td><td>가입 시트 닫기 · 퀴즈 결과 안 보고 나가기</td></tr>
+    <tr><td>목록에서 하나 고른다</td><td><b>L-SHEET-PICK</b></td><td>국적 · 정렬</td></tr>
+    <tr><td>여러 단계를 이어서 입력한다</td><td><b>L-SHEET-STEP</b></td><td>가입 · 재인증 · 탈퇴</td></tr>
+    <tr><td>적립하려는데 본인인증 전이다 (출석 [받기] · 퀴즈 열기 · 혜택 나가기 전 · 예약 뽑기)</td><td><b>L-SHEET-STEP</b> 본인인증 시트 → 마치면 하려던 참여를 이어서</td><td>출석 · 퀴즈 · 홈 안내 띠 「인증하기」</td></tr>
+    <tr><td>로그인이 필요한 버튼을 비로그인이 눌렀다</td><td><b>L-TOAST</b> "로그인하고 참여할 수 있어요" 또는 화면 안 [로그인하고 ~] 버튼 → L-SHEET-STEP</td><td>홈 [추천] · 출석 [로그인하고 출석하기]</td></tr>
+    <tr><td>운영자·시스템이 무언가를 했다</td><td><b>L-NOTI</b> + 알림함 기록</td><td>운영자 지급 · 출금 완료 · 쿠폰 발행</td></tr>
+    <tr><td>휴대폰 권한이 필요하다</td><td>픽콕 고지 카드 → <b>L-OS</b></td><td>알림 권한</td></tr>
+  </table></div>
+</section>
+
+<!-- ═════════ 3 규칙 ═════════ -->
+<section class="sec major" id="rules">
+  <div class="sec-hd"><h2>3. 공통 규칙 R1~R10</h2><span class="tag ok">확정 · 시범 적용</span></div>
+  <p class="sec-sub">구현물 안에서 규칙이 흔들리던 곳을 정리했습니다. <b>「지금 프로토」</b>와 다른 항목은 구현 시 이 규칙을 따릅니다.</p>
+
+  <div class="rule-card" id="R1"><h4><span class="rid">R1</span>토스트는 항상 맨 위에 보인다</h4>
+    바텀시트·전체화면 입력·확인창이 떠 있어도 토스트가 그 위에 보여야 합니다.
+    <div class="now">구현: 토스트 층 번호 <b>95</b> — 확인창(90)·시트보다 위. <span class="tag ok">프로토 반영 완료</span></div></div>
+
+  <div class="rule-card" id="R2"><h4><span class="rid">R2</span>토스트가 연달아 오면 순서대로 하나씩</h4>
+    앞 토스트를 덮어쓰지 않고, <b>2초씩 차례로</b> 보여줍니다. 같은 문구가 떠 있거나 기다리는 중이면 다시 넣지 않습니다. 기다리는 토스트는 <b>최대 3개</b>이고, 넘으면 가장 오래 기다린 것부터 버립니다.
+    <div class="now">예: 계정관리에서 추천코드 적용 "실패" 토스트 → 2초 뒤 "저장했어요". <span class="tag ok">프로토 반영 완료</span></div></div>
+
+  <div class="rule-card" id="R3"><h4><span class="rid">R3</span>오류 표시 기준 — 입력 실수는 토스트, 처리 실패는 확인창 + [다시 시도]</h4>
+    <ul><li><b>입력 실수</b>(사용자가 바로 고칠 수 있음): 토스트 또는 입력칸 아래 빨간 글씨</li>
+        <li><b>규칙상 막힘</b>(이미 참여함·상한 도달): 토스트</li>
+        <li><b>서버 처리 실패</b>(네트워크·서버 오류<b>일 때만</b>): <b>확인창</b> — 아이콘 「?」 / 제목 <b>"잠시 후 다시 시도해 주세요"</b> / 본문 2줄 = ① 무엇을 못 했는지 ② 이유 / <b>[닫기] [다시 시도]</b></li></ul>
+    <table class="t" style="margin-top:8px">
+      <tr><th style="width:160px">항목</th><th>내용</th></tr>
+      <tr><td>본문 예</td><td>① "출석하지 못했어요" ② "서버에 연결하지 못했어요" — 6절 C-FAIL 캡처</td></tr>
+      <tr><td>붙는 곳 (18가지 · 호출 19곳)</td><td>혜택 적립 · 퀴즈 문제 불러오기 · 퀴즈 채점 · 계정관리 저장 · 계정관리 추천코드 적용 · 가입 · 본인인증 · 가입 추천코드 적용(가입 직후·다시 시도 2곳) · 검색 · 정렬 다시 불러오기 · 예약 생성 · 예약 뽑기 · 계좌 저장 · 현금 전환 · 픽샵 구매 · 구매 취소 · 출석 · 쿠폰 사용 완료</td></tr>
+      <tr><td>①번 문구</td><td>출석 "출석하지 못했어요" · 본인인증 "본인인증을 마치지 못했어요" · 쿠폰 "사용 완료로 표시하지 못했어요" · 퀴즈 "문제를 불러오지 못했어요" · 그 밖은 7절 「서버 처리 실패」 문구</td></tr>
+      <tr><td>[다시 시도]</td><td>같은 요청을 한 번 더 보냅니다. 예외 두 가지:<br>· <b>가입</b> — 계정을 이미 만들었으면 그 단계는 건너뛰고 다음 단계부터 이어서 (처음부터 하면 "이미 가입" 오류가 나므로)<br>· <b>예약 뽑기</b> — 실패하면 선물상자를 먼저 닫고 확인창을 띄움. [다시 시도]는 선물상자를 다시 띄움</td></tr>
+    </table>
+    <div class="now">「이미 출석했어요」 같은 규칙상 막힘·입력 실수는 그대로 토스트입니다. <span class="tag ok">프로토 반영 완료</span> · 남은 위험: 서버가 처리한 뒤 응답만 끊기면 [다시 시도]가 같은 일을 두 번 할 수 있음 — 서버 쪽 중복 방지(R7)는 개발 시 필수</div></div>
+
+  <div class="rule-card" id="R4"><h4><span class="rid">R4</span>확인 형태 — 한 번 확인은 중앙 확인창, 여러 단계는 바텀시트</h4>
+    "~할까요?" 한 번 묻고 끝나는 확인은 <b>L-DIALOG</b>로 통일합니다. 체크·사유 선택 등 단계가 이어지는 탈퇴는 <b>L-SHEET-STEP</b>을 유지합니다.
+    <div class="now">지금 프로토: SNS 연결 해제·계정 통합의 단일 확인이 바텀시트로 되어 있습니다. (해당 기능은 현재 화면에서 들어갈 수 없음 — 회원 묶음에서 정리)</div></div>
+
+  <div class="rule-card" id="R5"><h4><span class="rid">R5</span>되돌릴 수 없는 작업은 확인을 받는다</h4>
+    쿠폰 [사용 완료]는 확인창을 띄웁니다. <b>로그아웃은 확인 없이 바로 실행</b>합니다(다시 로그인하면 되므로 — PO 확정 2026-10-26).
+    <div class="now">쿠폰 확인창 — 제목 "사용 완료로 표시할까요?" · 항목 「상품 — 브랜드 상품명」 · 안내 "표시한 뒤에는 되돌릴 수 없어요" · [취소] [사용 완료]. <span class="tag ok">프로토 반영 완료</span> · 로그아웃은 확인 없음</div></div>
+
+  <div class="rule-card" id="R6"><h4><span class="rid">R6</span>기기 뒤로가기 — 맨 위 층부터 하나씩 닫는다</h4>
+    <ul><li>확인창 → [취소]와 같은 동작 · 선택형 시트 → 닫기 · 전체화면 입력 → 닫기</li>
+        <li>단계형 시트(입력 중) → 이탈 확인창 · 2뎁스 화면 → 직전 화면</li>
+        <li><b>적립 연출·선물상자·강제 업데이트 중에는 무시</b>합니다.</li></ul>
+    <div class="now">지금 프로토: 기기 뒤로가기 처리가 없습니다(화면의 [←]만 있음). 안드로이드 앱 출시 시 필수입니다. <span class="tag proto">구현 시 반영</span></div></div>
+
+  <div class="rule-card" id="R7"><h4><span class="rid">R7</span>버튼 연타 방지</h4>
+    서버에 요청하는 버튼은 누르는 즉시 잠그고 "처리 중…"으로 바꿉니다. 응답이 오면 풀어 줍니다. 서버도 같은 요청을 두 번 처리하지 않게 막습니다.
+    <div class="now">확인창 [실행]을 누르면 <b>두 버튼 모두 잠기고</b> 실행 버튼 글자가 "처리 중…"으로 바뀝니다(6절 C-BUSY). <span class="tag ok">화면 쪽 프로토 반영 완료</span> · 서버 쪽 중복 방지는 프로토에 없음 — 개발 시 필수</div></div>
+
+  <div class="rule-card" id="R8"><h4><span class="rid">R8</span>문구는 해요체로 통일</h4>
+    5절 참고. "구매가 완료되었습니다" 같은 합쇼체, 대시(—), 토스트 속 이모지를 쓰지 않습니다.</div>
+
+  <div class="rule-card" id="R9"><h4><span class="rid">R9</span>버튼 순서는 [취소] [실행]</h4>
+    두 버튼이 나란히 있으면 왼쪽이 취소(회색), 오른쪽이 실행(강조색)입니다. 고객앱·어드민 모두 같습니다. 위험한 실행(삭제·반려)은 빨간색.
+    <div class="now">어드민 모달 전체 [취소] [실행]. <span class="tag ok">프로토 반영 완료</span></div></div>
+
+  <div class="rule-card" id="R10"><h4><span class="rid">R10</span>어드민은 자체 모달만 쓴다</h4>
+    브라우저 기본 경고창(confirm·prompt)을 쓰지 않습니다. 입력이 있는 모달은 <b>배경을 클릭해도 닫히지 않습니다</b>(입력값이 날아가지 않게). 8절 참고.
+    <div class="now"><span class="tag ok">프로토 반영 완료</span> — 출금 지급·쿠폰 재발행도 자체 모달</div></div>
+</section>
+
+<!-- ═════════ 4 겹칠 때 ═════════ -->
+<section class="sec major" id="R-ORDER">
+  <div class="sec-hd"><h2>4. 여러 개가 겹칠 때</h2></div>
+  <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="box"><h3>쌓이는 순서 (위가 위)</h3>
+      <div class="z">
+        <div>2뎁스 화면 · 상세 시트 <b>20</b></div>
+        <div>적립 연출 · 선물상자 · 아웃링크 <b>40</b></div>
+        <div>선택형 바텀시트 <b>50</b></div>
+        <div>전체화면 입력 <b>52</b></div>
+        <div>AI 검색 <b>55</b></div>
+        <div>전체화면 로딩 <b>56</b></div>
+        <div>필독 안내 <b>58</b></div>
+        <div>단계형 바텀시트 (가입·탈퇴) <b>62</b></div>
+        <div>앱 진입 · 업데이트 안내 <b>70</b></div>
+        <div>중앙 확인창 <b>90</b></div>
+        <div>토스트 · 알림 토스트 (R1) <b>95</b></div>
+      </div>
+      <div class="shot-cap" style="width:auto">숫자는 구현물의 층 번호(z-index). 확인창이 가입 시트보다 위라서 "가입을 그만둘까요?"가 시트 위에 뜹니다.</div>
+    </div>
+    <div class="box"><h3>알림 토스트를 잠시 띄우지 않는 때</h3>
+      <ul>
+        <li><b>적립 연출이 떠 있을 때</b>, 그리고 연출 직후 8초 — 연출이 이미 알려줬으므로</li>
+        <li><b>선물상자가 떠 있을 때</b>(최대 20초) — 열기 전에 결과를 먼저 알게 되지 않게</li>
+        <li><b>퀴즈 화면에 있을 때</b> — 문제 푸는 중 방해하지 않게</li>
+        <li><b>확인창이 떠 있을 때</b></li>
+        <li>적립·구매 요청 직후 9초 — 내 동작의 결과 알림이 토스트로 다시 뜨지 않게</li>
+      </ul>
+      <p style="margin:8px 0 0">이 사이에 들어온 알림은 <b>토스트로는 다시 띄우지 않고 알림함에만</b> 남습니다. 알림 종의 빨간 배지는 그대로 늘어납니다.</p>
+      <div class="note open" style="margin:10px 0 0"><h4>미결</h4>잠시 막혔던 알림을 나중에 몰아서 토스트로 보여줄지 — 지금은 보여주지 않음(구현 기준 유지).</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ 5 문구 ═════════ -->
+<section class="sec major" id="copy">
+  <div class="sec-hd"><h2>5. 문구 규칙</h2></div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>규칙</th><th>○</th><th>✕</th></tr>
+    <tr><td>해요체</td><td>구매했어요 · 저장했어요</td><td>구매가 완료되었습니다 · 실제 앱에서 동작합니다</td></tr>
+    <tr><td>같은 동작은 같은 문구</td><td>로그아웃했어요</td><td>로그아웃 되었어요 / 로그아웃했어요 혼용</td></tr>
+    <tr><td>토스트에 대시·이모지 금지</td><td>이번 달 적립 상한에 도달했어요. 친구는 정상 적립돼요</td><td>이번 달 적립 상한 도달 — 친구는 정상 적립돼요 · ✨ 서울 검색 결과예요</td></tr>
+    <tr><td>오류는 무엇이 잘못됐고 어떻게 하면 되는지</td><td>인증번호 6자리를 입력해 주세요</td><td>오류가 발생했습니다</td></tr>
+    <tr><td>사실과 다른 말 금지</td><td>3문제 · 최대 30P</td><td>3문제 · 꽝없음 (0P가 나올 수 있음)</td></tr>
+    <tr><td>토스트는 한 줄 (모바일 기준 약 22자)</td><td>추천코드를 복사했어요</td><td>두 문장 이상 — 확인창으로</td></tr>
+  </table></div>
+</section>
+
+<!-- ═════════ 6 예시 캡처 ═════════ -->
+<section class="sec major" id="gallery">
+  <div class="sec-hd"><h2>6. 예시 캡처 (구현물)</h2></div>
+  <div class="gallery">
+    <div class="g unit"><figure class="shot" data-id="C-TOAST" data-base="../"></figure><b>L-TOAST 토스트</b><span>친구 추천 [코드 복사] 직후</span></div>
+    <div class="g unit"><figure class="shot" data-id="C-NOTI" data-base="../"></figure><b>L-NOTI 알림 토스트</b><span>운영자가 포인트를 지급했을 때 (홈)</span></div>
+    <div class="g unit"><figure class="shot" data-id="C-EARN" data-base="../" data-only="1,2,3"></figure><b>L-EARN 적립 연출</b><span>① 안내 띠 ② 늘어난 포인트 ③ 지급 후 잔액</span></div>
+    <div class="g unit"><figure class="shot" data-id="C-DIALOG" data-base="../"></figure><b>L-DIALOG 중앙 확인창</b><span>퀴즈 결과를 안 보고 나갈 때 — 돈이 움직이지 않으므로 「?」, 확인 항목이 없으므로 회색 상자 없음</span></div>
+    <div class="g unit"><figure class="shot" data-id="C-FAIL" data-base="../"></figure><b>L-DIALOG 처리 실패 (R3)</b><span>① 무엇을 못 했는지·이유 ② [다시 시도] — 출석 실패 예</span></div>
+    <div class="g unit"><figure class="shot" data-id="C-BUSY" data-base="../"></figure><b>L-DIALOG 처리 중 (R7)</b><span>현금 전환 [신청하기]를 누른 직후 — 💸 아이콘(돈이 움직임) · ① 두 버튼 잠김</span></div>
+    <div class="g unit"><figure class="shot" data-id="C-SHEET-PICK" data-base="../"></figure><b>L-SHEET-PICK 선택형 시트</b><span>계정관리 · 국적 고르기</span></div>
+    <div class="g unit"><figure class="shot" data-id="C-SHEET-STEP" data-base="../"></figure><b>L-SHEET-STEP 단계형 시트</b><span>로그인·가입 첫 단계</span></div>
+    <div class="g unit"><figure class="shot" data-id="C-OVERLAY" data-base="../"></figure><b>L-OVERLAY 전체화면 입력</b><span>검색 · 날짜 선택</span></div>
+    <div class="g unit"><figure class="shot" data-id="C-LOADING" data-base="../"></figure><b>L-LOADING 전체화면 로딩</b><span>검색 결과 불러오는 중 (문구 2단계)</span></div>
+    <div class="g unit"><figure class="shot" data-id="C-INLINE" data-base="../"></figure><b>L-INLINE 화면 안 로딩</b><span>퀴즈 문제 불러오는 중</span></div>
+    <div class="g unit"><figure class="shot" data-id="C-OS" data-base="../"></figure><b>L-OS 시스템 창 (재현)</b><span>알림 권한 — 실제로는 OS가 그림</span></div>
+  </div>
+</section>
+
+<!-- ═════════ 7 호출 목록 ═════════ -->
+<section class="sec major" id="calls">
+  <div class="sec-hd"><h2>7. 구현물의 호출 목록</h2><span class="tag proto">프로토 기준</span></div>
+  <p class="sec-sub">고객앱 토스트 82건을 상황 유형별로 묶었습니다. 문구는 구현물 원문 그대로이며, R8·5절에 맞지 않는 것은 각 화면기획서 작성 때 고칩니다.</p>
+  <div class="box wrapx"><table class="t">
+    <tr><th>유형</th><th>쓰는 것</th><th>문구 (원문)</th></tr>
+    <tr><td>완료 알림</td><td>L-TOAST</td><td>포인트가 적립됐어요 · 로그아웃했어요 · 본인인증이 완료됐어요 · 예약을 기록했어요. 본인인증하면 적립돼요 · 추천코드를 등록했어요. 본인인증하면 적립돼요 · 추천코드를 복사했어요 · 저장했어요 · 마케팅 수신에 동의했어요 / 마케팅 수신을 철회했어요 · 예약된 광고성 알림은 취소돼요 · 로그인 완료 · 내 저금통이 열렸어요 · 회원가입 완료 · 추천코드로 {N}P 받았어요 / 회원가입을 완료했어요 · 내 저금통이 열렸어요 · 탈퇴가 완료됐어요 · 픽콕에 오신 걸 환영해요 · 목적지: {이름} · 조건을 반영해 다시 불러왔어요 · 적립 {N}P · 뽑기로 최대 {M}P 더! · 계좌가 등록됐어요. 다음부터는 바로 신청할 수 있어요 · 구매를 취소했어요 · 쿠폰번호를 복사했어요 · 사용 완료로 표시했어요 · 모두 읽음으로 표시했어요</td></tr>
+    <tr><td>안내·유도</td><td>L-TOAST</td><td>{브랜드} 페이지에서 {N}초 머물면 적립돼요 · ✨ 지역을 못 찾아 인기 도시 {X}로 보여드려요 · ✨ {X} 검색 결과예요 · <b>로그인하고 참여할 수 있어요</b>(비로그인이 참여 버튼을 누를 때, 약 15곳)</td></tr>
+    <tr><td>입력 검증</td><td>L-TOAST</td><td>입력값을 확인해 주세요 · 인증번호 6자리를 입력해 주세요 · 추천코드를 조회해 주세요. 비워 두고 가입할 수도 있어요 · 인증코드가 일치하지 않아요 · 목적지를 먼저 선택해 주세요 · 숫자가 달라요. 입금자명을 다시 확인해 주세요</td></tr>
+    <tr><td>규칙상 막힘</td><td>L-TOAST</td><td>이미 적립한 혜택이에요 · 아쉽게 정답이 없었어요 · 이번 달 적립 상한 도달 — 친구는 정상 적립돼요 · 저는 호텔 검색만 도와드릴 수 있어요 · 조건에 맞는 숙소를 찾지 못했어요</td></tr>
+    <tr><td>서버 처리 실패</td><td><b>L-DIALOG + [다시 시도]</b> (R3) — ①번 줄 문구</td><td>적립하지 못했어요 · 문제를 불러오지 못했어요 · 출제할 문제가 없어요 · 채점하지 못했어요 · 저장하지 못했어요 · 추천코드를 적용하지 못했어요 · 가입하지 못했어요 · 본인인증을 마치지 못했어요 · 검색 결과를 불러오지 못했어요 · 다시 불러오지 못했어요 · 예약을 만들지 못했어요 · 뽑지 못했어요 · 계좌를 저장하지 못했어요 · 신청하지 못했어요 · 구매하지 못했어요 · 취소하지 못했어요 · 출석하지 못했어요 · 사용 완료로 표시하지 못했어요 · 처리하지 못했어요 · (이유 줄) 서버에 연결하지 못했어요</td></tr>
+    <tr><td>시연용 대체 (실제 앱에서는 다른 동작)</td><td>개발 시 실제 기능으로</td><td>카카오톡 공유는 실제 앱에서 열려요 → 카카오 공유창(정책 4-9절) · OS 앱 설정으로 이동합니다 · 앱 스토어로 이동합니다 (시연) · 약관 전문은 My Page > 약관·정책에서 볼 수 있어요</td></tr>
+  </table></div>
+  <div class="box wrapx"><h3>중앙 확인창 (L-DIALOG) 9건</h3><table class="t">
+    <tr><th>상황</th><th>제목</th><th>버튼 [취소 / 실행]</th><th>아이콘</th></tr>
+    <tr><td>퀴즈 결과를 안 보고 나갈 때</td><td>결과를 보고 나가실래요?</td><td>그냥 나가기 / 결과 보기</td><td>?</td></tr>
+    <tr><td>본인인증 시트 [✕]</td><td>본인인증을 그만둘까요? — "지금 닫으면 이번 참여는 하지 않은 상태로 남아요."</td><td>계속하기 / 닫기</td><td>?</td></tr>
+    <tr><td>가입 시트 [✕]</td><td>가입을 그만둘까요? (진행 중) / 닫을까요?</td><td>계속하기 / 닫기</td><td>?</td></tr>
+    <tr><td>계좌 [변경]</td><td>등록된 계좌를 수정할까요?</td><td>취소 / 변경하기</td><td>💸</td></tr>
+    <tr><td>현금 전환</td><td>{N}P를 전환할까요? → 결과: {N}P 전환을 신청했어요</td><td>취소 / 신청하기 → 확인</td><td>💸 → ✓</td></tr>
+    <tr><td>픽샵 구매</td><td>이 상품을 구매할까요? → 결과: 구매했어요</td><td>취소 / 구매하기 → 닫기 / 쿠폰함 열기</td><td>💸 → ✓</td></tr>
+    <tr><td>쿠폰 구매 취소</td><td>구매를 취소할까요?</td><td>그만두기 / 취소하기</td><td>💸</td></tr>
+    <tr><td>쿠폰 [사용 완료]</td><td>사용 완료로 표시할까요?</td><td>취소 / 사용 완료</td><td>?</td></tr>
+    <tr><td>서버 처리 실패 (18가지)</td><td>잠시 후 다시 시도해 주세요</td><td>닫기 / 다시 시도</td><td>?</td></tr>
+  </table></div>
+</section>
+
+<!-- ═════════ 8 어드민 ═════════ -->
+<section class="sec major" id="admin">
+  <div class="sec-hd"><h2>8. 어드민 공통</h2></div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>종류</th><th>규칙</th><th>지금 구현물</th></tr>
+    <tr><td>토스트</td><td>하단 · <b>2.6초</b> · 성공은 검정, <b>오류는 빨강</b></td><td>같음</td></tr>
+    <tr><td>모달</td><td>제목 + 본문 + 버튼 · [✕] 있음 · 처리 중 버튼 전부 잠그고 "처리 중…" · <b>입력이 있는 모달은 배경 클릭으로 닫히지 않음</b>(R10) · 버튼 순서 [취소][실행](R9)</td><td>[취소][실행] 순서 · 입력 모달은 배경 클릭으로 닫히지 않음(입력 없는 모달은 닫힘) · ESC 처리 없음</td></tr>
+    <tr><td>확인</td><td>자체 모달로 (R10)</td><td>자체 모달 — 출금 「지급 처리」 "실제로 송금을 마치셨나요? 지급완료로 기록됩니다." + 회원·금액·입금 계좌 · [취소][지급하기] / 「쿠폰 재발행」 "쿠폰을 새로 발행합니다. 고객에게 알림이 갑니다." · [취소][재발행]. 브라우저 기본 창은 메뉴에서 들어갈 수 없는 옛 「요청 처리」 화면의 prompt 2건만 남음</td></tr>
+    <tr><td>되돌릴 수 없는 작업</td><td>모달에 대상·금액을 다시 보여주고 확인. 시연 데이터 초기화처럼 큰 작업은 <b>"초기화" 직접 입력</b></td><td>초기화는 직접 입력 방식 있음</td></tr>
+  </table></div>
+</section>
+
+
+
+</main>
+<script src="../shots/markers.js"></script>
+<script src="../wf-reward.js"></script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>F-OFFER 혜택(오퍼월) — 픽콕 리워드 화면기획서</title>
+<link rel="stylesheet" href="../wf-reward.css">
+<!-- 근거: 구현물 pickoq_demo static/app.js viewBenefit·offerCard·openOffer · api_earn.py offers·offer_claim · api_ad.py ad_landing (2026-10-27)
+     PO 지시(10-27): 혜택은 정책이 정해지지 않아 "지금 화면의 기능"만 적는다 — 사업 정책은 미결로만 표시.
+     광고 페이지 캡처(X1~X4)는 시연용 대체 화면이다. 카운트가 끝나 8910 사본 DB에만 적립됐다 -->
+</head>
+<body data-key="f_offer" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page">
+
+<div class="top"><span class="sid">F-OFFER</span><h1>혜택 (오퍼월)</h1></div>
+<div class="meta">
+  <span>기준 정책서 <b><a href="../policy/pol_offer.html#s1">리워드 혜택 v0.1 · 1~2절</a></b></span>
+  <span>기준 구현물 <b>pickoq_demo</b> <code>static/app.js</code> · <code>api_ad.py</code> (2026-10-27)</span>
+  <span>캡처 <b>2026-10-27</b> · 390×844</span>
+  <span>최종수정 <b>2026-10-27</b></span>
+</div>
+<p class="lead">광고를 누르고 <b>광고주 페이지에 정해진 초 동안 머물면</b> 포인트가 쌓이는 화면입니다. 하단 탭 [혜택]으로 들어옵니다. <b>혜택 사업 정책(광고 중개 방식·정산·단가)은 아직 정해지지 않아</b>, 이 문서는 지금 화면의 기능만 다룹니다.</p>
+
+<div class="box">
+  <h3>읽는 법</h3>
+  <div class="legend">
+    <span><b style="color:var(--zone)">붉은 점선 상자 A~E</b> 화면의 영역</span>
+    <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능 — 마우스를 올리면 설명과 함께 강조</span>
+    <span>「N-N절」을 누르면 그 절만 팝업으로 열립니다</span>
+    <span><span class="tag ok">확정</span> 정책서 근거 있음</span>
+    <span><span class="tag proto">프로토 기준</span> 정책서에 아직 없음</span>
+    <span><span class="tag open">미결</span> 바뀔 수 있음</span>
+  </div>
+</div>
+
+<div class="sec-policy">
+  <h3>⚙ 공통 정책 — 혜택 전체</h3>
+  <ul>
+    <li><b>1뎁스 화면</b>(하단 탭 보임). 비로그인도 목록은 보고, 광고를 누르면 로그인 시트가 뜹니다. (<a href="../policy/pol_offer.html#s1-1">1-1절</a>)</li>
+    <li>목록에는 어드민에서 <b>노출이 켜져 있고 노출 기간 안인</b> 광고만 나옵니다. (<a href="../policy/pol_offer.html#s1-1">1-1절</a>)</li>
+    <li><b>같은 광고는 회원당 한 번만</b> 적립됩니다. (<a href="../policy/pol_offer.html#s0">0절</a>)</li>
+    <li>본인인증 전 회원은 광고 페이지로 <b>나가기 전에</b> 본인인증을 묻습니다 — 다녀온 뒤 막히면 광고만 보고 못 받기 때문입니다. (<a href="../policy/pol_offer.html#s1-5">1-5절</a> · <a href="../policy/pol_earn.html#s1-6">참여형 1-6절</a>)</li>
+    <li>광고 페이지는 구현에서 <b>시연용 대체 화면</b>입니다. 실제 체류 확인·적립 통보 방식은 미결입니다. (<a href="../policy/pol_offer.html#s2">2절</a> · <span class="tag open">미결</span> R-O1)</li>
+  </ul>
+  <div class="src">기준: 리워드 혜택 정책서 v0.1 · 0~2절 / 참여형 적립 v0.8 · 1-6절</div>
+</div>
+
+<nav class="toc" aria-label="이 페이지 바로가기">
+  <span class="toc-lb">바로가기</span>
+  <a href="#flow"><b>①</b>화면 흐름·데이터</a>
+  <a href="#layout"><b>②</b>페이지 구성</a>
+  <span class="toc-sep"></span>
+  <a class="z" href="#zA"><b>A</b>위쪽</a>
+  <a class="z" href="#zB"><b>B</b>분류</a>
+  <a class="z" href="#zC"><b>C</b>광고 목록</a>
+  <a class="z" href="#zD"><b>D</b>안내</a>
+  <a class="z" href="#zE"><b>E</b>하단 탭</a>
+  <span class="toc-sep"></span>
+  <a href="#over"><b>④</b>광고 페이지</a>
+  <a href="#exc">예외 케이스</a>
+</nav>
+
+<section class="sec major" id="flow">
+  <div class="sec-hd"><h2>① 화면 흐름 · 데이터</h2></div>
+  <div class="box">
+    <div class="flow"><span>광고 카드 누르기</span><i>→</i><span>(비로그인) 로그인 시트 · (미인증) 본인인증 시트</span><i>→</i><span>광고 페이지 새 창</span><i>→</i><span>N초 머묾</span><i>→</i><span>적립 + 알림</span></div>
+    <div class="flow" style="margin-top:8px"><span>픽콕으로 돌아옴 (창 닫기 · [창 닫고 이동하기])</span><i>→</i><span>잔액·목록 다시 받기</span><i>→</i><span>「✓ 적립완료」 · 토스트 "포인트가 적립됐어요"</span></div>
+  </div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>요청</th><th>언제</th><th>받는 값 (화면에 쓰는 것)</th></tr>
+    <tr><td><code>GET /api/earn/offers</code></td><td>화면을 열 때 · 돌아왔을 때</td><td><code>offers[]</code> — 제목·광고주·분류·포인트·체류 초·버튼명·썸네일·<code>claimed</code>(받음) / <code>balance</code></td></tr>
+    <tr><td><code>GET /ad/{번호}</code></td><td>광고 카드를 누를 때(새 창)</td><td>광고 페이지 — 구현은 시연용 대체 화면(④)</td></tr>
+    <tr><td><code>POST /api/earn/offers/{번호}/claim</code></td><td>광고 페이지에서 N초가 지났을 때</td><td><code>point</code> · <code>balance</code> / 실패 사유</td></tr>
+  </table></div>
+</section>
+
+<section class="sec major" id="layout">
+  <div class="sec-hd"><span class="sid">F-OFFER-L</span><h2>② 페이지 구성</h2></div>
+  <p class="sec-sub">로그인 회원(본인인증 완료) · 첫 광고 하나를 받은 상태입니다. 광고·광고주는 시연 데이터입니다.</p>
+  <div class="two-col unit">
+    <div><figure class="shot" data-id="F-OFFER-L" data-base="../"></figure></div>
+    <div>
+      <div class="box wrapx" style="margin-bottom:12px"><table class="t">
+        <tr><th>영역</th><th>들어가는 요소</th><th>로그인 / 비로그인</th></tr>
+        <tr class="zrow" data-n="A"><td><b>A</b> 위쪽</td><td>제목 · 알림 종 · 공작새 · 잔액 · 받을 수 있는 혜택 · [픽샵 쇼핑]</td><td>비로그인은 광고 수 + 로그인 띠</td></tr>
+        <tr class="zrow" data-n="B"><td><b>B</b> 분류</td><td>칩 — 전체 · 분류별 (광고 수)</td><td>같음</td></tr>
+        <tr class="zrow" data-n="C"><td><b>C</b> 광고 목록</td><td>분류별 묶음 제목 + 광고 카드</td><td>비로그인은 「남음」 없이 개수만</td></tr>
+        <tr class="zrow" data-n="D"><td><b>D</b> 안내</td><td>광고 표시 · 한 번만 적립</td><td>같음</td></tr>
+        <tr class="zrow" data-n="E"><td><b>E</b> 하단 탭</td><td>[혜택] 선택됨 (<a href="f_home.html#zG">F-HOME G</a>)</td><td>같음</td></tr>
+      </table></div>
+      <div class="cn"><div class="cn-hd">화면 공통 규칙</div>
+        <ul><li>A~D가 함께 스크롤됩니다. 하단 탭은 떠 있습니다.</li>
+            <li>광고 순서는 등록 순서입니다(어드민에 순서를 바꾸는 기능은 없음).</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec major" id="detail" style="margin-bottom:0">
+  <div class="major-hd"><h2>③ 영역별 상세 — 기능 · 정의 · 정책</h2></div>
+  <p class="sec-sub">영역마다 상태별 캡처를 잘라 나란히 놓았습니다. 같은 영역 안에서는 상태가 달라도 같은 번호가 같은 요소입니다.</p>
+</section>
+
+<section class="sec zsec" id="zA">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">A</span><h2>위쪽</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-OFFER-A1 <small>로그인</small></div><figure class="shot" data-id="F-OFFER-A1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-OFFER-A2 <small>비로그인</small></div><figure class="shot" data-id="F-OFFER-A2" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「혜택」</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>알림 종 — 로그인 회원만</div><ul><li>→ 알림함(<a href="f_noti.html">F-NOTI</a>).</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>공작새</div></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>「사용 가능 포인트」</div></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>잔액 「NP」 / 광고 수 「N개」(A2)</div>
+      <ul><li>로그인 = 적립완료 포인트(본인인증 전 0P) · 비로그인 = 노출 중인 광고 수.</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>안내 한 줄</div>
+      <ul><li>로그인: "지금 받을 수 있는 혜택 NP · N개" — <b>아직 안 받은</b> 광고의 포인트 합과 개수.</li>
+          <li>비로그인: "클릭하고 3초만 머물면 포인트가 쌓여요".</li></ul>
+      <div class="case">「3초」는 고정 문구라 광고마다 정한 체류 초와 다를 수 있습니다 <span class="tag proto">#48</span></div></div>
+    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>[🛍️ 픽샵 쇼핑 — 포인트로 바로 구매] — 로그인만</div>
+      <ul><li>→ 픽샵(포인트 사용 묶음에서 작성).</li></ul></div>
+    <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>로그인 띠 — 비로그인만</div>
+      <ul><li>"로그인하면 혜택을 보고 바로 적립할 수 있어요" + [로그인] → 가입·로그인 시트(<a href="f_auth.html">F-AUTH</a>).</li></ul>
+      <div class="rule"><b>근거</b> 위쪽 (<a href="../policy/pol_offer.html#s1-2">1-2절</a>)</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zB">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">B</span><h2>분류</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-OFFER-B1 <small>전체</small></div><figure class="shot" data-id="F-OFFER-B1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-OFFER-B2 <small>분류 고름</small></div><figure class="shot" data-id="F-OFFER-B2" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「전체 N」</div><ul><li>처음 들어오면 선택됨.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>분류 칩 (아이콘 · 이름 · 수)</div>
+      <ul><li>어드민에 등록된 분류 중 <b>광고가 있는 것만</b> 나옵니다(여행 · 금융 · 쇼핑 · 생활 · 게임). 고르면 검은 칩(B2).</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>광고 수</div></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>묶음 제목 (B2)</div>
+      <ul><li>분류를 고르면 그 분류 묶음만 보입니다.</li></ul>
+      <div class="rule"><b>근거</b> 분류 (<a href="../policy/pol_offer.html#s1-3">1-3절</a>)</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zC">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">C</span><h2>광고 목록</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-OFFER-C1 <small>묶음 · 안 받은 광고</small></div><figure class="shot" data-id="F-OFFER-C1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-OFFER-C2 <small>받은 광고</small></div><figure class="shot" data-id="F-OFFER-C2" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>묶음 제목 「✈️ 여행 혜택 · N/M개 남음」</div>
+      <ul><li>로그인 = 남은 수/전체 · 비로그인 = 「M개」.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>썸네일</div><ul><li>어드민이 올린 이미지 · 없으면 아이콘.</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>「+NP」</div><ul><li>광고마다 어드민이 정한 포인트(시연 데이터는 모두 10P).</li></ul></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>제목</div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>광고주</div></div>
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>버튼 (어드민 「버튼명」 · 4자 이내)</div>
+      <ul><li>카드 전체를 누를 수 있습니다 → 비로그인이면 로그인 시트 · 본인인증 전이면 본인인증 시트(<a href="f_auth.html#zS6">F-AUTH S6</a> — 마치면 이어서 광고 열기) → <b>광고 페이지 새 창</b> + 토스트 "{광고주} 페이지에서 N초 머물면 적립돼요".</li></ul></div>
+    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>「✓ 적립완료」 — 받은 광고</div>
+      <ul><li>버튼 자리에 표시. 누르면 토스트 "이미 적립한 혜택이에요".</li></ul>
+      <div class="rule"><b>근거</b> 광고 카드·참여 흐름 (<a href="../policy/pol_offer.html#s1-4">1-4</a> · <a href="../policy/pol_offer.html#s1-5">1-5절</a>)</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zD">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">D</span><h2>안내</h2><span class="tag ok">확정</span></div>
+  <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-OFFER-D1</div><figure class="shot" data-id="F-OFFER-D1" data-base="../"></figure></div></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>안내 3줄</div>
+        <ul><li>"표시된 혜택은 광고이며, 광고주가 제공합니다." · "같은 혜택은 한 번만 적립돼요."</li>
+            <li>셋째 줄 "시연용 가상 데이터"는 시연 안내라 실제 서비스에서는 뺍니다.</li></ul>
+        <div class="rule"><b>근거</b> <a href="../policy/pol_offer.html#s1-6">1-6절</a></div></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zE">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">E</span><h2>하단 탭</h2><span class="tag ok">확정</span></div>
+  <p class="sec-sub">앱 전체 공통 — <a href="f_home.html#zG">F-HOME G</a>를 따릅니다.</p>
+  </div>
+</section>
+
+<section class="sec major" id="over">
+  <div class="sec-hd"><h2>④ 광고 페이지 — 구현은 시연용 대체 화면</h2><span class="tag open">미결 R-O1</span></div>
+  <p class="sec-sub">새 창으로 열립니다. 실제 서비스에서는 <b>광고주 페이지</b>로 바로 가고, 체류 확인·적립 통보 방식(중개사 포스트백 등)은 정해지지 않았습니다. 아래는 시연 화면의 동작입니다.</p>
+  <div class="unit">
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-OFFER-X1 <small>기다리는 중</small></div><figure class="shot" data-id="F-OFFER-X1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-OFFER-X2 <small>적립됨</small></div><figure class="shot" data-id="F-OFFER-X2" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-OFFER-X3 <small>이미 참여</small></div><figure class="shot" data-id="F-OFFER-X3" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-OFFER-X4 <small>비로그인</small></div><figure class="shot" data-id="F-OFFER-X4" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>주소 줄</div><ul><li>광고주 링크 주소.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>「광고」 표시</div></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>제목 · 광고주 (아래 설명 상자)</div></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>상태 문구</div>
+      <ul><li>X1 "조금만 기다려 주세요 · 이 화면에 N초 머물면 NP가 적립돼요"</li>
+          <li>X2 "NP 적립됐어요! · 픽콕으로 돌아가면 포인트가 올라가 있어요"</li>
+          <li>X3 "이미 참여한 혜택이에요 · 같은 광고는 한 번만 적립돼요"</li>
+          <li>X4 "로그인이 필요해요 · 픽콕에서 로그인한 뒤 다시 참여해 주세요"</li>
+          <li>실패 "적립하지 못했어요" + 서버 사유("종료된 광고예요" 등)</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>"적립이 끝나면 이동 버튼이 나타나요"</div><ul><li>기다리는 동안만.</li></ul></div>
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>[창 닫고 이동하기]</div>
+      <ul><li>적립이 끝나야(또는 이미 참여·비로그인) 나타납니다. 누르면 픽콕에 알리고 광고주 링크로 이동합니다.</li></ul></div>
+    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>카운트 → ✓</div><ul><li>1초마다 줄고, 0이 되면 서버에 적립을 요청합니다.</li></ul></div>
+    <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>"이 화면은 시연용입니다…"</div></div>
+    <div class="cn"><div class="cn-hd">서버 적립 조건</div>
+      <ul><li>로그인 · <b>본인인증</b> · 광고 노출 중 · 처음 참여 · 체류 초 이상.</li></ul>
+      <div class="case">구현은 <b>화면이 서버에 알려 준 체류 값</b>으로 판단합니다 → 실제 서비스는 광고주·중개사 쪽 확인으로 <span class="tag proto">#48</span> <span class="tag open">R-O1</span></div>
+      <div class="rule"><b>근거</b> 광고 페이지 (<a href="../policy/pol_offer.html#s2">2절</a>)</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="exc">
+  <div class="sec-hd"><h2>예외 케이스</h2><span class="tag ok">확정</span></div>
+  <p class="sec-sub">정책서 <a href="../policy/pol_offer.html#s5">5절</a>을 화면 동작 기준으로 옮겼습니다.</p>
+  <div class="box wrapx"><table class="t">
+    <tr><th>#</th><th>상황</th><th>화면 동작</th></tr>
+    <tr><td>E1</td><td>비로그인이 광고를 누름</td><td>로그인 시트</td></tr>
+    <tr><td>E2</td><td>본인인증 전 회원</td><td>나가기 전에 본인인증 시트 · 마치면 이어서 광고 열기</td></tr>
+    <tr><td>E3</td><td>받은 광고를 다시 누름</td><td>토스트 "이미 적립한 혜택이에요"</td></tr>
+    <tr><td>E4</td><td>체류 전에 창을 닫음</td><td>적립 안 됨 · 다시 누르면 처음부터</td></tr>
+    <tr><td>E5</td><td>보는 중 광고가 내려감</td><td>"종료된 광고예요"</td></tr>
+  </table></div>
+</section>
+
+</main>
+<script src="../shots/markers.js"></script>
+<script src="../policy/pol_offer_data.js"></script>
+<script src="../policy/pol_earn_data.js"></script>
+<script src="../wf-reward.js"></script>
+</body>
+</html>

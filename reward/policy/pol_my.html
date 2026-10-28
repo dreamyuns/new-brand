@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>픽콕 리워드 마이페이지 정책서 v0.1</title>
+<link rel="stylesheet" href="../wf-reward.css"></head>
+<body data-key="pol_my" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page pol">
+<div class="note diff"><h4>이 페이지는 생성물입니다</h4>
+원본: <code>context/신규서비스_리워드/02_정책서/리워드_마이페이지_정책서_v0.1.md</code> · 변환일 2026-10-27. 내용을 고칠 때는 <b>원본 md를 고친 뒤</b> <code>_capture/build_policy.py</code>를 다시 실행합니다.</div>
+<div class="box"><h3>목차</h3><div class="pol-toc"><a href="#s0">0. 결정 요약</a><a href="#s1">1. 마이페이지 (My 탭)</a><a href="#s1-1">1-1. 공통</a><a href="#s1-2">1-2. 위쪽 (로그인)</a><a href="#s1-3">1-3. 진행 막대 [PO 확정 2026-10-27]</a><a href="#s1-4">1-4. 위쪽 (비로그인)</a><a href="#s1-5">1-5. 메뉴</a><a href="#s1-6">1-6. 로그아웃</a><a href="#s2">2. 설정</a><a href="#s2-1">2-1. 구성</a><a href="#s2-2">2-2. 기기 알림 권한 [구현] [참고] 05 · 02 3-4</a><a href="#s2-3">2-3. 마케팅 정보 수신 동의</a><a href="#s2-4">2-4. 언어 · 통화 [구현] [참고] 05 2-3</a><a href="#s2-5">2-5. 앱 버전 [구현] [참고] 05 2-4</a><a href="#s3">3. FAQ (기능)</a><a href="#s4">4. 약관·정책 (기능)</a><a href="#s5">5. 예외</a><a href="#s6">6. 미결</a></div></div>
+<h1>픽콕 리워드 마이페이지 정책서</h1>
+<table>
+<thead>
+<tr>
+  <th>항목</th>
+  <th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>문서 버전</td>
+  <td><strong>v0.1</strong></td>
+</tr>
+<tr>
+  <td>작성일</td>
+  <td>2026-10-27</td>
+</tr>
+<tr>
+  <td>작성</td>
+  <td>대화창2 — 역할외(대화창1 정책) 대행 · PO 논의 확정 기반</td>
+</tr>
+<tr>
+  <td>기준 구현물</td>
+  <td><code>context/신규정책/prototype/pickoq_demo/</code> — 정책서와 구현이 다르면 구현을 기준으로 맞추되, <strong>이 문서에서 PO가 따로 정한 것은 정책이 우선</strong>하고 구현을 고친다(프로토 수정 요청)</td>
+</tr>
+<tr>
+  <td>함께 보는 문서</td>
+  <td><code>리워드_회원_정책서_v0.2.md</code>(계정관리 3절 · 로그아웃 6절) · <code>리워드_포인트_정책서_v0.2.md</code>(포인트 내역) · <code>참여형적립_기능정책서_v0.8.md</code>(친구 추천 4절)</td>
+</tr>
+<tr>
+  <td>기존 문서와의 관계</td>
+  <td>앱 정책 <code>신규정책/phase1.5정책/05_설정_마이페이지.md</code>는 <strong>참고만</strong> 한다. 리워드는 메뉴 구성(쿠폰함·저금통·친구 추천)이 달라 <strong>이 문서가 리워드 마이페이지의 기준</strong>이다 (PO 결정 2026-10-27 — 리워드 정책은 전부 새 문서)</td>
+</tr>
+<tr>
+  <td>화면기획서</td>
+  <td><code>04_화면기획서/front/f_my.html</code> · <code>front/f_set.html</code></td>
+</tr>
+<tr>
+  <td>범위</td>
+  <td>마이페이지(My 탭) · 설정 · FAQ(기능) · 약관·정책(기능)</td>
+</tr>
+<tr>
+  <td>범위 밖</td>
+  <td>내 쿠폰함·저금통 — 포인트 사용 묶음 / 알림함 — 알림 묶음 / FAQ 문구·약관 조항 내용 — PO가 나중에 정리 (2026-10-27)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>근거 표기:</strong> <code>[구현]</code> 구현물에서 확인 · <code>[PO 확정]</code> PO 결정(날짜) · <code>[제안]</code> 대화창2 제안 — PO 확인 · <code>[참고]</code> 앱 정책 05</p>
+</blockquote>
+<h2>변경 이력</h2>
+<table>
+<thead>
+<tr>
+  <th>버전</th>
+  <th>날짜</th>
+  <th>내용</th>
+  <th>결정</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>v0.1 (같은 날 추가)</td>
+  <td>2026-10-27</td>
+  <td>수정 요청 #44(마케팅 동의 서버 저장) <strong>PO 제외</strong> 반영 — 광고성 알림을 뺐으므로 그때 함께</td>
+  <td>PO</td>
+</tr>
+<tr>
+  <td>v0.1</td>
+  <td>2026-10-27</td>
+  <td>최초 작성 — 구현물(10-27) 기준. PO 결정: <strong>새 문서로 작성</strong> · <strong>My 진행 막대는 홈 저금통처럼 저금통 방식을 따른다</strong> · <strong>FAQ·약관은 기능만</strong>(문구·조항은 나중에)</td>
+  <td>PO</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="s0">0. 결정 요약</h1>
+<table>
+<thead>
+<tr>
+  <th>#</th>
+  <th>쟁점</th>
+  <th>결정</th>
+  <th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>1</td>
+  <td>마이페이지 위치</td>
+  <td>하단 탭 <strong>My</strong> (1뎁스 — 하단 탭 보임)</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>로그인 상태 구성</td>
+  <td>프로필 · 잔액 · 진행 막대 / 「내 활동」 5개 / 「지원·정보」 3개 / [로그아웃]</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>비로그인 상태 구성</td>
+  <td>[회원가입 / 로그인] / 「지원·정보」 3개만 · 알림 종 없음</td>
+  <td><code>[구현]</code> <code>[참고]</code> 05 1-3</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>진행 막대</td>
+  <td><strong>홈 저금통 카드와 같은 기준</strong> — 현금 전환 방식이면 「목표 · 전환까지」, 픽샵 방식이면 「지금 NP · 교환」</td>
+  <td><code>[PO 확정 2026-10-27]</code> — 구현은 늘 현금 전환 기준(#43)</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>마케팅 수신 동의</td>
+  <td><strong>설정 화면</strong>에서 켜고 끈다(계정관리에 없음) · 동의·철회 일시 표시</td>
+  <td><code>[구현]</code> <code>[참고]</code> 05 2-2</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>언어·통화</td>
+  <td>한국어 · KRW <strong>고정 표시</strong>(회색 · 누를 수 없음)</td>
+  <td><code>[구현]</code> <code>[참고]</code> 05 2-3</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td>FAQ · 약관</td>
+  <td><strong>기능만</strong> 정한다. 문구·조항은 나중에</td>
+  <td><code>[PO 확정 2026-10-27]</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="s1">1. 마이페이지 (My 탭)</h1>
+<h2 id="s1-1">1-1. 공통</h2>
+<table>
+<thead>
+<tr>
+  <th>항목</th>
+  <th>내용</th>
+  <th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>진입</td>
+  <td>하단 탭 [My]</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>뎁스</td>
+  <td>1뎁스 — <strong>하단 탭이 보인다</strong>. 메뉴로 들어간 화면(2뎁스)은 하단 탭이 없고 [←]로 돌아온다</td>
+  <td><code>[구현]</code> 홈 공통 규칙</td>
+</tr>
+<tr>
+  <td>데이터</td>
+  <td>이름·이메일·잔액은 로그인할 때·화면을 다시 그릴 때 <strong>서버 값</strong>을 쓴다(화면에 고정값 없음)</td>
+  <td><code>[구현]</code> <code>meName</code>·<code>meEmail</code>·<code>pt()</code></td>
+</tr>
+<tr>
+  <td>알림 종</td>
+  <td>로그인 회원만 위쪽 오른쪽에 보인다 · 안 읽은 수 배지(99 넘으면 「99+」) · 누르면 알림함</td>
+  <td><code>[구현]</code> — 알림함은 알림 묶음</td>
+</tr>
+</tbody>
+</table>
+<h2 id="s1-2">1-2. 위쪽 (로그인)</h2>
+<table>
+<thead>
+<tr>
+  <th>요소</th>
+  <th>내용</th>
+  <th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>제목</td>
+  <td>「My Page」</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>공작새</td>
+  <td>축하하는 공작새 그림 (비로그인은 누워 자는 그림)</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>프로필</td>
+  <td>「{이름}님」 · 이메일 · [&gt;] — <strong>누르면 계정관리</strong>(회원 정책서 3절)</td>
+  <td><code>[구현]</code> <code>[참고]</code> 05 1-2</td>
+</tr>
+<tr>
+  <td>잔액</td>
+  <td><strong>사용 가능 포인트</strong> — 적립완료만. 본인인증 전 회원은 0P (적립대기는 넣지 않음)</td>
+  <td><code>[구현]</code> 포인트 정책서 5-1 · 참여형 1-6</td>
+</tr>
+<tr>
+  <td>진행 막대</td>
+  <td>아래 1-3</td>
+  <td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="s1-3">1-3. 진행 막대 <code>[PO 확정 2026-10-27]</code></h2>
+<p>홈 저금통 카드와 <strong>같은 기준</strong>으로 보여 준다. 저금통 방식은 서비스 설정을 따른다.</p>
+<table>
+<thead>
+<tr>
+  <th>저금통 방식</th>
+  <th>막대</th>
+  <th>왼쪽</th>
+  <th>오른쪽</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>현금 전환</td>
+  <td>잔액 ÷ 현금 전환 최소 금액(어드민 <code>withdraw_min</code>, 기본 10,000P) — 최소 3%</td>
+  <td>「목표 10,000P」</td>
+  <td>「전환까지 NP」 / 다 모았으면 「전환 가능」</td>
+</tr>
+<tr>
+  <td>픽샵</td>
+  <td>같은 막대</td>
+  <td>「지금 NP」</td>
+  <td>「기프티콘·상품권 교환」</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>구현은 방식과 관계없이 <strong>늘 현금 전환 기준</strong>이다 → 프로토 수정 요청 #43.</li>
+<li>저금통 방식(현금 전환 A안 / 픽샵 B안)을 하나로 고르는 것은 홈의 미결과 같은 건이다 — 포인트 사용 묶음에서 정한다(미결 R-Y3). 구현은 시연 화면의 A·B 전환 장치로 바뀐다.</li>
+</ul>
+<h2 id="s1-4">1-4. 위쪽 (비로그인)</h2>
+<table>
+<thead>
+<tr>
+  <th>요소</th>
+  <th>내용</th>
+  <th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>안내</td>
+  <td>「로그인이 필요해요」 · &quot;로그인하면 포인트를 모을 수 있어요&quot;</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>버튼</td>
+  <td>[회원가입 / 로그인] → 가입·로그인 시트(회원 정책서 1절)</td>
+  <td><code>[구현]</code> <code>[참고]</code> 05 1-3</td>
+</tr>
+<tr>
+  <td>없는 것</td>
+  <td>프로필 · 잔액 · 진행 막대 · 알림 종</td>
+  <td><code>[구현]</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="s1-5">1-5. 메뉴</h2>
+<table>
+<thead>
+<tr>
+  <th>그룹</th>
+  <th>메뉴 (설명 문구)</th>
+  <th>이동</th>
+  <th>비로그인</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>내 활동</td>
+  <td>포인트 내역 (적립·사용 모두 보기)</td>
+  <td>포인트 내역 — 포인트 정책서 5절</td>
+  <td>안 보임</td>
+</tr>
+<tr>
+  <td>내 활동</td>
+  <td>내 쿠폰함 (픽샵에서 구매한 쿠폰)</td>
+  <td>쿠폰함 — 포인트 사용 묶음</td>
+  <td>안 보임</td>
+</tr>
+<tr>
+  <td>내 활동</td>
+  <td>알림함 (적립·공지 알림)</td>
+  <td>알림함 — 알림 묶음</td>
+  <td>안 보임</td>
+</tr>
+<tr>
+  <td>내 활동</td>
+  <td>저금통 (현금 전환 · 픽샵)</td>
+  <td>현금 전환 방식이면 현금 전환 화면, 픽샵 방식이면 픽샵</td>
+  <td>안 보임</td>
+</tr>
+<tr>
+  <td>내 활동</td>
+  <td>친구 추천 (내 코드 공유하고 양쪽 적립)</td>
+  <td>친구 추천 — 참여형 4절</td>
+  <td>안 보임</td>
+</tr>
+<tr>
+  <td>지원·정보</td>
+  <td>FAQ (자주 묻는 질문)</td>
+  <td>FAQ — 3절</td>
+  <td>보임</td>
+</tr>
+<tr>
+  <td>지원·정보</td>
+  <td>약관·정책 (이용약관 · 개인정보 처리방침)</td>
+  <td>약관·정책 — 4절</td>
+  <td>보임</td>
+</tr>
+<tr>
+  <td>지원·정보</td>
+  <td>설정 (마케팅 수신 · 언어·통화 · 앱 버전)</td>
+  <td>설정 — 2절</td>
+  <td>보임</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>「내 활동」은 회원 전용이라 비로그인에게는 <strong>그룹째 보이지 않는다</strong> — 보여 주고 로그인을 요구하면 마찰만 생긴다. <code>[구현]</code> <code>[참고]</code> 05 1-3</li>
+<li>만들지 않는 메뉴: 계정관리 행(프로필로 들어감) · 알림 설정(정보성 알림은 필수 · 마케팅은 설정) · 언어·통화 변환(설정에 고정 표시) · 내 예약(예약은 예약처에서 관리). <code>[구현]</code> <code>[참고]</code> 05 1-1</li>
+</ul>
+<h2 id="s1-6">1-6. 로그아웃</h2>
+<p>맨 아래 [로그아웃] (로그인 회원만). 처리는 <strong>회원 정책서 6절</strong>을 따른다 — 토스트 &quot;로그아웃했어요&quot; · 마이페이지(비로그인 모습)에 남는다. 구현은 서버 세션을 끊지 않는다 → 프로토 수정 요청 #34(기존).</p>
+<hr />
+<h1 id="s2">2. 설정</h1>
+<h2 id="s2-1">2-1. 구성</h2>
+<p>마이페이지 › 설정 (2뎁스). 로그인·비로그인 모두 들어올 수 있다. <code>[구현]</code></p>
+<table>
+<thead>
+<tr>
+  <th>그룹</th>
+  <th>항목</th>
+  <th style="text-align:center">로그인</th>
+  <th style="text-align:center">비로그인</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>알림</td>
+  <td>기기 알림 권한</td>
+  <td style="text-align:center">○</td>
+  <td style="text-align:center">○</td>
+</tr>
+<tr>
+  <td>알림</td>
+  <td>마케팅 정보 수신 동의 (토글 + 동의·철회 일시)</td>
+  <td style="text-align:center">○</td>
+  <td style="text-align:center">✕</td>
+</tr>
+<tr>
+  <td>지역</td>
+  <td>언어 · 통화 (고정 표시)</td>
+  <td style="text-align:center">○</td>
+  <td style="text-align:center">○</td>
+</tr>
+<tr>
+  <td>정보</td>
+  <td>앱 버전 · [업데이트]</td>
+  <td style="text-align:center">○</td>
+  <td style="text-align:center">○</td>
+</tr>
+</tbody>
+</table>
+<h2 id="s2-2">2-2. 기기 알림 권한 <code>[구현]</code> <code>[참고]</code> 05 · 02 3-4</h2>
+<ul>
+<li>휴대폰의 픽콕 알림 권한 상태를 보여 준다. <strong>토글은 만들지 않는다</strong> — 권한은 휴대폰 설정에서만 바꿀 수 있다.</li>
+<li>허용: &quot;알림을 받을 수 있어요&quot; + 「✓ 허용됨」</li>
+<li>거부: &quot;꺼져 있어 앱 알림을 받을 수 없어요&quot;(빨간 글씨) + [설정 열기] → 휴대폰 설정의 픽콕 알림 화면으로 이동</li>
+<li>마케팅 동의가 켜져 있는데 권한이 꺼져 있으면 안내 &quot;기기 알림이 꺼져 있어 앱 푸시는 오지 않아요. 이메일은 계속 받아요.&quot;</li>
+</ul>
+<h2 id="s2-3">2-3. 마케팅 정보 수신 동의</h2>
+<table>
+<thead>
+<tr>
+  <th>항목</th>
+  <th>내용</th>
+  <th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>형태</td>
+  <td>토글 · 보조 설명 &quot;이벤트·혜택 소식을 받아요&quot;</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>초기값</td>
+  <td>가입 때 고른 [선택] 마케팅 동의값(서버 <code>marketing_agree</code>)</td>
+  <td>회원 정책서 1-3 — 구현은 가입 직후에만 맞고, 다시 로그인하면 서버 값과 상관없이 <strong>켜짐</strong>으로 보인다(#44 — PO 제외, 광고성 알림과 함께)</td>
+</tr>
+<tr>
+  <td>적용 채널</td>
+  <td>이메일 + 앱 푸시 <strong>통합 1개</strong> (채널별로 나누지 않음)</td>
+  <td><code>[참고]</code> 05 2-2</td>
+</tr>
+<tr>
+  <td>켤 때</td>
+  <td>토스트 &quot;마케팅 수신에 동의했어요&quot;</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>끌 때</td>
+  <td>토스트 &quot;마케팅 수신을 철회했어요 · 예약된 광고성 알림은 취소돼요&quot; — 예약된 광고성 알림 <strong>전부 취소</strong></td>
+  <td><code>[구현]</code> <code>[참고]</code> 05 2-2</td>
+</tr>
+<tr>
+  <td>일시</td>
+  <td>토글 아래 「동의 YYYY.MM.DD HH:MM」(초록) / 「철회 YYYY.MM.DD HH:MM」(회색) — <strong>마지막 처리 일시</strong>. 광고성 정보 전송의 증빙이라 철회도 기록한다</td>
+  <td><code>[구현]</code> <code>[참고]</code> 02 3-3</td>
+</tr>
+<tr>
+  <td>저장</td>
+  <td>서버에 동의값·일시를 저장하고, 화면을 열 때 서버 값을 보여 준다. 어드민 광고성 알림 발송은 이 값을 기준으로 대상을 고른다</td>
+  <td>구현은 화면에서만 바뀌고 일시도 고정값(2026.09.15 14:22) — <strong>철회해도 어드민 광고 발송 대상(<code>marketing_agree=1</code>)에 그대로 남는다</strong>. 수정 요청 #44는 <strong>PO 제외(2026-10-27)</strong> — 광고성 알림을 이번 범위에서 뺐으므로(알림 정책서 1-2), 광고성 알림을 넣을 때 함께 고친다</td>
+</tr>
+<tr>
+  <td>약관 전문</td>
+  <td>설정에는 없다 — 마이페이지 › 약관·정책 › 「마케팅 정보 수신 동의」에서 본다</td>
+  <td><code>[구현]</code> (앱 정책 05는 설정 안 바텀시트 — 리워드는 구현 기준)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="s2-4">2-4. 언어 · 통화 <code>[구현]</code> <code>[참고]</code> 05 2-3</h2>
+<p>언어 「한국어」 · 통화 「KRW」를 <strong>회색 글씨로 고정 표시</strong>한다. 누를 수 없다. 아래 안내 &quot;지금은 한국어·KRW로만 제공돼요.&quot;</p>
+<h2 id="s2-5">2-5. 앱 버전 <code>[구현]</code> <code>[참고]</code> 05 2-4</h2>
+<ul>
+<li>최신: 「앱 버전 1.0.0」 + &quot;최신 버전이에요&quot;</li>
+<li>새 버전 있음: 「새 버전 N이 나왔어요」(빨간 글씨) + [업데이트] → 앱 스토어</li>
+<li>앱을 막는 강제 업데이트와는 별개다 — 여기는 사용자가 찾아와 누르는 확인이다.</li>
+</ul>
+<hr />
+<h1 id="s3">3. FAQ (기능)</h1>
+<blockquote>
+<p>질문·답변 <strong>문구는 PO가 나중에 정리</strong>한다(2026-10-27). 지금 구현물의 문구는 리워드 기준과 맞지 않는 곳이 있다(예: &quot;포인트를 쓸 수 있나요 — 사용은 준비 중&quot;). 이 절은 화면 기능만 정한다.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+  <th>항목</th>
+  <th>내용</th>
+  <th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>진입</td>
+  <td>마이페이지 › FAQ (2뎁스) · 로그인·비로그인 공통</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>분류</td>
+  <td>위쪽 분류 칩 — 처음 들어오면 <strong>첫 분류</strong>가 선택된다. 칩을 누르면 그 분류의 질문만 보이고 펼친 답은 접힌다</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>안내</td>
+  <td>목록 위 &quot;찾는 답이 없으면 화면 우측 아래 [💸 필독]도 확인해 보세요.&quot;</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>질문</td>
+  <td>질문을 누르면 답이 펼쳐지고 다시 누르면 접힌다. <strong>한 번에 하나만</strong> 펼쳐진다</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>문의</td>
+  <td>1:1 문의 화면 · 고객센터 연락처는 넣지 않는다</td>
+  <td><code>[참고]</code> 05 3-3</td>
+</tr>
+<tr>
+  <td>관리</td>
+  <td>구현은 문구가 앱에 들어 있다(어드민 관리 화면 없음) — 관리 방식은 문구 정리 때 정한다</td>
+  <td>미결 R-Y1</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="s4">4. 약관·정책 (기능)</h1>
+<blockquote>
+<p>약관 <strong>조항 내용은 PO가 나중에 정리</strong>한다(2026-10-27). 지금 구현물의 이용약관은 메타서치 픽콕 v0.10 목차라 리워드 조항(출석·퀴즈·친구 추천·현금 전환·픽샵·본인인증)이 없다.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+  <th>항목</th>
+  <th>내용</th>
+  <th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>진입</td>
+  <td>마이페이지 › 약관·정책 (2뎁스) · 로그인·비로그인 공통</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>목록</td>
+  <td>문서 3종 — 이용약관 · 개인정보 처리방침 · 마케팅 정보 수신 동의. 행마다 「버전 · N개 항목」</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>문서</td>
+  <td>행을 누르면 그 문서 화면 — 제목 · 버전 · 조문 목록. [←]는 약관 목록으로</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>전문</td>
+  <td>구현은 <strong>조문 제목만</strong> 싣는다. 실제 서비스는 법무 확정 전문을 보여 준다</td>
+  <td><code>[구현]</code> 미결 R-Y2</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="s5">5. 예외</h1>
+<table>
+<thead>
+<tr>
+  <th>#</th>
+  <th>상황</th>
+  <th>동작</th>
+  <th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>E1</td>
+  <td>비로그인이 「내 활동」 메뉴로 들어가려 함</td>
+  <td>메뉴가 보이지 않는다. 다른 경로로 들어오면 로그인 시트</td>
+  <td><code>[구현]</code> <code>myTap</code></td>
+</tr>
+<tr>
+  <td>E2</td>
+  <td>설정에서 비로그인</td>
+  <td>마케팅 동의 행이 없다</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>E3</td>
+  <td>휴대폰 알림 권한이 꺼진 채 마케팅 동의</td>
+  <td>앱 푸시는 오지 않고 이메일만 — 안내 문구 표시</td>
+  <td><code>[구현]</code></td>
+</tr>
+<tr>
+  <td>E4</td>
+  <td>잔액이 현금 전환 최소 금액 이상</td>
+  <td>막대 100% · 「전환 가능」(현금 전환 방식)</td>
+  <td><code>[구현]</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="s6">6. 미결</h1>
+<table>
+<thead>
+<tr>
+  <th>#</th>
+  <th>내용</th>
+  <th>다음</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>R-Y1</td>
+  <td>FAQ 문구(리워드 기준 재작성) · 관리 방식(앱에 고정 / 어드민 관리)</td>
+  <td>PO가 나중에 정리</td>
+</tr>
+<tr>
+  <td>R-Y2</td>
+  <td>약관 리워드 조항 · 전문 표시</td>
+  <td>PO·법무 — 대화창1 플래그</td>
+</tr>
+<tr>
+  <td>R-Y3</td>
+  <td>저금통 방식을 서비스에서 하나로 고정하는지 — 홈의 「저금통 A·B안 택1」 미결과 같은 건</td>
+  <td>포인트 사용 묶음</td>
+</tr>
+</tbody>
+</table>
+
+</main></body></html>

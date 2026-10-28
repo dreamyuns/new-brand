@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>픽콕 리워드 화면기획서 — 프런트</title>
+<link rel="stylesheet" href="../wf-reward.css">
+<!-- 프런트용·어드민용 화면기획서를 분리 (PO 2026-10-26 — 한 인덱스에 섞여 혼란스럽다는 피드백) -->
+<style>
+  .cover{background:#151c2c;color:#fff;border-radius:14px;padding:26px 28px;margin-bottom:22px}
+  .cover h1{margin:0 0 6px;font-size:26px} .cover p{margin:0;color:#b9c3d8}
+  .cover .cm{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px;font-size:12.5px;color:#d6ddeb}
+  .cover .cm b{color:#fff}
+  .grp-h{display:flex;align-items:center;gap:10px;margin:26px 0 10px}
+  .grp-h h2{margin:0;font-size:17px} .grp-h span{font-size:12px;color:var(--ink3)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+  .card{display:block;background:#fff;border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:12px;padding:14px 16px;color:var(--ink)}
+  a.card:hover{text-decoration:none;box-shadow:0 4px 16px rgba(20,30,60,.1)}
+  .card.pol{border-top-color:var(--pol-line)} .card.com{border-top-color:#f08c00} .card.adm{border-top-color:#7c4dff}
+  .card.soon{opacity:.55;border-top-color:#c3cad8;cursor:default}
+  .card .cid{font-family:Consolas,monospace;font-size:12.5px;font-weight:700;color:var(--accent)}
+  .card .cd{float:right;font-size:11px;color:var(--ink3)}
+  .card h3{margin:4px 0 4px;font-size:15.5px} .card p{margin:0 0 8px;font-size:12.5px;color:var(--ink2)}
+  .chips{display:flex;flex-wrap:wrap;gap:4px} .chips span{font-size:11px;background:#f1f3f7;border-radius:8px;padding:1px 7px;color:var(--ink2)}
+</style>
+</head>
+<body data-key="index_front" data-side="front" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page">
+<div class="cover"><h1>픽콕 리워드 화면기획서 · 프런트(고객 앱)</h1><p>고객 앱 화면 — 개발자·디자이너 전달용. 구현물을 실제로 캡처해 번호와 정책을 붙였습니다.</p><div class="cm"><span>기준 정책서 <b>참여형 적립 v0.8</b></span><span>기준 구현물 <b>pickoq_demo 고객 앱</b> (2026-10-27 수정분)</span><span>화면 <b>390×844</b></span><span>최종수정 <b>2026-10-27</b></span><span>작성 <b>대화창2</b> · PO 윤성균</span></div></div>
+<div class="box">
+  <h3>이 기획서를 읽는 법</h3>
+  <ul style="margin:0;padding-left:18px">
+    <li><b>정책서가 함께 들어 있습니다.</b> 주석의 「N-N절」을 누르면 그 절만 팝업으로 열립니다.</li>
+    <li><b>구현물이 기준입니다.</b> 정책서와 구현물이 다르면 정책서를 구현물에 맞췄습니다. 구현물을 고쳐야 할 것은 「구현 시 반영」 배지로 표시했습니다.</li>
+    <li>캡처 표시: <b style="color:var(--zone)">붉은 점선 상자 A~</b> = 화면 영역 · <b style="color:var(--marker)">빨간 숫자</b> = 기능. 각 화면은 <b>화면 흐름·데이터 → 페이지 구성 → 영역별 상세 → 화면 위에 뜨는 것 → 예외</b> 순서입니다.</li>
+    <li>배지: <span class="tag ok">확정</span> 정책 근거 있음 · <span class="tag proto">프로토 기준</span> 정책서에 아직 없음 · <span class="tag open">미결</span> 바뀔 수 있음</li>
+    <li>팝업·토스트·확인창을 언제 쓰는지는 <a href="../common/c_layer.html">C-LAYER</a>에 한 번만 정리했습니다.</li>
+  </ul>
+</div>
+<div class="grp-h"><h2>정책서</h2><span>md 원본을 HTML로 변환해 수록</span></div>
+<div class="cards">
+  <a class="card pol" href="../policy/pol_earn.html"><span class="cid">POLICY</span><span class="cd">2026-10-27</span>
+    <h3>참여형 적립 기능정책서 v0.8</h3><p>공통 원칙(참여 자격·본인인증) · 출석체크 · 여행상식 퀴즈 · 친구 추천(카카오톡 공유 포함) · 미결 R-A1~R-A14</p>
+    <div class="chips"><span>1절 공통</span><span>2절 출석</span><span>3절 퀴즈</span><span>4절 친구 추천</span><span>5절 미결</span></div></a>
+  <a class="card pol" href="../policy/pol_member.html"><span class="cid">POLICY</span><span class="cd">2026-10-27</span>
+    <h3>리워드 회원 정책서 v0.2</h3><p>이메일 가입·로그인 · 약관 · 본인인증(첫 적립 때) · 계정관리 · 재인증 · 탈퇴(포인트·적립대기 소멸 · 7일 재가입 제한) · 어드민 회원 · 미결 R-M1~R-M7</p>
+    <div class="chips"><span>1절 가입·로그인</span><span>3절 계정관리</span><span>5절 탈퇴</span><span>9절 미결</span></div></a>
+  <a class="card pol" href="../policy/pol_point.html"><span class="cid">POLICY</span><span class="cd">2026-10-27</span>
+    <h3>리워드 포인트 정책서 v0.2</h3><p>1P = 1원 · 원장 · 예약 적립(체크아웃 + 7일 확정) · 예약 뽑기 · 포인트 내역 · 소멸(적립일 + 1년) · 미결 R-P1~R-P6</p>
+    <div class="chips"><span>3절 예약 적립</span><span>4절 뽑기</span><span>5절 내역</span><span>6절 소멸</span></div></a>
+  <a class="card pol" href="../policy/pol_my.html"><span class="cid">POLICY</span><span class="cd">2026-10-27</span>
+    <h3>리워드 마이페이지 정책서 v0.1</h3><p>My 탭(로그인·비로그인) · 진행 막대 = 홈 저금통 기준 · 설정(알림 권한·마케팅 동의·언어·통화·앱 버전) · FAQ·약관 기능 · 미결 R-Y1~R-Y3</p>
+    <div class="chips"><span>1절 My</span><span>2절 설정</span><span>3절 FAQ</span><span>4절 약관</span></div></a>
+  <a class="card pol" href="../policy/pol_noti.html"><span class="cid">POLICY</span><span class="cd">2026-10-27</span>
+    <h3>리워드 알림 정책서 v0.1</h3><p>정보성만(광고성 제외) · 알림 종류 · 예약 적립 = 적립완료일 · 소멸 예정 = 월 1회 요약 + 임박 · 알림함 90일 · 새 알림 토스트 · 어드민 알림·관리자 로그 · 미결 R-N1~R-N5</p>
+    <div class="chips"><span>2절 종류</span><span>3절 소멸 예정</span><span>4절 알림함</span><span>6·7절 어드민</span></div></a>
+  <a class="card pol" href="../policy/pol_offer.html"><span class="cid">POLICY</span><span class="cd">2026-10-27</span>
+    <h3>리워드 혜택 정책서 v0.1 · 현재 기능</h3><p>지금 화면 기능 정리(사업 정책은 미결로만) · 광고 누르고 N초 머물면 적립 · 같은 광고 한 번 · 나가기 전 본인인증 · 광고 페이지는 시연용 대체 화면 · 어드민 혜택·광고주 관리 · 미결 R-O1~R-O5</p>
+    <div class="chips"><span>1절 혜택 탭</span><span>2절 광고 페이지</span><span>3·4절 어드민</span></div></a>
+</div>
+<div class="grp-h"><h2>공통</h2><span>모든 화면에 적용</span></div>
+<div class="cards">
+  <a class="card com" href="../common/c_layer.html"><span class="cid">C-LAYER</span><span class="cd">2026-10-27</span>
+    <h3>팝업·알림 노출 규칙</h3><p>토스트·알림 토스트·적립 연출·확인창·바텀시트·로딩·OS 창 10종 — 언제 무엇을 쓰나 · 규칙 R1~R10 · 겹칠 때 · 문구 규칙</p>
+    <div class="chips"><span>종류 10</span><span>규칙 10</span><span>예시 캡처 10</span></div></a>
+</div>
+<div class="grp-h"><h2>회원</h2><span>리워드 회원 정책서 v0.2</span></div>
+<div class="cards">
+  <a class="card" href="f_auth.html"><span class="cid">F-AUTH</span><span class="cd">2026-10-27</span>
+    <h3>가입·로그인·본인인증</h3><p>이메일 + 6자리 코드(비밀번호 없음) · 약관·추천코드 · 가입 완료 · 가입 직후 본인인증 권유(선택) · 첫 적립 때 본인인증 시트(통신사 → 정보 → 인증번호)</p>
+    <div class="chips"><span>시트 구성 A~D</span><span>단계 S1~S6</span><span>이탈·실패 확인창</span></div></a>
+</div>
+<div class="grp-h"><h2>홈</h2><span>앱의 첫 화면 · 홈에서 들어가는 출석체크·퀴즈 (참여형 적립 정책서 1~3절)</span></div>
+<div class="cards">
+  <a class="card" href="f_home.html"><span class="cid">F-HOME</span><span class="cd">2026-10-27</span>
+    <h3>홈 (메인)</h3><p>AI 검색바 · 내 포인트(상태 4) · 저금통 A·B안(택1 미결) · 호텔 예약(예약하면 포인트 적립) · 오늘의 적립 · 혜택 진입 · 하단 탭</p>
+    <div class="chips"><span>페이지 구성 A~G</span><span>로그인·비로그인</span><span>저금통 4상태</span></div></a>
+  <a class="card" href="f_attend.html"><span class="cid">F-ATT</span><span class="cd">2026-10-27</span>
+    <h3>출석체크</h3><p>6칸 누적 카드 · 1~5번째 10P · 6번째 선물상자(10P + 추가 10~100P) · 연속 일수(보상 무관)</p>
+    <div class="chips"><span>페이지 구성 A~D</span><span>C 출석 카드 4상태</span><span>적립 연출 · 선물상자</span></div></a>
+  <a class="card" href="f_quiz.html"><span class="cid">F-QUIZ</span><span class="cd">2026-10-27</span>
+    <h3>여행상식 퀴즈</h3><p>OX 3문제 · 문항당 10P(0~30P) · 한 문제에 한 번만 · 해설 아래 광고(적립 없음) · 푼 문제 재출제 없음</p>
+    <div class="chips"><span>페이지 구성 A~D</span><span>C 카드 7상태</span><span>이탈 확인창</span></div></a>
+
+</div>
+<div class="grp-h"><h2>혜택</h2><span>리워드 혜택 정책서 v0.1 · 현재 기능만</span></div>
+<div class="cards">
+  <a class="card" href="f_offer.html"><span class="cid">F-OFFER</span><span class="cd">2026-10-27</span>
+    <h3>혜택 (오퍼월)</h3><p>잔액·받을 수 있는 혜택 · 분류 칩 · 광고 카드(+NP · 적립완료) · 나가기 전 본인인증 · 광고 페이지(시연용 대체 화면) 4상태</p>
+    <div class="chips"><span>페이지 구성 A~E</span><span>로그인·비로그인</span><span>광고 페이지 4상태</span></div></a>
+</div>
+<div class="grp-h"><h2>마이페이지</h2><span>My 화면의 메뉴 순서(계정관리 = 프로필) · 리워드 마이페이지·포인트·알림 정책서</span></div>
+<div class="cards">
+  <a class="card" href="f_my.html"><span class="cid">F-MY</span><span class="cd">2026-10-27</span>
+    <h3>마이페이지 (My 탭)</h3><p>프로필 → 계정관리 · 잔액(적립완료) · 진행 막대(홈 저금통 기준) · 내 활동 5 · 지원·정보 3 · 로그아웃 · 비로그인 모습</p>
+    <div class="chips"><span>페이지 구성 A~E</span><span>로그인·비로그인</span><span>막대 2상태</span></div></a>
+  <a class="card" href="f_acc.html"><span class="cid">F-ACC</span><span class="cd">2026-10-27</span>
+    <h3>계정관리 · 회원탈퇴</h3><p>이메일·이름·영문·국적·전화번호(본인인증) · [본인인증하기] · 재인증 → 확인 → 사유 → 완료 · 포인트·적립대기 소멸 · 7일 재가입 제한</p>
+    <div class="chips"><span>페이지 구성 A~D</span><span>재인증 2단계</span><span>탈퇴 3단계</span></div></a>
+  <a class="card" href="f_point.html"><span class="cid">F-POINT</span><span class="cd">2026-10-27</span>
+    <h3>포인트 내역 · 예약 뽑기</h3><p>사용 가능 포인트 · 필터 4(사용·차감) · 카드 종류·상태 · 예약 적립예정 → 적립완료 → 뽑기 · 소멸 예정일 · 본인인증 전 적립대기</p>
+    <div class="chips"><span>페이지 구성 A~D</span><span>카드 8종</span><span>뽑기 상자·결과</span></div></a>
+  <div class="card soon"><span class="cid">F-COUPON</span><span class="cd">예정</span><h3>내 쿠폰함</h3><p>픽샵에서 구매한 쿠폰 — 포인트 사용 묶음</p></div>
+  <a class="card" href="f_noti.html"><span class="cid">F-NOTI</span><span class="cd">2026-10-27</span>
+    <h3>알림함 · 새 알림 토스트</h3><p>게시판형 알림함 · 안 읽음/읽음/펼침 · [모두 읽음] · 권한 꺼짐 띠 · 앱을 켜 둔 동안 새 알림 토스트 · 알림 종류표</p>
+    <div class="chips"><span>페이지 구성 A~D·V</span><span>목록 4상태</span><span>토스트</span></div></a>
+  <div class="card soon"><span class="cid">F-JAR</span><span class="cd">예정</span><h3>저금통</h3><p>현금 전환 · 픽샵 — 포인트 사용 묶음</p></div>
+  <a class="card" href="f_invite.html"><span class="cid">F-INV</span><span class="cd">2026-10-27</span>
+    <h3>친구 추천</h3><p>추천코드 9자리 · 양방 1,000P · 추천인 월 20회 · 카카오톡 공유(링크 자동 채움) · 가입 시트·계정관리 코드 입력</p>
+    <div class="chips"><span>페이지 구성 A~G</span><span>현황 3상태</span><span>가입 시트 5상태</span></div></a>
+  <a class="card" href="f_set.html"><span class="cid">F-SET</span><span class="cd">2026-10-27</span>
+    <h3>설정 · FAQ · 약관·정책</h3><p>기기 알림 권한 · 마케팅 수신 동의(동의·철회 일시) · 언어·통화 고정 · 앱 버전 · FAQ·약관은 기능만(문구·조항 나중에)</p>
+    <div class="chips"><span>설정 A~C</span><span>알림 4상태</span><span>FAQ · 약관</span></div></a>
+</div>
+<div class="grp-h"><h2>작성 예정</h2><span>PO 확정 순서</span></div>
+<div class="cards">
+  <div class="card soon"><span class="cid">F-AUTH2</span><span class="cd">나중에</span><h3>간편 가입 · 계정 통합</h3><p>카카오·네이버 간편 가입 · 계정 연결·통합 · 중복 본인인증 → 통합 (PO 2026-10-27 「나중에」)</p></div>
+  <div class="card soon"><span class="cid">F-ETC</span><span class="cd">예정</span><h3>이후</h3><p>포인트 사용(현금 전환·픽샵·쿠폰함) · 검색·숙소상세·아웃링크</p></div>
+</div>
+<div class="note open" style="margin-top:26px"><h4>미결</h4><ul><li>R-A2 미출석 리마인드 푸시 · R-A3 참여형 적립 월 상한 · R-A7 탈퇴 후 재가입 배제(법무) · R-A8 하단 탭 4개 vs 3개</li><li>R-A12 앱 미설치 친구에게 추천코드 전달 · R-A13 카카오디벨로퍼스 앱 등록 주체</li><li>회원 R-M1 간편 가입 · R-M2 계정 통합·중복 본인인증 · R-M3 만 14세 미만 · R-M4 외국인 · R-M5 정지 회원 · R-M6 탈퇴 데이터 보관 · R-M7 로그인 유지 기간</li><li>홈 저금통 A·B안 택1 (마이페이지 R-Y3 같은 건)</li><li>마이페이지 R-Y1 FAQ 문구·관리 · R-Y2 약관 리워드 조항 (PO 나중에)</li><li>혜택 R-O1 광고 중개 방식 · R-O2 단가·정산 · R-O3 월 상한 · R-O4 분류 · R-O5 리포트·광고주 계정 (정책 정해지면)</li><li>알림 R-N1 소멸 임박 안내 방식(제안: 매주 월요일) · R-N2 최소 금액 · R-N3 휴대폰 푸시 · R-N4 광고성 알림 · R-N5 확인 간격</li></ul></div>
+</main>
+</body>
+</html>

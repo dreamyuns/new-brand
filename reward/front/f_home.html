@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>F-HOME 홈 — 픽콕 리워드 화면기획서</title>
+<link rel="stylesheet" href="../wf-reward.css">
+<!-- _양식.html 기반. 홈은 정책서 근거가 적어 프로토(구현물) 기준으로 기능·정책을 적었다(PO 2026-10-26).
+     저금통은 A·B안 둘 다 싣고 택1 미결(PO). 캡처의 포인트·이번 달 숫자는 상태별 예시값 -->
+</head>
+<body data-key="f_home" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page">
+
+<div class="top"><span class="sid">F-HOME</span><h1>홈 (메인)</h1></div>
+<div class="meta">
+  <span>기준 정책서 <b>홈 전용 정책서 없음 — 프로토 기준</b> · 참고 <a href="../policy/pol_earn.html#s1">참여형 적립 v0.8 · 1절</a></span>
+  <span>기준 구현물 <b>pickoq_demo</b> <code>static/app.js</code> (2026-10-08)</span>
+  <span>캡처 <b>2026-10-27</b> · 390×844</span>
+  <span>최종수정 <b>2026-10-27</b></span>
+</div>
+<p class="lead">앱을 열면 처음 보이는 화면입니다. 내 포인트와 저금통을 보여주고, 포인트를 모으는 방법(호텔 예약 · 오늘의 적립 · 혜택)으로 들어가는 입구 역할을 합니다.</p>
+
+<div class="box">
+  <h3>읽는 법</h3>
+  <div class="legend">
+    <span><b style="color:var(--zone)">붉은 점선 상자 A~G</b> 화면의 영역</span>
+    <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능</span>
+    <span>「N-N절」을 누르면 그 절만 팝업으로 열립니다</span>
+    <span><span class="tag ok">확정</span> 정책서 근거 있음</span>
+    <span><span class="tag proto">프로토 기준</span> 정책서에 아직 없음</span>
+    <span><span class="tag open">미결</span> 바뀔 수 있음</span>
+  </div>
+</div>
+
+<!-- 변경이력: 개발자 공유 이후부터 노출 -->
+<div class="box hist"><h3>변경이력</h3>
+  <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
+    <tr><td>v0.1</td><td>2026-10-26</td><td>최초 작성 — 캡처 21장, 프로토 기준</td></tr></table></div>
+
+<div class="sec-policy">
+  <h3>⚙ 공통 정책 — 홈 전체</h3>
+  <ul>
+    <li><b>로그인하지 않아도 홈 전체를 보여줍니다.</b> 포인트는 0P로 흐리게, 저금통·적립 항목은 잠금 상태로 보이고 누르면 로그인을 안내합니다 — 받을 수 있는 포인트를 보여주는 것이 가입 동기가 되므로 숨기지 않습니다. (<a href="../policy/pol_earn.html#s1-2">1-2절</a>)</li>
+    <li>내 포인트는 <b>서버 잔액</b>을 그대로 보여줍니다. 화면에서 더하거나 빼지 않습니다. <span class="tag proto">프로토 기준</span></li>
+    <li>홈에 들어올 때마다 서버에서 잔액·오늘 출석 여부·퀴즈 진행·남은 혜택 수를 새로 받습니다. 적립 연출이 끝나면 숫자가 바로 갱신됩니다.</li>
+    <li><b>저금통</b>은 모은 포인트를 쓰는 출구입니다. <b>A안(현금 꺼내기)</b>과 <b>B안(픽샵 쇼핑)</b> 중 하나로 정해야 합니다. <span class="tag open">미결</span> 택1 (제안서 R7)</li>
+    <li>숫자(현금 전환 최소 10,000P · 출석 10P · 퀴즈 30P · 추천 1,000P)는 <b>어드민 설정값</b>으로 채워 넣습니다 — 앱이 설정값(출석 포인트·출석 칸 수·퀴즈 문항 수·문항당 포인트·추천 포인트·출금 최소액)을 서버에서 받아 문구를 만듭니다. 캡처는 설정이 기본값일 때의 숫자입니다.</li>
+    <li><b>본인인증 전 회원에게는 저금통 위에 안내 띠(V)를 항상 보여줍니다</b> — 적립대기 포인트가 있으면 "적립 대기 중인 포인트가 있어요. 본인인증하면 바로 받아요", 없으면 "본인인증하고 포인트 적립을 시작하세요". <b>금액은 보여주지 않습니다</b>(적립대기 금액은 포인트 내역에서만). 인증하면 사라집니다. (<a href="../policy/pol_earn.html#s1-6">1-6절</a>)</li>
+    <li>하단 탭은 <b>홈 · 검색 · 혜택 · My 4개</b>, 네 탭의 1뎁스 화면에서 모두 보이고 2뎁스 화면에서는 모두 숨깁니다. <span class="tag open">미결</span> 앱 정책 05의 3탭과 충돌 (<a href="../policy/pol_earn.html#s5">R-A8</a>)</li>
+  </ul>
+  <div class="src">기준: 참여형 적립 v0.8 · 1-2 · 1-5절 / 그 외 프로토(구현물) 기준 — 홈·저금통 정책서 신설 필요</div>
+</div>
+
+<nav class="toc" aria-label="이 페이지 바로가기">
+  <span class="toc-lb">바로가기</span>
+  <a href="#flow"><b>①</b>화면 흐름·데이터</a>
+  <a href="#layout"><b>②</b>페이지 구성</a>
+  <span class="toc-sep"></span>
+  <a class="z" href="#zA"><b>A</b>검색바</a>
+  <a class="z" href="#zB"><b>B</b>내 포인트</a>
+  <a class="z" href="#zV"><b>V</b>인증 띠</a>
+  <a class="z" href="#zC"><b>C</b>저금통</a>
+  <a class="z" href="#zD"><b>D</b>호텔 예약</a>
+  <a class="z" href="#zE"><b>E</b>오늘의 적립</a>
+  <a class="z" href="#zF"><b>F</b>혜택 진입</a>
+  <a class="z" href="#zG"><b>G</b>하단 탭</a>
+  <span class="toc-sep"></span>
+  <a href="#over"><b>④</b>화면 위에 뜨는 것</a>
+  <a href="#exc">예외 케이스</a>
+</nav>
+
+<!-- ═════ ① 화면 흐름 · 데이터 ═════ -->
+<section class="sec major" id="flow">
+  <div class="sec-hd"><h2>① 화면 흐름 · 데이터</h2></div>
+  <div class="box">
+    <div class="flow"><span>앱 실행 (스플래시·권한·온보딩 — 앱 진입 기획서)</span><i>→</i><span>홈</span></div>
+    <div class="flow" style="margin-top:8px"><i>홈에서 가는 곳:</i><span>검색바 → AI 검색 (X1)</span><span>저금통 → 현금 전환 / 픽샵</span><span>호텔 예약 → 검색 탭</span><span>출석·퀴즈 → 각 화면 (F-ATT·F-QUIZ)</span><span>[추천] → 친구 추천 (F-INV)</span><span>혜택 → 혜택 탭</span><span>알림 종 → 알림함</span><span>[로그인] → 로그인 시트</span></div>
+  </div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>요청</th><th>언제</th><th>받는 값 (화면에 쓰는 것)</th></tr>
+    <tr><td><code>GET /api/earn/home</code></td><td>홈을 열 때 · 적립 후</td><td><code>balance</code> 잔액 · <code>attend_done</code> 오늘 출석 · <code>attend</code>(도장 수·연속 일수) · <code>quiz_done</code> · <code>offers_left</code> 남은 혜택 수 · <code>phone_verified</code></td></tr>
+    <tr><td><code>GET /api/noti/unread</code></td><td>홈을 열 때 · 5초마다</td><td>안 읽은 알림 수 → 알림 종 배지</td></tr>
+    <tr><td colspan="3"><b>부족한 값 (구현 시 추가)</b> — ①<b>이번 달 적립 합계</b>(B 보조 문구 "이번 달 +NP") — 지금은 앱 안의 시연용 값 ②<b>오늘 퀴즈 답한 수</b>(E 퀴즈 카드) — 지금은 퀴즈 화면을 열어야 채워지고, 서버 <code>quiz_done</code>은 「전부 정답」 기준이라 쓸 수 없음 ③<b>설정값</b>(현금 전환 최소·지급액들)</td></tr>
+  </table></div>
+</section>
+
+<!-- ═════ ② 페이지 구성 ═════ -->
+<section class="sec major" id="layout">
+  <div class="sec-hd"><span class="sid">F-HOME-L</span><h2>② 페이지 구성</h2></div>
+  <p class="sec-sub">왼쪽은 로그인(저금통 A안), 오른쪽은 비로그인입니다. 긴 화면 전체.</p>
+  <div class="two-col unit" style="grid-template-columns:400px 400px minmax(0,1fr)">
+    <div><figure class="shot" data-id="F-HOME-L" data-base="../"></figure><div class="shot-cap">로그인 · 저금통 A안</div></div>
+    <div><figure class="shot" data-id="F-HOME-L0" data-base="../"></figure><div class="shot-cap">비로그인</div></div>
+    <div>
+      <div class="box wrapx" style="margin-bottom:12px"><table class="t">
+        <tr><th>영역</th><th>들어가는 요소</th><th>상태에 따라 바뀌는 것</th></tr>
+        <tr class="zrow" data-n="A"><td><b>A</b> 검색바</td><td>AI 검색바 · 마이크 · [로그인] 또는 알림 종</td><td>비로그인 [로그인] / 로그인 알림 종</td></tr>
+        <tr class="zrow" data-n="B"><td><b>B</b> 내 포인트</td><td>캐릭터 · 「내 포인트」 · 잔액 · 보조 문구</td><td>캐릭터 3가지 · 문구 4가지</td></tr>
+        <tr><td><b>V</b> 본인인증 안내 띠</td><td>안내 문구 · 「인증하기 ›」</td><td><b>본인인증 전 회원만</b> B와 C 사이에 표시 · 적립대기 있음/없음 문구 2가지</td></tr>
+        <tr class="zrow" data-n="C"><td><b>C</b> 저금통</td><td>목표 진행 막대 · [꺼내기] 또는 [픽샵 쇼핑]</td><td>비로그인 / A안 모으는 중 / A안 달성 / B안</td></tr>
+        <tr class="zrow" data-n="D"><td><b>D</b> 가장 크게 적립받기</td><td>호텔 예약 안내 카드</td><td>바뀌지 않음</td></tr>
+        <tr class="zrow" data-n="E"><td><b>E</b> 오늘의 적립</td><td>출석 · 퀴즈 · 친구 추천 카드 + 남은 요약</td><td>미참여 / 참여완료 / 비로그인</td></tr>
+        <tr class="zrow" data-n="F"><td><b>F</b> 더 모으기</td><td>혜택 진입 카드</td><td>남은 혜택 수 / 비로그인 문구</td></tr>
+        <tr class="zrow" data-n="G"><td><b>G</b> 하단 탭</td><td>홈 · 검색 · 혜택 · My</td><td>현재 탭 강조</td></tr>
+      </table></div>
+      <div class="cn"><div class="cn-hd">화면 공통 규칙</div>
+        <ul>
+          <li><b>1뎁스 화면</b> — 하단 탭(G)이 화면 아래에 떠 있고, A~F가 함께 스크롤됩니다.</li>
+          <li>A·B는 파란 배경 한 덩어리, C부터는 흰 판이 위로 겹쳐 올라온 모양입니다.</li>
+          <li>적립 연출이 끝나면 B의 캐릭터가 한 번 튀어 오르고 "+NP"가 떠오른 뒤 알림 종이 흔들립니다.</li>
+        </ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ ③ 영역별 상세 ═════ -->
+<section class="sec major" id="detail" style="margin-bottom:0">
+  <div class="major-hd"><h2>③ 영역별 상세 — 기능 · 정의 · 정책</h2></div>
+  <p class="sec-sub">영역마다 상태별 캡처를 잘라 나란히 놓았습니다. 같은 영역 안에서는 상태가 달라도 같은 번호가 같은 요소입니다.</p>
+</section>
+
+<section class="sec zsec" id="zA">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">A</span><h2>검색바</h2><span class="tag proto">프로토 기준</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-HOME-A1 <small>비로그인</small></div><figure class="shot" data-id="F-HOME-A1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-HOME-A2 <small>로그인</small></div><figure class="shot" data-id="F-HOME-A2" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>AI 검색바 「✦ 제주 오션뷰 호텔 찾아줘」</div>
+      <ul><li>누르면 <b>AI 검색 입력 화면</b>(X1)이 열립니다. 문장으로 호텔을 찾는 기능 — 상세는 검색 묶음 화면기획서(예정).</li>
+          <li>안의 문구는 예시 문장(고정)입니다.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>마이크</div>
+      <ul><li>누르면 음성 입력 화면으로 바뀌고, 말한 문장으로 바로 검색합니다(시연은 예시 문장 자동 입력).</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>[로그인] — 비로그인일 때</div><ul><li>로그인·가입 시트를 엽니다(회원 화면기획서).</li></ul></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>알림 종 — 로그인일 때</div><ul><li>안 읽은 알림 수 배지(99+). 누르면 알림함.</li></ul></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zB">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">B</span><h2>내 포인트</h2><span class="tag proto">프로토 기준</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-HOME-B1 <small>비로그인</small></div><figure class="shot" data-id="F-HOME-B1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-HOME-B2 <small>모으는 중</small></div><figure class="shot" data-id="F-HOME-B2" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-HOME-B3 <small>목표 달성 (10,000P 이상)</small></div><figure class="shot" data-id="F-HOME-B3" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-HOME-B4 <small>0P</small></div><figure class="shot" data-id="F-HOME-B4" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>캐릭터</div>
+      <ul><li>비로그인 = 엎드려 자는 모습(z z z) / 로그인 = 축하하는 모습 / <b>잔액이 현금 전환 최소(10,000P) 이상</b> = 뿌듯해하는 모습.</li>
+          <li>적립 연출이 끝나면 한 번 튀어 오릅니다.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>「내 포인트」</div></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>잔액</div>
+      <ul><li>쓸 수 있는 포인트(서버 잔액). 비로그인은 「0P」를 흐리게.</li></ul>
+      <div class="data"><b>데이터</b> ← <code>balance</code></div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>보조 문구 — 상태별</div>
+      <div class="wrapx"><table class="t" style="margin-top:4px">
+        <tr><th>조건</th><th>문구</th></tr>
+        <tr><td>비로그인</td><td>로그인하면 포인트가 쌓이기 시작해요</td></tr>
+        <tr><td>잔액 0P</td><td>첫 적립을 해볼까요?</td></tr>
+        <tr><td>목표의 70% 미만</td><td>이번 달 +NP 모았어요</td></tr>
+        <tr><td>목표의 70% 이상</td><td>이번 달 +NP · 거의 다 모았어요</td></tr>
+        <tr><td>목표 달성</td><td>이번 달 +NP · 꺼낼 준비가 됐어요! (B안: 쇼핑할 준비가 됐어요!)</td></tr>
+      </table></div>
+      <div class="data"><b>데이터</b> ← 「이번 달 +NP」 = 서버가 계산한 <b>이번 달 적립</b> — 이번 달 늘어난 포인트 중 <b>환불(출금 반려·구매 취소로 돌려준 것)만 뺀 합</b>. 운영자 지급은 포함합니다.</div>
+      <div class="case">「목표」 = 현금 전환 최소액(어드민 「출금 최소 신청액」 <code>withdraw_min</code>, 기본 10,000P). 「적립」에 무엇을 넣을지는 대시보드 숫자 정의와 함께 다시 정합니다 <span class="tag open">미결</span> · 캡처의 금액은 상태별 예시값입니다.</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zV">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">V</span><h2>본인인증 안내 띠 — 본인인증 전 회원만</h2><span class="tag ok">확정</span></div>
+  <p class="sec-sub">로그인했지만 <b>본인인증을 하지 않은 회원</b>에게만 저금통(C) 바로 위에 나옵니다. 본인인증 전에는 <b>내 포인트(B)가 0P</b>, 「이번 달 +NP」도 0으로 보입니다 — 예전에 쌓인 포인트가 있어도 인증하면 그때 보입니다. 비로그인·인증 완료 회원에게는 없습니다. 가입 때 본인인증을 받지 않으므로 처음 가입한 회원은 모두 이 띠를 봅니다.</p>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-HOME-LV <small>본인인증 전 · 위치</small></div><figure class="shot" data-id="F-HOME-LV" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-HOME-V1 <small>적립대기 없음</small></div><figure class="shot" data-id="F-HOME-V1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-HOME-V2 <small>적립대기 있음</small></div><figure class="shot" data-id="F-HOME-V2" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>안내 문구 — 2가지</div>
+      <div class="wrapx"><table class="t" style="margin-top:4px">
+        <tr><th>조건</th><th>문구</th></tr>
+        <tr><td>적립대기 없음</td><td>본인인증하고 포인트 적립을 시작하세요</td></tr>
+        <tr><td>적립대기 있음 (인증 전에 생긴 예약 적립·친구 추천 몫)</td><td>적립 대기 중인 포인트가 있어요. 본인인증하면 바로 받아요</td></tr>
+      </table></div>
+      <ul><li><b>금액은 보여주지 않습니다</b> — 홈에는 적립완료 포인트만 나옵니다. 적립대기 건은 <b>포인트 내역에서만</b> 금액과 「적립대기」 배지로 보입니다(PO 확정 2026-10-27).</li></ul>
+      <div class="data"><b>데이터</b> ← 적립대기가 있는지만 <code>pending</code> (참/거짓 — 금액은 받지 않음)</div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>「인증하기 ›」</div>
+      <ul><li>띠 어디를 눌러도 <b>본인인증 시트</b>가 열립니다(출석 화면 X4와 같은 시트).</li>
+          <li>인증을 마치면 띠가 사라집니다. 적립대기가 있었으면 적립 연출 "NP 적립! · 적립대기 포인트가 지급됐어요", 없었으면 토스트 "본인인증이 완료됐어요".</li></ul>
+      <div class="rule"><b>근거</b> 본인인증은 첫 적립 때 · 안내 3곳 중 ② 메인 상단 띠배너 · 금액 미표시 · 보류 알림 없음 (<a href="../policy/pol_earn.html#s1-6">1-6절</a> v0.8)</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zC">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">C</span><h2>저금통</h2><span class="tag open">A·B 택1 미결</span></div>
+  <p class="sec-sub">모은 포인트를 어디에 쓰는지 보여주는 카드입니다. <b>A안 = 현금으로 꺼내기, B안 = 픽샵에서 기프티콘으로 바꾸기</b> — 둘 중 하나로 정해야 합니다(PO 2026-10-26: 둘 다 싣고 미결).</p>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-HOME-C1 <small>비로그인</small></div><figure class="shot" data-id="F-HOME-C1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-HOME-C2 <small>A안 · 모으는 중</small></div><figure class="shot" data-id="F-HOME-C2" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-HOME-C3 <small>A안 · 목표 달성</small></div><figure class="shot" data-id="F-HOME-C3" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-HOME-C4 <small>B안 · 픽샵</small></div><figure class="shot" data-id="F-HOME-C4" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「내 저금통」 + 오른쪽 칩</div>
+      <ul><li>비로그인 「로그인 필요」 / A안 「목표 달성률 N%」 / B안 「교환 가능 N개」(잔액으로 살 수 있는 픽샵 상품 수).</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>설명</div>
+      <ul><li>비로그인: "모은 포인트를 저금통에 담아두고, 10,000P가 되면 현금으로 꺼낼 수 있어요."</li>
+          <li>A안: "현금 전환 목표까지 모으는 중" → 달성 시 "이제 현금으로 꺼낼 수 있어요" / B안: "모을수록 바꿀 수 있는 게 많아져요"</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>진행 막대</div>
+      <ul><li>잔액 ÷ 목표(어드민 「출금 최소 신청액」, 기본 10,000P). 막대 끝에 동전. 100%를 넘지 않습니다. 비로그인은 빗금 막대.</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>아래 줄</div>
+      <ul><li>A안: 「목표 10,000P」 · 「전환까지 NP」 → 달성 시 「전환 가능」 / B안: 「지금 NP」 · 「기프티콘·상품권 교환」</li></ul></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>버튼</div>
+      <div class="wrapx"><table class="t" style="margin-top:4px">
+        <tr><th>상태</th><th>버튼</th><th>누르면</th></tr>
+        <tr><td>비로그인</td><td>[🔒 로그인하고 시작하기]</td><td>로그인 시트</td></tr>
+        <tr><td>A안 · 모으는 중</td><td>[↑ 꺼내기 (10,000P부터)] — <b>누를 수 없음</b></td><td>—</td></tr>
+        <tr><td>A안 · 달성</td><td>[↑ 꺼내기] 노랑</td><td>현금 전환 화면 (포인트 사용 묶음)</td></tr>
+        <tr><td>B안</td><td>[🎁 픽샵 쇼핑] 노랑</td><td>픽샵 (포인트 사용 묶음)</td></tr>
+      </table></div>
+      <div class="rule"><b>근거</b> 제안서 v0.5 3-3 저금통 (목표 10,000P는 예시값) · 현금 전환은 전자금융거래법 법무 검토 중 <span class="tag open">미결</span> · 포인트 사용처 업체 회신 대기</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zD">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">D</span><h2>가장 크게 적립받기 — 호텔 예약</h2><span class="tag proto">프로토 기준</span></div>
+  <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-HOME-D1</div><figure class="shot" data-id="F-HOME-D1" data-base="../"></figure></div></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>배지 「👑 적립 최대」</div></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>"호텔 예약하고 적립받기"</div></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>"예약 완료 시 🎲 뽑기로 추가 적립까지."</div>
+        <ul><li>예약 적립 + 뽑기는 포인트 내역·예약 뽑기 묶음에서 다룹니다.</li></ul></div>
+      <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>"예약하면 포인트 적립"</div>
+        <ul><li><b>숫자 없이 한 줄</b>입니다. 실제 적립은 예약처·요금마다 달라 포인트 금액이나 비율로 약속하지 않습니다.</li>
+            <li>「뽑기로 추가 적립」은 위 문장(③)에 이미 있으므로 여기에는 넣지 않습니다.</li></ul>
+        <div class="rule"><b>근거</b> PO 확정 2026-10-26 — 「1박당 최대 5,000P」(근거 없는 고정값) 삭제 · 「최대 N% 적립」안 대신 숫자 없는 문구로</div></div>
+      <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>[호텔 검색 →]</div><ul><li>문구 오른쪽의 <b>남는 폭을 모두 채우는</b> 넓은 버튼입니다.</li><li>카드 어디를 눌러도 <b>검색 탭</b>으로 이동합니다.</li></ul></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zE">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">E</span><h2>오늘의 적립</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-HOME-E1 <small>로그인 · 미참여</small></div><figure class="shot" data-id="F-HOME-E1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-HOME-E2 <small>출석·퀴즈 완료</small></div><figure class="shot" data-id="F-HOME-E2" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-HOME-E3 <small>비로그인</small></div><figure class="shot" data-id="F-HOME-E3" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>출석체크 카드</div>
+      <ul><li>미참여 「+{출석 포인트}P」(기본 +10P) [받기] / 완료 「✓참여완료」 「보기 ›」(카드 흐림). 어디를 눌러도 출석체크 화면(F-ATT) — 카드에서 바로 출석되지 않습니다.</li></ul>
+      <div class="rule"><b>근거</b> 버튼을 눌러야 출석 · 참여완료 배지 (<a href="../policy/pol_earn.html#s2-2">2-2절</a> · <a href="../policy/pol_earn.html#s1-5">1-5절</a>)</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>여행상식 퀴즈 카드</div>
+      <ul><li>설명: <b>"{문항 수}문제 · 최대 {문항 수 × 문항당 포인트}P"</b> — 기본값이면 "3문제 · 최대 30P". 0P도 나올 수 있으므로 「꽝없음」은 쓰지 않습니다.</li>
+          <li>미참여: 「+{최대}P」 [풀기 {답한 수}/{문항 수}] / 완료: 「✓오늘 완료」. 누르면 퀴즈 화면(F-QUIZ).</li>
+          <li><b>「오늘 완료」 = 오늘 문제를 모두 답함</b> — 맞힌 수와 관계없습니다. 앱을 다시 열어도 유지됩니다(서버가 오늘 답한 수를 보내 줌).</li></ul>
+      <div class="data"><b>데이터</b> ← 오늘 답한 수 <code>quiz_solved</code> · 완료 여부 <code>quiz_done</code></div>
+      <div class="rule"><b>근거</b> <a href="../policy/pol_earn.html#s3-11">3-11절</a></div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>친구 추천 카드</div>
+      <ul><li>「+1,000P」 [추천] — 항상 같은 모양(하루 1회가 아님). [추천]을 누르면 친구 추천 화면(F-INV). 비로그인은 토스트 "로그인하고 참여할 수 있어요".</li></ul></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>남은 요약 「N개 남음 · 최대 +NP」</div>
+      <ul><li>오늘 아직 하지 않은 <b>출석·퀴즈</b>의 개수와 받을 수 있는 최대 포인트. 하면 빠집니다. <b>친구 추천은 세지 않습니다</b>(PO 확정 2026-10-26).</li>
+          <li>최대 포인트 = 출석 포인트(안 했으면) + <b>퀴즈 남은 문항 수 × 문항당 포인트</b>. 예: 출석 안 함 + 퀴즈 1문제 답함 → "2개 남음 · 최대 +30P".</li>
+          <li>비로그인: "로그인 후 참여 가능".</li></ul>
+      <div class="case">둘 다 했으면 지금은 "0개 남음 · 최대 +0P"(E2)입니다. 완료 문구("오늘 적립 완료" 등)로 바꿀지는 디자인 확정 때 정합니다 <span class="tag open">미결</span></div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zF">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">F</span><h2>더 모으기 — 혜택 진입 카드</h2><span class="tag proto">프로토 기준</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-HOME-F1 <small>로그인</small></div><figure class="shot" data-id="F-HOME-F1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-HOME-F2 <small>비로그인</small></div><figure class="shot" data-id="F-HOME-F2" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>혜택 카드</div>
+      <ul><li>제목 "혜택 보고 적립하기".</li>
+          <li>로그인: "아직 N개 남았어요 · 클릭만 해도 적립" / 비로그인: "클릭만 해도 쌓이는 제휴 혜택".</li>
+          <li>누르면 <b>혜택 탭</b>(하단 탭 ③과 같은 화면)으로 갑니다.</li></ul>
+      <div class="data"><b>데이터</b> ← <code>offers_left</code> (아직 참여하지 않은 혜택 수)</div>
+      <div class="rule"><b>근거</b> 혜택(오퍼월) 정책서 없음 — 제안서 v0.5 3-5 예시값 <span class="tag open">미결</span> (혜택 묶음에서 정함)</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zG">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">G</span><h2>하단 탭 — 앱 전체 공통</h2><span class="tag proto">프로토 기준</span></div>
+  <div class="note open"><h4>하단 탭은 홈만의 요소가 아닙니다 — 앱 전체 이동의 뼈대</h4><ul>
+    <li><b>보이는 곳</b>: 홈 · 검색 · 혜택 · My <b>네 메뉴의 1뎁스 화면에서 모두</b> 보입니다.</li>
+    <li><b>숨기는 곳</b>: 어느 탭에서 들어갔든 <b>2뎁스 화면</b>(출석체크·퀴즈·친구 추천·숙소 상세·포인트 내역·계정관리 등)으로 들어가면 <b>모두 숨깁니다</b>. 2뎁스에서는 위쪽 [←] 뒤로가기로 돌아갑니다.</li>
+    <li><b>누르면</b>: 그 탭의 <b>1뎁스 첫 화면</b>으로 갑니다. 지금 보고 있는 탭을 다시 눌러도 그 탭 첫 화면이 다시 나옵니다.</li>
+    <li><b>로그인 여부</b>: 네 탭 모두 비로그인도 누를 수 있습니다. 로그인이 필요한 내용은 각 탭 화면 안에서 안내합니다.</li>
+    <li><b>모양</b>: 화면 아래쪽에 떠 있는 둥근 막대(양옆·아래 10px 띄움). 지금 탭은 <b>파란 글자 + 연한 파란 바탕</b>으로 강조. 화면 내용이 탭 뒤로 지나가며 스크롤됩니다.</li>
+    <li><b>근거</b>: 1뎁스에만 노출 — 구현물 기준(PO 지시 2026-09-21) · 4탭(홈·검색·혜택·My)은 앱 정책 05의 3탭(검색·적립·MY)과 충돌 <span class="tag open">미결</span> (<a href="../policy/pol_earn.html#s5">R-A8</a>)</li>
+  </ul></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-HOME-G1 <small>하단 탭 (홈에 있을 때)</small></div><figure class="shot" data-id="F-HOME-G1" data-base="../" data-only="1,2,3,4"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>탭 「홈」</div><ul><li>지금 이 화면(메인). 홈에 있으므로 강조되어 있습니다.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>탭 「검색」</div><ul><li>호텔 검색 첫 화면.</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>탭 「혜택」</div><ul><li>혜택(오퍼월) 목록. F 혜택 카드를 눌러도 같은 곳으로 갑니다.</li></ul></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>탭 「My」</div><ul><li>마이페이지 첫 화면.</li></ul></div>
+  </div></div>
+  </div>
+</section>
+
+<!-- ═════ ④ 화면 위에 뜨는 것 ═════ -->
+<section class="sec major" id="over">
+  <div class="sec-hd"><h2>④ 화면 위에 뜨는 것</h2></div>
+  <div class="two-col unit sub-item">
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-HOME-X1 <small style="font-weight:400">검색바를 누르면 — AI 검색 입력</small></div><figure class="shot" data-id="F-HOME-X1" data-base="../"></figure></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>AI 검색 입력 화면 (전체화면)</div>
+        <ul><li>입력창 "어디로 갈까요? 편하게 말해 보세요" · 예시 문장 3개 · 키보드 · [✕]로 닫기.</li>
+            <li>문장을 해석해 지역·조건을 찾고 검색 결과로 이동합니다. <b>상세는 검색 묶음 화면기획서</b>에서 다룹니다(<a href="../common/c_layer.html#L-OVERLAY">L-OVERLAY</a>).</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="exc">
+  <div class="sec-hd"><h2>예외 케이스</h2></div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>상황</th><th>화면 동작</th></tr>
+    <tr><td>서버에 연결하지 못함</td><td>지금은 토스트 "서버에 연결하지 못했어요" → 홈 숫자 자리에 [다시 시도]가 있는 안내 (<a href="../common/c_layer.html#R3">C-LAYER R3</a>) <span class="tag proto">구현 시 반영</span></td></tr>
+    <tr><td>잔액이 목표를 넘음 (A안)</td><td>막대는 100%에서 멈춤 · 칩 「목표 달성률 100%」 · [꺼내기] 켜짐</td></tr>
+    <tr><td>B안에서 살 수 있는 상품이 없음</td><td>칩 「교환 가능 0개」 · [픽샵 쇼핑]은 그대로 켜짐(상품 구경 가능)</td></tr>
+    <tr><td>다른 곳에서 적립 후 홈으로 돌아옴</td><td>홈 진입 시 서버 값으로 갱신</td></tr>
+    <tr><td>알림이 들어옴</td><td>알림 종 배지 숫자 증가 · 알림 토스트 (<a href="../common/c_layer.html#L-NOTI">L-NOTI</a>)</td></tr>
+  </table></div>
+</section>
+
+</main>
+<script src="../shots/markers.js"></script>
+<script src="../policy/pol_earn_data.js"></script>
+<script src="../wf-reward.js"></script>
+</body>
+</html>

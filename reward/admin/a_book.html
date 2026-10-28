@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A-BOOK 예약 적립 — 픽콕 리워드 화면기획서</title>
+<link rel="stylesheet" href="../wf-reward.css">
+<!-- _양식.html 기반 · 어드민 1440 · 근거: pickoq_demo admin/admin4.js PAGES.bookings·bkCreate · api_booking.py (2026-10-27). [만들기]는 누르지 않음 -->
+</head>
+<body data-key="a_book" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page">
+
+<div class="top"><span class="sid">A-BOOK</span><h1>예약 적립 (어드민)</h1></div>
+<div class="meta">
+  <span>기준 정책서 <b><a href="../policy/pol_point.html#s3">리워드 포인트 v0.2 · 3·4절</a></b> · <a href="../policy/pol_admin.html#s9">리워드 어드민 v0.3 · 제9조</a></span>
+  <span>기준 구현물 <b>pickoq_demo</b> <code>admin/admin4.js</code> (2026-10-27)</span>
+  <span>캡처 <b>2026-10-27</b> · PC 1440</span>
+  <span>최종수정 <b>2026-10-27</b></span>
+</div>
+<p class="lead">호텔 예약으로 생긴 적립을 예약 단위로 봅니다. 예약처가 주는 캐시백을 <b>기본 적립(1%)</b>과 <b>뽑기</b>로 나눠 주므로, 뽑지 않아 지급되지 않은 「미수령」 금액도 함께 봅니다.</p>
+
+<div class="box">
+  <h3>읽는 법</h3>
+  <div class="legend">
+    <span><b style="color:var(--zone)">붉은 점선 상자 A~E</b> 화면의 영역</span>
+    <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능</span>
+    <span>「N-N절」을 누르면 그 절만 팝업으로 열립니다</span>
+    <span><span class="tag ok">확정</span> 정책서 근거 있음</span>
+    <span><span class="tag proto">프로토 기준</span> 정책서에 아직 없음</span>
+    <span><span class="tag open">미결</span> 바뀔 수 있음</span>
+  </div>
+</div>
+
+<div class="box hist"><h3>변경이력</h3>
+  <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
+    <tr><td>v0.1</td><td>2026-10-27</td><td>최초 작성 — 캡처 6장</td></tr></table></div>
+
+<div class="sec-policy">
+  <h3>⚙ 공통 정책 — 예약 적립</h3>
+  <ul>
+    <li>예약처 캐시백 = <b>기본 적립</b>(예약금액 × 1%, 설정 <code>draw_base_rate</code>) + <b>뽑기 몫</b>(나머지). 뽑기는 자사 추가 비용이 아니고, <b>뽑지 않은 몫은 지급되지 않습니다.</b> (<a href="../policy/pol_point.html#s3-1">포인트 3-1절</a>)</li>
+    <li><b>기본 적립은 체크아웃 + 7일에 확정</b>됩니다. 그 전에는 「적립예정」. (<a href="../policy/pol_point.html#s3-2">3-2절</a> · PO 확정 2026-10-27) <span class="tag proto">프로토 수정 #37</span> 지금 구현은 「예약 즉시 지급」이고 머리 설명·상태도 그 기준 — 어드민 정책서 9-5 「적립예정 단계를 두지 않는다」도 바꿔야 함</li>
+    <li>뽑기는 <b>적립완료 뒤 예약당 1회</b>, 뽑기 몫의 30~100% (<a href="../policy/pol_point.html#s4">4절</a>).</li>
+    <li>본인인증 전 회원의 예약은 「적립대기」로 표시되고 요약 숫자에서 빠집니다. (<a href="../policy/pol_admin.html#s9-5">9-5절</a>)</li>
+    <li>실제 서비스에서는 KAYAK 리포팅으로 예약이 <b>자동으로</b> 쌓입니다. [+ 예약 적립 만들기]는 시연용입니다.</li>
+  </ul>
+  <div class="src">기준: 리워드 포인트 정책서 v0.2 · 3 · 4절 / 리워드 어드민 정책서 v0.3 · 제9조</div>
+</div>
+
+<nav class="toc" aria-label="이 페이지 바로가기">
+  <span class="toc-lb">바로가기</span>
+  <a href="#flow"><b>①</b>화면 흐름·데이터</a>
+  <a href="#layout"><b>②</b>페이지 구성</a>
+  <span class="toc-sep"></span>
+  <a class="z" href="#zB"><b>B</b>머리</a>
+  <a class="z" href="#zC"><b>C</b>요약·읽는 법</a>
+  <a class="z" href="#zD"><b>D</b>칩·찾기</a>
+  <a class="z" href="#zE"><b>E</b>목록</a>
+  <span class="toc-sep"></span>
+  <a href="#over"><b>④</b>시연용 만들기</a>
+</nav>
+
+<section class="sec major" id="flow">
+  <div class="sec-hd"><h2>① 화면 흐름 · 데이터</h2></div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>요청</th><th>언제</th><th>받는 값</th></tr>
+    <tr><td><code>GET /api/admin/bookings</code> (<code>?draw=done|none</code>)</td><td>열 때 · 칩</td><td><code>bookings</code>(행마다 회원·호텔·OTA·금액·요율·기본·뽑기 상태·<code>draw_max</code>·<code>eligible</code>·총 적립·<code>status</code>·체크인·체크아웃·적립일시) · <code>stat</code>(<code>total_base</code> · <code>total_draw</code> · <code>draw_done</code> · <code>avg_ratio</code> · <code>unclaimed</code> · <code>draw_able</code> · <code>base_rate</code>)</td></tr>
+    <tr><td><code>POST /api/admin/bookings</code></td><td>시연용 [만들기]</td><td>지금 구현: 기본 적립을 <b>바로 지급</b> + 고객 알림 "예약 적립 +NP · 뽑기로 최대 NP를 더 받을 수 있어요" — 정책과 다름(#37)</td></tr>
+  </table></div>
+</section>
+
+<section class="sec major" id="layout">
+  <div class="sec-hd"><span class="sid">A-BOOK-L</span><h2>② 페이지 구성</h2></div>
+  <div class="pc-layout unit">
+    <figure class="shot pc" data-id="A-BOOK-L" data-base="../"></figure>
+    <div class="box wrapx" style="margin:0"><table class="t">
+      <tr><th>영역</th><th>들어가는 요소</th><th>상태에 따라 바뀌는 것</th></tr>
+      <tr class="zrow" data-n="A"><td><b>A</b> 공통 틀</td><td>왼쪽 메뉴(「예약 적립」 강조) · 위 막대</td><td>—</td></tr>
+      <tr class="zrow" data-n="B"><td><b>B</b> 머리</td><td>제목 · 설명 · [+ 예약 적립 만들기]</td><td>—</td></tr>
+      <tr class="zrow" data-n="C"><td><b>C</b> 요약</td><td>총 적립 · 뽑기로 지급 · 미수령 뽑기 (그 위 「읽는 법」 띠)</td><td>숫자</td></tr>
+      <tr class="zrow" data-n="D"><td><b>D</b> 칩·찾기</td><td>전체 · 뽑기 완료 · 미수령 · 검색어 · 날짜 기준(숙박일/적립일) · 기간 · 뽑기</td><td>고른 칩</td></tr>
+      <tr class="zrow" data-n="E"><td><b>E</b> 목록</td><td>11열 표</td><td>뽑기 배지 · 적립대기</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<section class="sec major" id="detail" style="margin-bottom:0"><div class="major-hd"><h2>③ 영역별 상세 — 기능 · 정의 · 정책</h2></div></section>
+
+<section class="sec zsec" id="zB">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">B</span><h2>머리</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row"><div class="sw pc"><div class="lb">A-BOOK-B1</div><figure class="shot" data-id="A-BOOK-B1" data-base="../"></figure></div></div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>제목 「예약 적립」</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>"기본 적립 1% 는 예약 즉시 지급되고, 나머지는 뽑기로 지급됩니다"</div>
+      <div class="case">정책 변경으로 <b>"기본 적립 1%는 체크아웃 + 7일에 확정되고, 나머지는 뽑기로 지급됩니다"</b>로 바꿉니다 <span class="tag proto">프로토 수정 #37</span></div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>[+ 예약 적립 만들기]</div><ul><li>시연용 — ④ X1. 실제 서비스에서는 숨깁니다.</li></ul></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zC">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">C</span><h2>요약 · 읽는 법</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row"><div class="sw pc"><div class="lb">A-BOOK-C1</div><figure class="shot" data-id="A-BOOK-C1" data-base="../"></figure></div></div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>총 적립 포인트 — "기본 NP (1% 확정) + 뽑기 NP"</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>뽑기로 지급 — "N건 수령 — 평균 당첨률 N%"</div>
+      <ul><li>평균 당첨률 = 당첨액 ÷ 뽑기 몫의 평균(30~100% 사이).</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>미수령 뽑기 — "N건 — 뽑지 않으면 지급되지 않음"</div>
+      <ul><li>이 숫자가 계속 늘면 고객에게 뽑기 안내가 부족하다는 뜻입니다.</li></ul>
+      <div class="rule"><b>근거</b> <a href="../policy/pol_admin.html#s9-1">어드민 9-1절</a></div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>「📌 이 화면을 읽는 법 — 뽑기는 자사 추가 비용이 아닙니다」</div>
+      <ul><li>캐시백 중 1%는 확정, 나머지는 뽑기 · 뽑지 않은 포인트는 지급되지 않으므로 미수령액을 함께 봄.</li></ul>
+      <div class="case">「적립예정」 단계가 생기면 요약에 <b>적립예정(확정 전) 금액·건수</b>를 따로 두는 것을 권합니다 <span class="tag open">미결</span></div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zD">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">D</span><h2>칩 · 찾기</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row"><div class="sw pc"><div class="lb">A-BOOK-D1</div><figure class="shot" data-id="A-BOOK-D1" data-base="../"></figure></div></div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>전체</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>뽑기 완료 N</div></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>미수령 N</div><ul><li>적립완료됐고 뽑기 몫이 있는데 아직 안 뽑은 예약.</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>검색어 "회원 · 호텔 · 예약처로 찾기"</div></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>날짜 기준 — 숙박일 / 적립일 · 기간 · 뽑기(전체/미수령)</div>
+      <ul><li>적립은 숙박을 마친 뒤 확정되므로 <b>숙박일</b>로도 찾을 수 있게 둡니다(예약처 자료와 맞춰 보는 기준).</li></ul>
+      <div class="rule"><b>근거</b> <a href="../policy/pol_admin.html#s9-3">어드민 9-3</a> · <a href="../policy/pol_admin.html#s9-4">9-4절</a></div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zE">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">E</span><h2>목록</h2><span class="tag ok">확정</span></div>
+  <div class="shots-row"><div class="sw pc"><div class="lb">A-BOOK-E1 <small>열 제목에 번호 · 8행</small></div><figure class="shot" data-id="A-BOOK-E1" data-base="../"></figure></div></div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>#</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>회원 — 이름 + 이메일</div></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>호텔</div></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>OTA (예약처)</div></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>예약금액</div></div>
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>요율 — 예약처 캐시백 %</div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>기본적립 — 금액 × 1%</div></div>
+    <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>뽑기</div>
+      <ul><li>뽑음 = 당첨액(초록) · 안 뽑음 = 「미수령 NP」(노랑, 뽑기 몫 최대) · 몫 없음 = 「대상아님」(흐림).</li></ul></div>
+    <div class="cn" data-n="9"><div class="cn-hd"><span class="no">9</span>총 적립 = 기본 + 뽑기</div>
+      <ul><li>본인인증 전이면 「적립대기」 배지 + "본인인증 전 · NP".</li></ul>
+      <div class="case">「적립예정」 상태 표시가 없습니다 — 추가 <span class="tag proto">프로토 수정 #37</span></div></div>
+    <div class="cn" data-n="10"><div class="cn-hd"><span class="no">10</span>체크인 / 체크아웃</div><ul><li>적립예정일(체크아웃 + 7일)의 기준.</li></ul></div>
+    <div class="cn" data-n="11"><div class="cn-hd"><span class="no">11</span>적립일시</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec major" id="over">
+  <div class="sec-hd"><h2>④ 시연용 — 예약 적립 만들기</h2><span class="tag proto">시연용</span></div>
+  <div class="unit sub-item pc-over">
+    <div class="lb" style="font-weight:700;margin-bottom:6px">A-BOOK-X1 <small style="font-weight:400">예약 적립 만들기 모달</small></div>
+    <figure class="shot" data-id="A-BOOK-X1" data-base="../"></figure>
+    <div class="detail"><div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>회원</div></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>호텔명 · 예약처(OTA 7곳)</div></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>공급사 요율 (%) — 기본 3.0</div></div>
+      <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>예약 금액 (원) — 기본 500,000</div></div>
+    </div><div class="ann">
+      <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>체크인 · 체크아웃</div>
+        <ul><li>"실제 운영에서는 카약 리포팅에서 bookingStartDate · bookingEndDate 로 들어옵니다. 적립 확정일(체크아웃 +7일)을 계산하는 기준이 됩니다."</li></ul></div>
+      <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>계산 결과</div><ul><li>금액·요율을 넣으면 기본 적립·뽑기 최대가 바로 계산됩니다.</li></ul></div>
+      <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>[취소] [만들기]</div>
+        <ul><li>실제 서비스에서는 이 기능을 두지 않습니다. 시연에서는 「적립예정」으로 만들고 「체크아웃 처리」로 확정하는 방식을 권합니다 <span class="tag proto">프로토 수정 #37</span></li></ul></div>
+    </div></div>
+  </div>
+</section>
+
+</main>
+<script src="../shots/markers.js"></script>
+<script src="../policy/pol_point_data.js"></script>
+<script src="../policy/pol_admin_data.js"></script>
+<script src="../wf-reward.js"></script>
+</body>
+</html>

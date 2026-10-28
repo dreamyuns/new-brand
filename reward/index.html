@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>픽콕 리워드 화면기획서</title>
+<link rel="stylesheet" href="wf-reward.css">
+<!-- 프런트용·어드민용 화면기획서를 분리 (PO 2026-10-26 — 한 인덱스에 섞여 혼란스럽다는 피드백) -->
+<style>
+  .cover{background:#151c2c;color:#fff;border-radius:14px;padding:26px 28px;margin-bottom:22px}
+  .cover h1{margin:0 0 6px;font-size:26px} .cover p{margin:0;color:#b9c3d8}
+  .cover .cm{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px;font-size:12.5px;color:#d6ddeb}
+  .cover .cm b{color:#fff}
+  .grp-h{display:flex;align-items:center;gap:10px;margin:26px 0 10px}
+  .grp-h h2{margin:0;font-size:17px} .grp-h span{font-size:12px;color:var(--ink3)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+  .card{display:block;background:#fff;border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:12px;padding:14px 16px;color:var(--ink)}
+  a.card:hover{text-decoration:none;box-shadow:0 4px 16px rgba(20,30,60,.1)}
+  .card.pol{border-top-color:var(--pol-line)} .card.com{border-top-color:#f08c00} .card.adm{border-top-color:#7c4dff}
+  .card.soon{opacity:.55;border-top-color:#c3cad8;cursor:default}
+  .card .cid{font-family:Consolas,monospace;font-size:12.5px;font-weight:700;color:var(--accent)}
+  .card .cd{float:right;font-size:11px;color:var(--ink3)}
+  .card h3{margin:4px 0 4px;font-size:15.5px} .card p{margin:0 0 8px;font-size:12.5px;color:var(--ink2)}
+  .chips{display:flex;flex-wrap:wrap;gap:4px} .chips span{font-size:11px;background:#f1f3f7;border-radius:8px;padding:1px 7px;color:var(--ink2)}
+</style>
+</head>
+<body data-key="index_root" data-side="root" data-base="">
+<script src="wf-nav.js"></script>
+<main class="page">
+<div class="cover"><h1>픽콕 리워드 화면기획서</h1><p>보실 기획서를 고르세요. 프런트(고객 앱)와 어드민(운영자)은 데이터와 화면이 달라 따로 구성했습니다.</p><div class="cm"><span>최종수정 <b>2026-10-27</b></span><span>작성 <b>대화창2</b> · PO 윤성균</span></div></div>
+<div class="cards" style="grid-template-columns:repeat(auto-fill,minmax(360px,1fr))">
+  <a class="card" href="front/index.html" style="padding:22px"><span class="cid">FRONT</span><h3 style="font-size:20px">프런트 화면기획서 (고객 앱)</h3><p>홈 · 참여형 적립(출석·퀴즈·친구 추천) · 공통 팝업 규칙 · 참여형 적립 정책서</p><div class="chips"><span>모바일 390×844</span><span>정책서 v0.8</span></div></a>
+  <a class="card adm" href="admin/index.html" style="padding:22px"><span class="cid">ADMIN</span><h3 style="font-size:20px">어드민 화면기획서 (운영자)</h3><p>대시보드 · 퀴즈 관리 · 설정 · 어드민 정책서</p><div class="chips"><span>PC 1440</span><span>어드민 정책서 v0.2</span></div></a>
+</div>
+</main>
+</body>
+</html>
