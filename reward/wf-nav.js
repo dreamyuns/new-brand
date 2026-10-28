@@ -104,4 +104,18 @@
     if(open) delete closed[groups[gi].name]; else closed[groups[gi].name] = 1;
     try { localStorage.setItem(SKEY, JSON.stringify(closed)); } catch(err){}
   });
+
+  /* 메뉴 스크롤 위치 유지 (PO 2026-10-28) — 다른 화면을 눌러도 왼쪽 메뉴는 보던 자리 그대로, 본문만 맨 위에서 시작.
+     누르기 직전 위치를 이 탭에만 기억했다가 새 페이지에서 되살린다. 기억이 없으면 지금 화면 항목이 보이게만 맞춘다 */
+  var nav = b.querySelector('.nav'), PKEY = 'pickoq-wf-nav-scroll-' + side;
+  function saveScroll(){ try { sessionStorage.setItem(PKEY, String(nav.scrollTop)); } catch(err){} }
+  nav.addEventListener('click', function(e){ if(e.target.closest('a')) saveScroll(); });
+  window.addEventListener('pagehide', saveScroll);
+  var y = null;
+  try { y = sessionStorage.getItem(PKEY); } catch(err){}
+  if(y !== null){ nav.scrollTop = +y || 0; }
+  else {
+    var on = nav.querySelector('a.on');
+    if(on && on.offsetTop + on.offsetHeight > nav.clientHeight) nav.scrollTop = on.offsetTop - nav.clientHeight / 3;
+  }
 })();
