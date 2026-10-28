@@ -6,7 +6,7 @@
 <title>F-ATT 출석체크 — 픽콕 리워드 화면기획서</title>
 <link rel="stylesheet" href="../wf-reward.css">
 <!-- 구성 (PO 결정 2026-10-26): ①화면 흐름·데이터 → ②페이지 구성(전체 캡처 + 영역 A~D) → ③영역별 상세(상태별로 잘라 낸 캡처를 나란히 + 기능·정의·정책)
-     → ④화면 위에 뜨는 것(자르지 않음) → 예외. 프로토 수정 요청은 화면기획서에 넣지 않고 _프로토수정요청.md 로만 관리.
+     → ④팝업·시트(자르지 않음) → 예외. 프로토 수정 요청은 화면기획서에 넣지 않고 _프로토수정요청.md 로만 관리.
      표시 약속: 붉은 점선 상자 + 알파벳 = 영역 / 빨간 숫자 = 기능. 같은 영역 안에서는 상태가 달라도 같은 번호 = 같은 요소 -->
 </head>
 <body data-key="f_attend" data-base="../">
@@ -27,7 +27,7 @@
   <div class="legend">
     <span><b style="color:var(--zone)">붉은 점선 상자 A~D</b> 화면의 영역</span>
     <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능 — 마우스를 올리면 설명과 함께 강조</span>
-    <span><span class="tag ok">확정</span> 정책서 근거 있음</span>
+    <span> 정책서 근거 있음</span>
     <span><span class="tag proto">프로토 기준</span> 정책서에 아직 없음</span>
     <span><span class="tag open">미결</span> 바뀔 수 있음</span>
   </div>
@@ -79,7 +79,7 @@
   <a class="z" href="#zC"><b>C</b>출석 카드</a>
   <a class="z" href="#zD"><b>D</b>규칙 안내</a>
   <span class="toc-sep"></span>
-  <a href="#over"><b>④</b>화면 위에 뜨는 것</a>
+  <a href="#over"><b>④</b>팝업·시트</a>
   <a href="#exc">예외 케이스</a>
 </nav>
 
@@ -133,7 +133,7 @@
 </section>
 <section class="sec zsec" id="zA">
   <div class="unit">
-  <div class="zone-hd"><span class="zl">A</span><h2>상단 바</h2><span class="tag ok">확정</span></div>
+  <div class="zone-hd"><span class="zl">A</span><h2>상단 바</h2></div>
   <div class="shots-row">
     <div class="sw"><div class="lb">F-ATT-A1 <small>비로그인</small></div><figure class="shot" data-id="F-ATT-A1" data-base="../"></figure></div>
     <div class="sw"><div class="lb">F-ATT-A2 <small>로그인</small></div><figure class="shot" data-id="F-ATT-A2" data-base="../"></figure></div>
@@ -153,7 +153,7 @@
 
 <section class="sec zsec" id="zB">
   <div class="unit">
-  <div class="zone-hd"><span class="zl">B</span><h2>상태 영역</h2><span class="tag ok">확정</span></div>
+  <div class="zone-hd"><span class="zl">B</span><h2>상태 영역</h2></div>
   <div class="shots-row">
     <div class="sw"><div class="lb">F-ATT-B1 <small>비로그인</small></div><figure class="shot" data-id="F-ATT-B1" data-base="../"></figure></div>
     <div class="sw"><div class="lb">F-ATT-B2 <small>로그인 · 미참여</small></div><figure class="shot" data-id="F-ATT-B2" data-base="../"></figure></div>
@@ -180,7 +180,7 @@
 
 <section class="sec zsec" id="zC">
   <div class="unit">
-  <div class="zone-hd"><span class="zl">C</span><h2>출석 카드</h2><span class="tag ok">확정</span></div>
+  <div class="zone-hd"><span class="zl">C</span><h2>출석 카드</h2></div>
   <p class="sec-sub">상태 4가지를 나란히 놓았습니다. 같은 번호는 상태가 달라도 같은 요소입니다.</p>
   <div class="shots-row">
     <div class="sw"><div class="lb">F-ATT-C1 <small>비로그인</small></div><figure class="shot" data-id="F-ATT-C1" data-base="../"></figure></div>
@@ -227,7 +227,7 @@
 
 <section class="sec zsec" id="zD">
   <div class="unit">
-  <div class="zone-hd"><span class="zl">D</span><h2>규칙 안내 「이렇게 쌓여요」</h2><span class="tag ok">확정</span></div>
+  <div class="zone-hd"><span class="zl">D</span><h2>규칙 안내 「이렇게 쌓여요」</h2></div>
   <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
     <div class="shots-row"><div class="sw"><div class="lb">F-ATT-D1 <small>모든 상태 공통</small></div><figure class="shot" data-id="F-ATT-D1" data-base="../"></figure></div></div>
     <div class="ann">
@@ -244,9 +244,9 @@
   </div>
 </section>
 
-<!-- ═════════════════ ④ 화면 위에 뜨는 것 ═════════════════ -->
+<!-- ═════════════════ ④ 팝업·시트 ═════════════════ -->
 <section class="sec major" id="over">
-  <div class="sec-hd"><h2>④ 화면 위에 뜨는 것</h2></div>
+  <div class="sec-hd"><h2>④ 팝업·시트</h2></div>
   <p class="sec-sub">전체 화면을 덮으므로 자르지 않고 보여줍니다. 공통 동작은 <a href="../common/c_layer.html#L-EARN">C-LAYER 적립 연출</a>을 따릅니다.</p>
 
   <div class="two-col unit sub-item">
@@ -320,7 +320,7 @@
 </section>
 
 <section class="sec zsec" id="exc">
-  <div class="sec-hd"><h2>예외 케이스</h2><span class="tag ok">확정</span></div>
+  <div class="sec-hd"><h2>예외 케이스</h2></div>
   <p class="sec-sub">정책서 <a href="../policy/pol_earn.html#s2-8">2-8절</a>을 화면 동작 기준으로 옮겼습니다.</p>
   <div class="box wrapx"><table class="t">
     <tr><th>#</th><th>상황</th><th>화면·서버 동작</th></tr>
