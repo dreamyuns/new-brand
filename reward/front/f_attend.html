@@ -39,7 +39,7 @@
 <!-- 변경이력: 개발자 공유 이후부터 노출 -->
 <div class="box hist"><h3>변경이력</h3>
   <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
-    <tr><td>v0.4</td><td>2026-10-30</td><td>실개발 기준으로 다시 씀 — 캡처 17장</td></tr>
+    <tr><td>v0.4</td><td>2026-10-30</td><td>실개발 기준으로 다시 씀 — 캡처 17장 (재점검: 가입 권유 생략 · 실패 확인창 [닫기] · E7 정보 못 받음)</td></tr>
     <tr><td>v0.3</td><td>2026-10-27</td><td>프로토 기준 (기준 예시 페이지)</td></tr></table></div>
 
 <div class="sec-policy">
@@ -163,7 +163,7 @@
   </div><div class="ann">
     <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>버튼</div>
       <div class="box wrapx"><table class="t"><tr><th>상태</th><th>버튼</th><th>누르면</th></tr>
-        <tr><td>비로그인</td><td>[🔒 로그인하고 출석하기] 파랑</td><td>로그인 시트</td></tr>
+        <tr><td>비로그인</td><td>[🔒 로그인하고 출석하기] 파랑</td><td>로그인 시트 — 여기서 새로 가입해도 「가입 직후 본인인증 권유 팝업」은 뜨지 않음(출석을 누를 때 바로 묻기 때문 · <a href="f_home.html#over">F-HOME X3</a>)</td></tr>
         <tr><td>미참여</td><td>[✓ 출석하고 10P 받기] 노랑</td><td>서버 지급 → 적립 연출(X1)</td></tr>
         <tr><td>선물상자 차례</td><td>[✓ 출석하고 선물상자 열기] 노랑</td><td>서버가 10P + 추가 포인트를 정해 지급 → 선물상자(X2)</td></tr>
         <tr><td>오늘 완료</td><td>[✓ 오늘 출석 완료] 초록 · 누를 수 없음</td><td>—</td></tr>
@@ -219,7 +219,7 @@
     <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-ATT-X4 <small style="font-weight:400">본인인증 전 — 본인인증 시트</small></div><figure class="shot" data-id="F-ATT-X4" data-base="../" data-only="-"></figure></div>
     <div class="ann"><div class="cn"><div class="cn-hd">휴대폰 본인인증</div>
       <ul><li>통신사 · 이름 · 휴대폰 번호 · [인증하기] — 한 화면. 자세한 규칙은 <a href="f_auth.html">F-AUTH</a>.</li>
-          <li>마치면 적립대기가 있으면 그 적립 연출이 먼저, 없으면 토스트 "본인인증이 완료됐어요" → <b>출석을 이어서</b> 합니다.</li></ul>
+          <li>마치면 적립대기가 있으면 그 적립 연출("NP 적립! · 적립대기 포인트가 지급됐어요")이 먼저, 없으면 토스트 "본인인증이 완료됐어요" → <b>출석을 이어서</b> 합니다.</li></ul>
       <div class="rule"><b>근거</b> 첫 적립 때 본인인증 (<a href="../policy/pol_earn.html#s1-6">1-6절</a>)</div></div></div>
   </div>
   <div class="two-col unit sub-item">
@@ -236,10 +236,11 @@
     <tr><th>#</th><th>상황</th><th>화면·서버 동작</th></tr>
     <tr><td>E1</td><td>오늘 이미 출석했는데 다시 요청(두 기기 등)</td><td>서버 409 → 토스트 "이미 참여했어요" · 화면을 새로 받음</td></tr>
     <tr><td>E2</td><td>버튼을 빨리 두 번 누름</td><td>처리하는 동안 버튼이 잠겨 한 번만 · 서버도 같은 날 두 번 지급하지 않음</td></tr>
-    <tr><td>E3</td><td>서버 처리 실패</td><td>확인창 "출석하지 못했어요" + [다시 시도]</td></tr>
+    <tr><td>E3</td><td>서버 처리 실패</td><td>확인창 "출석하지 못했어요"(본문 = 서버가 보낸 사유, 없으면 "잠시 후 다시 시도해 주세요") + [다시 시도] [닫기]</td></tr>
     <tr><td>E4</td><td>선물상자를 열기 전에 앱을 닫음</td><td>포인트는 이미 지급 · 포인트 내역에 남음</td></tr>
     <tr><td>E5</td><td>자정을 넘김</td><td>한국 시간 자정 기준으로 새 날 — 다시 열면 미참여</td></tr>
     <tr><td>E6</td><td>하루 이상 빠짐</td><td>도장 그대로 · 연속 일수만 다시 셈</td></tr>
+    <tr><td>E7</td><td>출석 정보를 받기 전 · 못 받음</td><td>버튼이 잠긴 채 「🔥 0일 연속」 · 빈 카드로 보임 — 따로 오류 안내는 없음(실개발 현재 동작) <span class="tag open">미결</span> 홈처럼 「다시 시도」 안내가 필요한지 확인</td></tr>
   </table></div>
 </section>
 
