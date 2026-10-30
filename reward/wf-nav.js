@@ -21,15 +21,18 @@
     ['f_quiz',   'F-QUIZ', '여행상식 퀴즈',     'front/f_quiz.html'],
     ['grp', '검색'],   /* 하단 탭 순서(홈 · 검색 · 혜택 · My)대로 — 검색 묶음은 없던 기능인 필독부터 (PO 2026-10-28) */
     ['f_guide',  'F-GUIDE','적립 필독',         'front/f_guide.html'],
+    ['f_sres', 'F-SRES', '검색 결과 — 실개발 기준 작성 중', ''],
+    ['f_sdet', 'F-SDET', '숙소 상세 — 실개발 기준 작성 중', ''],
+    ['f_sout', 'F-SOUT', '아웃링크 · 예약 적립 — 실개발 기준 작성 중', ''],
     ['grp', '혜택'],
     ['f_offer',  'F-OFFER','혜택 (오퍼월)',     'front/f_offer.html'],
     ['grp', '마이페이지'],   /* My 화면의 메뉴 순서와 같게 (PO 2026-10-27) */
     ['f_my',     'F-MY',   'My (마이페이지)',   'front/f_my.html'],
     ['f_acc',    'F-ACC',  '계정관리·탈퇴 (프로필)', 'front/f_acc.html'],
     ['f_point',  'F-POINT','포인트 내역·예약 뽑기', 'front/f_point.html'],
-    ['f_coupon', 'F-COUPON','내 쿠폰함',        'front/f_coupon.html'],
+    ['f_coupon', 'F-COUPON','내 쿠폰함 — 나중에',        'front/f_coupon.html'],
     ['f_noti',   'F-NOTI', '알림함·새 알림 토스트', 'front/f_noti.html'],
-    ['f_jar',    'F-JAR',  '저금통 (현금 전환·픽샵)', 'front/f_jar.html'],
+    ['f_jar',    'F-JAR',  '저금통 (현금 전환·픽샵) — 나중에', 'front/f_jar.html'],
     ['f_invite', 'F-INV',  '친구 추천',         'front/f_invite.html'],
     ['f_set',    'F-SET',  '설정·FAQ·약관',     'front/f_set.html'],
   ];

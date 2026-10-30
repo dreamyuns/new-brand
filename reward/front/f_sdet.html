@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>F-SDET 숙소 상세 — 픽콕 리워드 화면기획서</title>
+<link rel="stylesheet" href="../wf-reward.css">
+<!-- _양식.html 기반 · 근거: pickoq_demo static/app.js openDetail·viewDetail·galOf·roomOf·dResearch·goOutlink · static/api.js loadDetail (2026-10-28)
+     리워드 정책서에는 숙소 상세 규정이 없다 — 「프로토 기준」(적립 나누기만 포인트 정책서 근거). 반영: P24(사진 자리 안내) -->
+</head>
+<body data-key="f_sdet" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page">
+
+<div class="top"><span class="sid">F-SDET</span><h1>숙소 상세</h1></div>
+<div class="meta">
+  <span>기준 정책서 <b><a href="../policy/pol_point.html#s4">리워드 포인트 v0.2 · 4절(예약 뽑기)</a></b> · 나머지 <span class="tag proto">프로토 기준</span></span>
+  <span>기준 구현물 <b>pickoq_demo</b> <code>static/app.js</code> · <code>static/api.js</code> (2026-10-28)</span>
+  <span>캡처 <b>2026-10-28</b> · 390×844</span>
+  <span>최종수정 <b>2026-10-28</b></span>
+</div>
+<p class="lead">검색 결과에서 숙소를 누르면 열리는 화면입니다. <b>예약처(아고다·부킹닷컴 등)별 가격과 적립</b>을 비교하고, 한 곳을 누르면 그 예약처로 이동합니다(<a href="f_sout.html">F-SOUT</a>). 사진·전체 예약처는 KAYAK에서 한 번 더 받아 채웁니다.</p>
+
+<div class="box">
+  <h3>읽는 법</h3>
+  <div class="legend">
+    <span><b style="color:var(--zone)">붉은 점선 상자 A~F</b> 화면의 영역</span>
+    <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능 — 마우스를 올리면 설명과 함께 강조</span>
+    <span>「N-N절」을 누르면 그 절만 팝업으로 열립니다</span>
+    <span>표시 없음 = 정책서 근거 있음</span>
+    <span><span class="tag proto">프로토 기준</span> 정책서에 아직 없음</span>
+    <span><span class="tag open">미결</span> 바뀔 수 있음</span>
+  </div>
+</div>
+
+<!-- 변경이력: 개발자 공유 이후부터 노출 — 내용은 계속 기록 -->
+<div class="box hist"><h3>변경이력</h3>
+  <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
+    <tr><td>v0.1</td><td>2026-10-28</td><td>최초 작성 — P24 사진 자리 안내 반영</td></tr></table></div>
+
+<div class="sec-policy">
+  <h3>⚙ 공통 정책 — 숙소 상세 전체</h3>
+  <ul>
+    <li><b>가격 비교는 이 화면에서만</b> 합니다 — 검색 결과 카드에는 예약처 목록을 펼치지 않습니다(PO 2026-10-07). <span class="tag proto">프로토 기준</span></li>
+    <li>예약처는 <b>싼 순서</b>로 5곳씩. 가장 싼 곳에 「최저가」, 적립이 가장 많은 곳에 「적립 최대」 표시. <span class="tag proto">프로토 기준</span></li>
+    <li>적립 = 예약처가 주는 캐시백을 <b>기본 적립(설정 요율 · 기본 1%) + 뽑기 몫</b>으로 나눈 것입니다. 기본은 체크아웃 7일 뒤 적립되고, 뽑기는 적립완료 뒤 포인트 내역에서 합니다. (<a href="../policy/pol_point.html#s3-2">포인트 3-2</a> · <a href="../policy/pol_point.html#s4">4절</a>)</li>
+    <li>예약처를 누르면 <b>그 예약처 사이트로 이동</b>합니다 — 실제 예약·결제는 예약처에서 합니다(<a href="f_sout.html">F-SOUT</a>). <span class="tag proto">프로토 기준</span></li>
+    <li><b>로그인 없이</b> 볼 수 있습니다. [💸 필독] 버튼은 이 화면에 <b>없습니다</b>(<a href="f_guide.html">F-GUIDE</a> G1). <span class="tag proto">프로토 기준</span></li>
+    <li>사진·리뷰 항목 점수·편의시설·지도·객실 조건 일부는 <b>시연용 가상 데이터</b>입니다(KAYAK이 주지 않는 것). <span class="tag proto">프로토 기준</span></li>
+  </ul>
+  <div class="src">기준: 리워드 포인트 정책서 v0.2 · 3-2 · 4절 / 나머지는 구현물 기준</div>
+</div>
+
+<nav class="toc" aria-label="이 페이지 바로가기">
+  <span class="toc-lb">바로가기</span>
+  <a href="#flow"><b>①</b>화면 흐름·데이터</a>
+  <a href="#layout"><b>②</b>페이지 구성</a>
+  <span class="toc-sep"></span>
+  <a class="z" href="#zA"><b>A</b>사진</a>
+  <a class="z" href="#zB"><b>B</b>숙소 정보</a>
+  <a class="z" href="#zC"><b>C</b>날짜·인원</a>
+  <a class="z" href="#zD"><b>D</b>적립 띠</a>
+  <a class="z" href="#zE"><b>E</b>가격 비교·소개</a>
+  <a class="z" href="#zF"><b>F</b>예약 버튼</a>
+  <span class="toc-sep"></span>
+  <a href="#over"><b>④</b>팝업·시트</a>
+  <a href="#exc">예외 케이스</a>
+  <a href="#gap">정책서에 채울 것</a>
+</nav>
+
+<section class="sec major" id="flow">
+  <div class="sec-hd"><h2>① 화면 흐름 · 데이터</h2></div>
+  <div class="box">
+    <div class="flow"><span>검색 결과 카드 · AI 추천</span><i>→</i><span>숙소 상세 (목록에서 받은 값으로 먼저 그림)</span><i>→</i><span>사진·전체 예약처 채우기</span></div>
+    <div class="flow" style="margin-top:8px"><span>예약처 한 줄 또는 [적립 최대 N%로 예약]</span><i>→</i><span>아웃링크 (<a href="f_sout.html">F-SOUT</a>)</span></div>
+    <div class="flow" style="margin-top:8px"><span>날짜 바 펼치기</span><i>→</i><span>날짜·인원 바꾸기</span><i>→</i><span>[이 조건으로 다시 검색]</span><i>→</i><span>이 숙소를 새 조건으로 다시 불러옴</span></div>
+  </div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>요청</th><th>언제</th><th>받는 값 (화면에 쓰는 것)</th></tr>
+    <tr><td><code>GET /api/search/hotel/{khotel ID}</code></td><td>화면을 열 때(KAYAK 숙소) · 다시 검색할 때 — <code>checkin</code> · <code>checkout</code> · <code>rooms</code></td><td>사진 목록 · <b>전체 예약처</b>(총액·적립률·로고·객실명·무료 취소·예약 주소) · 설명 · 리뷰 수</td></tr>
+    <tr><td colspan="3">받는 동안 사진 위에 "가격을 더 불러오는 중…"(A2) · 실패해도 목록에서 받은 값으로 그린 화면을 그대로 둡니다(안내 없음)</td></tr>
+  </table></div>
+</section>
+
+<section class="sec major" id="layout">
+  <div class="sec-hd"><span class="sid">F-SDET-L</span><h2>② 페이지 구성</h2></div>
+  <p class="sec-sub">검색 결과 첫 번째 숙소. 긴 화면 전체.</p>
+  <div class="two-col unit">
+    <div><figure class="shot" data-id="F-SDET-L" data-base="../"></figure></div>
+    <div>
+      <div class="box wrapx" style="margin-bottom:12px"><table class="t">
+        <tr><th>영역</th><th>들어가는 요소</th><th>배치·동작</th><th>상태에 따라 바뀌는 것</th></tr>
+        <tr class="zrow" data-n="A"><td><b>A</b> 사진</td><td>사진 · [←] · N / N · 좌우 화살표 · [사진 모두 보기]</td><td>맨 위 · 스크롤되면 올라감</td><td>실제 사진 / 색 띠 자리</td></tr>
+        <tr class="zrow" data-n="B"><td><b>B</b> 숙소 정보</td><td>이름 · 주소 · 평점 · 성급·유형</td><td>—</td><td>—</td></tr>
+        <tr class="zrow" data-n="C"><td><b>C</b> 날짜·인원</td><td>요약 바 · (펼치면) 날짜·인원 · [이 조건으로 다시 검색]</td><td>누르면 펼침</td><td>접힘 / 펼침</td></tr>
+        <tr class="zrow" data-n="D"><td><b>D</b> 적립 띠</td><td>"이 숙소는 최대 N% · NP 쌓여요"</td><td>노란 띠</td><td>—</td></tr>
+        <tr class="zrow" data-n="E"><td><b>E</b> 가격 비교·소개</td><td>예약처별 가격 비교 → 숙소 설명 · 리뷰 · 위치 · 편의시설 · 이용 안내</td><td>세로로 이어짐</td><td>예약처 수</td></tr>
+        <tr class="zrow" data-n="F"><td><b>F</b> 예약 버튼</td><td>최저가 · [적립 최대 N%로 예약]</td><td>화면 아래 고정</td><td>—</td></tr>
+      </table></div>
+      <div class="cn"><div class="cn-hd">화면 공통 규칙</div>
+        <ul><li>2뎁스 — 하단 탭 없음. [←]로 검색 결과(같은 결과).</li><li>F만 아래에 고정되고 나머지는 스크롤됩니다. 열 때 맨 위부터.</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec major" id="detail" style="margin-bottom:0">
+  <div class="major-hd"><h2>③ 영역별 상세 — 기능 · 정의 · 정책</h2></div>
+  <p class="sec-sub">영역마다 상태별 캡처를 잘라 나란히 놓았습니다. 같은 영역 안에서는 상태가 달라도 같은 번호가 같은 요소입니다.</p>
+</section>
+
+<section class="sec zsec" id="zA">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">A</span><h2>사진</h2><span class="tag proto">프로토 기준</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-SDET-A1 <small>실제 사진</small></div><figure class="shot" data-id="F-SDET-A1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-SDET-A2 <small>예약처 더 받는 중</small></div><figure class="shot" data-id="F-SDET-A2" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-SDET-A3 <small>사진 없음 — 색 띠</small></div><figure class="shot" data-id="F-SDET-A3" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>[←]</div><ul><li>검색 결과로 돌아갑니다.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>「N / 전체」</div></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>[‹] [›]</div><ul><li>한 장씩 넘깁니다. 끝에서 넘기면 처음으로.</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>[사진 모두 보기]</div><ul><li>사진 시트(X2) — 한 장을 누르면 그 사진으로 돌아옵니다.</li></ul></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>사진 위 작은 글씨</div>
+      <ul><li>A2: "가격을 더 불러오는 중…" — 상세를 받는 동안만.</li>
+          <li>A3: "사진 자리 · 시연용" — KAYAK 사진이 없을 때 색 띠 6장(외관·객실·욕실·수영장·조식·전망)으로 자리만 잡습니다.</li></ul>
+      <div class="case">실서비스에서 사진이 없는 숙소를 어떻게 보여 줄지 정하지 않았습니다 <span class="tag open">미결</span> G3</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zB">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">B</span><h2>숙소 정보</h2></div>
+  <div class="shots-row"><div class="sw"><div class="lb">F-SDET-B1</div><figure class="shot" data-id="F-SDET-B1" data-base="../"></figure></div></div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>숙소 이름</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>도시 · 주소</div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>★ 평점</div></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>성급 · 유형</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zC">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">C</span><h2>날짜·인원</h2><span class="tag proto">프로토 기준</span></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-SDET-C1 <small>접힘</small></div><figure class="shot" data-id="F-SDET-C1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-SDET-C2 <small>펼침</small></div><figure class="shot" data-id="F-SDET-C2" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>요약 바 — 📅 날짜 · 👤 인원 · 🛏 객실 · [∨]</div><ul><li>누르면 펼치고 다시 누르면 접힙니다.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>체크인 – 체크아웃</div><ul><li>누르면 달력 창.</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>투숙객 · 객실</div><ul><li>누르면 인원 창.</li></ul></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>[이 조건으로 다시 검색]</div><ul><li>접고 로딩 → 이 숙소를 새 날짜·인원으로 다시 불러옴 → 토스트 "조건을 반영해 다시 불러왔어요".</li></ul></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zD">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">D</span><h2>적립 띠</h2></div>
+  <div class="shots-row"><div class="sw"><div class="lb">F-SDET-D1</div><figure class="shot" data-id="F-SDET-D1" data-base="../"></figure></div></div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>"💰 이 숙소는 최대 N% · NP 쌓여요"</div>
+      <ul><li>N% = 이 숙소 예약처 중 <b>가장 높은 적립률</b> · NP = 예약처 중 <b>가장 많이 받을 수 있는 포인트</b>(기본 + 뽑기 최대). 둘이 다른 예약처일 수 있습니다(비싼 곳은 비율이 낮아도 포인트가 많을 수 있음).</li>
+          <li>「최대」인 이유 — 뽑기 몫은 뽑아야 정해집니다(꽝 없이 최소 10P).</li></ul>
+      <div class="rule"><b>근거</b> 예약 적립 = 기본 + 뽑기 (<a href="../policy/pol_point.html#s4">포인트 4절</a>)</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zE">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">E</span><h2>가격 비교 · 소개</h2></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-SDET-E1 <small>예약처별 가격 비교</small></div><figure class="shot" data-id="F-SDET-E1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-SDET-E2 <small>설명 · 리뷰 · 위치 · 편의시설 · 이용 안내</small></div><figure class="shot" data-id="F-SDET-E2" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「예약처별 가격 비교 · N곳」</div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>예약처 로고</div><ul><li>로고가 없으면 이름 글자.</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>「최저가」 / 「적립 최대」</div><ul><li>가장 싼 곳 / 적립 포인트가 가장 많은 곳. 한 곳이 둘 다일 수 있습니다.</li></ul></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>객실명 · 조건(「무료 취소」 등)</div><ul><li>KAYAK이 객실명을 주면 그것을, 안 주면 시연용 이름을 씁니다.</li></ul></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>총액 「N원」</div><ul><li>세금·수수료 포함 · 선택한 박수 전체.</li></ul></div>
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>"최대 NP 적립"</div><ul><li>그 예약처 적립률로 계산한 최대(기본 + 뽑기 최대).</li></ul></div>
+    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>[›] — 줄 전체가 버튼</div>
+      <ul><li>누르면 그 예약처로 아웃링크(<a href="f_sout.html">F-SOUT</a>).</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>[다른 가격 더보기 (N곳) ▽]</div><ul><li>5곳씩 더.</li></ul></div>
+    <div class="cn" data-n="9"><div class="cn-hd"><span class="no">9</span>"적립 = 예약 완료 시 <b>기본 1%</b> + <b>뽑기로 최대 N%</b>까지"</div>
+      <ul><li>기본 비율은 어드민 설정 「예약 기본 적립 요율」을 따릅니다.</li></ul>
+      <div class="case">「예약 완료 시」라고 쓰여 있지만 실제 적립은 <b>체크아웃 7일 뒤</b>입니다(#37) — 문구가 오해를 줄 수 있습니다 <span class="tag open">미결</span> G4</div></div>
+    <div class="cn" data-n="10"><div class="cn-hd"><span class="no">10</span>숙소 설명</div><ul><li>3줄까지 · [더보기 ＋] / [접기 －]. KAYAK 설명이 없으면 시연용 문장.</li></ul></div>
+    <div class="cn" data-n="11"><div class="cn-hd"><span class="no">11</span>리뷰 — 평점 · 「최고예요/매우 좋음」 · 건수 · 항목별 막대</div><ul><li>항목 점수는 <b>시연용</b>(평점 주변으로 흩은 값). 4개 → [전체 보기 ▽].</li></ul></div>
+    <div class="cn" data-n="12"><div class="cn-hd"><span class="no">12</span>위치 — 「🗺 지도 자리 · 시연용」 · 주소</div></div>
+    <div class="cn" data-n="13"><div class="cn-hd"><span class="no">13</span>편의시설 6개 · [전체 편의시설 보기]</div><ul><li>X1 시트. 시연용 목록.</li></ul></div>
+    <div class="cn" data-n="14"><div class="cn-hd"><span class="no">14</span>이용 안내 — 체크인 15:00 · 체크아웃 12:00</div><ul><li>시연용 고정값.</li></ul></div>
+    <div class="cn" data-n="15"><div class="cn-hd"><span class="no">15</span>"사진·리뷰·편의시설·객실 조건은 시연용 가상 데이터입니다."</div><ul><li>시연 장치 — 개발 대상이 아닙니다.</li></ul></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zF">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">F</span><h2>예약 버튼</h2><span class="tag proto">프로토 기준</span></div>
+  <div class="shots-row"><div class="sw"><div class="lb">F-SDET-F1</div><figure class="shot" data-id="F-SDET-F1" data-base="../"></figure></div></div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「N원 / N박 최저가」</div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>[적립 최대 N%로 예약]</div>
+      <ul><li>누르면 <b>가장 싼 예약처</b>로 아웃링크합니다.</li></ul>
+      <div class="case">버튼 글자는 「적립 최대 N%」인데 실제로는 <b>최저가 예약처</b>로 갑니다 — 적립이 가장 많은 곳과 다를 수 있습니다 <span class="tag open">미결</span> G2</div></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec major" id="over">
+  <div class="sec-hd"><h2>④ 팝업·시트</h2></div>
+  <p class="sec-sub">전체 화면을 덮으므로 자르지 않습니다. 공통 동작은 <a href="../common/c_layer.html">C-LAYER</a>를 따릅니다.</p>
+  <div class="two-col unit sub-item">
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-SDET-X1 <small style="font-weight:400">편의시설 전체</small></div><figure class="shot" data-id="F-SDET-X1" data-base="../"></figure></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「편의시설」</div></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>분류별 목록</div><ul><li>시연용 목록.</li></ul></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>[닫기]</div><ul><li>바깥을 눌러도 닫힙니다.</li></ul></div>
+    </div>
+  </div>
+  <div class="two-col unit sub-item">
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-SDET-X2 <small style="font-weight:400">사진 모두 보기 — 사진이 없을 때 (P24)</small></div><figure class="shot" data-id="F-SDET-X2" data-base="../"></figure></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「사진 N장」</div></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>사진 칸 (2열)</div><ul><li>누르면 그 사진으로 바뀌고 시트가 닫힙니다. 실제 사진이 있으면 사진이, 없으면 색 띠와 이름이 나옵니다.</li></ul></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>"실제 사진이 아직 없어 <b>색 띠로 자리만</b> 잡았어요."</div>
+        <ul><li>사진이 없을 때만 나오는 시연 안내입니다.</li></ul>
+        <div class="rule"><b>근거</b> 문구 해요체 (P24 · <a href="../common/c_layer.html#R8">C-LAYER R8</a>)</div></div>
+      <div class="cn"><div class="cn-hd">동작</div><ul><li>바깥을 누르면 닫힙니다.</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="exc">
+  <div class="sec-hd"><h2>예외 케이스</h2></div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>#</th><th>상황</th><th>화면 동작</th></tr>
+    <tr><td>E1</td><td>상세를 받는 데 실패</td><td>목록에서 받은 값(대표 사진·예약처 일부)으로 그린 화면 그대로 · 안내 없음</td></tr>
+    <tr><td>E2</td><td>상세를 받는 사이 다른 숙소로 이동</td><td>늦게 온 응답은 화면에 그리지 않음</td></tr>
+    <tr><td>E3</td><td>예약처가 5곳 이하</td><td>[다른 가격 더보기] 없음</td></tr>
+    <tr><td>E4</td><td>비로그인</td><td>똑같이 보이고 아웃링크도 됩니다 — 로그인 안내는 아웃링크 화면에서도 없음(<a href="f_sout.html#gap">F-SOUT G1</a>)</td></tr>
+  </table></div>
+</section>
+
+<section class="sec zsec" id="gap">
+  <div class="sec-hd"><h2>정책서에 채울 것</h2><span class="tag open">미결</span></div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>#</th><th>정할 것</th><th>지금 구현</th></tr>
+    <tr><td>G1</td><td>예약처 정렬 기준(가격순 / 적립순)과 한 번에 보이는 수</td><td>싼 순서 · 5곳씩</td></tr>
+    <tr><td>G2</td><td>아래 [적립 최대 N%로 예약] 버튼이 갈 예약처</td><td>최저가 예약처(글자는 「적립 최대」)</td></tr>
+    <tr><td>G3</td><td>사진이 없는 숙소 · 지도 · 리뷰 항목 점수 · 편의시설을 실데이터로 채울지</td><td>시연용 가상 데이터</td></tr>
+    <tr><td>G4</td><td>「적립 = 예약 완료 시 …」 문구 — 체크아웃 7일 뒤 적립(#37)과 맞추기</td><td>「예약 완료 시」</td></tr>
+  </table></div>
+</section>
+
+</main>
+<script src="../shots/markers.js"></script>
+<script src="../policy/pol_point_data.js"></script>
+<script src="../wf-reward.js"></script>
+</body>
+</html>
