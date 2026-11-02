@@ -5,22 +5,28 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>F-NOTI 알림함 — 픽콕 리워드 화면기획서</title>
 <link rel="stylesheet" href="../wf-reward.css">
-<!-- 근거: 구현물 pickoq_demo static/app.js viewNoti·ntItem·ntDetail·openNoti·toggleNoti·readAllNoti · api.js checkNoti·showNotiToast · api_noti.py (2026-10-27)
-     캡처는 [모두 읽음]을 누르지 않았다. 알림을 펼치면 읽음이 되는데 8910 사본 DB에서만 바뀐다.
-     X1 토스트는 구현 함수를 밖에서 부를 수 없어 같은 마크업을 넣어 띄웠다(문구는 예약 적립 알림 형식) -->
+<!-- 2026-11-02 실개발 기준으로 다시 씀(PO). 근거: pickoq-front feature/reward src/features/reward/ui/NotificationsScreen.tsx ·
+     RewardBell.tsx · messages/ko-KR.json reward.noti / pickoq-backend NotificationService(개인 + 전체 공지 · 최신 100건) ·
+     NotificationRepository(안 읽은 수 = 개인 안 읽음 + 안 읽은 공지) · resources/messages/noti_ko.properties(알림 문구) ·
+     batch RewardNotiService(소멸 안내 매달 1일·매주 월요일 · 90일 지나면 삭제)
+     정책변경 C20③(게시판 형태 · 종 → 알림함) · C23(새 회원도 최근 90일 공지)
+     캡처: 캡처 사본 dev 계정 — 개인 알림 2건·공지 1건을 잠시 안 읽음으로 바꿔 찍고 읽음 기록을 되돌림(_capture/cap_r_noti.py) -->
 </head>
 <body data-key="f_noti" data-base="../">
 <script src="../wf-nav.js"></script>
 <main class="page">
 
-<div class="top"><span class="sid">F-NOTI</span><h1>알림함 · 새 알림 토스트</h1></div>
+<div class="top"><span class="sid">F-NOTI</span><h1>알림함</h1></div>
 <div class="meta">
-  <span>기준 정책서 <b><a href="../policy/pol_noti.html#s4">리워드 알림 v0.1 · 2~5절</a></b></span>
-  <span>기준 구현물 <b>pickoq_demo</b> <code>static/app.js</code> · <code>api.js</code> (2026-10-27)</span>
-  <span>캡처 <b>2026-10-28</b> · 390×844</span>
-  <span>최종수정 <b>2026-10-28</b></span>
+  <span>기준 <b>실개발</b> 고객 웹 <code>feature/reward</code> (2026-11-02) · 정책 <b><a href="../policy/pol_noti.html#s4">리워드 알림 · 2~4절</a></b> + 정책변경 C20·C23</span>
+  <span>캡처 <b>2026-11-02</b> · 390×844 · 시연 데이터</span>
+  <span>최종수정 <b>2026-11-02</b></span>
 </div>
-<p class="lead">회원에게 온 알림을 모아 보는 <b>게시판</b>입니다. 알림은 모두 <b>서버가 만들고</b>, 앱을 켜 둔 동안 새 알림이 오면 화면 위에 <b>토스트</b>로 잠깐 보여 줍니다. 휴대폰 푸시는 앱 출시 때 붙입니다.</p>
+<p class="lead">회원에게 온 알림과 전체 공지를 모아 보는 <b>게시판</b>입니다. 리워드 화면 머리의 <b>알림 종</b>(로그인 회원만)과 마이페이지 「알림함」으로 들어옵니다. 알림은 모두 서버가 만듭니다.</p>
+
+<div class="box note-design"><b>화면 모습은 디자인 확정 전입니다.</b> 이 문서는 <b>기능과 정책</b>을 기준으로 읽어 주세요. 캡처 속 알림은 시연 데이터입니다.</div>
+
+<div class="box note-later"><b>프로토에 있던 것 중 실개발에 없는 것</b> — ① 앱을 켜 둔 동안 새 알림이 오면 위에 뜨는 <b>새 알림 토스트</b> ② <b>휴대폰 알림 권한 안내 띠</b>. 둘 다 휴대폰 푸시와 함께 앱 출시 때 다시 정합니다(앱은 개발자 인계 · C22).</div>
 
 <div class="box">
   <h3>읽는 법</h3>
@@ -28,130 +34,91 @@
     <span><b style="color:var(--zone)">붉은 점선 상자 A~D</b> 화면의 영역</span>
     <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능 — 마우스를 올리면 설명과 함께 강조</span>
     <span>「N-N절」을 누르면 그 절만 팝업으로 열립니다</span>
-    <span>표시 없음 = 정책서 근거 있음</span>
-    <span><span class="tag proto">프로토 기준</span> 정책서에 아직 없음</span>
+    <span><span class="tag proto">실개발 기준</span> 정책서에 아직 없음</span>
     <span><span class="tag open">미결</span> 바뀔 수 있음</span>
   </div>
 </div>
 
+<!-- 변경이력: 개발자 공유 이후부터 노출 -->
+<div class="box hist"><h3>변경이력</h3>
+  <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
+    <tr><td>v0.2</td><td>2026-11-02</td><td>실개발 기준으로 다시 씀 — 캡처 10장. 게시판 형태(C20③) · 누르면 펼침+읽음 · 포인트 알림은 [포인트 내역 보기] · 전체 공지 함께(새 회원도 최근 90일 · C23) · 새 알림 토스트·알림 권한 띠 없음</td></tr>
+    <tr><td>v0.1</td><td>2026-10-27</td><td>최초 작성 — 프로토 기준</td></tr></table></div>
+
 <div class="sec-policy">
-  <h3>⚙ 공통 정책 — 알림 전체</h3>
+  <h3>⚙ 공통 정책 — 알림함 전체</h3>
   <ul>
-    <li><b>로그인 회원만</b> 받습니다. 비로그인은 알림 종이 없고, 알림함에 들어오려 하면 로그인 시트가 뜹니다. (<a href="../policy/pol_noti.html#s4-1">4-1절</a>)</li>
-    <li>알림은 <b>정보성만</b> — 적립·사용·본인인증·운영 공지. <b>광고성(마케팅) 알림은 이번에 넣지 않습니다.</b> (<a href="../policy/pol_noti.html#s1-2">1-2절</a> · PO 확정 2026-10-27)</li>
-    <li>본인인증 전이라 <b>보류된 적립(적립대기)에는 알림을 보내지 않고</b>, 인증으로 지급될 때 1건 보냅니다. (<a href="../policy/pol_noti.html#s0">0절</a> · <a href="../policy/pol_earn.html#s1-6">참여형 1-6절</a>)</li>
-    <li>예약 적립 알림은 <b>적립완료일(체크아웃 + 7일)</b>에 1건, 소멸 예정 알림은 <b>매달 1회 요약 + 임박 안내</b>입니다. (<a href="../policy/pol_noti.html#s2">2절</a> · <a href="../policy/pol_noti.html#s3">3절</a> · PO 확정 2026-10-27)</li>
-    <li>알림은 <b>90일</b> 보관하고, 소멸 예정 알림은 소멸일이 지나면 지웁니다. (<a href="../policy/pol_noti.html#s4-6">4-6절</a>)</li>
+    <li><b>게시판 형태</b> — 캐릭터·파란 머리 없이 제목 줄 + 목록. 리워드 화면의 알림 종을 누르면 여기로 옵니다. <span class="tag proto">실개발 기준</span> C20③</li>
+    <li>목록 = <b>내 알림 + 전체 공지</b>, 최신순 <b>최근 100건</b>. 알림은 <b>90일이 지나면 매일 밤 자동으로 지워집니다</b> — 그래서 새로 가입한 회원도 최근 90일 안의 전체 공지를 봅니다. (<a href="../policy/pol_noti.html#s4-2">4-2절</a>) <span class="tag proto">실개발 기준</span> C23</li>
+    <li>알림 문구는 서버가 회원이 보는 언어로 만듭니다(지금은 한국어). 종류는 아래 「알림 종류」 표.</li>
+    <li>안 읽은 수 = 안 읽은 내 알림 + 안 읽은 공지. 알림 종 배지에 같은 숫자(99건 넘으면 99+). (<a href="../policy/pol_noti.html#s4-3">4-3절</a>)</li>
   </ul>
-  <div class="src">기준: 리워드 알림 정책서 v0.1 · 1~5절</div>
+  <div class="src">기준: 리워드 알림 정책서 2~4절 / 정책변경 C20 · C22 · C23 / 화면은 실개발 고객 웹(2026-11-02)</div>
 </div>
 
 <nav class="toc" aria-label="이 페이지 바로가기">
   <span class="toc-lb">바로가기</span>
   <a href="#flow"><b>①</b>화면 흐름·데이터</a>
-  <a href="#kinds">알림 종류</a>
   <a href="#layout"><b>②</b>페이지 구성</a>
   <span class="toc-sep"></span>
-  <a class="z" href="#zA"><b>A</b>위쪽</a>
-  <a class="z" href="#zV"><b>V</b>권한 안내 띠</a>
+  <a class="z" href="#zA"><b>A</b>제목 줄</a>
   <a class="z" href="#zB"><b>B</b>개수 줄</a>
   <a class="z" href="#zC"><b>C</b>알림 목록</a>
   <a class="z" href="#zD"><b>D</b>안내</a>
   <span class="toc-sep"></span>
-  <a href="#over"><b>④</b>새 알림 토스트</a>
+  <a href="#kinds">알림 종류</a>
   <a href="#exc">예외 케이스</a>
 </nav>
 
 <section class="sec major" id="flow">
   <div class="sec-hd"><h2>① 화면 흐름 · 데이터</h2></div>
   <div class="box">
-    <div class="flow"><i>들어오는 곳:</i><span>위쪽 알림 종</span><span>마이페이지 › 알림함</span><span>새 알림 토스트 누르기</span></div>
-    <div class="flow" style="margin-top:8px"><span>알림함 열기</span><i>→</i><span>서버에서 목록 받기</span><i>→</i><span>알림 누르기</span><i>→</i><span>펼침 + 읽음</span><i>→</i><span>[포인트 내역 보기]</span></div>
-    <div class="flow" style="margin-top:8px"><span>앱을 켜 둔 동안</span><i>→</i><span>일정 간격으로 새 알림 확인</span><i>→</i><span>배지 갱신 · 새 알림이면 토스트</span></div>
+    <div class="flow"><span>알림 종 / 마이페이지 「알림함」</span><i>→</i><span>알림함</span><i>→</i><span>줄 누르기 → 펼침 + 읽음</span><i>→</i><span>(포인트 알림) [포인트 내역 보기] → <a href="f_point.html">F-POINT</a></span></div>
+    <div class="flow" style="margin-top:8px"><i>모두 읽음:</i><span>[모두 읽음]</span><i>→</i><span>토스트 "모두 읽음으로 표시했어요" · 빨간 점 사라짐 · 종 배지 0</span></div>
+    <div class="flow" style="margin-top:8px"><i>비로그인:</i><span>(주소로 들어옴)</span><i>→</i><span>"로그인하면 적립·소멸 알림을 볼 수 있어요" + [로그인하기]</span></div>
   </div>
   <div class="box wrapx"><table class="t">
-    <tr><th>요청</th><th>언제</th><th>받는 값 (화면에 쓰는 것)</th></tr>
-    <tr><td><code>GET /api/noti</code></td><td>알림함을 열 때</td><td><code>notifications[]</code> — 제목·본문·종류·만든 시각·안 읽음 · 최근 100건 / <code>unread</code></td></tr>
-    <tr><td><code>GET /api/noti/unread</code></td><td>앱을 켜 둔 동안 일정 간격(구현 5초 · <span class="tag open">미결</span> R-N5)</td><td><code>unread</code> 안 읽은 수 · <code>latest</code> 가장 최근 안 읽은 알림 1건(토스트용)</td></tr>
-    <tr><td><code>POST /api/noti/read</code></td><td>알림을 펼칠 때(<code>id</code>) · [모두 읽음](<code>id</code> 없음)</td><td><code>unread</code></td></tr>
-  </table></div>
-</section>
-
-<section class="sec major" id="kinds">
-  <div class="sec-hd"><h2>알림 종류 (서버가 만든다)</h2></div>
-  <p class="sec-sub">제목·본문은 구현물 문구 그대로입니다. 전체 표는 정책서 <a href="../policy/pol_noti.html#s2">2절</a>에 있습니다.</p>
-  <div class="box wrapx"><table class="t">
-    <tr><th>분류</th><th>보내는 때 → 제목</th><th>[포인트 내역 보기]</th></tr>
-    <tr><td>출석 · 퀴즈 · 친구 추천 · 혜택</td><td>적립할 때 → 「출석 적립 +NP」 · 「퀴즈 +NP」 · 「친구가 가입했어요 +NP」 · 「혜택 적립 +NP」 등</td><td>있음 · <b>퀴즈 0P 알림은 없음</b></td></tr>
-    <tr><td>예약</td><td><b>적립완료일</b> → 「예약 적립 +NP」(예약할 때는 알림 없음 · 본인인증 전이면 확정 때 적립대기) · 뽑기 → 「뽑기 NP 추가 적립」</td><td>있음</td></tr>
-    <tr><td>본인인증</td><td>인증 완료(관리자가 인증 처리해도 같음) → 「본인인증이 완료됐어요」 · 적립대기 지급 → 「적립대기 포인트 +NP」</td><td>지급 알림만</td></tr>
-    <tr><td>관리자 지급·회수</td><td>「포인트가 지급됐어요 (+NP)」 · 미인증 회원은 알림 없음</td><td>있음</td></tr>
-    <tr><td>소멸 예정</td><td>매달 1일 「다음 달 소멸 예정 NP」 · <b>매주 월요일</b> 「7일 안에 NP가 소멸돼요」 · 본문 "포인트 내역에서 소멸 예정일을 확인할 수 있어요." · 본인인증 전 회원·0P는 보내지 않음 · 같은 안내는 한 번만 <span class="tag open">R-N2</span> 최소 금액</td><td>있음</td></tr>
-    <tr><td>현금 전환 · 픽샵</td><td>출금 접수·완료·반려 · 쿠폰 발행·재발행·지연 · 구매 취소 환불 (포인트 사용 묶음에서 자세히)</td><td>있음 · <b>쿠폰 알림은 [쿠폰함 보기]</b></td></tr>
-    <tr><td>공지</td><td>관리자가 보냄 (<a href="../admin/a_noti.html">A-NOTI</a>)</td><td>없음</td></tr>
+    <tr><th>요청</th><th>언제</th><th>받는 값</th></tr>
+    <tr><td><code>GET /api/v1/member/{회원}/reward/notifications</code></td><td>화면을 열 때 · 읽음 뒤</td><td><code>unreadCount</code> 안 읽은 수 · <code>total</code> 전체 수 · <code>items[]</code> — 제목 · 본문 · 일시 · 읽음 · 이동(<code>POINT</code> / 없음)</td></tr>
+    <tr><td>알림 하나 읽음</td><td>안 읽은 줄을 펼칠 때</td><td>— (실패해도 내용은 보여 줌)</td></tr>
+    <tr><td>모두 읽음</td><td>[모두 읽음]</td><td>읽음 처리한 수</td></tr>
   </table></div>
 </section>
 
 <section class="sec major" id="layout">
   <div class="sec-hd"><span class="sid">F-NOTI-L</span><h2>② 페이지 구성</h2></div>
-  <p class="sec-sub">로그인 회원 · 휴대폰 알림 권한 허용 · 세 번째 알림만 읽은 상태입니다.</p>
-  <div class="two-col unit">
-    <div><figure class="shot" data-id="F-NOTI-L" data-base="../"></figure></div>
-    <div>
-      <div class="box wrapx" style="margin-bottom:12px"><table class="t">
-        <tr><th>영역</th><th>들어가는 요소</th><th>상태에 따라 바뀌는 것</th></tr>
-        <tr class="zrow" data-n="A"><td><b>A</b> 위쪽</td><td>[←] · 「알림」 · [모두 읽음]</td><td>안 읽은 알림이 없으면 [모두 읽음] 꺼짐</td></tr>
-        <tr><td><b>V</b> 권한 안내 띠</td><td>기기 알림 꺼짐 안내 · [설정 열기]</td><td>권한이 꺼졌을 때만 (캡처에는 없음)</td></tr>
-        <tr class="zrow" data-n="B"><td><b>B</b> 개수 줄</td><td>안 읽은 수 · 전체 수</td><td>안 읽은 알림 0건이면 「새 알림이 없어요」</td></tr>
-        <tr class="zrow" data-n="C"><td><b>C</b> 알림 목록</td><td>알림 한 줄씩 · 최신순</td><td>안 읽음 / 읽음 / 펼침 · 없으면 빈 상태</td></tr>
-        <tr class="zrow" data-n="D"><td><b>D</b> 안내</td><td>보관 기간 · 포인트 내역 안내</td><td>바뀌지 않음</td></tr>
-      </table></div>
-      <div class="cn"><div class="cn-hd">화면 공통 규칙</div>
-        <ul><li><b>2뎁스 화면</b> — 하단 탭 없음 · [←]로 들어온 화면에 돌아갑니다.</li>
-            <li>게시판 형태입니다 — 공작새 그림·히어로 영역을 쓰지 않습니다.</li>
-            <li>A는 위에 고정, V~D가 함께 스크롤됩니다.</li></ul></div>
-    </div>
+  <p class="sec-sub">왼쪽 = 로그인 회원(안 읽은 알림 3건), 오른쪽 = 비로그인.</p>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-NOTI-L <small>로그인</small></div><figure class="shot" data-id="F-NOTI-L" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-NOTI-L0 <small>비로그인</small></div><figure class="shot" data-id="F-NOTI-L0" data-base="../"></figure></div>
   </div>
+  <div class="box wrapx" style="margin-top:12px"><table class="t">
+    <tr><th>영역</th><th>들어가는 요소</th><th>배치·동작</th></tr>
+    <tr class="zrow" data-n="A"><td><b>A</b> 제목 줄</td><td>[←] · 「알림」 · [모두 읽음]</td><td>흰 줄 · 위에 고정</td></tr>
+    <tr class="zrow" data-n="B"><td><b>B</b> 개수 줄</td><td>안 읽은 알림 N건 · 전체 N건</td><td>목록 위</td></tr>
+    <tr class="zrow" data-n="C"><td><b>C</b> 알림 목록</td><td>줄마다 빨간 점 · 제목 · 본문 한 줄 · 일시 · ›</td><td>흰 카드 하나에 줄이 이어짐</td></tr>
+    <tr class="zrow" data-n="D"><td><b>D</b> 안내</td><td>안내 2줄</td><td>목록 아래 글</td></tr>
+  </table></div>
+  <div class="cn"><div class="cn-hd">화면 공통 규칙</div>
+    <ul><li>2뎁스 — 하단 탭 없음. 화면 전체가 한 번에 스크롤되고 제목 줄은 위에 붙어 있습니다. 더 보기·쪽 나눔 없음.</li></ul></div>
 </section>
 
 <section class="sec major" id="detail" style="margin-bottom:0">
   <div class="major-hd"><h2>③ 영역별 상세 — 기능 · 정의 · 정책</h2></div>
-  <p class="sec-sub">영역마다 상태별 캡처를 잘라 나란히 놓았습니다. 같은 영역 안에서는 상태가 달라도 같은 번호가 같은 요소입니다.</p>
 </section>
 
 <section class="sec zsec" id="zA">
   <div class="unit">
-  <div class="zone-hd"><span class="zl">A</span><h2>위쪽</h2></div>
-  <div class="shots-row">
-    <div class="sw"><div class="lb">F-NOTI-A1 <small>안 읽은 알림 있음</small></div><figure class="shot" data-id="F-NOTI-A1" data-base="../"></figure></div>
-    <div class="sw"><div class="lb">F-NOTI-A2 <small>모두 읽음</small></div><figure class="shot" data-id="F-NOTI-A2" data-base="../"></figure></div>
-  </div>
-  <div class="detail"><div class="ann">
-    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>[←] / 개수 줄 (A2)</div>
-      <ul><li>[←]는 들어온 화면으로 돌아갑니다.</li>
-          <li>A2의 ①은 아래 개수 줄 — 다 읽으면 「새 알림이 없어요」로 바뀝니다(B 영역).</li></ul></div>
-    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>「알림」</div></div>
-  </div><div class="ann">
-    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>[모두 읽음]</div>
-      <ul><li><b>안 읽은 알림이 있을 때만</b> 켜집니다(A2는 꺼짐 — 흐린 글씨).</li>
-          <li>누르면 전부 읽음 → 파란 점이 모두 사라지고 토스트 "모두 읽음으로 표시했어요". 확인창 없음.</li></ul>
-      <div class="rule"><b>근거</b> 읽음 (<a href="../policy/pol_noti.html#s4-3">4-3절</a>)</div></div>
-  </div></div>
-  </div>
-</section>
-
-<section class="sec zsec" id="zV">
-  <div class="unit">
-  <div class="zone-hd"><span class="zl">V</span><h2>휴대폰 알림 권한 안내 띠</h2></div>
+  <div class="zone-hd"><span class="zl">A</span><h2>제목 줄</h2></div>
   <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
-    <div class="shots-row"><div class="sw"><div class="lb">F-NOTI-V1 <small>권한 꺼짐</small></div><figure class="shot" data-id="F-NOTI-V1" data-base="../"></figure></div></div>
+    <div class="shots-row"><div class="sw"><div class="lb">F-NOTI-A1</div><figure class="shot" data-id="F-NOTI-A1" data-base="../"></figure></div>
+      <div class="sw"><div class="lb">F-NOTI-T1 <small>모두 읽음 토스트</small></div><figure class="shot" data-id="F-NOTI-T1" data-base="../" data-only="-"></figure></div></div>
     <div class="ann">
-      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>"기기 알림이 꺼져 있어요" · "포인트 적립·소멸 안내를 받지 못해요"</div>
-        <ul><li>휴대폰에서 픽콕 알림 권한이 꺼졌을 때만 맨 위에 나옵니다.</li>
-            <li>꺼져 있어도 <b>알림함에는 그대로 쌓입니다</b> — 휴대폰 화면으로 오지 않을 뿐입니다.</li></ul></div>
-      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>[설정 열기]</div>
-        <ul><li>휴대폰 설정의 픽콕 알림 화면으로 이동합니다(시연은 토스트). 설정 화면의 권한 행과 같습니다(<a href="f_set.html#zA">F-SET A</a>).</li></ul>
-        <div class="rule"><b>근거</b> 권한 안내 (<a href="../policy/pol_noti.html#s4-5">4-5절</a>)</div></div>
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>[←]</div><ul><li>이전 화면으로. 돌아갈 곳이 없으면 첫 화면.</li></ul></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>「알림」</div></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>[모두 읽음] — 로그인만</div>
+        <ul><li>안 읽은 알림이 있을 때만 파랗게 켜집니다(없으면 회색 · B2).</li>
+            <li>누르면 모두 읽음 → 토스트 "모두 읽음으로 표시했어요"(T1). 실패하면 "잠시 후 다시 시도해 주세요".</li></ul></div>
     </div>
   </div>
   </div>
@@ -160,16 +127,15 @@
 <section class="sec zsec" id="zB">
   <div class="unit">
   <div class="zone-hd"><span class="zl">B</span><h2>개수 줄</h2></div>
-  <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
-    <div class="shots-row"><div class="sw"><div class="lb">F-NOTI-B1</div><figure class="shot" data-id="F-NOTI-B1" data-base="../"></figure></div></div>
-    <div class="ann">
-      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「안 읽은 알림 N건」</div>
-        <ul><li>N은 파란 굵은 글씨. 0건이면 「새 알림이 없어요」(A2).</li></ul></div>
-      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>「전체 N건」</div>
-        <ul><li>목록에 있는 알림 수 — <b>최근 100건</b>까지 보여 줍니다.</li></ul>
-        <div class="rule"><b>근거</b> 목록 (<a href="../policy/pol_noti.html#s4-2">4-2절</a>)</div></div>
-    </div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-NOTI-B1 <small>안 읽은 알림 있음</small></div><figure class="shot" data-id="F-NOTI-B1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-NOTI-B2 <small>모두 읽은 뒤</small></div><figure class="shot" data-id="F-NOTI-B2" data-base="../"></figure></div>
   </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>"안 읽은 알림 <b>N건</b>" / "새 알림이 없어요"</div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>"전체 N건"</div><ul><li>내 알림 + 공지 전체 수(90일 안).</li></ul></div>
+  </div></div>
   </div>
 </section>
 
@@ -177,30 +143,19 @@
   <div class="unit">
   <div class="zone-hd"><span class="zl">C</span><h2>알림 목록</h2></div>
   <div class="shots-row">
-    <div class="sw"><div class="lb">F-NOTI-C1 <small>안 읽음</small></div><figure class="shot" data-id="F-NOTI-C1" data-base="../"></figure></div>
-    <div class="sw"><div class="lb">F-NOTI-C2 <small>읽음</small></div><figure class="shot" data-id="F-NOTI-C2" data-base="../"></figure></div>
-    <div class="sw"><div class="lb">F-NOTI-C3 <small>펼침 · 포인트 알림</small></div><figure class="shot" data-id="F-NOTI-C3" data-base="../"></figure></div>
-    <div class="sw"><div class="lb">F-NOTI-C4 <small>펼침 · 공지</small></div><figure class="shot" data-id="F-NOTI-C4" data-base="../"></figure></div>
-    <div class="sw"><div class="lb">F-NOTI-E1 <small>빈 상태</small></div><figure class="shot" data-id="F-NOTI-E1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-NOTI-C1 <small>안 읽은 줄</small></div><figure class="shot" data-id="F-NOTI-C1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-NOTI-C2 <small>포인트 알림 펼침</small></div><figure class="shot" data-id="F-NOTI-C2" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-NOTI-C3 <small>공지 펼침</small></div><figure class="shot" data-id="F-NOTI-C3" data-base="../"></figure></div>
   </div>
   <div class="detail"><div class="ann">
-    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>안 읽음 점 / 빈 상태 문구 (E1)</div>
-      <ul><li>파란 점 = 안 읽음. 읽으면 점이 사라집니다(C2).</li>
-          <li>E1: 알림이 하나도 없으면 "받은 알림이 없어요 / 포인트 적립·소멸 소식을 알려드려요".</li></ul></div>
-    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>제목</div>
-      <ul><li>서버가 만든 제목 그대로 — 위 「알림 종류」 표.</li></ul></div>
-    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>본문 첫 줄</div>
-      <ul><li><b>두 줄까지</b> 보이고 넘으면 잘립니다(한 줄이면 「뽑기로 최대 NP…」가 통째로 사라져서). 전체는 펼쳐서 봅니다.</li></ul></div>
-    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>시각</div>
-      <ul><li>1분 안 「방금」 · 1시간 안 「N분 전」 · 오늘 「N시간 전」 · 그 전 「N월 N일」.</li></ul></div>
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>빨간 점</div><ul><li>안 읽은 알림만. 읽으면 사라지고 제목이 회색·보통 굵기로 바뀝니다.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>제목</div><ul><li>예: "뽑기 1,300P 추가 적립" · "혜택 적립 +10P" · 공지는 관리자가 쓴 제목. <b>공지와 내 알림을 구분하는 표시는 없습니다.</b></li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>본문 한 줄</div><ul><li>접혀 있을 때만 · 넘치면 「…」.</li></ul></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>일시 「MM.DD HH:mm」</div></div>
   </div><div class="ann">
-    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>[>]</div>
-      <ul><li>한 줄 전체를 누를 수 있습니다. 누르면 아래로 펼쳐지고 <b>그때 읽음</b>이 됩니다(서버에도 저장). 펼치면 화살표가 아래로 바뀝니다.</li>
-          <li>다시 누르면 접힙니다. 한 번에 하나만 펼칩니다.</li></ul></div>
-    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>펼친 본문</div>
-      <ul><li>본문 전체.</li></ul></div>
-    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>[포인트 내역 보기]</div>
-      <ul><li>포인트가 움직인 알림에만 붙습니다 → <a href="f_point.html">F-POINT</a>. 공지(C4)·퀴즈 0P는 없습니다. 쿠폰 알림(발행·재발행·발행 지연)은 대신 <b>[쿠폰함 보기]</b> → <a href="f_coupon.html">F-COUPON</a>.</li></ul>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>› (펼치면 아래로 돌아감)</div><ul><li>줄 전체를 누를 수 있습니다. 한 번에 한 줄만 펼쳐지고, 다시 누르면 접힙니다.</li></ul></div>
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>펼친 내용</div><ul><li>본문 전체(줄바꿈 그대로) — 회색 상자. 안 읽은 알림이면 이때 읽음 처리.</li></ul></div>
+    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>[포인트 내역 보기 ›]</div><ul><li>포인트가 움직인 알림(적립·뽑기·소멸·지급·회수)에만 → 포인트 내역. 공지(C3)에는 없습니다.</li></ul>
       <div class="rule"><b>근거</b> 목록·읽음·펼친 내용 (<a href="../policy/pol_noti.html#s4-2">4-2</a> · <a href="../policy/pol_noti.html#s4-3">4-3</a> · <a href="../policy/pol_noti.html#s4-4">4-4절</a>)</div></div>
   </div></div>
   </div>
@@ -209,49 +164,51 @@
 <section class="sec zsec" id="zD">
   <div class="unit">
   <div class="zone-hd"><span class="zl">D</span><h2>안내</h2></div>
-  <p class="sec-sub">"알림은 <b>90일</b> 동안 보관돼요. 소멸 예정 알림은 소멸일이 지나면 사라져요." · "적립·소멸 내역은 <b>포인트 내역</b>에서 언제든 다시 볼 수 있어요." — 하루 처리(서버)가 <b>90일 지난 알림과 소멸일이 지난 소멸 안내를 지웁니다</b>(시연은 화면을 열 때 10분에 한 번 + 어드민 [하루 처리 지금 실행]). 근거 <a href="../policy/pol_noti.html#s4-6">4-6절</a>.</p>
+  <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-NOTI-D1</div><figure class="shot" data-id="F-NOTI-D1" data-base="../"></figure></div></div>
+    <div class="ann"><div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>안내 2줄</div>
+      <ul><li>"알림은 90일 동안 보관돼요." · "적립·소멸 내역은 포인트 내역에서 언제든 다시 볼 수 있어요."</li></ul></div></div>
+  </div>
   </div>
 </section>
 
-<section class="sec major" id="over">
-  <div class="sec-hd"><h2>④ 새 알림 토스트</h2></div>
-  <p class="sec-sub">어느 화면에서든 앱을 켜 둔 동안 뜹니다. 캡처는 홈 위입니다. 공통 동작은 <a href="../common/c_layer.html">C-LAYER</a>를 따릅니다.</p>
-  <div class="two-col unit sub-item">
-    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-NOTI-X1 <small style="font-weight:400">새 알림</small></div><figure class="shot" data-id="F-NOTI-X1" data-base="../"></figure></div>
-    <div class="ann">
-      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>🔔</div></div>
-      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>제목</div></div>
-      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>본문</div>
-        <ul><li>가장 최근 안 읽은 알림 1건을 보여 줍니다.</li></ul></div>
-      <div class="cn"><div class="cn-hd">동작</div>
-        <ul><li>앱을 켜 둔 동안 일정 간격으로 서버에 새 알림을 묻습니다(구현 5초 — 시연용, 실제 간격은 개발 때 · <span class="tag open">미결</span> R-N5). 물을 때마다 알림 종 배지도 고칩니다.</li>
-            <li>약 4초 뒤 저절로 사라집니다. <b>누르면 알림함</b>으로 갑니다.</li>
-            <li>띄우지 않는 때: 앱을 막 열었을 때 이미 쌓여 있던 알림 · 같은 알림을 두 번 · <b>적립 연출이 떠 있거나 퀴즈를 푸는 중</b>(같은 내용을 연출로 보여 주고 있어 겹침). 알림함에는 그대로 남습니다.</li>
-            <li>휴대폰 푸시는 아직 없습니다 — 앱을 꺼 두면 다음에 열 때 알림함·배지로만 보입니다(<span class="tag open">미결</span> R-N3).</li></ul>
-        <div class="rule"><b>근거</b> 새 알림 토스트 (<a href="../policy/pol_noti.html#s5">5절</a>)</div></div>
-    </div>
-  </div>
+<section class="sec major" id="kinds">
+  <div class="sec-hd"><h2>알림 종류 (서버가 만든다)</h2></div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>언제</th><th>제목</th><th>본문</th><th>이동</th></tr>
+    <tr><td>출석</td><td>출석 적립 +NP</td><td>내일도 잊지 말고 출석해 주세요.</td><td>포인트 내역</td></tr>
+    <tr><td>출석 6번째 선물상자</td><td>출석 보너스 NP 당첨!</td><td>N일차 출석으로 총 NP를 받았어요.</td><td>포인트 내역</td></tr>
+    <tr><td>퀴즈 (맞힘 / 0개)</td><td>퀴즈 +NP / 오늘 퀴즈를 모두 풀었어요</td><td>N문제 중 N개를 맞혔어요. / 아쉽게 정답이 없었어요. …</td><td>포인트 내역</td></tr>
+    <tr><td>친구 추천 (코드 넣음 / 내 코드로 가입)</td><td>추천코드 적립 NP / 친구가 가입했어요 +NP</td><td>○○ 코드로 NP를 받았어요. / 내 추천코드로 가입해서 NP를 받았어요.</td><td>포인트 내역</td></tr>
+    <tr><td>혜택</td><td>혜택 적립 +NP</td><td>{광고주} · {혜택 제목}</td><td>포인트 내역</td></tr>
+    <tr><td>예약 적립 확정 (뽑기 있음 / 없음)</td><td>예약 적립 +NP</td><td>{호텔} · 뽑기로 최대 NP를 더 받을 수 있어요. / {호텔} 예약으로 포인트가 적립됐어요.</td><td>포인트 내역</td></tr>
+    <tr><td>예약 뽑기</td><td>뽑기 NP 추가 적립</td><td>{호텔}</td><td>포인트 내역</td></tr>
+    <tr><td>본인인증 완료 · 적립대기 지급</td><td>본인인증이 완료됐어요 / 적립대기 포인트 +NP</td><td>이제 포인트를 적립하고 사용할 수 있어요. / 본인인증을 마쳐서 기다리던 포인트가 지급됐어요.</td><td>— / 포인트 내역</td></tr>
+    <tr><td>소멸 예정 (매달 1일 / 매주 월요일)</td><td>다음 달 소멸 예정 NP / 7일 안에 NP가 소멸돼요</td><td>포인트 내역에서 소멸 예정일을 확인할 수 있어요.</td><td>포인트 내역</td></tr>
+    <tr><td>관리자 지급·회수</td><td>포인트가 지급됐어요 (+NP) / 포인트가 회수됐어요 (-NP)</td><td>관리자가 적은 사유</td><td>포인트 내역</td></tr>
+    <tr><td>전체 공지 (어드민)</td><td>관리자가 쓴 제목</td><td>관리자가 쓴 본문</td><td>—</td></tr>
+  </table></div>
+  <div class="cn"><div class="cn-hd">규칙</div>
+    <ul><li>적립대기로 들어간 적립(본인인증 전)에는 알림을 보내지 않습니다 — 지급될 때 「적립대기 포인트」 알림.</li>
+        <li>소멸 예정 안내는 같은 안내를 한 번만 · 금액 0이면 보내지 않음 · 안내한 포인트가 다 소멸되면 그 안내를 지웁니다.</li></ul>
+    <div class="rule"><b>근거</b> 알림 종류 (<a href="../policy/pol_noti.html#s2">2절</a>) · 소멸 예정 (<a href="../policy/pol_noti.html#s3">3절</a>)</div></div>
 </section>
 
 <section class="sec zsec" id="exc">
   <div class="sec-hd"><h2>예외 케이스</h2></div>
-  <p class="sec-sub">정책서 <a href="../policy/pol_noti.html#s8">8절</a>을 화면 동작 기준으로 옮겼습니다.</p>
   <div class="box wrapx"><table class="t">
     <tr><th>#</th><th>상황</th><th>화면 동작</th></tr>
-    <tr><td>E1</td><td>본인인증 전 회원이 적립</td><td>알림 없음 · 인증으로 지급될 때 「적립대기 포인트 +NP」 1건</td></tr>
-    <tr><td>E2</td><td>휴대폰 알림 권한 꺼짐</td><td>알림함에는 쌓임 · 맨 위 V 띠</td></tr>
-    <tr><td>E3</td><td>적립 연출·퀴즈 중 새 알림</td><td>토스트 안 띄움 · 알림함·배지에는 반영</td></tr>
-    <tr><td>E4</td><td>소멸 예정 알림의 소멸일이 지남</td><td>알림함에서 사라짐</td></tr>
-    <tr><td>E5</td><td>비로그인이 알림함에 들어오려 함</td><td>로그인 시트</td></tr>
-    <tr><td>E6</td><td>알림함을 불러오지 못함</td><td>확인창 "알림을 불러오지 못했어요" + [다시 시도] (예시 알림을 대신 보여주지 않음)</td></tr>
-    <tr><td>E7</td><td>새 알림이 옴</td><td>종 배지가 바로 바뀜</td></tr>
+    <tr><td>E1</td><td>알림이 하나도 없음</td><td>"받은 알림이 없어요 · 포인트 적립·소멸 소식을 알려드려요"</td></tr>
+    <tr><td>E2</td><td>목록을 불러오지 못함</td><td>"잠시 후 다시 시도해 주세요 · 다시 시도"(누르면 다시 받기) · 불러오는 동안 「목록을 불러오는 중…」</td></tr>
+    <tr><td>E3</td><td>읽음 표시 실패</td><td>내용은 펼쳐 보여 줌 · 빨간 점은 남음</td></tr>
+    <tr><td>E4</td><td>100건이 넘음</td><td>최신 100건만</td></tr>
+    <tr><td>E5</td><td>비로그인</td><td>안내 + [로그인하기] → 로그인 시트 · 알림 종은 보이지 않음</td></tr>
   </table></div>
 </section>
 
 </main>
 <script src="../shots/markers.js"></script>
 <script src="../policy/pol_noti_data.js"></script>
-<script src="../policy/pol_earn_data.js"></script>
 <script src="../wf-reward.js"></script>
 </body>
 </html>
