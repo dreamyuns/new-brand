@@ -31,6 +31,7 @@
     ['f_my',     'F-MY',   'My (마이페이지)',   'front/f_my.html'],
     ['f_acc',    'F-ACC',  '계정관리·탈퇴 (프로필)', 'front/f_acc.html'],
     ['f_point',  'F-POINT','포인트 내역·예약 뽑기', 'front/f_point.html'],
+    ['f_shop',   'F-SHOP', '기프티샵 (구매 준비 중)', 'front/f_shop.html'],
     ['f_coupon', 'F-COUPON','내 쿠폰함 — 나중에',        'front/f_coupon.html'],
     ['f_noti',   'F-NOTI', '알림함·새 알림 토스트', 'front/f_noti.html'],
     ['f_jar',    'F-JAR',  '저금통 (현금 전환·픽샵) — 나중에', 'front/f_jar.html'],

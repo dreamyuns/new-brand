@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>F-SHOP 기프티샵 — 픽콕 리워드 화면기획서</title>
+<link rel="stylesheet" href="../wf-reward.css">
+<!-- 2026-11-02 신규 — 실개발 기준(PO 「현재 서버 기준으로 다음 업데이트」). 근거: pickoq-front feature/reward
+     src/features/reward/ui/ShopScreen.tsx · ShopItemScreen.tsx · messages/ko-KR.json reward.shopPage /
+     pickoq-backend ShopService(설정 shop_open = 1 이면 구매 열림 · 지금 0) · 정책변경 C8(목록·상품 페이지까지 · 구매 「준비중」)
+     캡처: 캡처 사본 웹 — 상품 20개는 시연 데이터. [구매하기]는 토스트만(서버 기록 없음) · 사본 DB 안 바꿈(_capture/cap_r_shop.py) -->
+</head>
+<body data-key="f_shop" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page">
+
+<div class="top"><span class="sid">F-SHOP</span><h1>기프티샵 — 목록 · 상품</h1></div>
+<div class="meta">
+  <span>기준 <b>실개발</b> 고객 웹 <code>feature/reward</code> (2026-11-02) · 정책 <b><a href="../policy/pol_use.html#s3">포인트 사용 · 3절(픽샵)</a></b> + 정책변경 C8</span>
+  <span>캡처 <b>2026-11-02</b> · 390×844 · 시연 데이터</span>
+  <span>최종수정 <b>2026-11-02</b></span>
+</div>
+<p class="lead">모은 포인트로 기프티콘·상품권을 바꾸는 곳입니다(주소 <code>/rewards/shop</code>). 리워드 홈의 [기프티샵 쇼핑], 혜택 탭의 기프티샵 카드, 마이페이지 「기프티샵」으로 들어옵니다. <b>이번 출시는 상품 목록과 상품 페이지까지만</b> 열고, <b>구매는 「준비 중」</b>입니다(C8).</p>
+
+<div class="box note-design"><b>화면 모습은 디자인 확정 전입니다.</b> 이 문서는 <b>기능과 정책</b>을 기준으로 읽어 주세요. 상품·가격은 시연 데이터입니다(상품 사진 없음 → 🎁).</div>
+
+<div class="box note-later"><b>구매 뒤 화면은 나중에 작성해요.</b> 주문 접수·포인트 차감·쿠폰 발행·내 쿠폰함·취소는 기프티콘 업체가 정해지면 만듭니다(외부 업체 연동 · C8). 프로토 기준 기록은 <a href="f_jar.html">F-JAR</a>·<a href="f_coupon.html">F-COUPON</a>에 남아 있습니다. 운영자가 설정(shop_open)을 켜면 구매가 열리도록만 해 두었습니다.</div>
+
+<div class="box">
+  <h3>읽는 법</h3>
+  <div class="legend">
+    <span><b style="color:var(--zone)">붉은 점선 상자</b> 화면의 영역</span>
+    <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능</span>
+    <span><span class="tag proto">실개발 기준</span> 정책서에 아직 없음</span>
+    <span><span class="tag open">미결</span> 바뀔 수 있음</span>
+  </div>
+</div>
+
+<!-- 변경이력: 개발자 공유 이후부터 노출 -->
+<div class="box hist"><h3>변경이력</h3>
+  <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
+    <tr><td>v0.1</td><td>2026-11-02</td><td>신규 — 실개발 기준, 캡처 10장(목록 로그인·비로그인 · 상품 페이지 3상태 · 판매 종료 · 준비 중 토스트 · 로그인 시트)</td></tr></table></div>
+
+<div class="sec-policy">
+  <h3>⚙ 공통 정책 — 기프티샵</h3>
+  <ul>
+    <li><b>비로그인도 목록·상품을 볼 수 있습니다.</b> 비로그인이 [로그인하고 구매하기]를 누르면 로그인 시트.</li>
+    <li>목록에는 어드민 「기프티샵 상품」에서 <b>판매 중</b>인 상품만, 어드민 순서대로 나옵니다. 1P = 1원.</li>
+    <li><b>구매는 「준비 중」</b> — [구매하기]를 누르면 토스트 "구매는 준비 중이에요. 조금만 기다려 주세요!"만 뜨고 포인트는 빠지지 않습니다. <span class="tag proto">실개발 기준</span> C8</li>
+    <li>로그인 회원은 내 포인트로 살 수 있는지 미리 보여 줍니다(모자라면 "NP 더 모으면 돼요").</li>
+  </ul>
+  <div class="src">기준: 포인트 사용 정책서 3절(픽샵) / 정책변경 C1 · C8 / 화면은 실개발 고객 웹(2026-11-02)</div>
+</div>
+
+<nav class="toc" aria-label="이 페이지 바로가기">
+  <span class="toc-lb">바로가기</span>
+  <a href="#list"><b>①</b>목록</a>
+  <a href="#item"><b>②</b>상품 페이지</a>
+  <a href="#exc">예외 케이스</a>
+</nav>
+
+<section class="sec major" id="list">
+  <div class="sec-hd"><span class="sid">F-SHOP-L</span><h2>① 목록</h2></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-SHOP-L <small>로그인 · 10,390P</small></div><figure class="shot" data-id="F-SHOP-L" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-SHOP-L0 <small>비로그인</small></div><figure class="shot" data-id="F-SHOP-L0" data-base="../"></figure></div>
+  </div>
+  <div class="shots-row" style="margin-top:12px">
+    <div class="sw"><div class="lb">F-SHOP-A1 <small>머리</small></div><figure class="shot" data-id="F-SHOP-A1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-SHOP-B1 <small>상품 카드</small></div><figure class="shot" data-id="F-SHOP-B1" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>[←]</div><ul><li>이전 화면으로. 2뎁스 — 하단 탭 없음.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>「기프티샵」 · 알림 종(로그인만)</div></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>공작 · 내 포인트 · 안내</div>
+      <ul><li>로그인: 볼을 감싼 공작 · 「NP」 · "모은 포인트로 바로 바꿔요".</li>
+          <li>비로그인: 자는 공작 · "로그인하면 모은 포인트로 바꿀 수 있어요"(숫자 없음).</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>「기프티콘」</div><ul><li>지금은 한 묶음 — 어드민 상품 「분류」는 화면에 쓰지 않습니다.</li></ul></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>「NP 보유」 — 로그인만</div></div>
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>상품 카드 (2열)</div>
+      <ul><li>사진(없으면 🎁) · 브랜드 · 상품명 · 「N,NNNP」 · [구매하기].</li>
+          <li>로그인 회원 포인트가 모자라면 버튼 대신 회색 "NP 더 모으면 돼요".</li>
+          <li>카드를 누르면 상품 페이지(②).</li></ul></div>
+    <div class="cn"><div class="cn-hd">맨 아래 안내</div><ul><li>"🛍️ 구매는 준비 중이에요. 곧 모은 포인트로 바꿀 수 있어요."</li></ul></div>
+  </div></div>
+</section>
+
+<section class="sec major" id="item">
+  <div class="sec-hd"><span class="sid">F-SHOP-P</span><h2>② 상품 페이지</h2></div>
+  <p class="sec-sub">주소 <code>/rewards/shop/{상품}</code>. 맨 위 [←] · 「기프티샵」만 있는 흰 화면입니다.</p>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-SHOP-P1 <small>살 수 있음</small></div><figure class="shot" data-id="F-SHOP-P1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-SHOP-P2 <small>포인트 모자람</small></div><figure class="shot" data-id="F-SHOP-P2" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-SHOP-P0 <small>비로그인</small></div><figure class="shot" data-id="F-SHOP-P0" data-base="../" data-only="-"></figure></div>
+  </div>
+  <div class="box wrapx" style="margin-top:12px"><table class="t">
+    <tr><th>영역</th><th>내용</th></tr>
+    <tr><td>사진 · 이름</td><td>큰 사진(없으면 🎁) · 브랜드 · 상품명 · 「N,NNNP」</td></tr>
+    <tr class="zrow" data-n="C"><td><b>C</b> 포인트 계산 (로그인만)</td><td>「내 포인트 NP」 · 「구매 후 남는 포인트 NP」 / 모자라면 「모자란 포인트 NP」(빨강)</td></tr>
+    <tr class="zrow" data-n="D"><td><b>D</b> 상품 안내</td><td>어드민 「상세」 문구(줄바꿈 그대로)</td></tr>
+    <tr class="zrow" data-n="E"><td><b>E</b> 아래 고정</td><td>"구매는 준비 중이에요. 곧 모은 포인트로 바꿀 수 있어요." + 버튼 — 로그인 [구매하기] / 비로그인 [로그인하고 구매하기] / 모자라면 회색 「NP 더 모으면 돼요」(누를 수 없음)</td></tr>
+  </table></div>
+  <div class="shots-row" style="margin-top:12px">
+    <div class="sw"><div class="lb">F-SHOP-T1 <small>[구매하기] → 준비 중</small></div><figure class="shot" data-id="F-SHOP-T1" data-base="../" data-only="-"></figure></div>
+    <div class="sw"><div class="lb">F-SHOP-X1 <small>비로그인 → 로그인 시트</small></div><figure class="shot" data-id="F-SHOP-X1" data-base="../" data-only="-"></figure></div>
+    <div class="sw"><div class="lb">F-SHOP-P3 <small>판매가 끝난 상품</small></div><figure class="shot" data-id="F-SHOP-P3" data-base="../" data-only="-"></figure></div>
+  </div>
+  <div class="cn"><div class="cn-hd">버튼 동작</div>
+    <ul><li>[구매하기] → 토스트 "구매는 준비 중이에요. 조금만 기다려 주세요!"(T1) — 포인트·주문 기록 없음.</li>
+        <li>[로그인하고 구매하기] → 로그인 시트(X1 · <a href="f_auth.html">F-AUTH</a>). 로그인 뒤 같은 상품 페이지에 남습니다.</li>
+        <li>판매가 끝났거나 없는 상품 → "판매가 끝난 상품이에요" + [닫기](P3).</li></ul>
+    <div class="rule"><b>근거</b> <span class="tag proto">실개발 기준</span> C8 — 구매를 열 때의 방식(즉시 발행 등)은 업체 연동 방식 확정 후 다시 확인 <span class="tag open">미결</span></div></div>
+</section>
+
+<section class="sec zsec" id="exc">
+  <div class="sec-hd"><h2>예외 케이스</h2></div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>#</th><th>상황</th><th>화면 동작</th></tr>
+    <tr><td>E1</td><td>판매 중인 상품이 없음</td><td>"준비된 상품이 없어요"</td></tr>
+    <tr><td>E2</td><td>판매 종료 · 없는 상품 번호</td><td>"판매가 끝난 상품이에요" + [닫기]</td></tr>
+    <tr><td>E3</td><td>목록을 불러오지 못함</td><td>"잠시 후 다시 시도해 주세요 · 다시 시도" · 불러오는 동안 「목록을 불러오는 중…」</td></tr>
+  </table></div>
+</section>
+
+</main>
+<script src="../shots/markers.js"></script>
+<script src="../policy/pol_use_data.js"></script>
+<script src="../wf-reward.js"></script>
+</body>
+</html>
