@@ -3099,6 +3099,13 @@ window.MARKERS = {
   "note": "",
   "w": 1424
  },
+ "C-AILOAD": {
+  "h": 844,
+  "img": "shots/front/C-AILOAD.png",
+  "m": [],
+  "note": "",
+  "w": 390
+ },
  "C-BUSY": {
   "h": 844,
   "img": "shots/front/C-BUSY.png",
@@ -3289,6 +3296,13 @@ window.MARKERS = {
     "y": 56.3
    }
   ],
+  "note": "",
+  "w": 390
+ },
+ "C-SKEL": {
+  "h": 844,
+  "img": "shots/front/C-SKEL.png",
+  "m": [],
   "note": "",
   "w": 390
  },
