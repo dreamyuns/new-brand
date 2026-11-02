@@ -19,11 +19,12 @@
     ['f_home',   'F-HOME', '홈 (메인)',        'front/f_home.html'],
     ['f_attend', 'F-ATT',  '출석체크',          'front/f_attend.html'],
     ['f_quiz',   'F-QUIZ', '여행상식 퀴즈',     'front/f_quiz.html'],
-    ['grp', '검색'],   /* 하단 탭 순서(홈 · 검색 · 혜택 · My)대로 — 검색 묶음은 없던 기능인 필독부터 (PO 2026-10-28) */
-    ['f_guide',  'F-GUIDE','적립 필독',         'front/f_guide.html'],
-    ['f_sres', 'F-SRES', '검색 결과 — 실개발 기준 작성 중', ''],
-    ['f_sdet', 'F-SDET', '숙소 상세 — 실개발 기준 작성 중', ''],
-    ['f_sout', 'F-SOUT', '아웃링크 · 예약 적립 — 실개발 기준 작성 중', ''],
+    ['grp', '검색'],   /* 하단 탭 순서(홈 · 검색 · 혜택 · My) · 검색 탭 → 결과 → 상세 → 아웃링크 순 (11-02 실개발 기준) */
+    ['f_find',   'F-FIND', '검색 탭',           'front/f_find.html'],
+    ['f_sres',   'F-SRES', '검색 결과',         'front/f_sres.html'],
+    ['f_sdet',   'F-SDET', '숙소 상세',         'front/f_sdet.html'],
+    ['f_sout',   'F-SOUT', '아웃링크',          'front/f_sout.html'],
+    ['f_guide',  'F-GUIDE','적립필독',          'front/f_guide.html'],
     ['grp', '혜택'],
     ['f_offer',  'F-OFFER','혜택 (오퍼월)',     'front/f_offer.html'],
     ['grp', '마이페이지'],   /* My 화면의 메뉴 순서와 같게 (PO 2026-10-27) */

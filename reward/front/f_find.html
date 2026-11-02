@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>F-FIND 검색 탭 — 픽콕 리워드 화면기획서</title>
+<link rel="stylesheet" href="../wf-reward.css">
+<!-- 2026-11-02 신규 — 실개발 기준(PO 「검색화면 지금 서버화면으로」). 근거: pickoq-front feature/reward src/features/home/ui/HomeScreen.tsx ·
+     DestinationModal.tsx · DateRangeModal.tsx · OccupancyModal.tsx · model/ai-suggestion-tags.ts(20개 중 4개) · reward/ui/AiSearchBox.tsx · GuideButton.tsx
+     messages/ko-KR.json home · 정책변경 C12(4탭 · 검색 = 둘째 탭) · C13③⑤⑥(머리 「어디로 떠날까요?」 + 공작 · 적립필독)
+     적립필독은 커밋 a7d97bf(10-29)부터 떠 있는 버튼 — C13⑥의 「검색 탭은 제목줄 알약」은 그 전 결정
+     캡처: 캡처 사본 웹(비로그인) · 자동완성은 사본 서버가 KAYAK에서 실제로 받음(_capture/cap_r_search.py · cap_r_search_fix.py) -->
+</head>
+<body data-key="f_find" data-base="../">
+<script src="../wf-nav.js"></script>
+<main class="page">
+
+<div class="top"><span class="sid">F-FIND</span><h1>검색 탭</h1></div>
+<div class="meta">
+  <span>기준 <b>실개발</b> 고객 웹 <code>feature/reward</code> (2026-11-02) · 정책 Phase1 메타서치 정책서(M01) + 정책변경 C12·C13</span>
+  <span>캡처 <b>2026-11-02</b> · 390×844</span>
+  <span>최종수정 <b>2026-11-02</b></span>
+</div>
+<p class="lead">하단 탭 [검색]의 첫 화면입니다(주소 <code>/find</code>). 예전 검색 메인(M01)이 여기로 옮겨 왔고, 맨 위에 리워드 머리(「어디로 떠날까요?」 + 공작)가 붙었습니다. <b>AI로 문장 검색</b>하거나 <b>목적지·날짜·인원을 골라 검색</b>합니다.</p>
+
+<div class="box note-design"><b>화면 모습은 디자인 확정 전입니다.</b> 이 문서는 <b>기능과 정책</b>을 기준으로 읽어 주세요.</div>
+
+<div class="box">
+  <h3>읽는 법</h3>
+  <div class="legend">
+    <span><b style="color:var(--zone)">붉은 점선 상자 A~D</b> 화면의 영역</span>
+    <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능 — 마우스를 올리면 설명과 함께 강조</span>
+    <span><span class="tag proto">실개발 기준</span> 정책서에 아직 없음(정책변경 모음에만 있음)</span>
+    <span><span class="tag open">미결</span> 바뀔 수 있음</span>
+  </div>
+</div>
+
+<!-- 변경이력: 개발자 공유 이후부터 노출 -->
+<div class="box hist"><h3>변경이력</h3>
+  <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
+    <tr><td>v0.1</td><td>2026-11-02</td><td>신규 — 실개발 기준, 캡처 9장(검색 탭 머리·AI 검색창·검색 폼·목적지·날짜·인원 시트)</td></tr></table></div>
+
+<div class="sec-policy">
+  <h3>⚙ 공통 정책 — 검색 탭 전체</h3>
+  <ul>
+    <li><b>1뎁스 화면</b>(하단 탭 보임 · [검색] 선택). 로그인 여부와 관계없이 같은 화면입니다. <span class="tag proto">실개발 기준</span> C12 · C13③</li>
+    <li>날짜·인원은 <b>기본값이 미리 채워져</b> 있습니다(오늘부터 7일 뒤 체크인 · 1박 · 성인 2명 객실 1개 — 캡처일 11.2 → 11.9~11.10). 목적지는 비어 있고 <b>목적지 없이는 검색할 수 없습니다</b>.</li>
+    <li>[검색하기]를 누르면 조건이 <b>최근 검색</b>으로 저장되고 검색 결과(<a href="f_sres.html">F-SRES</a>)로 갑니다.</li>
+    <li>오른쪽 아래 <b>[적립필독]</b>은 떠 있는 버튼입니다(검색 결과·숙소 상세에도 같은 버튼). 선택 시트나 AI 검색 중에는 숨깁니다. → <a href="f_guide.html">F-GUIDE</a> <span class="tag proto">실개발 기준</span> C13⑤</li>
+  </ul>
+  <div class="src">기준: Phase1 메타서치 정책서(검색 메인 M01) / 정책변경 C12 · C13 / 화면은 실개발 고객 웹(2026-11-02)</div>
+</div>
+
+<nav class="toc" aria-label="이 페이지 바로가기">
+  <span class="toc-lb">바로가기</span>
+  <a href="#flow"><b>①</b>화면 흐름</a>
+  <a href="#layout"><b>②</b>페이지 구성</a>
+  <span class="toc-sep"></span>
+  <a class="z" href="#zA"><b>A</b>머리</a>
+  <a class="z" href="#zB"><b>B</b>AI 검색</a>
+  <a class="z" href="#zC"><b>C</b>검색 폼</a>
+  <span class="toc-sep"></span>
+  <a href="#over"><b>④</b>시트·토스트</a>
+  <a href="#exc">예외 케이스</a>
+</nav>
+
+<section class="sec major" id="flow">
+  <div class="sec-hd"><h2>① 화면 흐름</h2></div>
+  <div class="box">
+    <div class="flow"><i>폼 검색:</i><span>목적지 (X1·X2)</span><i>→</i><span>날짜 (X3)</span><i>→</i><span>인원·객실 (X4)</span><i>→</i><span>[검색하기]</span><i>→</i><span>검색 결과</span></div>
+    <div class="flow" style="margin-top:8px"><i>AI 검색:</i><span>문장 입력 또는 추천 검색어 누르기</span><i>→</i><span>"AI가 검색조건을 분석중이에요" 로딩</span><i>→</i><span>검색 결과(문장에서 읽은 목적지·날짜·조건) — 목적지를 못 읽으면 "어디로 여행하고 싶으세요?" 안내</span></div>
+  </div>
+</section>
+
+<section class="sec major" id="layout">
+  <div class="sec-hd"><span class="sid">F-FIND-L</span><h2>② 페이지 구성</h2></div>
+  <div class="two-col unit">
+    <div><figure class="shot" data-id="F-FIND-L" data-base="../"></figure></div>
+    <div>
+      <div class="box wrapx" style="margin-bottom:12px"><table class="t">
+        <tr><th>영역</th><th>들어가는 요소</th></tr>
+        <tr class="zrow" data-n="A"><td><b>A</b> 머리</td><td>「어디로 떠날까요?」 · 공작</td></tr>
+        <tr class="zrow" data-n="B"><td><b>B</b> AI 검색</td><td>AI 검색창(빛나는 테두리 · 안내 문구 바뀜) · 추천 검색어 4개</td></tr>
+        <tr class="zrow" data-n="C"><td><b>C</b> 검색 폼</td><td>목적지 · 날짜 · 인원·객실 · [검색하기]</td></tr>
+        <tr class="zrow" data-n="D"><td><b>D</b> 적립필독</td><td>오른쪽 아래 떠 있는 버튼</td></tr>
+        <tr><td>그 아래</td><td>회사 정보(사업자 정보 · 약관 링크) · 하단 탭</td></tr>
+      </table></div>
+      <div class="cn"><div class="cn-hd">화면 공통 규칙</div>
+        <ul><li>파란 머리 위에 흰 판(검색 폼)이 겹쳐 올라온 배치. 화면 전체가 한 번에 스크롤됩니다.</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec major" id="detail" style="margin-bottom:0">
+  <div class="major-hd"><h2>③ 영역별 상세 — 기능 · 정의 · 정책</h2></div>
+</section>
+
+<section class="sec zsec" id="zA">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">A</span><h2>머리</h2></div>
+  <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-FIND-A1</div><figure class="shot" data-id="F-FIND-A1" data-base="../"></figure></div></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「어디로 떠날까요?」</div><ul><li>제목 자리의 인사말(리워드 화면과 같은 크기). 로그인 회원의 프로필 버튼 자리를 대신합니다.</li></ul></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>공작</div><ul><li>서 있는 큰 공작(둥실 움직임). 누를 수 없습니다. 알림 종은 이 화면에 없습니다.</li></ul>
+        <div class="rule"><b>근거</b> <span class="tag proto">실개발 기준</span> C13③⑥</div></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zB">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">B</span><h2>AI 검색</h2></div>
+  <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-FIND-B1</div><figure class="shot" data-id="F-FIND-B1" data-base="../"></figure></div></div>
+    <div class="ann">
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>AI 검색창</div>
+        <ul><li>빛나는 테두리 + 안내 문구가 바뀌며 지나갑니다(리워드 홈 검색창과 같은 모양 — <a href="f_home.html#zA">F-HOME A</a>).</li>
+            <li>문장을 쓰고 엔터 또는 ➤ → AI 검색. AI 검색 중에는 입력이 잠깁니다.</li></ul></div>
+      <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>➤ 보내기</div></div>
+      <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>추천 검색어 4개</div>
+        <ul><li>준비된 20개 중 4개를 골라 보여 줍니다(예: "후쿠오카 온천 호텔 3박"). 누르면 그 문장으로 <b>바로 AI 검색</b>합니다.</li></ul></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zC">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">C</span><h2>검색 폼</h2></div>
+  <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-FIND-C1</div><figure class="shot" data-id="F-FIND-C1" data-base="../"></figure></div></div>
+    <div class="ann">
+      <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>목적지 「도시 또는 호텔명」</div><ul><li>누르면 목적지 시트(X1). 고르면 이름이 채워집니다.</li></ul></div>
+      <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>날짜 「11.9 (월) - 11.10 (화)」</div><ul><li>누르면 날짜 시트(X3).</li></ul></div>
+      <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>인원·객실 「투숙객 2명, 객실 1개」</div><ul><li>누르면 인원 시트(X4).</li></ul></div>
+      <div class="cn" data-n="9"><div class="cn-hd"><span class="no">9</span>[검색하기]</div>
+        <ul><li>목적지가 없으면 토스트 "목적지를 입력해주세요."(T1). 있으면 최근 검색에 저장하고 검색 결과로.</li></ul></div>
+      <div class="cn"><div class="cn-hd">[적립필독] (영역 D · 폼 오른쪽 아래)</div><ul><li>→ 안내 5장(<a href="f_guide.html">F-GUIDE</a>).</li></ul></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="sec major" id="over">
+  <div class="sec-hd"><h2>④ 시트 · 토스트</h2></div>
+  <p class="sec-sub">아래에서 올라오는 시트입니다. 자르지 않습니다.</p>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-FIND-X1 <small>목적지 — 처음</small></div><figure class="shot" data-id="F-FIND-X1" data-base="../" data-only="-"></figure></div>
+    <div class="sw"><div class="lb">F-FIND-X2 <small>목적지 — 「서울」 입력</small></div><figure class="shot" data-id="F-FIND-X2" data-base="../" data-only="-"></figure></div>
+    <div class="sw"><div class="lb">F-FIND-X3 <small>날짜</small></div><figure class="shot" data-id="F-FIND-X3" data-base="../" data-only="-"></figure></div>
+    <div class="sw"><div class="lb">F-FIND-X4 <small>인원·객실</small></div><figure class="shot" data-id="F-FIND-X4" data-base="../" data-only="-"></figure></div>
+    <div class="sw"><div class="lb">F-FIND-T1 <small>목적지 없음</small></div><figure class="shot" data-id="F-FIND-T1" data-base="../" data-only="-"></figure></div>
+  </div>
+  <div class="cn"><div class="cn-hd">시트별 동작</div>
+    <ul><li><b>목적지(X1·X2)</b> — 입력 칸 + 「최근 검색」(있을 때 · 전체 삭제·하나씩 삭제) + 「인기도시」 10곳. 글자를 치면 KAYAK 자동완성(도시 → 지역·공항 → 호텔 순, 입력한 글자 파랗게). 최근 검색을 누르면 그때의 목적지·날짜·인원이 폼에 채워집니다(검색은 직접 눌러야 함). 결과가 없으면 "검색 결과가 없어요".</li>
+        <li><b>날짜(X3)</b> — 달력에서 체크인·체크아웃 → 아래 "체크인 ○ · N박 · 체크아웃 ○" → [적용하기]. 지난 날은 고를 수 없습니다.</li>
+        <li><b>인원·객실(X4)</b> — 객실마다 성인(만 18세 이상)·아동(만 0~17세, 아동마다 나이 선택) · [+ 객실 추가](최대 8객실 — 넘으면 "최대 8객실까지 추가 가능합니다") · [적용하기].</li></ul></div>
+</section>
+
+<section class="sec zsec" id="exc">
+  <div class="sec-hd"><h2>예외 케이스</h2></div>
+  <div class="box wrapx"><table class="t">
+    <tr><th>#</th><th>상황</th><th>화면 동작</th></tr>
+    <tr><td>E1</td><td>목적지 없이 [검색하기]</td><td>토스트 "목적지를 입력해주세요."</td></tr>
+    <tr><td>E2</td><td>체크인이 지난 최근 검색을 고름</td><td>날짜는 기본값으로 다시 채움</td></tr>
+    <tr><td>E3</td><td>AI 검색이 목적지를 못 읽음 · 호텔과 무관한 문장</td><td>"어디로 여행하고 싶으세요? 도시, 지역, 호텔명 모두 괜찮아요" + [다시 입력하기] / "저는 호텔 검색만 도와드릴 수 있어요…"</td></tr>
+    <tr><td>E4</td><td>AI 검색 실패</td><td>토스트 "잠시 검색이 원활하지 않아요. 다시 시도해 주세요."</td></tr>
+  </table></div>
+</section>
+
+</main>
+<script src="../shots/markers.js"></script>
+<script src="../wf-reward.js"></script>
+</body>
+</html>
