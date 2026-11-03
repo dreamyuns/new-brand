@@ -9,7 +9,10 @@
      src/features/search/ui/SearchResultScreen.tsx · HotelCard.tsx · AiRecommendCard.tsx · FilterSheet.tsx · AiFilterModal.tsx · SearchEditModal.tsx ·
      packages/shared constants/search.ts(한 번에 50곳) · messages/ko-KR.json search
      검색 결과 화면은 리워드 이전부터 개발팀이 만든 화면 — 리워드용 변경은 [적립필독] 버튼(C13⑤)뿐
-     캡처: 캡처 사본 웹(비로그인) · 서울 11.9~11.10 2명 — 숙소·가격은 사본 서버가 KAYAK에서 실제로 받은 캡처 시점 값(_capture/cap_r_search.py) -->
+     캡처: 캡처 사본 웹(비로그인) · 서울 11.9~11.10 2명 — 숙소·가격은 사본 서버가 KAYAK에서 실제로 받은 캡처 시점 값(_capture/cap_r_search.py)
+     2026-11-03 지도 보기 추가 — 근거: pickoq-front feature/search-map(b682d76 · c436353, 대사 11-03 · feature/reward 아직 미병합)
+     SearchMapView.tsx · model/google-maps.ts · shared search-map.ts(묶기 규칙) · 정책변경 C25. 캡처 _capture/cap_r_map.py(서울 11.10~11.11 · 비로그인)
+     F-SRES-L · E1 은 [지도로 보기] 버튼이 생겨 11-03 다시 찍음 -->
 </head>
 <body data-key="f_sres" data-base="../">
 <script src="../wf-nav.js"></script>
@@ -17,9 +20,9 @@
 
 <div class="top"><span class="sid">F-SRES</span><h1>검색 결과</h1></div>
 <div class="meta">
-  <span>기준 <b>실개발</b> 고객 웹 <code>feature/reward</code> (2026-11-02) · 정책 Phase1 메타서치 정책서(S01) + 정책변경 C13</span>
-  <span>캡처 <b>2026-11-02</b> · 390×844 · 실제 KAYAK 응답(캡처 시점)</span>
-  <span>최종수정 <b>2026-11-02</b></span>
+  <span>기준 <b>실개발</b> 고객 웹 <code>feature/reward</code> (2026-11-02) · 지도 보기는 <code>feature/search-map</code> (2026-11-03) · 정책 Phase1 메타서치 정책서(S01 · S01-MAP) + 정책변경 C13 · C25</span>
+  <span>캡처 <b>2026-11-02</b> · 지도 보기 <b>2026-11-03</b> · 390×844 · 실제 KAYAK 응답(캡처 시점)</span>
+  <span>최종수정 <b>2026-11-03</b></span>
 </div>
 <p class="lead">검색 탭에서 [검색하기]를 누르거나 AI 검색을 하면 나오는 숙소 목록입니다(주소 <code>/search?destination=…</code>). 숙소와 가격은 <b>호텔스컴바인(KAYAK)</b>에서 받아 옵니다. 숙소를 누르면 <b>새 창</b>으로 숙소 상세(<a href="f_sdet.html">F-SDET</a>)가 열립니다.</p>
 
@@ -38,6 +41,7 @@
 <!-- 변경이력: 개발자 공유 이후부터 노출 -->
 <div class="box hist"><h3>변경이력</h3>
   <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
+    <tr><td>v0.3</td><td>2026-11-03</td><td>⑤ 지도 보기 추가(실개발 11-03) — [지도로 보기] 버튼 · 위쪽 검색줄 · 가격 핀·묶음 · 작은 카드 · 지도 위 검색 수정·필터 · 지도 불러오기 실패. 페이지 구성·맨 아래 캡처 다시 찍음</td></tr>
     <tr><td>v0.2</td><td>2026-11-02</td><td>실개발 기준으로 다시 씀 — 캡처 9장(조건 줄 · 필터 칩 · AI 추천 · 숙소 카드 · 목록 더보기 · 필터 시트 · AI 필터 · 검색 수정)</td></tr>
     <tr><td>v0.1</td><td>2026-10-28</td><td>프로토 기준 작성 중</td></tr></table></div>
 
@@ -49,9 +53,10 @@
     <li>한 번에 <b>50곳</b>씩 보여 주고 [목록 더보기]로 50곳씩 더 받습니다.</li>
     <li>필터·정렬은 서버가 처리합니다. 필터를 바꾸면 주소만 바뀌고(뒤로가기 기록에 쌓이지 않음), 조건(목적지·날짜·인원)을 바꾸면 새 검색입니다 — 이때 적용 중인 필터는 모두 초기화됩니다.</li>
     <li>숙소 상세는 <b>새 창</b>으로 엽니다 — 결과 목록(조건·스크롤·더보기)을 그대로 두기 위해.</li>
+    <li>목록 아래 가운데 <b>[지도로 보기]</b> 떠 있는 버튼 → 같은 결과를 지도로(⑤). <span class="tag proto">실개발 기준</span> C25</li>
     <li>오른쪽 아래 <b>[적립필독]</b> 떠 있는 버튼 → <a href="f_guide.html">F-GUIDE</a>. <span class="tag proto">실개발 기준</span> C13⑤</li>
   </ul>
-  <div class="src">기준: Phase1 메타서치 정책서(S01 · 5-6절 필터) / 정책변경 C13 / 화면은 실개발 고객 웹(2026-11-02)</div>
+  <div class="src">기준: Phase1 메타서치 정책서(S01 · 5-6절 필터 · 5-11절 지도) / 정책변경 C13 · C25 / 화면은 실개발 고객 웹(2026-11-02)</div>
 </div>
 
 <nav class="toc" aria-label="이 페이지 바로가기">
@@ -65,6 +70,12 @@
   <a class="z" href="#zE"><b>E</b>더보기·적립필독</a>
   <span class="toc-sep"></span>
   <a href="#over"><b>④</b>시트</a>
+  <span class="toc-sep"></span>
+  <a href="#map"><b>⑤</b>지도 보기</a>
+  <a class="z" href="#zF"><b>F</b>위쪽 검색줄</a>
+  <a class="z" href="#zG"><b>G</b>지도 · 핀</a>
+  <a class="z" href="#zH"><b>H</b>작은 카드</a>
+  <a href="#mapover">지도 위 시트</a>
   <a href="#exc">예외 케이스</a>
 </nav>
 
@@ -80,7 +91,7 @@
         <tr class="zrow" data-n="B"><td><b>B</b> 필터 칩</td><td>AI 필터 · 전체필터 · N박 가격 · 성급 · 숙소 유형 · 평점 7.0+ (가로로 밀어 넘김)</td></tr>
         <tr class="zrow" data-n="C"><td><b>C</b> AI 추천</td><td>추천 숙소 3곳 + [펼치기]</td></tr>
         <tr class="zrow" data-n="D"><td><b>D</b> 숙소 목록</td><td>「조건에 맞는 호텔 N곳」 + 숙소 카드</td></tr>
-        <tr class="zrow" data-n="E"><td><b>E</b> 더보기·적립필독</td><td>[목록 더보기] · [적립필독]</td></tr>
+        <tr class="zrow" data-n="E"><td><b>E</b> 더보기·적립필독</td><td>[지도로 보기] · [목록 더보기] · [적립필독]</td></tr>
       </table></div>
       <div class="cn"><div class="cn-hd">화면 공통 규칙</div>
         <ul><li>2뎁스 — 하단 탭이 없습니다. 위쪽 검색창·조건 줄·필터 칩은 스크롤해도 위에 붙어 있습니다.</li></ul></div>
@@ -164,7 +175,11 @@
     <div class="shots-row"><div class="sw"><div class="lb">F-SRES-E1</div><figure class="shot" data-id="F-SRES-E1" data-base="../"></figure></div></div>
     <div class="ann">
       <div class="cn" data-n="17"><div class="cn-hd"><span class="no">17</span>[목록 더보기 ⌄]</div><ul><li>50곳 더. 마지막까지 받으면 토스트 "총 N개 숙소가 모두 표시됐습니다".</li></ul></div>
-      <div class="cn" data-n="18"><div class="cn-hd"><span class="no">18</span>[적립필독]</div><ul><li>→ <a href="f_guide.html">F-GUIDE</a>. 시트·AI 검색 중에는 숨김.</li></ul></div>
+      <div class="cn" data-n="18"><div class="cn-hd"><span class="no">18</span>[적립필독]</div><ul><li>→ <a href="f_guide.html">F-GUIDE</a>. 시트·AI 검색 중에는 숨김. 지도 보기에서도 숨김.</li></ul></div>
+      <div class="cn" data-n="19"><div class="cn-hd"><span class="no">19</span>[지도로 보기]</div>
+        <ul><li>목록 아래 가운데에 늘 떠 있습니다(스크롤해도 같은 자리). 누르면 지금 결과 그대로 지도 보기(⑤)가 열립니다.</li>
+            <li>숨는 때: 처음 결과를 받는 중 · 결과 0곳 · 검색 실패 · 필터·검색 수정 창이 열려 있을 때.</li></ul>
+        <div class="rule"><b>근거</b> 정책서 5-11절은 위쪽 [목록|지도] 토글 → 실개발은 아래 떠 있는 버튼(PO 11-03 · C25③) <span class="tag proto">실개발 기준</span></div></div>
     </div>
   </div>
   </div>
@@ -183,6 +198,108 @@
         <li><b>검색 수정(X3)</b> — 목적지 · 날짜 · 인원·객실 + [검색하기].</li></ul></div>
 </section>
 
+<!-- ════════ ⑤ 지도 보기 (2026-11-03 · feature/search-map) ════════ -->
+<section class="sec major" id="map">
+  <div class="sec-hd"><span class="sid">F-SRES-M</span><h2>⑤ 지도 보기 <span class="tag proto">실개발 기준</span></h2></div>
+  <p class="sec-sub">[지도로 보기]를 누르면 같은 주소에 <code>&amp;layout=map</code>이 붙고 지도가 화면 전체를 덮습니다. 목록은 그대로 뒤에 남아 있습니다.</p>
+  <div class="sec-policy">
+    <h3>⚙ 공통 정책 — 지도 보기</h3>
+    <ul>
+      <li><b>목록에 불러온 호텔만 핀으로</b> 보여 줍니다(처음 50곳 · [목록 더보기]로 늘면 지도도 늘어남). 지도를 위해 KAYAK을 다시 부르지 않습니다. 지도 위 안내 「목록에서 불러온 N곳」. (C25②)</li>
+      <li><b>「이 지역 검색」은 없습니다</b> — 지도를 옮겨도 결과는 그대로입니다. (C25①)</li>
+      <li>처음 열면 <b>목록 1위 호텔을 가운데</b>(동네가 보이는 확대 단계)에 두고, 그 핀을 검게 강조하고, 아래에 작은 카드를 띄웁니다. 검색 조건이 바뀌면 새 1위로 다시 맞춥니다([목록 더보기]로 늘 때는 그대로). (C25④)</li>
+      <li>필터는 목록과 같은 것을 씁니다. 정렬 버튼은 지도에 없습니다. (C25⑧)</li>
+      <li><b>[✕] = 지도만 닫기</b> — 지금 결과 그대로 목록으로 돌아갑니다(지도에서 다시 검색했어도 이전 검색으로 돌아가지 않음). 휴대폰 뒤로가기는 지도를 열기 전 목록으로. (C25③)</li>
+      <li>구글 지도의 가게·식당 아이콘은 숨깁니다(가격 핀과 섞이지 않게) — 관광지·역·공원은 남깁니다. (C25⑨)</li>
+      <li>지도 키는 개발 중 PO 데모 키입니다 — 개발자에게 넘길 때 회사 키로 바꿔야 합니다. <span class="tag open">미결</span> (C25⑩)</li>
+    </ul>
+    <div class="src">기준: 정책변경 C25(PO 2026-11-03) / Phase1 메타서치 정책서 5-11절(S01-MAP — [목록|지도] 토글·「이 지역 검색」은 실개발과 다름, 정책서 반영 대기)</div>
+  </div>
+  <div class="two-col unit">
+    <div><figure class="shot" data-id="F-SRES-M" data-base="../"></figure></div>
+    <div>
+      <div class="box wrapx" style="margin-bottom:12px"><table class="t">
+        <tr><th>영역</th><th>들어가는 요소</th></tr>
+        <tr class="zrow" data-n="F"><td><b>F</b> 위쪽 검색줄</td><td>[✕] · AI 검색창(안내 글 = 목적지·날짜·인원 요약) · [보내기] / [돋보기] · [전체필터]</td></tr>
+        <tr class="zrow" data-n="G"><td><b>G</b> 지도 · 핀</td><td>「목록에서 불러온 N곳」 · 가격 핀 · 강조 핀 · 숫자 묶음</td></tr>
+        <tr class="zrow" data-n="H"><td><b>H</b> 작은 카드</td><td>고른 호텔 1곳(목록 카드와 같은 모양)</td></tr>
+      </table></div>
+      <div class="cn"><div class="cn-hd">화면 공통 규칙</div>
+        <ul><li>지도가 열려 있는 동안 뒤의 목록은 스크롤되지 않습니다. [적립필독] 버튼은 숨깁니다.</li>
+            <li>화면 모습은 결과 화면 부품·색을 그대로 쓴 것입니다(디자인 확정 전).</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zF">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">F</span><h2>위쪽 검색줄</h2></div>
+  <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-SRES-F1</div><figure class="shot" data-id="F-SRES-F1" data-base="../"></figure></div></div>
+    <div class="ann">
+      <div class="cn" data-n="20"><div class="cn-hd"><span class="no">20</span>[✕] 지도 닫기</div><ul><li>지금 결과 그대로 목록으로 돌아갑니다(주소에서 <code>layout=map</code>만 뺌).</li></ul></div>
+      <div class="cn" data-n="21"><div class="cn-hd"><span class="no">21</span>AI 검색창</div>
+        <ul><li>비어 있을 때 안내 글 = 「목적지 · 날짜 · 인원」 요약(예: "서울 · 11.10 - 11.11 · 투숙객 2명 · 객실 1개"). AI 검색으로 들어왔으면 그 문장이 들어 있습니다.</li>
+            <li>문장을 넣고 검색하면 <b>지도에 머문 채</b> 새 결과로 바뀌고, 지도가 새 1위 호텔로 옮겨 갑니다(예: 서울 → 강릉). 목적지를 말하지 않으면 지금 도시를 유지합니다 — 결과 화면 AI 재검색과 같은 규칙. (C25⑦)</li></ul></div>
+      <div class="cn" data-n="22"><div class="cn-hd"><span class="no">22</span>[보내기]</div><ul><li>AI 검색 실행.</li></ul></div>
+      <div class="cn" data-n="23"><div class="cn-hd"><span class="no">23</span>[돋보기]</div><ul><li>목적지·날짜·인원 바꾸기 = 결과 화면의 「검색 수정」 창(MX1). [검색하기] = 새 검색.</li></ul></div>
+      <div class="cn" data-n="24"><div class="cn-hd"><span class="no">24</span>[전체필터]</div><ul><li>목록과 같은 필터 시트(MX2). 적용 중인 필터가 있으면 버튼이 강조됩니다.</li></ul></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zG">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">G</span><h2>지도 · 핀</h2></div>
+  <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-SRES-G1</div><figure class="shot" data-id="F-SRES-G1" data-base="../"></figure></div></div>
+    <div class="ann">
+      <div class="cn" data-n="25"><div class="cn-hd"><span class="no">25</span>「목록에서 불러온 N곳」</div><ul><li>지도에 올린 호텔 수(좌표 있는 호텔만). 누를 수 없는 안내입니다.</li></ul></div>
+      <div class="cn" data-n="26"><div class="cn-hd"><span class="no">26</span>강조 핀(검정)</div><ul><li>지금 고른 호텔 — 아래 작은 카드와 짝입니다. 묶음에 들어가지 않고 늘 따로 보이며, 다른 핀 위에 그려집니다.</li></ul></div>
+      <div class="cn" data-n="27"><div class="cn-hd"><span class="no">27</span>가격 핀 「NNN,NNN원」</div>
+        <ul><li>목록 카드와 같은 가격(검색한 박수 전체 최저가). 누르면 그 호텔이 강조되고, 지도가 그 호텔로 옮겨 가며, 카드가 바뀝니다(G3).</li>
+            <li>가격이 없는 호텔은 흐린 「요금 없음」 핀.</li></ul></div>
+      <div class="cn" data-n="28"><div class="cn-hd"><span class="no">28</span>숫자 묶음(파란 원)</div>
+        <ul><li>가격 핀끼리 겹치는 거리(가로 76px · 세로 32px 안)면 숫자 하나로 묶습니다. 목록 순서가 앞선 호텔이 묶음의 기준점이 됩니다.</li>
+            <li>누르면 묶인 호텔들의 가운데로 옮기고 2단계 확대합니다(G2). 아주 많이 확대하면 묶지 않고, 같은 건물처럼 좌표가 겹치는 핀은 위아래로 벌려 보여 줍니다.</li></ul></div>
+      <div class="cn"><div class="cn-hd">지도 빈 곳 누르기</div><ul><li>강조와 작은 카드가 사라집니다(G4). 핀을 누르면 다시 나타납니다.</li></ul></div>
+    </div>
+  </div>
+  <div class="shots-row" style="margin-top:14px">
+    <div class="sw"><div class="lb">F-SRES-G2 <small>묶음을 누름 → 확대</small></div><figure class="shot" data-id="F-SRES-G2" data-base="../" data-only="-"></figure></div>
+    <div class="sw"><div class="lb">F-SRES-G3 <small>다른 가격 핀을 누름</small></div><figure class="shot" data-id="F-SRES-G3" data-base="../" data-only="-"></figure></div>
+    <div class="sw"><div class="lb">F-SRES-G4 <small>빈 곳을 누름 → 카드 닫힘</small></div><figure class="shot" data-id="F-SRES-G4" data-base="../" data-only="-"></figure></div>
+  </div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zH">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">H</span><h2>작은 카드</h2></div>
+  <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
+    <div class="shots-row"><div class="sw"><div class="lb">F-SRES-H1</div><figure class="shot" data-id="F-SRES-H1" data-base="../"></figure></div></div>
+    <div class="ann">
+      <div class="cn" data-n="30"><div class="cn-hd"><span class="no">30</span>작은 카드</div>
+        <ul><li>목록의 숙소 카드와 같은 부품입니다 — 사진 · 이름 · ★평점 · 「N성급 ∙ 유형」 · 주소 · 가격(적립 포인트는 보여 주지 않음).</li>
+            <li>누르면 숙소 상세(<a href="f_sdet.html">F-SDET</a>)가 <b>새 창</b>으로 열립니다 — 지도는 그대로.</li></ul></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="sec major" id="mapover">
+  <div class="sec-hd"><h2>지도 위 시트 · 실패</h2></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-SRES-MX1 <small>[돋보기] 검색 수정</small></div><figure class="shot" data-id="F-SRES-MX1" data-base="../" data-only="-"></figure></div>
+    <div class="sw"><div class="lb">F-SRES-MX2 <small>[전체필터]</small></div><figure class="shot" data-id="F-SRES-MX2" data-base="../" data-only="-"></figure></div>
+    <div class="sw"><div class="lb">F-SRES-MX3 <small>지도를 불러오지 못함</small></div><figure class="shot" data-id="F-SRES-MX3" data-base="../" data-only="-"></figure></div>
+  </div>
+  <div class="cn"><div class="cn-hd">동작</div>
+    <ul><li><b>검색 수정(MX1)</b>·<b>필터(MX2)</b>는 목록에서 쓰는 창과 같습니다. 적용하면 지도에 머문 채 결과가 바뀝니다.</li>
+        <li><b>실패(MX3)</b> — 지도 키가 없거나, 구글 지도를 받지 못했거나, 키 인증이 거절되면 「지도를 불러올 수 없어요」. [✕]로 목록에 돌아갈 수 있습니다. MX3은 캡처 때 구글 지도 주소를 일부러 막아 만든 화면입니다.</li></ul></div>
+</section>
+
 <section class="sec zsec" id="exc">
   <div class="sec-hd"><h2>예외 케이스</h2></div>
   <div class="box wrapx"><table class="t">
@@ -193,6 +310,10 @@
     <tr><td>E4</td><td>AI 재검색이 목적지를 못 읽음 · 조건이 그대로</td><td>이동 없이 안내 팝업("어디로 여행하고 싶으세요?" + [다시 입력하기])</td></tr>
     <tr><td>E5</td><td>AI 검색을 너무 자주 함</td><td>서버가 보낸 안내(남은 초)를 토스트로</td></tr>
     <tr><td>E6</td><td>목적지 없는 주소로 들어옴</td><td>첫 화면으로 이동</td></tr>
+    <tr><td>E7</td><td>지도 — 지도를 불러오지 못함</td><td>「지도를 불러올 수 없어요」(MX3) · [✕]로 목록</td></tr>
+    <tr><td>E8</td><td>지도 — 좌표가 없는 호텔</td><td>지도에서 빠집니다(목록에는 있음) — 「불러온 N곳」 숫자에서도 빠짐. 좌표가 (0,0)이어도 빠짐</td></tr>
+    <tr><td>E9</td><td>지도 — 결과 0곳</td><td>지도 위에 「조건에 맞는 숙소가 없어요」</td></tr>
+    <tr><td>E10</td><td>지도 — 결과를 받는 중</td><td>지도 가운데에 도는 표시(목록의 뼈대 대신)</td></tr>
   </table></div>
 </section>
 
