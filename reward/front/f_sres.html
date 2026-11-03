@@ -10,7 +10,7 @@
      packages/shared constants/search.ts(한 번에 50곳) · messages/ko-KR.json search
      검색 결과 화면은 리워드 이전부터 개발팀이 만든 화면 — 리워드용 변경은 [적립필독] 버튼(C13⑤)뿐
      캡처: 캡처 사본 웹(비로그인) · 서울 11.9~11.10 2명 — 숙소·가격은 사본 서버가 KAYAK에서 실제로 받은 캡처 시점 값(_capture/cap_r_search.py)
-     2026-11-03 지도 보기 추가 — 근거: pickoq-front feature/search-map(b682d76 · c436353, 대사 11-03 · feature/reward 아직 미병합)
+     2026-11-03 지도 보기 추가 — 근거: pickoq-front feature/search-map(b682d76 · c436353 · a4d65df 닫기 버튼 분리 14:23, 대사 11-03 · feature/reward 아직 미병합)
      SearchMapView.tsx · model/google-maps.ts · shared search-map.ts(묶기 규칙) · 정책변경 C25. 캡처 _capture/cap_r_map.py(서울 11.10~11.11 · 비로그인)
      F-SRES-L · E1 은 [지도로 보기] 버튼이 생겨 11-03 다시 찍음 -->
 </head>
@@ -41,7 +41,7 @@
 <!-- 변경이력: 개발자 공유 이후부터 노출 -->
 <div class="box hist"><h3>변경이력</h3>
   <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
-    <tr><td>v0.3</td><td>2026-11-03</td><td>⑤ 지도 보기 추가(실개발 11-03) — [지도로 보기] 버튼 · 위쪽 검색줄 · 가격 핀·묶음 · 작은 카드 · 지도 위 검색 수정·필터 · 지도 불러오기 실패. 페이지 구성·맨 아래 캡처 다시 찍음</td></tr>
+    <tr><td>v0.3</td><td>2026-11-03</td><td>⑤ 지도 보기 추가(실개발 11-03) — [지도로 보기] 버튼 · 위쪽 검색줄 · 가격 핀·묶음 · 작은 카드 · 지도 위 검색 수정·필터 · 지도 불러오기 실패. 페이지 구성·맨 아래 캡처 다시 찍음. 같은 날 오후 [✕]가 입력칸 밖 작은 동그라미 버튼으로 바뀌어 지도 캡처 다시 찍음</td></tr>
     <tr><td>v0.2</td><td>2026-11-02</td><td>실개발 기준으로 다시 씀 — 캡처 9장(조건 줄 · 필터 칩 · AI 추천 · 숙소 카드 · 목록 더보기 · 필터 시트 · AI 필터 · 검색 수정)</td></tr>
     <tr><td>v0.1</td><td>2026-10-28</td><td>프로토 기준 작성 중</td></tr></table></div>
 
@@ -237,7 +237,7 @@
   <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
     <div class="shots-row"><div class="sw"><div class="lb">F-SRES-F1</div><figure class="shot" data-id="F-SRES-F1" data-base="../"></figure></div></div>
     <div class="ann">
-      <div class="cn" data-n="20"><div class="cn-hd"><span class="no">20</span>[✕] 지도 닫기</div><ul><li>지금 결과 그대로 목록으로 돌아갑니다(주소에서 <code>layout=map</code>만 뺌).</li></ul></div>
+      <div class="cn" data-n="20"><div class="cn-hd"><span class="no">20</span>[✕] 지도 닫기</div><ul><li>검색창 왼쪽에 따로 떨어진 작은 흰 동그라미 버튼입니다(입력칸과 헷갈리지 않게 · PO 11-03).</li><li>지금 결과 그대로 목록으로 돌아갑니다(주소에서 <code>layout=map</code>만 뺌).</li></ul></div>
       <div class="cn" data-n="21"><div class="cn-hd"><span class="no">21</span>AI 검색창</div>
         <ul><li>비어 있을 때 안내 글 = 「목적지 · 날짜 · 인원」 요약(예: "서울 · 11.10 - 11.11 · 투숙객 2명 · 객실 1개"). AI 검색으로 들어왔으면 그 문장이 들어 있습니다.</li>
             <li>문장을 넣고 검색하면 <b>지도에 머문 채</b> 새 결과로 바뀌고, 지도가 새 1위 호텔로 옮겨 갑니다(예: 서울 → 강릉). 목적지를 말하지 않으면 지금 도시를 유지합니다 — 결과 화면 AI 재검색과 같은 규칙. (C25⑦)</li></ul></div>
