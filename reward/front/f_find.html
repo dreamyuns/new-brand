@@ -9,7 +9,8 @@
      DestinationModal.tsx · DateRangeModal.tsx · OccupancyModal.tsx · model/ai-suggestion-tags.ts(20개 중 4개) · reward/ui/AiSearchBox.tsx · GuideButton.tsx
      messages/ko-KR.json home · 정책변경 C12(4탭 · 검색 = 둘째 탭) · C13③⑤⑥(머리 「어디로 떠날까요?」 + 공작 · 적립필독)
      적립필독은 커밋 a7d97bf(10-29)부터 떠 있는 버튼 — C13⑥의 「검색 탭은 제목줄 알약」은 그 전 결정
-     캡처: 캡처 사본 웹(비로그인) · 자동완성은 사본 서버가 KAYAK에서 실제로 받음(_capture/cap_r_search.py · cap_r_search_fix.py) -->
+     캡처: 캡처 사본 웹(비로그인) · 자동완성은 사본 서버가 KAYAK에서 실제로 받음(_capture/cap_r_search.py · cap_r_search_fix.py)
+     2026-11-03 E3 — 숙소와 무관한 질문 팝업 분리(shared nlParseScopeKind · use-ai-search.ts · backend nl.note.offTopic) · 캡처 없음(캡처 서버 11-02 판) -->
 </head>
 <body data-key="f_find" data-base="../">
 <script src="../wf-nav.js"></script>
@@ -19,7 +20,7 @@
 <div class="meta">
   <span>기준 <b>실개발</b> 고객 웹 <code>feature/reward</code> (2026-11-02) · 정책 Phase1 메타서치 정책서(M01) + 정책변경 C12·C13</span>
   <span>캡처 <b>2026-11-02</b> · 390×844</span>
-  <span>최종수정 <b>2026-11-02</b></span>
+  <span>최종수정 <b>2026-11-03</b></span>
 </div>
 <p class="lead">하단 탭 [검색]의 첫 화면입니다(주소 <code>/find</code>). 예전 검색 메인(M01)이 여기로 옮겨 왔고, 맨 위에 리워드 머리(「어디로 떠날까요?」 + 공작)가 붙었습니다. <b>AI로 문장 검색</b>하거나 <b>목적지·날짜·인원을 골라 검색</b>합니다.</p>
 
@@ -38,6 +39,7 @@
 <!-- 변경이력: 개발자 공유 이후부터 노출 -->
 <div class="box hist"><h3>변경이력</h3>
   <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
+    <tr><td>v0.2</td><td>2026-11-03</td><td>예외 E3 — 숙소와 무관한 질문은 「숙소 검색만 도와드릴 수 있어요」 팝업으로 분리(예전 토스트 문구 삭제)</td></tr>
     <tr><td>v0.1</td><td>2026-11-02</td><td>신규 — 실개발 기준, 캡처 9장(검색 탭 머리·AI 검색창·검색 폼·목적지·날짜·인원 시트)</td></tr></table></div>
 
 <div class="sec-policy">
@@ -165,7 +167,7 @@
     <tr><th>#</th><th>상황</th><th>화면 동작</th></tr>
     <tr><td>E1</td><td>목적지 없이 [검색하기]</td><td>토스트 "목적지를 입력해주세요."</td></tr>
     <tr><td>E2</td><td>체크인이 지난 최근 검색을 고름</td><td>날짜는 기본값으로 다시 채움</td></tr>
-    <tr><td>E3</td><td>AI 검색이 목적지를 못 읽음 · 호텔과 무관한 문장</td><td>"어디로 여행하고 싶으세요? 도시, 지역, 호텔명 모두 괜찮아요" + [다시 입력하기] / "저는 호텔 검색만 도와드릴 수 있어요…"</td></tr>
+    <tr><td>E3</td><td>AI 검색이 검색으로 이어지지 않음</td><td>이동 없이 안내 팝업 — 두 가지로 나뉩니다<br>· <b>숙소와 무관한 질문</b>(날씨·환율 등 — 서버가 판단): 「숙소 검색만 도와드릴 수 있어요」 — 본문은 서버가 보낸 안내(지금 문구: "숙소 검색과 관련 없는 질문이라 검색하지 않았습니다. 지역·날짜 등 숙소 조건으로 다시 입력해 주세요.") · 서버 안내가 없으면 "지역·날짜 같은 숙소 조건으로 다시 입력해 주세요" + [다시 입력하기]<br>· <b>목적지를 못 읽음</b>: 「어디로 여행하고 싶으세요?」 — 도시, 지역, 호텔명 모두 괜찮아요 / AI가 딱 맞는 숙소를 찾아드릴게요 + [다시 입력하기]</td></tr>
     <tr><td>E4</td><td>AI 검색 실패</td><td>토스트 "잠시 검색이 원활하지 않아요. 다시 시도해 주세요."</td></tr>
   </table></div>
 </section>
