@@ -203,3 +203,8 @@ table.t th{background:#f7f8fb;font-weight:700;color:var(--ink2);white-space:nowr
 .note-design{background:#fff8e6;border:1px solid #f3d28a;border-left:4px solid #e0a800;color:#5a4300;font-size:13.5px;line-height:1.6}
 /* 외부 연동이 필요해 이번 개발에서 빠진 화면 (2026-10-30 PO) */
 .note-later{background:#f2f4f7;border:1px dashed #9aa4b2;border-left:4px solid #6b7686;color:#334;font-size:13.5px;line-height:1.6}
+/* 캡처 대기 빈칸 — 실제 캡처를 아직 못 찍은 자리(임의 그림을 넣지 않음 · 2026-11-05) */
+.shot-pending{width:300px;aspect-ratio:390/844;border:2px dashed #9aa4b2;border-radius:14px;background:#f5f6f8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;color:#556;font-size:13px;line-height:1.5;padding:16px;box-sizing:border-box}
+.shot-pending b{color:#334;font-size:13.5px}
+.shot-pending.short{aspect-ratio:auto;min-height:150px}
+.shot-pending.pc{width:100%;max-width:900px;aspect-ratio:auto;min-height:180px}
