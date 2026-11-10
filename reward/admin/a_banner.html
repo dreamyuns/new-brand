@@ -6,8 +6,8 @@
 <title>A-BANNER 메인배너관리 — 픽콕 리워드 화면기획서</title>
 <link rel="stylesheet" href="../wf-reward.css">
 <!-- 2026-11-10 신규 — 실개발 어드민 기준(대사 가이드 05_실개발/20261110_대이전달_어드민화면기획서_업데이트가이드_v0.1.md 2절)
-     근거: pickoq-admin reward-banner a70d3d4 src/app/(admin)/screens/banners/page.tsx · components/reward/image-picker.tsx · lib/reward/pickoq-pages.ts
-     서버 local/run-home ef221e6 · 정책변경 C32③ · C33①⑥⑨ · C34③(정책서 절 번호 없음 — 대일 반영 뒤 링크)
+     근거: pickoq-admin reward-banner 00ab5eb(v0.2 · 11-10 오후 C36) ← a70d3d4 src/app/(admin)/screens/banners/page.tsx · components/reward/image-picker.tsx · lib/reward/pickoq-pages.ts
+     서버 local/run-home 07b4c54 · 정책변경 C32③ · C33①⑥⑨ · C34③ · C36(관리 코드 · 노출 중일 때만 · 경고 · 배너별 적립 수) · lib/reward/codes.ts(정책서 절 번호 없음 — 대일 반영 뒤 링크)
      캡처: 캡처 사본 어드민 3110(DB 3308 · 서버 8090) · 시험 데이터 _capture/seed_admin.sql · _capture/cap_r_admin.py
      배너 이미지·로고는 대사 PC에 올라가 있던 시험 이미지(디자인 시안 배너 · 호텔 사진)를 복사해 씀 -->
 </head>
@@ -17,7 +17,7 @@
 
 <div class="top"><span class="sid">A-BANNER</span><h1>메인배너관리 (어드민)</h1></div>
 <div class="meta">
-  <span>기준 <b>실개발</b> 어드민 <code>reward-banner</code> (2026-11-10) · 정책변경 C32~C34 (정책서 반영 대기)</span>
+  <span>기준 <b>실개발</b> 어드민 <code>reward-banner</code> (2026-11-10 오후) · 정책변경 C32~C36 (정책서 반영 대기)</span>
   <span>캡처 <b>2026-11-10</b> · PC 1440 · 시험 데이터</span>
   <span>최종수정 <b>2026-11-10</b></span>
 </div>
@@ -38,19 +38,23 @@
 <!-- 변경이력: 개발자 공유 이후부터 노출 -->
 <div class="box hist"><h3>변경이력</h3>
   <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
+    <tr><td>v0.2</td><td>2026-11-10</td><td>오후 PO 결정 C36 반영 — 관리 코드(BN·OF) · 「노출 중만 보기」 · 연결할 혜택은 노출 중인 것만 · 미노출 경고 · 적립 수 = 이 배너로 받은 수 · 혜택이 꺼지면 배너로도 상세·적립 안 됨(안내 페이지). 캡처 8장 다시 찍음</td></tr>
     <tr><td>v0.1</td><td>2026-11-10</td><td>신규 — 실개발 어드민 기준 · 캡처 7장(캡처 사본 어드민 3110)</td></tr></table></div>
 
 <div class="sec-policy">
   <h3>⚙ 공통 정책 — 메인배너관리</h3>
   <ul>
     <li>고객 홈에는 <b>노출 중</b>(노출 스위치 켬 + 노출 기간 안)인 배너가 <b>순서대로 최대 5장</b> 보입니다. <b>0장이면 배너 자리를 숨기고</b>, 2장 이상이면 <b>3초마다 자동으로 넘어가고</b> 손으로도 넘길 수 있습니다. <span class="tag proto">실개발 기준</span> (C32③)</li>
-    <li><b>배너와 혜택은 따로 켜고 끕니다.</b> 혜택 관리에서 그 혜택의 노출을 꺼도, 연결한 배너가 켜져 있으면 고객은 <b>배너로 혜택 상세에 들어가 적립</b>할 수 있습니다. 배너를 꺼도 혜택은 혜택 목록에 그대로입니다. (C34③)</li>
-    <li>적립은 <b>혜택 기준으로 1번</b>입니다 — 배너로 받든 목록에서 받든 같은 혜택은 한 번만. 연결한 혜택이 지워지면 그 배너는 홈에서 빠집니다. (C33① · C34③)</li>
+    <li>배너와 혜택의 <b>노출 스위치는 따로</b>입니다(배너를 꺼도 혜택은 목록에 그대로). <b>단 혜택 상세·적립은 혜택이 노출 중일 때만</b> 됩니다 — 연결한 혜택이 꺼지거나 노출기간이 끝나면 배너는 홈에 남지만 <b>적립 배지가 없고</b>, 누르면 <b>「볼 수 없는 혜택」 안내 페이지</b>가 나옵니다. 그래서 목록에 빨간 경고를 띄웁니다. <span class="tag proto">실개발 기준</span> (C36①②)</li>
+    <li>새로 연결할 수 있는 혜택은 <b>노출 중인 것만</b>(노출 스위치 ON · 노출기간 안)입니다. (C36③)</li>
+    <li>적립은 <b>혜택 기준으로 1번</b>입니다 — 배너로 받든 목록에서 받든 같은 혜택은 한 번만. <b>배너로 받으면 적립 기록에 그 배너가 남아</b> 「적립 수」와 전체 포인트 내역 출처(「혜택 OF-001 · 배너 BN-003」)에 쓰입니다. 연결한 혜택이 지워지면 그 배너는 홈에서 빠집니다. (C33① · C36④)</li>
+    <li><b>관리 코드</b> — 배너 <b>BN</b>-001 · 혜택 <b>OF</b>-003 · 퀴즈 <b>QZ</b> · 광고주 <b>AD</b> · 기프티샵 상품 <b>GS</b>. 종류 글자 2자 + 번호 3자리(1000 이상은 그대로), 등록하면 자동으로 붙고 바뀌지 않습니다. 목록 첫 칸 · 선택 상자 앞(「[OF-003] 제목」) · 포인트 내역 출처에 보이고, 고객 화면에는 안 보입니다. <span class="tag proto">실개발 기준</span> (C36⑤)</li>
+    <li><b>지우기 버튼은 없습니다</b> — 노출을 끄는 것이 숨기기입니다(꼭 지울 것은 개발팀이 서버에서). (C36⑦)</li>
     <li>배너로 들어가면 혜택 상세 맨 위 이미지가 <b>배너 이미지</b>, 목록에서 들어가면 <b>목록(썸네일) 이미지</b>입니다. (C33⑥)</li>
     <li>고객 홈 배너의 <b>왼쪽 위 배지</b> = 「+10P」 → 받은 뒤 「적립완료」(혜택 상세페이지로 연결한 배너만). 그래서 디자이너에게 <b>왼쪽 위를 비운 통이미지</b>를 요청합니다. (C33⑨) — 고객 화면은 <a href="../front/f_home.html">F-HOME</a></li>
     <li>등록·수정·노출 켜고 끄기는 <b>관리자 로그</b>에 「메인 배너」로 남습니다(<a href="a_log.html">A-LOG</a>).</li>
   </ul>
-  <div class="src">기준: 실개발 어드민 <code>reward-banner</code> a70d3d4 · 서버 ef221e6 / 정책변경 C32③ · C33①⑥⑨ · C34③ — 정책서 절 번호는 대일 반영 뒤 링크</div>
+  <div class="src">기준: 실개발 어드민 <code>reward-banner</code> a70d3d4 · 서버 ef221e6 / 정책변경 C32③ · C33①⑥⑨ · C34③ · C36 — 정책서 절 번호는 대일 반영 뒤 링크</div>
 </div>
 
 <nav class="toc" aria-label="이 페이지 바로가기">
@@ -83,7 +87,7 @@
 
 <section class="sec major" id="layout">
   <div class="sec-hd"><span class="sid">A-BANNER-L</span><h2>② 페이지 구성</h2></div>
-  <p class="sec-sub">어드민 공통 틀 안에 머리 → 안내 띠 → 목록. 찾기 칸은 없습니다. 목록의 4줄은 연결 종류·기간 상태를 하나씩 보여 주려고 넣은 시험 데이터입니다.</p>
+  <p class="sec-sub">어드민 공통 틀 안에 머리 → 안내 띠 → 「노출 중만 보기」 → 목록. 검색 칸은 없습니다. 목록의 4줄은 연결 종류·기간 상태를 하나씩 보여 주려고 넣은 시험 데이터입니다.</p>
   <div class="pc-layout unit">
     <figure class="shot pc" data-id="A-BANNER-L" data-base="../"></figure>
     <div class="box wrapx" style="margin:0"><table class="t">
@@ -91,7 +95,7 @@
       <tr class="zrow" data-n="A"><td><b>A</b> 공통 틀</td><td>왼쪽 메뉴 — <b>「화면관리」 묶음 신설</b>(포인트관리와 적립 운영 사이) · 「메인배너관리」 강조</td><td>—</td></tr>
       <tr class="zrow" data-n="B"><td><b>B</b> 머리</td><td>제목 · 설명 · [+ 배너 등록]</td><td>—</td></tr>
       <tr class="zrow" data-n="C"><td><b>C</b> 안내 띠</td><td>이미지 규격 · 홈 노출 규칙 · 「지금 노출 중 N장」</td><td>노출 중 장수</td></tr>
-      <tr class="zrow" data-n="E"><td><b>E</b> 목록</td><td>8열 표</td><td>노출 스위치 · 연결 종류 · 기간 배지 · 적립 수</td></tr>
+      <tr class="zrow" data-n="E"><td><b>E</b> 목록</td><td>「노출 중만 보기」 체크 · 9열 표(첫 칸 코드)</td><td>노출 스위치 · 연결 종류 · 미노출 경고 · 기간 배지 · 적립 수</td></tr>
     </table></div>
   </div>
 </section>
@@ -114,25 +118,31 @@
 <section class="sec zsec" id="zE">
   <div class="unit">
   <div class="zone-hd"><span class="zl">C·E</span><h2>안내 띠 · 목록</h2></div>
-  <div class="shots-row"><div class="sw pc"><div class="lb">A-BANNER-E1</div><figure class="shot" data-id="A-BANNER-E1" data-base="../"></figure></div></div>
+  <div class="shots-row">
+    <div class="sw pc"><div class="lb">A-BANNER-E1 <small>전체</small></div><figure class="shot" data-id="A-BANNER-E1" data-base="../"></figure></div>
+    <div class="sw pc"><div class="lb">A-BANNER-E2 <small>「노출 중만 보기」 켬</small></div><figure class="shot" data-id="A-BANNER-E2" data-base="../"></figure></div>
+  </div>
   <div class="detail"><div class="ann">
     <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>안내 띠</div>
       <ul><li>"배너 이미지는 문구까지 들어간 통이미지로 올립니다(가로형 · 권장 816×280). 홈에는 노출 중인 배너가 순서대로 최대 5장 보이고, 0장이면 배너 자리가 숨겨집니다. 지금 노출 중 N장."</li>
-          <li>「노출 중」 = 스위치가 켜져 있고 오늘이 노출 기간 안인 배너 수(캡처는 2장 — 3번은 예정, 4번은 꺼짐).</li></ul></div>
-    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>순서</div><ul><li>작은 숫자가 앞. 정렬 = 순서 작은 것 → 최근 등록.</li></ul></div>
-    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>노출 스위치</div><ul><li>누르면 <b>확인창 없이 바로</b> 켜고 끕니다. 끄면 홈에서 빠집니다.</li></ul></div>
-    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>이미지</div><ul><li>올린 통이미지를 가로로 작게.</li></ul></div>
-    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>배너 이름</div><ul><li>관리용 — 고객 화면에는 안 보입니다.</li></ul></div>
+          <li>「노출 중」 = 스위치가 켜져 있고 오늘이 노출 기간 안인 배너 수(캡처는 2장 — BN-003은 예정, BN-004는 꺼짐).</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>「노출 중만 보기」 <span class="tag proto">실개발 기준</span></div>
+      <ul><li>처음에는 꺼져 있어 전체가 보입니다. 켜면 노출 중인 배너만 남습니다(E2). 화면 안에서만 거르고 서버에 다시 묻지 않습니다. (C36)</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>코드 「BN-001」 <span class="tag proto">실개발 기준</span></div><ul><li>관리 코드 — 자동으로 붙고 바뀌지 않습니다. 고객 화면에는 안 보입니다. (C36⑤)</li></ul></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>순서</div><ul><li>작은 숫자가 앞. 정렬 = 순서 작은 것 → 최근 등록.</li></ul></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>노출 스위치</div><ul><li>누르면 <b>확인창 없이 바로</b> 켜고 끕니다. 끄면 홈에서 빠집니다. 지우기 버튼은 없습니다 — 끄는 것이 숨기기.</li></ul></div>
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>이미지</div><ul><li>올린 통이미지를 가로로 작게.</li></ul></div>
+    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>배너 이름</div><ul><li>관리용 — 고객 화면에는 안 보입니다.</li></ul></div>
   </div><div class="ann">
-    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>연결 페이지</div>
+    <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>연결 페이지</div>
       <ul><li>위 줄 = 종류(굵게), 아래 줄 = 어디로 가는지(작게).</li></ul>
       <div class="box wrapx"><table class="t"><tr><th>종류</th><th>아래 줄</th></tr>
-        <tr><td>혜택 상세페이지(적립)</td><td>「혜택 제목 · 10P · 3초」 · 혜택 노출이 꺼져 있으면 뒤에 「· 혜택 목록엔 꺼짐(배너로만)」</td></tr>
+        <tr><td>혜택 상세페이지(적립)</td><td>「[OF-008] 혜택 제목 · 10P · 3초」 · 연결 혜택이 노출 중이 아니면 그 아래 <b>빨간 경고 「⚠ 연결 혜택 미노출 — 누르면 안내 페이지가 나옵니다」</b>(BN-002)</td></tr>
         <tr><td>픽콕 내 페이지</td><td>「상점 (/rewards/shop)」처럼 「이름 (주소)」</td></tr>
         <tr><td>외부 URL(새 창)</td><td>주소</td></tr></table></div></div>
-    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>노출 기간</div><ul><li>비면 「제한 없음」. 있으면 오늘 기준 배지 「예정」 · 「진행중」 · 「종료」 + 날짜.</li></ul></div>
-    <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>적립 수</div><ul><li>혜택 상세페이지로 연결한 배너만 — <b>그 혜택의 적립 수</b>(목록에서 받은 것도 포함). 나머지는 「—」.</li></ul></div>
-    <div class="cn" data-n="9"><div class="cn-hd"><span class="no">9</span>[수정]</div><ul><li>그 배너 값이 채워진 수정 창(④).</li></ul></div>
+    <div class="cn" data-n="9"><div class="cn-hd"><span class="no">9</span>노출 기간</div><ul><li>비면 「제한 없음」. 있으면 오늘 기준 배지 「예정」 · 「진행중」 · 「종료」 + 날짜.</li></ul></div>
+    <div class="cn" data-n="10"><div class="cn-hd"><span class="no">10</span>적립 수</div><ul><li>혜택 상세페이지로 연결한 배너만 — <b>이 배너로 들어와 받은 수만</b> 셉니다(혜택 목록에서 받은 것은 안 셈). 나머지는 「—」. (C36④)</li></ul></div>
+    <div class="cn" data-n="11"><div class="cn-hd"><span class="no">11</span>[수정]</div><ul><li>그 배너 값이 채워진 수정 창(④).</li></ul></div>
   </div></div>
   </div>
 </section>
@@ -141,7 +151,7 @@
   <div class="sec-hd"><h2>④ 등록·수정 창</h2></div>
   <p class="sec-sub">창 위 안내: "혜택 상세페이지로 연결한 배너의 적립은 그 혜택 기준으로 1번입니다(목록에서 받았으면 배너에서도 받은 것으로 봅니다)." 연결 페이지를 바꾸면 그 아래 칸이 바뀝니다(X1~X3). 캡처는 창 안 스크롤을 펼쳐 한 번에 찍었습니다.</p>
   <div class="pc-layout unit sub-item">
-    <div><div class="lb" style="font-weight:700;margin-bottom:6px">A-BANNER-X1 <small style="font-weight:400">수정 · 혜택 상세페이지 연결(노출 꺼진 혜택)</small></div><figure class="shot pc" data-id="A-BANNER-X1" data-base="../"></figure></div>
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">A-BANNER-X1 <small style="font-weight:400">수정 · 혜택 상세페이지 연결(지금 연결된 혜택이 꺼짐)</small></div><figure class="shot pc" data-id="A-BANNER-X1" data-base="../"></figure></div>
     <div class="ann">
       <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>배너 이미지 * — [이미지 선택]</div>
         <ul><li>고르면 <b>바로 올라가고</b> 가로 미리보기 · [이미지 바꾸기] · [빼기]. 안내 "문구까지 들어간 통이미지 · 가로형(권장 816×280) · png·jpg·webp 3MB 이하". 주소를 직접 쓰는 칸은 없습니다. (<a href="#img">이미지 선택</a>)</li></ul></div>
@@ -149,8 +159,10 @@
       <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>연결 페이지 * — 3가지</div>
         <ul><li><b>혜택 상세페이지(적립)</b> · <b>픽콕 내 페이지</b> · <b>외부 URL(새 창)</b>. 안내 "혜택 상세페이지 = 고른 혜택 상세로(적립 · 상세 맨 위에 이 배너 이미지) · 픽콕 내 페이지 · 외부 URL은 새 창".</li></ul></div>
       <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>연결할 혜택 * (혜택 상세페이지일 때)</div>
-        <ul><li>혜택 목록에서 고릅니다 — 「제목 · 10P」, 노출 꺼진 혜택은 뒤에 「· 혜택 목록엔 꺼짐」.</li>
-            <li>안내 "혜택의 노출 스위치와는 따로입니다 — 혜택 목록에서 꺼 둔 혜택도 배너로는 들어와 적립할 수 있어요". 포인트·체류 초·상세내용은 <b>그 혜택 것</b>을 씁니다.</li></ul></div>
+        <ul><li><b>노출 중인 혜택만</b> 목록에 나옵니다 — 「[OF-003] 제목 · 10P」.</li>
+            <li>수정할 때 이미 연결된 혜택이 꺼져 있으면 <b>그것만</b> 「· 미노출(지금 연결된 혜택)」로 함께 보입니다(캡처). 다른 꺼진 혜택은 고를 수 없습니다.</li>
+            <li>안내 "노출 중인 혜택(노출 스위치 ON · 노출기간 안)만 고를 수 있어요 — 나중에 혜택이 꺼지면 배너를 눌러도 안내 페이지가 나옵니다". 포인트·체류 초·상세내용은 <b>그 혜택 것</b>을 씁니다.</li></ul>
+        <div class="rule"><b>근거</b> <span class="tag proto">실개발 기준</span> C36③ — 정책서 반영 대기</div></div>
       <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>노출 순서 · 노출</div><ul><li>숫자(작은 게 앞) + 스위치. 안내 "작은 숫자가 앞 · 노출을 끄면 홈에서 빠집니다".</li></ul></div>
       <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>노출 기간</div><ul><li>시작일 ~ 종료일. 비우면 제한 없이 노출.</li></ul></div>
       <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>[취소] [저장]</div>
@@ -180,6 +192,7 @@
         <ul><li>위에서부터 하나씩 검사해 첫 번째만 보여 줍니다 — 창은 그대로.</li></ul>
         <div class="box wrapx"><table class="t"><tr><th>언제</th><th>문구</th></tr>
           <tr><td>이미지 없음</td><td>배너 이미지를 올려 주세요.</td></tr>
+          <tr><td>(서버) 노출 중이 아닌 혜택을 연결</td><td>노출 중인 혜택만 연결할 수 있어요(노출 스위치 ON · 노출기간 안)</td></tr>
           <tr><td>이름 없음</td><td>배너 이름을 입력해 주세요.</td></tr>
           <tr><td>혜택 상세페이지인데 혜택을 안 고름</td><td>연결할 혜택을 골라 주세요.</td></tr>
           <tr><td>픽콕 내 페이지인데 안 고름</td><td>픽콕 내 페이지를 골라 주세요.</td></tr>
@@ -207,7 +220,7 @@
     <tr><td>E1</td><td>배너가 하나도 없음</td><td>목록 자리에 「등록된 배너가 없습니다.」 · 안내 띠 「지금 노출 중 0장」 · 고객 홈은 배너 자리 숨김</td></tr>
     <tr><td>E2</td><td>노출 중 배너가 6장 이상</td><td>고객 홈에는 순서대로 5장만</td></tr>
     <tr><td>E3</td><td>연결한 혜택이 지워짐</td><td>그 배너는 고객 홈에서 빠짐</td></tr>
-    <tr><td>E4</td><td>연결한 혜택의 노출을 끔</td><td>배너는 그대로 노출 · 배너로 들어와 적립 가능 · 목록에 「혜택 목록엔 꺼짐(배너로만)」</td></tr>
+    <tr><td>E4</td><td>연결한 혜택의 노출을 끄거나 노출기간이 끝남</td><td>배너는 홈에 남지만 적립 배지 없음 · 누르면 「볼 수 없는 혜택」 안내 페이지(상세·적립 안 됨) · 어드민 목록에 빨간 경고 「⚠ 연결 혜택 미노출 — 누르면 안내 페이지가 나옵니다」 → 다른 혜택으로 바꾸거나 배너를 끄면 됨</td></tr>
     <tr><td>E5</td><td>목록을 못 받음</td><td>목록 자리에 오류 문구 + [다시 시도]</td></tr>
     <tr><td>E6</td><td>로그인이 끝남</td><td>로그인 화면으로 보냄</td></tr>
   </table></div>
