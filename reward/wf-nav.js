@@ -57,6 +57,8 @@
     ['a_wd',     'A-WD',   '출금 신청',         'admin/a_wd.html'],
     ['a_order',  'A-ORDER','픽샵 구매내역',     'admin/a_order.html'],
     ['a_book',   'A-BOOK', '예약 적립',         'admin/a_book.html'],
+    ['grp', '화면관리'],   /* 실개발 어드민 11-09 신설 — 포인트관리와 적립 운영 사이 */
+    ['a_banner', 'A-BANNER','메인배너관리',     'admin/a_banner.html'],
     ['grp', '적립 운영'],
     ['a_offer',  'A-OFFER','혜택(오퍼월)',      'admin/a_offer.html'],
     ['a_quiz',   'A-QUIZ', '퀴즈 관리',         'admin/a_quiz.html'],
