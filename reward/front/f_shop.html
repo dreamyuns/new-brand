@@ -22,7 +22,6 @@
 </div>
 <p class="lead">모은 포인트로 기프티콘·상품권을 바꾸는 곳입니다(주소 <code>/rewards/shop</code>). 리워드 홈의 [기프티샵 쇼핑], 혜택 탭의 기프티샵 카드, 마이페이지 「기프티샵」으로 들어옵니다. <b>이번 출시는 상품 목록과 상품 페이지까지만</b> 열고, <b>구매는 「준비 중」</b>입니다(C8).</p>
 
-<div class="box note-design"><b>화면 모습은 디자인 확정 전입니다.</b> 이 문서는 <b>기능과 정책</b>을 기준으로 읽어 주세요. 상품·가격은 시연 데이터입니다(상품 사진 없음 → 🎁).</div>
 
 <div class="box note-later"><b>구매 뒤 화면은 나중에 작성해요.</b> 주문 접수·포인트 차감·쿠폰 발행·내 쿠폰함·취소는 기프티콘 업체가 정해지면 만듭니다(외부 업체 연동 · C8). 프로토 기준 기록은 <a href="f_jar.html">F-JAR</a>·<a href="f_coupon.html">F-COUPON</a>에 남아 있습니다. 운영자가 설정(shop_open)을 켜면 구매가 열리도록만 해 두었습니다.</div>
 
@@ -31,7 +30,6 @@
   <div class="legend">
     <span><b style="color:var(--zone)">붉은 점선 상자</b> 화면의 영역</span>
     <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능</span>
-    <span><span class="tag proto">실개발 기준</span> 정책서에 아직 없음</span>
     <span><span class="tag open">미결</span> 바뀔 수 있음</span>
   </div>
 </div>
@@ -46,7 +44,7 @@
   <ul>
     <li><b>비로그인도 목록·상품을 볼 수 있습니다.</b> 비로그인이 [로그인하고 구매하기]를 누르면 로그인 시트.</li>
     <li>목록에는 어드민 「기프티샵 상품」에서 <b>판매 중</b>인 상품만, 어드민 순서대로 나옵니다. 1P = 1원.</li>
-    <li><b>구매는 「준비 중」</b> — [구매하기]를 누르면 토스트 "구매는 준비 중이에요. 조금만 기다려 주세요!"만 뜨고 포인트는 빠지지 않습니다. <span class="tag proto">실개발 기준</span> C8</li>
+    <li><b>구매는 「준비 중」</b> — [구매하기]를 누르면 토스트 "구매는 준비 중이에요. 조금만 기다려 주세요!"만 뜨고 포인트는 빠지지 않습니다. C8</li>
     <li>로그인 회원은 내 포인트로 살 수 있는지 미리 보여 줍니다(모자라면 "NP 더 모으면 돼요").</li>
   </ul>
   <div class="src">기준: 포인트 사용 정책서 3절(픽샵) / 정책변경 C1 · C8 / 화면은 실개발 고객 웹(2026-11-02)</div>
@@ -110,7 +108,7 @@
     <ul><li>[구매하기] → 토스트 "구매는 준비 중이에요. 조금만 기다려 주세요!"(T1) — 포인트·주문 기록 없음.</li>
         <li>[로그인하고 구매하기] → 로그인 시트(X1 · <a href="f_auth.html">F-AUTH</a>). 로그인 뒤 같은 상품 페이지에 남습니다.</li>
         <li>판매가 끝났거나 없는 상품 → "판매가 끝난 상품이에요" + [닫기](P3).</li></ul>
-    <div class="rule"><b>근거</b> <span class="tag proto">실개발 기준</span> C8 — 구매를 열 때의 방식(즉시 발행 등)은 업체 연동 방식 확정 후 다시 확인 <span class="tag open">미결</span></div></div>
+    <div class="rule"><b>근거</b> C8 — 구매를 열 때의 방식(즉시 발행 등)은 업체 연동 방식 확정 후 다시 확인 <span class="tag open">미결</span></div></div>
 </section>
 
 <section class="sec zsec" id="exc">

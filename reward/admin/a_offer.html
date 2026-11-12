@@ -18,13 +18,12 @@
 
 <div class="top"><span class="sid">A-OFFER</span><h1>혜택(오퍼월) 관리 · 광고주 관리 (어드민)</h1></div>
 <div class="meta">
-  <span>기준 <b>실개발</b> 어드민 <code>reward-banner</code> (2026-11-10) · 정책 참고 <a href="../policy/pol_offer.html#s3">리워드 혜택 v0.1 · 3~4절</a> · 정책변경 C33·C34·C36 (정책서 반영 대기)</span>
+  <span>기준 <b>실개발</b> 어드민 <code>reward-banner</code> (2026-11-10) · 정책 참고 <a href="../policy/pol_offer.html#s3">리워드 혜택 v0.1 · 3~4절</a> · 정책변경 C33·C34·C36</span>
   <span>캡처 <b>2026-11-10</b> · PC 1440 · 시험 데이터</span>
   <span>최종수정 <b>2026-11-10</b></span>
 </div>
 <p class="lead">고객 혜택 탭과 홈 광고 줄에 나갈 <b>혜택(광고)을 등록·노출</b>하고, 혜택을 올릴 수 있는 <b>광고주를 관리</b>하는 두 화면입니다.</p>
 
-<div class="box note-design"><b>화면 모습은 디자인 확정 전입니다.</b> 이 문서는 <b>기능과 정책</b>을 기준으로 읽어 주세요. 혜택·광고주 이름과 이미지는 시험 데이터입니다.</div>
 
 <div class="box">
   <h3>읽는 법</h3>
@@ -32,7 +31,6 @@
     <span><b style="color:var(--zone)">붉은 점선 상자 A~E</b> 화면의 영역</span>
     <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능</span>
     <span>「N-N절」을 누르면 그 절만 팝업으로 열립니다</span>
-    <span><span class="tag proto">실개발 기준</span> 정책서에 아직 없음(대일 반영 대기)</span>
     <span><span class="tag open">미결</span> 바뀔 수 있음</span>
   </div>
 </div>
@@ -48,10 +46,10 @@
   <ul>
     <li><b>광고주 관리에서 「사용」인 광고주만</b> 새 혜택에 고를 수 있습니다(이미 그 광고주로 된 혜택을 고칠 때는 꺼진 광고주도 보임). (<a href="../policy/pol_offer.html#s4">4절</a>)</li>
     <li>고객 화면에는 <b>노출 스위치가 켜져 있고 노출 기간 안인</b> 혜택만 나갑니다. 적립·체류를 비우면 리워드 설정의 기본값(10P · 3초)이 들어갑니다. 회원당 혜택 1개에 1번만 적립됩니다. (<a href="../policy/pol_offer.html#s3">3절</a>)</li>
-    <li><b>혜택 상세·적립은 혜택이 노출 중일 때만</b>(노출 스위치 ON · 노출기간 안) 됩니다 — 끄거나 기간이 지나면 혜택 목록·홈 광고 줄에서 빠지고, 이 혜택에 연결된 메인 배너를 눌러도 「볼 수 없는 혜택」 안내 페이지가 나옵니다(<a href="a_banner.html">A-BANNER</a>). <span class="tag proto">실개발 기준</span> (C36①②)</li>
-    <li><b>관리 코드</b> — 혜택 <b>OF</b>-003 · 광고주 <b>AD</b>-005(배너 BN · 퀴즈 QZ · 기프티샵 상품 GS도 같은 규칙). 자동으로 붙고 바뀌지 않으며 고객 화면에는 안 보입니다. <span class="tag proto">실개발 기준</span> (C36⑤)</li>
-    <li><b>이동 주소</b> = 적립 뒤 고객이 [페이지 이동 후 상세보기]를 누르면 가는 곳 — 픽콕 내 페이지(5개 중 선택) 또는 외부 URL(새 창). <span class="tag proto">실개발 기준</span> (C33③ · C34②)</li>
-    <li>이미지는 모두 <b>[이미지 선택]으로 올립니다</b>(주소를 쓰는 칸 없음 · png·jpg·webp 3MB 이하 — <a href="a_banner.html#img">이미지 선택</a>). <span class="tag proto">실개발 기준</span> (D1)</li>
+    <li><b>혜택 상세·적립은 혜택이 노출 중일 때만</b>(노출 스위치 ON · 노출기간 안) 됩니다 — 끄거나 기간이 지나면 혜택 목록·홈 광고 줄에서 빠지고, 이 혜택에 연결된 메인 배너를 눌러도 「볼 수 없는 혜택」 안내 페이지가 나옵니다(<a href="a_banner.html">A-BANNER</a>). (C36①②)</li>
+    <li><b>관리 코드</b> — 혜택 <b>OF</b>-003 · 광고주 <b>AD</b>-005(배너 BN · 퀴즈 QZ · 기프티샵 상품 GS도 같은 규칙). 자동으로 붙고 바뀌지 않으며 고객 화면에는 안 보입니다. (C36⑤)</li>
+    <li><b>이동 주소</b> = 적립 뒤 고객이 [페이지 이동 후 상세보기]를 누르면 가는 곳 — 픽콕 내 페이지(5개 중 선택) 또는 외부 URL(새 창). (C33③ · C34②)</li>
+    <li>이미지는 모두 <b>[이미지 선택]으로 올립니다</b>(주소를 쓰는 칸 없음 · png·jpg·webp 3MB 이하 — <a href="a_banner.html#img">이미지 선택</a>). (D1)</li>
     <li>정산(요율·청구)·성과 리포트·광고주 계정은 이번 범위가 아닙니다 — 광고주의 정산 방식은 적어 두기만 합니다. (<span class="tag open">미결</span> R-O2)</li>
   </ul>
   <div class="src">기준: 실개발 어드민 <code>reward-banner</code> a70d3d4 / 리워드 혜택 정책서 v0.1 · 3·4절 / 정책변경 C33③④⑤⑦ · C34② · C36 · D1 — 새로 생긴 항목의 정책서 절 번호는 대일 반영 뒤 링크</div>
@@ -123,9 +121,9 @@
   <div class="shots-row"><div class="sw pc"><div class="lb">A-OFFER-E1</div><figure class="shot" data-id="A-OFFER-E1" data-base="../"></figure></div></div>
   <div class="cn"><div class="cn-hd">안내 띠</div><ul><li>"노출 스위치가 켜져 있어도 노출 기간 밖이면 고객 화면에 보이지 않습니다. 적립·체류를 비워 두면 리워드 설정의 기본값이 들어갑니다. 회원당 혜택 1개에 1번만 적립됩니다."</li></ul></div>
   <div class="detail"><div class="ann">
-    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「노출 중만 보기」 <span class="tag proto">실개발 기준</span></div><ul><li>처음에는 꺼져 있어 전체가 보입니다. 켜면 노출 중(스위치 ON · 기간 안)인 혜택만 남습니다(화면 안에서만 거름).</li></ul></div>
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「노출 중만 보기」 </div><ul><li>처음에는 꺼져 있어 전체가 보입니다. 켜면 노출 중(스위치 ON · 기간 안)인 혜택만 남습니다(화면 안에서만 거름).</li></ul></div>
     <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>선택</div><ul><li>머리 칸 체크 = 모두 선택. 일괄 수정에 씁니다.</li></ul></div>
-    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>코드 「OF-001」 <span class="tag proto">실개발 기준</span></div><ul><li>관리 코드. 메인배너관리의 연결 페이지 칸·선택 상자에도 같은 코드가 보입니다. (C36⑤)</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>코드 「OF-001」 </div><ul><li>관리 코드. 메인배너관리의 연결 페이지 칸·선택 상자에도 같은 코드가 보입니다. (C36⑤)</li></ul></div>
     <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>노출 스위치</div>
       <ul><li>누르면 <b>확인창 없이 바로</b> 켜고 끕니다(따로 알림 없음). 끄면 혜택 목록·홈 광고 줄에서 빠지고 <b>상세도 열리지 않습니다</b> — 연결된 메인 배너를 눌러도 안내 페이지.</li></ul></div>
     <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>썸네일</div><ul><li>올린 이미지. 없으면 🎁.</li></ul></div>
@@ -138,7 +136,7 @@
     <div class="cn" data-n="11"><div class="cn-hd"><span class="no">11</span>노출기간</div>
       <ul><li>비면 「제한 없음」. 있으면 오늘 기준 배지 「예정」 · 「진행중」 · 「종료」 + 날짜.</li></ul></div>
     <div class="cn" data-n="12"><div class="cn-hd"><span class="no">12</span>버튼명</div><ul><li>고객 목록의 버튼 글자.</li></ul></div>
-    <div class="cn" data-n="13"><div class="cn-hd"><span class="no">13</span>이동 <span class="tag proto">실개발 기준</span></div>
+    <div class="cn" data-n="13"><div class="cn-hd"><span class="no">13</span>이동 </div>
       <ul><li>예전 「아웃링크」 칸. 위 줄 = 주소, 아래 줄 = 「픽콕 내 페이지 · 상점 (/rewards/shop)」 또는 「외부 URL · 새 창」.</li></ul></div>
     <div class="cn" data-n="14"><div class="cn-hd"><span class="no">14</span>참여수</div><ul><li>적립된 회원 수(배너로 들어와 받은 것 포함 — 배너별 수는 메인배너관리 「적립 수」).</li></ul></div>
     <div class="cn" data-n="15"><div class="cn-hd"><span class="no">15</span>[수정]</div><ul><li>그 혜택 값이 채워진 수정 창.</li></ul>
@@ -148,17 +146,17 @@
 
 <section class="sec major" id="over">
   <div class="sec-hd"><h2>④ 등록·수정 · 일괄 수정 창</h2></div>
-  <p class="sec-sub">캡처는 창 안 스크롤을 펼쳐 한 번에 찍었습니다(실제 창은 화면 높이에 맞춰 안에서 스크롤). 칸 순서는 PO 11-09 확정 순서입니다.</p>
+  <p class="sec-sub">캡처는 창 안 스크롤을 펼쳐 한 번에 찍었습니다(실제 창은 화면 높이에 맞춰 안에서 스크롤).</p>
   <div class="pc-layout unit sub-item">
     <div><div class="lb" style="font-weight:700;margin-bottom:6px">A-OFFER-X1 <small style="font-weight:400">혜택 수정 · 이동 = 픽콕 내 페이지 · 상세내용에 이미지</small></div><figure class="shot pc" data-id="A-OFFER-X1" data-base="../"></figure></div>
     <div class="ann">
       <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>광고주 *</div><ul><li>「사용」인 광고주만 — 「[AD-003] 이름 · 정산 방식」(앞에 관리 코드).</li></ul></div>
-      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>썸네일 — [이미지 선택] <span class="tag proto">실개발 기준</span></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>썸네일 — [이미지 선택] </div>
         <ul><li>주소 입력 칸 없음 · 정사각 미리보기. 안내 "목록에 보이는 이미지 · png·jpg·webp 3MB 이하 — 고르면 바로 올라갑니다". (<a href="a_banner.html#img">이미지 선택</a>)</li></ul></div>
       <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>제목 *</div></div>
       <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>한 줄 설명</div><ul><li>"목록·상세에서 제목 아래에 보입니다".</li></ul></div>
       <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>버튼명 *</div><ul><li>"목록 버튼에 보이는 말" · 6자까지 · 처음 값 「참여하기」.</li></ul></div>
-      <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>이동 주소 * — 이동 방식 선택 <span class="tag proto">실개발 기준</span></div>
+      <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>이동 주소 * — 이동 방식 선택 </div>
         <ul><li>예전 「광고주 페이지」에서 이름이 바뀌었습니다. 앞 상자에서 <b>픽콕 내 페이지 / 외부 URL(새 창)</b>을 고릅니다.</li>
             <li>픽콕 내 페이지면 뒤가 5개 선택 상자(혜택 · 상점 · 출석체크 · 여행상식 퀴즈 · 친구초대 — 메인 배너와 같은 목록), 외부 URL이면 입력 칸(X1b).</li>
             <li>안내 "적립 뒤 [페이지 이동 후 상세보기]로 가는 곳 — 픽콕 내 페이지(5개 중 선택) · 외부 URL은 https://로 시작해 새 창으로 엽니다".</li></ul></div>
@@ -166,10 +164,10 @@
       <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>분류</div><ul><li>여행 · 금융 · 쇼핑 · 생활 · 게임. 고객 홈 광고 줄의 칩이 됩니다. (<span class="tag open">미결</span> R-O4)</li></ul></div>
       <div class="cn" data-n="9"><div class="cn-hd"><span class="no">9</span>노출기간</div><ul><li>시작일 ~ 종료일. 비우면 제한 없음.</li></ul></div>
       <div class="cn" data-n="10"><div class="cn-hd"><span class="no">10</span>정렬 순서</div><ul><li>"작을수록 위".</li></ul></div>
-      <div class="cn" data-n="11"><div class="cn-hd"><span class="no">11</span>노출 여부 <span class="tag proto">실개발 기준</span></div>
+      <div class="cn" data-n="11"><div class="cn-hd"><span class="no">11</span>노출 여부 </div>
         <ul><li>스위치 하나. 안내 "끄거나 노출기간이 지나면 혜택 목록·홈 광고 줄에서 빠지고, 상세도 열리지 않아요(이 혜택에 연결된 메인 배너를 눌러도 「볼 수 없는 혜택」 안내가 나옵니다)". (C36①②)</li></ul>
         <div class="case">「목록에 숨김(배너 전용)」 칸은 없습니다 — 11-09에 만들었다가 11-10에 없앴습니다(C34③)</div></div>
-      <div class="cn" data-n="12"><div class="cn-hd"><span class="no">12</span>상세내용 — 에디터 <span class="tag proto">실개발 기준</span></div>
+      <div class="cn" data-n="12"><div class="cn-hd"><span class="no">12</span>상세내용 — 에디터 </div>
         <ul><li>예전 「홍보 페이지 내용」에서 이름이 바뀌었습니다. 고객이 머무는 상세 화면 본문입니다. 안내 "이미지는 [이미지]로 고르거나 복사해서 붙여 넣으세요(Ctrl+V)". (<a href="#editor">에디터</a>)</li></ul></div>
       <div class="cn" data-n="13"><div class="cn-hd"><span class="no">13</span>[취소] [저장]</div>
         <ul><li>저장되면 창이 닫히고 목록이 새로 그려집니다(따로 알림 없음).</li>
@@ -202,13 +200,13 @@
 </section>
 
 <section class="sec zsec" id="editor">
-  <div class="sec-hd"><h2>상세내용 에디터 <span class="tag proto">실개발 기준</span></h2></div>
+  <div class="sec-hd"><h2>상세내용 에디터 </h2></div>
   <div class="cn"><div class="cn-hd">도구와 이미지 넣는 법</div>
     <ul><li>도구 줄: <b>굵게 · 기울임 · 밑줄 · 소제목 · 목록 · 번호 목록 · 글자색 5개(검정 · 파랑 · 빨강 · 초록 · 주황) · [이미지]</b>.</li>
         <li>이미지 넣는 법 3가지 — [이미지] 버튼으로 고르기 · <b>복사한 이미지 붙여넣기(Ctrl+V)</b> · 끌어다 놓기. 서버에 올라가 그 자리에 들어갑니다(png·jpg·webp 3MB 이하 · 넘으면 에디터 아래 빨간 안내 "3MB 이하 이미지만 올릴 수 있습니다.").</li>
         <li>예전에 글로만 쓴 상세는 줄바꿈 그대로 문단으로 들어옵니다.</li>
         <li>고객 화면은 <b>허용한 서식만 남겨서</b> 보여 줍니다(위험한 코드는 걸러짐). 고객 혜택 상세는 <a href="../front/f_offer.html">F-OFFER</a>.</li></ul>
-    <div class="rule"><b>근거</b> PO 11-09 · 정책변경 C33⑤ — 정책서 반영 대기</div></div>
+    <div class="rule"><b>근거</b> 정책변경 C33⑤</div></div>
 </section>
 
 <section class="sec major" id="adv">
@@ -227,10 +225,10 @@
   <div class="unit sub-item">
   <div class="shots-row"><div class="sw pc"><div class="lb">A-ADV-E1</div><figure class="shot" data-id="A-ADV-E1" data-base="../"></figure></div></div>
   <div class="detail"><div class="ann">
-    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>코드 「AD-003」 <span class="tag proto">실개발 기준</span></div><ul><li>관리 코드. 혜택 등록 창의 광고주 선택 상자 앞에도 보입니다. (C36⑤)</li></ul></div>
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>코드 「AD-003」 </div><ul><li>관리 코드. 혜택 등록 창의 광고주 선택 상자 앞에도 보입니다. (C36⑤)</li></ul></div>
     <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>상태 — 「사용」 / 「중지」 배지</div><ul><li>목록에서는 바꿀 수 없고 수정 창의 「사용」 스위치로 바꿉니다. 중지하면 새 혜택 등록 때 고를 수 없습니다.</li></ul>
       <div class="case">중지한 광고주의 <b>이미 노출 중인 혜택</b>은 그대로 노출됩니다 <span class="tag open">미결</span> R-O5</div></div>
-    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>로고 <span class="tag proto">실개발 기준</span></div><ul><li>올린 로고(BI). 없으면 「없음」.</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>로고 </div><ul><li>올린 로고(BI). 없으면 「없음」.</li></ul></div>
     <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>광고주</div></div>
     <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>사업자번호</div></div>
     <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>담당자 연락처</div></div>
@@ -245,9 +243,9 @@
     <div><div class="lb" style="font-weight:700;margin-bottom:6px">A-ADV-X1 <small style="font-weight:400">광고주 수정 · 로고 있음</small></div><figure class="shot pc" data-id="A-ADV-X1" data-base="../"></figure></div>
     <div class="ann">
       <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>광고주 이름 *</div></div>
-      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>로고(BI) — [이미지 선택] <span class="tag proto">실개발 기준</span></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>로고(BI) — [이미지 선택] </div>
         <ul><li>가로로 긴 미리보기(잘리지 않게 전체). 안내 "있으면 고객 혜택 상세에 광고주 이름 대신 로고가 보입니다 · png·jpg·webp 3MB 이하".</li></ul>
-        <div class="rule"><b>근거</b> 정책변경 C33⑦ — 정책서 반영 대기</div></div>
+        <div class="rule"><b>근거</b> 정책변경 C33⑦</div></div>
       <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>사업자번호</div></div>
       <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>담당자 연락처</div></div>
       <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>정산 방식</div><ul><li>글자 칸. 안내 "예: CPC(클릭당) · CPA(참여당) · 고정". 처음 값 CPC.</li></ul></div>

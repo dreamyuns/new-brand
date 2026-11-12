@@ -29,14 +29,12 @@
 </div>
 <p class="lead">검색 탭에서 [검색하기]를 누르거나 AI 검색을 하면 나오는 숙소 목록입니다(주소 <code>/search?destination=…</code>). 숙소와 가격은 <b>호텔스컴바인(KAYAK)</b>에서 받아 옵니다. 숙소를 누르면 <b>새 창</b>으로 숙소 상세(<a href="f_sdet.html">F-SDET</a>)가 열립니다.</p>
 
-<div class="box note-design"><b>화면 모습은 디자인 확정 전입니다.</b> 이 문서는 <b>기능과 정책</b>을 기준으로 읽어 주세요. 캡처 속 숙소·가격은 캡처한 순간의 실제 값이라 다시 검색하면 달라집니다.</div>
 
 <div class="box">
   <h3>읽는 법</h3>
   <div class="legend">
     <span><b style="color:var(--zone)">붉은 점선 상자 A~E</b> 화면의 영역</span>
     <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능 — 마우스를 올리면 설명과 함께 강조</span>
-    <span><span class="tag proto">실개발 기준</span> 정책서에 아직 없음</span>
     <span><span class="tag open">미결</span> 바뀔 수 있음</span>
   </div>
 </div>
@@ -57,9 +55,9 @@
     <li>한 번에 <b>50곳</b>씩 보여 주고 [목록 더보기]로 50곳씩 더 받습니다.</li>
     <li>필터·정렬은 서버가 처리합니다. 필터를 바꾸면 주소만 바뀌고(뒤로가기 기록에 쌓이지 않음), 조건(목적지·날짜·인원)을 바꾸면 새 검색입니다 — 이때 적용 중인 필터는 모두 초기화됩니다.</li>
     <li>숙소 상세는 <b>새 창</b>으로 엽니다 — 결과 목록(조건·스크롤·더보기)을 그대로 두기 위해.</li>
-    <li><b>AI 검색 결과가 0곳</b>이면(KAYAK에는 숙소가 있는데 문장에서 읽은 조건 때문에 다 빠진 경우) 조건을 <b>하나씩 풀어 자동으로 다시 찾습니다 — 한 문장에 최대 2번.</b> 푸는 순서: 분위기(테마) → 전망(「뷰 좋은」) → 평점 8점(「좋은·훌륭한」 같은 칭찬 말로 걸린 것만) → 편의시설(마지막에 말한 것부터 하나씩) → 숙소 종류 → 가격. 목적지·날짜·인원·정렬·성급과, 평점 칩으로 직접 고른 평점은 풀지 않습니다. 풀 때마다 토스트로 알립니다(예외 E11). 폼 검색에는 없습니다. <span class="tag proto">실개발 기준</span></li>
-    <li>목록 아래 가운데 <b>[지도로 보기]</b> 떠 있는 버튼 → 같은 결과를 지도로(⑤). <span class="tag proto">실개발 기준</span> C25</li>
-    <li>오른쪽 아래 <b>[적립필독]</b> 떠 있는 버튼 → <a href="f_guide.html">F-GUIDE</a>. <span class="tag proto">실개발 기준</span> C13⑤</li>
+    <li><b>AI 검색 결과가 0곳</b>이면(KAYAK에는 숙소가 있는데 문장에서 읽은 조건 때문에 다 빠진 경우) 조건을 <b>하나씩 풀어 자동으로 다시 찾습니다 — 한 문장에 최대 2번.</b> 푸는 순서: 분위기(테마) → 전망(「뷰 좋은」) → 평점 8점(「좋은·훌륭한」 같은 칭찬 말로 걸린 것만) → 편의시설(마지막에 말한 것부터 하나씩) → 숙소 종류 → 가격. 목적지·날짜·인원·정렬·성급과, 평점 칩으로 직접 고른 평점은 풀지 않습니다. 풀 때마다 토스트로 알립니다(예외 E11). 폼 검색에는 없습니다. </li>
+    <li>목록 아래 가운데 <b>[지도로 보기]</b> 떠 있는 버튼 → 같은 결과를 지도로(⑤). C25</li>
+    <li>오른쪽 아래 <b>[적립필독]</b> 떠 있는 버튼 → <a href="f_guide.html">F-GUIDE</a>. C13⑤</li>
   </ul>
   <div class="src">기준: Phase1 메타서치 정책서(S01 · 5-6절 필터 · 5-11절 지도) / 정책변경 C13 · C25 / 화면은 실개발 고객 웹(2026-11-02)</div>
 </div>
@@ -184,7 +182,7 @@
       <div class="cn" data-n="19"><div class="cn-hd"><span class="no">19</span>[지도로 보기]</div>
         <ul><li>목록 아래 가운데에 늘 떠 있습니다(스크롤해도 같은 자리). 누르면 지금 결과 그대로 지도 보기(⑤)가 열립니다.</li>
             <li>숨는 때: 처음 결과를 받는 중 · 결과 0곳 · 검색 실패 · 필터·검색 수정 창이 열려 있을 때.</li></ul>
-        <div class="rule"><b>근거</b> 정책서 5-11절은 위쪽 [목록|지도] 토글 → 실개발은 아래 떠 있는 버튼(PO 11-03 · C25③) <span class="tag proto">실개발 기준</span></div></div>
+        <div class="rule"><b>근거</b> 정책서 5-11절은 위쪽 [목록|지도] 토글 → 실개발은 아래 떠 있는 버튼(C25③) </div></div>
     </div>
   </div>
   </div>
@@ -205,7 +203,7 @@
 
 <!-- ════════ ⑤ 지도 보기 (2026-11-03 · feature/search-map) ════════ -->
 <section class="sec major" id="map">
-  <div class="sec-hd"><span class="sid">F-SRES-M</span><h2>⑤ 지도 보기 <span class="tag proto">실개발 기준</span></h2></div>
+  <div class="sec-hd"><span class="sid">F-SRES-M</span><h2>⑤ 지도 보기 </h2></div>
   <p class="sec-sub">[지도로 보기]를 누르면 같은 주소에 <code>&amp;layout=map</code>이 붙고 지도가 화면 전체를 덮습니다. 목록은 그대로 뒤에 남아 있습니다.</p>
   <div class="sec-policy">
     <h3>⚙ 공통 정책 — 지도 보기</h3>
@@ -218,7 +216,7 @@
       <li>구글 지도의 가게·식당 아이콘은 숨깁니다(가격 핀과 섞이지 않게) — 관광지·역·공원은 남깁니다. (C25⑨)</li>
       <li>지도 키는 개발 중 PO 데모 키입니다 — 개발자에게 넘길 때 회사 키로 바꿔야 합니다. <span class="tag open">미결</span> (C25⑩)</li>
     </ul>
-    <div class="src">기준: 정책변경 C25(PO 2026-11-03) / Phase1 메타서치 정책서 5-11절(S01-MAP — [목록|지도] 토글·「이 지역 검색」은 실개발과 다름, 정책서 반영 대기)</div>
+    <div class="src">기준: 정책변경 C25 / Phase1 메타서치 정책서 5-11절(S01-MAP — [목록|지도] 토글·「이 지역 검색」은 실개발과 다름, 정책서 반영 대기)</div>
   </div>
   <div class="two-col unit">
     <div><figure class="shot" data-id="F-SRES-M" data-base="../"></figure></div>
@@ -242,7 +240,7 @@
   <div class="two-col" style="grid-template-columns:320px minmax(0,1fr)">
     <div class="shots-row"><div class="sw"><div class="lb">F-SRES-F1</div><figure class="shot" data-id="F-SRES-F1" data-base="../"></figure></div></div>
     <div class="ann">
-      <div class="cn" data-n="20"><div class="cn-hd"><span class="no">20</span>[✕] 지도 닫기</div><ul><li>검색창 왼쪽에 따로 떨어진 작은 흰 동그라미 버튼입니다(입력칸과 헷갈리지 않게 · PO 11-03).</li><li>지금 결과 그대로 목록으로 돌아갑니다(주소에서 <code>layout=map</code>만 뺌).</li></ul></div>
+      <div class="cn" data-n="20"><div class="cn-hd"><span class="no">20</span>[✕] 지도 닫기</div><ul><li>검색창 왼쪽에 따로 떨어진 작은 흰 동그라미 버튼입니다(입력칸과 헷갈리지 않게).</li><li>지금 결과 그대로 목록으로 돌아갑니다(주소에서 <code>layout=map</code>만 뺌).</li></ul></div>
       <div class="cn" data-n="21"><div class="cn-hd"><span class="no">21</span>AI 검색창</div>
         <ul><li>비어 있을 때 안내 글 = 「목적지 · 날짜 · 인원」 요약(예: "서울 · 11.10 - 11.11 · 투숙객 2명 · 객실 1개"). AI 검색으로 들어왔으면 그 문장이 들어 있습니다.</li>
             <li>문장을 넣고 검색하면 <b>지도에 머문 채</b> 새 결과로 바뀌고, 지도가 새 1위 호텔로 옮겨 갑니다(예: 서울 → 강릉). 목적지를 말하지 않으면 지금 도시를 유지합니다 — 결과 화면 AI 재검색과 같은 규칙. (C25⑦)</li></ul></div>
