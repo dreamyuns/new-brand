@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>F-QUIZ 여행상식 퀴즈 — 픽콕 리워드 화면기획서</title>
 <link rel="stylesheet" href="../wf-reward.css">
-<!-- 2026-10-30 실개발 기준으로 다시 씀(PO). 근거: pickoq-front feature/reward src/features/reward/ui/QuizScreen.tsx ·
-     EarnOverlay.tsx · IdentitySheet.tsx · messages/ko-KR.json reward.quiz / pickoq-backend QuizService
-     (today: 처음 열 때 출제 · answer: 본인인증 필요 · 마지막 문제에서 한 번에 지급)
-     캡처: 캡처 사본 dev 계정 — 오늘 기록을 사본 DB에서 잠시 옮기고 정상 문제 3개를 배정해 실제로 풀어 찍은 뒤 되돌림(_capture/cap_r_quiz.py) -->
+<!-- 2026-11-12 디자인 반영 개발 화면 기준으로 다시 씀(PO 「화면은 지금 개발에 바뀐 것 그대로」). 근거: pickoq-front feature/attend-quiz-design 97ad05b
+     src/features/reward/ui/QuizScreen.tsx · EarnPage.tsx · LoginGuideModal.tsx · AqParts.tsx · messages/ko-KR.json reward.quiz /
+     pickoq-backend feat/quiz-claim d91c762 QuizService(today · answer · claim — [포인트 받기]를 눌러야 적립 · 그날만) ·
+     대사 가이드 20261112_대이전달_프런트화면기획서_업데이트가이드_v0.1.md 5절 (C49 · C50)
+     캡처: 캡처 사본 dev 계정 — 오늘 문제를 1·3·4번으로 배정하고 실제로 눌러 찍은 뒤 되돌림. 광고 줄은 3번 문제에 시험 광고를 잠시 넣어 찍음(_capture/cap_r_quiz.py) -->
 </head>
 <body data-key="f_quiz" data-base="../">
 <script src="../wf-nav.js"></script>
@@ -16,18 +17,18 @@
 
 <div class="top"><span class="sid">F-QUIZ</span><h1>여행상식 퀴즈</h1></div>
 <div class="meta">
-  <span>기준 <b>실개발</b> 고객 웹 <code>feature/reward</code> (2026-10-30) · 정책 <b><a href="../policy/pol_earn.html#s3">참여형 적립 v0.8 · 3절</a></b></span>
-  <span>캡처 <b>2026-10-30</b> · 390×844 · 시연 데이터</span>
-  <span>최종수정 <b>2026-10-30</b></span>
+  <span>기준 <b>실개발</b> 고객 웹 <code>feature/attend-quiz-design</code> (2026-11-12) · 정책 <b><a href="../policy/pol_earn.html#s3">참여형 적립 · 3절</a></b></span>
+  <span>캡처 <b>2026-11-12</b> · 390×844 · 시연 데이터</span>
+  <span>최종수정 <b>2026-11-12</b></span>
 </div>
-<p class="lead">하루 3문제의 여행 상식 OX 퀴즈를 풀고, 맞힌 문제마다 포인트를 받는 화면입니다. 홈의 「오늘의 적립」에서 들어옵니다.</p>
+<p class="lead">하루 3문제의 여행 상식 OX 퀴즈를 풀고, 결과 화면에서 [포인트 받기]를 눌러 맞힌 만큼 포인트를 받는 화면입니다. 홈 「매일 포인트 GET!」의 퀴즈 칸에서 들어옵니다(비로그인도 바로 들어옴).</p>
 
-<div class="box note-design"><b>화면 모습은 디자인 확정 전입니다.</b> 색·글꼴·크기·배치는 리워드 디자인이 나오면 바뀝니다. 이 문서는 <b>기능과 정책</b>을 기준으로 읽어 주세요. 캡처 속 문제·숫자는 시연 데이터입니다.</div>
+<div class="box note-design"><b>디자인 시안이 반영된 개발 화면입니다.</b> 시안과 다른 곳은 <b>개발 화면이 기준</b>입니다. 캡처 속 문제·숫자는 시연 데이터입니다.</div>
 
 <div class="box">
   <h3>읽는 법</h3>
   <div class="legend">
-    <span><b style="color:var(--zone)">붉은 점선 상자 A~D</b> 화면의 영역</span>
+    <span><b style="color:var(--zone)">붉은 점선 상자 A~F</b> 화면의 영역</span>
     <span><b style="color:var(--marker)">빨간 숫자</b> 영역 안의 기능 — 마우스를 올리면 설명과 함께 강조</span>
     <span>「N-N절」을 누르면 그 절만 팝업으로 열립니다</span>
     <span>표시 없음 = 정책서 근거 있음</span>
@@ -39,20 +40,22 @@
 <!-- 변경이력: 개발자 공유 이후부터 노출 -->
 <div class="box hist"><h3>변경이력</h3>
   <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
-    <tr><td>v0.2</td><td>2026-10-30</td><td>실개발 기준으로 다시 씀 — 캡처 16장 (재점검: 홈에서 들어올 때 본인인증 · 문제 없음·불러오기 문구 위치 · 채점 실패 시 되돌림 · 적립대기 지급 · 가입 권유 생략)</td></tr>
-    <tr><td>v0.1</td><td>2026-10-26</td><td>최초 작성 — 캡처 19장(실제 서버로 풀이), 정책서 v0.7 기준</td></tr></table></div>
+    <tr><td>v0.5</td><td>2026-11-12</td><td>디자인 반영 개발 화면으로 다시 씀 — 한 번 고르고 한 번 더 눌러 제출 · 답한 뒤 아래 시트 · 결과 화면 [포인트 받기] · 흰 적립 연출 · 로그인 안내 모달 · 이전/다음 다시 보기·자동 적립·본인인증 시트 삭제 · 캡처 24장</td></tr>
+    <tr><td>v0.4</td><td>2026-10-30</td><td>실개발 기준으로 다시 씀</td></tr></table></div>
 
 <div class="sec-policy">
   <h3>⚙ 공통 정책 — 여행상식 퀴즈 전체</h3>
   <ul>
     <li><b>하루 한 번, 3문제</b>. 한국 시간 자정에 새 날이 됩니다. 문제 수·문항당 포인트는 어드민 설정값. (<a href="../policy/pol_earn.html#s3-2">3-2절</a>)</li>
     <li><b>그날 처음 화면을 열 때 서버가 문제를 정합니다</b> — 사용 중인 문제 가운데 이 회원이 아직 안 푼 문제에서 무작위로 고릅니다. 한 번 정해진 오늘 문제는 다시 열어도 같습니다. (<a href="../policy/pol_earn.html#s3-6">3-6절</a>)</li>
-    <li>O / X 중 하나를 고르면 <b>바로 채점</b>되고 바꿀 수 없습니다. 틀린 문항은 0P, 대신 정답과 해설을 보여 줍니다. (<a href="../policy/pol_earn.html#s3-3">3-3</a> · <a href="../policy/pol_earn.html#s3-5">3-5절</a>)</li>
-    <li><b>포인트는 마지막 문제를 푼 순간 한 번에</b> 들어옵니다(맞힌 개수 × 10P, 최대 30P). 3문제를 다 풀기 전에 나가면 그때까지 맞힌 것은 아직 지급 전입니다. (<a href="../policy/pol_earn.html#s3-4">3-4절</a>)</li>
+    <li>O / X 칸을 <b>한 번 누르면 고르기만</b> 하고(칸 위 안내 "한번 더 누르면 답안을 제출해요"), <b>같은 칸을 한 번 더 누르면 제출</b>됩니다. 다른 칸을 누르면 고른 답이 바뀝니다. 제출하면 바꿀 수 없습니다. <span class="tag proto">실개발 기준</span> C49</li>
+    <li>제출하면 바로 채점되어 아래 시트에 정답/오답 · 해설이 나옵니다. 틀린 문항은 0P. (<a href="../policy/pol_earn.html#s3-3">3-3</a> · <a href="../policy/pol_earn.html#s3-5">3-5절</a>)</li>
+    <li><b>포인트는 결과 화면에서 [포인트 받기]를 눌러야 적립</b>됩니다(맞힌 개수 × 10P, 최대 30P). 문제를 다 풀어도 저절로 들어오지 않습니다. <b>받지 않은 포인트는 그날(한국 시간 자정)까지만</b> 받을 수 있고, 다음 날 사라집니다. <span class="tag proto">실개발 기준</span> C49</li>
     <li>안 푼 문제의 정답은 서버가 화면에 보내지 않습니다. 푼 문제만 내 답·정답·해설이 내려옵니다.</li>
-    <li><b>본인인증 전 회원</b>은 화면에 들어오자마자 본인인증 시트가 뜹니다. 시트를 닫으면 홈으로 돌아갑니다. (<a href="../policy/pol_earn.html#s1-6">1-6절</a>) <span class="tag proto">실개발 기준</span></li>
+    <li><b>적립은 본인인증 없이</b> 됩니다(본인인증은 포인트를 쓸 때만). <span class="tag proto">실개발 기준</span> C48</li>
+    <li><b>비로그인</b>은 문제 대신 「🔒 로그인하면 열려요」가 보이고, [로그인하고 시작하기]를 누르면 <b>로그인 안내 모달</b>이 먼저 뜹니다. 로그인한 뒤에는 이 화면에서 바로 문제가 열립니다. <span class="tag proto">실개발 기준</span> C37</li>
   </ul>
-  <div class="src">기준: 참여형 적립 v0.8 · 1-6 · 3절 / 화면은 실개발 고객 웹(2026-10-30)</div>
+  <div class="src">기준: 참여형 적립 · 3절 + 정책 반영 대기 C37 · C48 · C49 · C50 / 화면은 실개발 고객 웹(2026-11-12)</div>
 </div>
 
 <nav class="toc" aria-label="이 페이지 바로가기">
@@ -61,50 +64,53 @@
   <a href="#layout"><b>②</b>페이지 구성</a>
   <span class="toc-sep"></span>
   <a class="z" href="#zA"><b>A</b>위쪽 바</a>
-  <a class="z" href="#zB"><b>B</b>공작·받은 포인트</a>
-  <a class="z" href="#zC"><b>C</b>문제 카드</a>
-  <a class="z" href="#zD"><b>D</b>규칙 안내</a>
+  <a class="z" href="#zB"><b>B</b>진행 막대</a>
+  <a class="z" href="#zC"><b>C</b>문제 말풍선</a>
+  <a class="z" href="#zD"><b>D</b>O / X</a>
+  <a class="z" href="#zE"><b>E</b>이렇게 적립돼요</a>
+  <a class="z" href="#zF"><b>F</b>결과</a>
   <span class="toc-sep"></span>
-  <a href="#over"><b>④</b>팝업·시트</a>
+  <a href="#over"><b>④</b>시트·연출</a>
   <a href="#exc">예외 케이스</a>
 </nav>
 
 <section class="sec major" id="flow">
   <div class="sec-hd"><h2>① 화면 흐름 · 데이터</h2></div>
   <div class="box">
-    <div class="flow"><span>홈 「오늘의 적립」 여행상식 퀴즈</span><i>→</i><span>퀴즈 (1/3)</span><i>→</i><span>O 또는 X</span><i>→</i><span>정답·해설</span><i>→</i><span>[다음 문제 ›]</span><i>→</i><span>… 3번째 답</span><i>→</i><span>2초 뒤 적립 연출 (X1)</span><i>→</i><span>「오늘 퀴즈 완료」</span></div>
-    <div class="flow" style="margin-top:8px"><i>하나도 못 맞힘:</i><span>3번째 답</span><i>→</i><span>2초 뒤 토스트 "아쉽게 정답이 없었어요"</span></div>
-    <div class="flow" style="margin-top:8px"><i>본인인증 전:</i><span>홈에서 퀴즈를 누르면 홈에서 먼저 본인인증 시트</span><i>→</i><span>마치면 퀴즈로</span></div>
-    <div class="flow" style="margin-top:8px"><i>본인인증 전 · 바로 들어옴:</i><span>퀴즈 열기</span><i>→</i><span>본인인증 시트 자동 (X2)</span><i>→</i><span>마치면 퀴즈 / [✕] → "그만둘까요?" → [닫기] → 홈</span></div>
-    <div class="flow" style="margin-top:8px"><i>비로그인:</i><span>[로그인하고 시작하기]</span><i>→</i><span>로그인 시트 (<a href="f_auth.html">F-AUTH</a>)</span></div>
+    <div class="flow"><span>홈 「매일 포인트 GET!」 퀴즈</span><i>→</i><span>Q1 · O/X 한 번 누름(고르기)</span><i>→</i><span>같은 칸 한 번 더(제출)</span><i>→</i><span>아래 시트 정답/오답·해설 (X2·X3)</span><i>→</i><span>[다음 문제]</span></div>
+    <div class="flow" style="margin-top:8px"><i>마지막:</i><span>시트 [결과 확인하기] (X4)</span><i>→</i><span>결과 「3문제 중 N문제 맞혔어요! / +NP 받으세요!」</span><i>→</i><span>[포인트 받기]</span><i>→</i><span>흰 적립 연출 (X5) · 6초</span><i>→</i><span>결과 「+NP를 적립했어요」 · 버튼 없음</span></div>
+    <div class="flow" style="margin-top:8px"><i>0문제:</i><span>[결과 확인하기]</span><i>→</i><span>결과 「…0문제를 맞혔어요. / 내일 다시 도전해요!」 · 버튼 없음</span></div>
+    <div class="flow" style="margin-top:8px"><i>비로그인:</i><span>[로그인하고 시작하기]</span><i>→</i><span>로그인 안내 모달 (X1)</span><i>→</i><span>[로그인하기] → 로그인 시트 (<a href="f_auth.html">F-AUTH</a>)</span></div>
   </div>
   <div class="box wrapx"><table class="t">
     <tr><th>요청</th><th>언제</th><th>받는 값 (화면에 쓰는 것)</th></tr>
-    <tr><td><code>GET /api/v1/member/{회원}/reward/quiz/today</code></td><td>화면을 열 때 (로그인 · 본인인증 완료)</td><td><code>total</code> 문제 수 · <code>answered</code> 푼 수 · <code>correct</code> 맞힌 수 · <code>done</code> 다 풂 · <code>pointEach</code> 문항당 포인트 · <code>questions[]</code> 문제(푼 것만 내 답·정답·해설·광고 링크)</td></tr>
-    <tr><td><code>POST /api/v1/member/{회원}/reward/quiz/answer</code></td><td>O / X를 누를 때</td><td>맞음 여부 · 정답 · 해설 · 광고 링크 · 다 풂 여부 · 맞힌 수 · 지급 포인트</td></tr>
-    <tr><td><code>GET /api/v1/member/{회원}/reward/home</code></td><td>화면을 열 때</td><td><code>identityVerified</code> — 거짓이면 본인인증 시트</td></tr>
-    <tr><td><code>GET /api/v1/reward/config</code></td><td>비로그인일 때</td><td>문제 수 · 문항당 포인트(잠금 카드 문구 숫자)</td></tr>
-    <tr><td colspan="3">오류: 409 이미 푼 문제 → 토스트 "이미 참여했어요" · 그 밖 → 고른 표시를 되돌리고 확인창 "채점하지 못했어요" + [다시 시도] [닫기] · 출제할 문제가 없음 → 카드 안 문구 "출제할 문제가 없어요" · 불러오는 중 "잠시만 기다려 주세요" / 못 불러옴 "문제를 불러오지 못했어요"(카드 안)</td></tr>
+    <tr><td><code>GET /api/v1/member/{회원}/reward/quiz/today</code></td><td>화면을 열 때(로그인)</td><td>문제 목록(문제 · 답했는지 · 푼 문제만 내 답·정답·해설·광고) · <code>pointEach</code> 문항당 포인트 · <code>claimed</code> 오늘 받았는지 · <code>available</code> 낼 문제가 있는지</td></tr>
+    <tr><td><code>POST …/reward/quiz/answer</code></td><td>같은 칸을 두 번째 누를 때</td><td>맞았는지 · 정답 · 해설 · 광고 주소·이름 → 아래 시트</td></tr>
+    <tr><td><code>POST …/reward/quiz/claim</code></td><td>[포인트 받기]</td><td>적립 포인트 → 흰 적립 연출. 다 안 풀었으면 거절 · 이미 받았으면 막음</td></tr>
+    <tr><td><code>GET /api/v1/reward/config</code></td><td>비로그인일 때</td><td>문제 수 · 문항당 포인트(안내 숫자)</td></tr>
+    <tr><td colspan="3">오류: 이미 답한 문제 → 토스트 후 오늘 문제를 새로 받음 · 채점 실패 → 확인창 "채점하지 못했어요" + [다시 시도] [닫기] · 받기 실패 → 토스트(서버 문구)</td></tr>
   </table></div>
 </section>
 
 <section class="sec major" id="layout">
   <div class="sec-hd"><span class="sid">F-QUIZ-L</span><h2>② 페이지 구성</h2></div>
-  <p class="sec-sub">왼쪽 = 로그인 · 오늘 안 푼 상태, 가운데 = 오늘 다 푼 상태, 오른쪽 = 비로그인.</p>
+  <p class="sec-sub">왼쪽 = 비로그인, 가운데 = 문제 풀기(Q1), 오른쪽 = 결과(받기 전). 화면이 세 가지 모양으로 바뀝니다.</p>
   <div class="shots-row">
-    <div class="sw"><div class="lb">F-QUIZ-L <small>로그인 · 풀기 전</small></div><figure class="shot" data-id="F-QUIZ-L" data-base="../"></figure></div>
-    <div class="sw"><div class="lb">F-QUIZ-LD <small>오늘 다 풂</small></div><figure class="shot" data-id="F-QUIZ-LD" data-base="../"></figure></div>
     <div class="sw"><div class="lb">F-QUIZ-L0 <small>비로그인</small></div><figure class="shot" data-id="F-QUIZ-L0" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-QUIZ-L <small>문제 풀기</small></div><figure class="shot" data-id="F-QUIZ-L" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-QUIZ-R <small>결과 · 받기 전</small></div><figure class="shot" data-id="F-QUIZ-R" data-base="../"></figure></div>
   </div>
   <div class="box wrapx" style="margin-top:12px"><table class="t">
     <tr><th>영역</th><th>들어가는 요소</th><th>배치·동작</th><th>상태에 따라 바뀌는 것</th></tr>
-    <tr class="zrow" data-n="A"><td><b>A</b> 위쪽 바</td><td>[←] · 「여행상식 퀴즈」 · 알림 종</td><td>파란 머리 맨 위</td><td>알림 종은 로그인만</td></tr>
-    <tr class="zrow" data-n="B"><td><b>B</b> 공작·받은 포인트</td><td>공작 · 「+NP」 · 안내 한 줄</td><td>파란 머리</td><td>비로그인은 포인트 없이 로그인 안내</td></tr>
-    <tr class="zrow" data-n="C"><td><b>C</b> 문제 카드</td><td>진행 막대 · 문제 · O/X · 결과 · [이전]·[다음]</td><td>흰 카드</td><td>풀기 전 / 푼 뒤 / 다 풂 / 비로그인 잠금</td></tr>
-    <tr class="zrow" data-n="D"><td><b>D</b> 규칙 안내</td><td>「이렇게 쌓여요」 6줄</td><td>흰 카드</td><td>다 풀면 사라짐 · 숫자는 설정값</td></tr>
+    <tr class="zrow" data-n="A"><td><b>A</b> 위쪽 바</td><td>[‹] 또는 [✕] · 「여행상식 퀴즈」</td><td>맨 위</td><td>결과 화면에서는 [✕]</td></tr>
+    <tr class="zrow" data-n="B"><td><b>B</b> 진행 막대</td><td>막대 3칸 · 받을 포인트 · N/3</td><td>문제·결과 화면 위</td><td>비로그인엔 없음 · 받은 뒤 「받은 포인트」</td></tr>
+    <tr class="zrow" data-n="C"><td><b>C</b> 문제 말풍선</td><td>Q번호 · 문제 · 공작새 · 나(내 답 말풍선)</td><td>가운데</td><td>비로그인 = 「오늘의 문제 / 🔒 로그인하면 열려요」 · 결과 = 결과 문장 · 동전 든 공작새</td></tr>
+    <tr class="zrow" data-n="D"><td><b>D</b> O / X</td><td>[O 맞아요] [X 아니에요]</td><td>두 칸 나란히</td><td>고름 / 제출됨</td></tr>
+    <tr class="zrow" data-n="E"><td><b>E</b> 이렇게 적립돼요</td><td>안내 6줄 · (비로그인) 아래 고정 [로그인하고 시작하기]</td><td>흰 카드</td><td>결과 화면엔 없음</td></tr>
+    <tr class="zrow" data-n="F"><td><b>F</b> 결과</td><td>「오늘의 결과」 · 문항 3줄(펼침) · [포인트 받기]</td><td>흰 카드</td><td>받은 뒤·0문제 = 버튼 없음</td></tr>
   </table></div>
   <div class="cn"><div class="cn-hd">화면 공통 규칙</div>
-    <ul><li>2뎁스 — 하단 탭이 없고 [←]로 돌아갑니다.</li><li>화면 전체가 한 번에 스크롤됩니다.</li></ul></div>
+    <ul><li>2뎁스 — 하단 탭이 없고 [‹]/[✕]로 돌아갑니다(이전 화면이 없으면 홈).</li><li>화면 전체가 한 번에 스크롤됩니다. 비로그인 버튼만 아래에 고정.</li></ul></div>
 </section>
 
 <section class="sec major" id="detail" style="margin-bottom:0">
@@ -115,119 +121,163 @@
 <section class="sec zsec" id="zA">
   <div class="unit">
   <div class="zone-hd"><span class="zl">A</span><h2>위쪽 바</h2></div>
-  <div class="shots-row">
-    <div class="sw"><div class="lb">F-QUIZ-A1 <small>비로그인</small></div><figure class="shot" data-id="F-QUIZ-A1" data-base="../"></figure></div>
-    <div class="sw"><div class="lb">F-QUIZ-A2 <small>로그인</small></div><figure class="shot" data-id="F-QUIZ-A2" data-base="../"></figure></div>
-  </div>
+  <div class="shots-row"><div class="sw"><div class="lb">F-QUIZ-A1 <small>문제 풀기</small></div><figure class="shot" data-id="F-QUIZ-A1" data-base="../"></figure></div></div>
   <div class="detail"><div class="ann">
-    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>[←] · 「여행상식 퀴즈」</div><ul><li>이전 화면(보통 홈)으로.</li></ul></div>
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>[‹] / [✕]</div><ul><li>비로그인·문제 풀기 = [‹], 결과 화면 = [✕](F-QUIZ-R). 둘 다 이전 화면(보통 홈)으로 — 이전 화면이 없으면 홈.</li><li>푸는 도중 나가도 이미 제출한 답은 남습니다(E1).</li></ul></div>
   </div><div class="ann">
-    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>알림 종 — 로그인만</div><ul><li>안 읽은 알림 수 배지 · 누르면 알림함.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>「여행상식 퀴즈」</div><ul><li>예전 화면의 알림 종은 없습니다. <span class="tag proto">실개발 기준</span></li></ul></div>
   </div></div>
   </div>
 </section>
 
 <section class="sec zsec" id="zB">
   <div class="unit">
-  <div class="zone-hd"><span class="zl">B</span><h2>공작 · 받은 포인트</h2></div>
+  <div class="zone-hd"><span class="zl">B</span><h2>진행 막대</h2></div>
   <div class="shots-row">
-    <div class="sw"><div class="lb">F-QUIZ-B1 <small>풀기 전</small></div><figure class="shot" data-id="F-QUIZ-B1" data-base="../"></figure></div>
-    <div class="sw"><div class="lb">F-QUIZ-B2 <small>1문제 맞힘</small></div><figure class="shot" data-id="F-QUIZ-B2" data-base="../"></figure></div>
-    <div class="sw"><div class="lb">F-QUIZ-B3 <small>다 풂</small></div><figure class="shot" data-id="F-QUIZ-B3" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-QUIZ-B1 <small>Q1 · 아직 안 맞힘</small></div><figure class="shot" data-id="F-QUIZ-B1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-QUIZ-B2 <small>Q2 · 1문제 맞힘</small></div><figure class="shot" data-id="F-QUIZ-B2" data-base="../"></figure></div>
   </div>
   <div class="detail"><div class="ann">
-    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>공작</div><ul><li>비로그인 = 누워 자는 모습 / 푸는 중 = 갸웃하는 모습 / 다 풂 = 기뻐하는 모습. 누를 수 없습니다.</li></ul></div>
-    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>「+NP」</div>
-      <ul><li>오늘 맞힌 개수 × 문항당 포인트. 문제를 맞힐 때마다 바로 올라갑니다.</li>
-          <li>푸는 중에 보이는 숫자는 <b>받을 예정</b>인 포인트 — 실제 지급은 마지막 문제를 풀 때입니다.</li>
-          <li>비로그인은 숫자가 없습니다.</li></ul>
-      <div class="rule"><b>근거</b> 마지막 문제에서 한 번에 지급 (<a href="../policy/pol_earn.html#s3-4">3-4절</a>)</div></div>
-  </div><div class="ann">
-    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>안내 한 줄</div>
-      <ul><li>푸는 중 "OX로 맞히면 문항당 10P · 하루 한 번" / 다 풂 "오늘 N문제를 맞혔어요" / 비로그인 "로그인하고 참여하세요" / 불러오는 중 "오늘의 문제를 불러오는 중이에요".</li></ul></div>
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>막대 · 받을 포인트 · N/3</div>
+      <ul><li>막대 = 지금 문제까지 파랗게(결과 화면은 모두 파랑).</li>
+          <li>「받을 포인트 +NP」 = 지금까지 맞힌 개수 × 10P. <b>아직 적립된 것이 아닙니다</b> — 결과에서 [포인트 받기]를 눌러야 들어옵니다. 받은 뒤에는 「받은 포인트 +NP」.</li>
+          <li>오른쪽 「N/3」 = 지금 문제 번호 / 전체(결과 화면은 3/3).</li></ul></div>
   </div></div>
   </div>
 </section>
 
 <section class="sec zsec" id="zC">
   <div class="unit">
-  <div class="zone-hd"><span class="zl">C</span><h2>문제 카드</h2></div>
+  <div class="zone-hd"><span class="zl">C</span><h2>문제 말풍선 · 공작새 · 나</h2></div>
   <div class="shots-row">
-    <div class="sw"><div class="lb">F-QUIZ-C1 <small>비로그인 잠금</small></div><figure class="shot" data-id="F-QUIZ-C1" data-base="../"></figure></div>
-    <div class="sw"><div class="lb">F-QUIZ-C2 <small>풀기 전</small></div><figure class="shot" data-id="F-QUIZ-C2" data-base="../"></figure></div>
-    <div class="sw"><div class="lb">F-QUIZ-C3 <small>맞힘</small></div><figure class="shot" data-id="F-QUIZ-C3" data-base="../"></figure></div>
-  </div>
-  <div class="shots-row" style="margin-top:12px">
-    <div class="sw"><div class="lb">F-QUIZ-C4 <small>틀림 · 마지막 문제</small></div><figure class="shot" data-id="F-QUIZ-C4" data-base="../"></figure></div>
-    <div class="sw"><div class="lb">F-QUIZ-C5 <small>다 풂 · 다시 보기</small></div><figure class="shot" data-id="F-QUIZ-C5" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-QUIZ-B0 <small>비로그인</small></div><figure class="shot" data-id="F-QUIZ-B0" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-QUIZ-C1 <small>문제 풀기</small></div><figure class="shot" data-id="F-QUIZ-C1" data-base="../"></figure></div>
   </div>
   <div class="detail"><div class="ann">
-    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>비로그인 잠금 카드</div>
-      <ul><li>🔒 "로그인하고 참여하세요" · "하루 3문제 · 문항당 10P · 한 문제당 한 번만 답할 수 있어요" · [로그인하고 시작하기] → 로그인 시트.</li>
-          <li>로그인 전에는 문제를 보여 주지 않습니다.</li>
-          <li>이 화면의 로그인 시트에서 새로 가입해도 「가입 직후 본인인증 권유 팝업」은 뜨지 않습니다 — 퀴즈 화면이 바로 본인인증을 묻기 때문(<a href="f_home.html#over">F-HOME X3</a>).</li></ul></div>
-    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>진행 막대 「N / 3」</div>
-      <ul><li>지금 보는 문제 = 파랑, 푼 문제 = 노랑, 안 푼 문제 = 회색.</li></ul></div>
-    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>문제</div><ul><li>어드민 문제 은행의 문장 그대로.</li></ul></div>
-    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>[O 맞아요]</div></div>
-    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>[X 아니에요]</div>
-      <ul><li>누르면 바로 채점 — 고른 쪽이 파랗게, 다른 쪽은 회색으로 잠깁니다. 다시 고를 수 없습니다.</li>
-          <li>채점하는 동안 두 버튼 모두 잠겨 두 번 눌리지 않습니다.</li></ul>
-      <div class="rule"><b>근거</b> 한 문제당 한 번 · 재응시 없음 (<a href="../policy/pol_earn.html#s3-3">3-3절</a>)</div></div>
-    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>안내 한 줄</div><ul><li>"맞히면 10P · 한 번만 답할 수 있어요" — 풀기 전에만.</li></ul></div>
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>말풍선</div>
+      <ul><li>문제 풀기 = 파란 「Q번호」 + 문제 문장.</li><li>비로그인 = 「오늘의 문제」 + 「🔒 로그인하면 열려요」 — 문제는 보이지 않습니다.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>공작새</div><ul><li>손 흔드는 그림. 누를 수 없습니다.</li></ul></div>
   </div><div class="ann">
-    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>결과</div><ul><li>맞힘 "✓ 정답이에요!"(연두) / 틀림 "✕ 아쉬워요"(분홍).</li></ul></div>
-    <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>정답</div><ul><li>"정답 : O (맞아요)" 또는 "정답 : X (아니에요)" — 맞혀도 틀려도 보여 줍니다.</li></ul></div>
-    <div class="cn" data-n="9"><div class="cn-hd"><span class="no">9</span>해설</div>
-      <ul><li>어드민에 등록한 해설.</li>
-          <li>문제에 광고 링크가 등록돼 있으면 해설 아래 「광고 · {문구} ›」(문구가 비어 있으면 "자세히 보기")가 나오고, 누르면 그 링크로 이동합니다(캡처의 문제에는 링크가 없음).</li></ul>
-      <div class="rule"><b>근거</b> 오답도 해설 제공 (<a href="../policy/pol_earn.html#s3-5">3-5절</a>)</div></div>
-    <div class="cn" data-n="10"><div class="cn-hd"><span class="no">10</span>[‹ 이전]</div><ul><li>앞 문제로. 첫 문제에서는 누를 수 없습니다.</li></ul></div>
-    <div class="cn" data-n="11"><div class="cn-hd"><span class="no">11</span>[다음 문제 ›] / [다음 ›]</div>
-      <ul><li>지금 문제를 풀어야 파랗게 켜집니다. 푼 문제를 다시 볼 때는 「다음 ›」.</li>
-          <li>마지막 문제를 풀면 2초 동안 정답·해설을 보여 준 뒤 적립 연출(X1) — 하나도 못 맞혔으면 토스트 "아쉽게 정답이 없었어요".</li></ul></div>
-    <div class="cn" data-n="13"><div class="cn-hd"><span class="no">13</span>「🎉 오늘 퀴즈 완료」</div>
-      <ul><li>"3문제 중 N개를 맞혀 NP를 받았어요. 내일 새로운 문제로 다시 만나요."</li>
-          <li>다 푼 날에는 카드 맨 위에 붙고, 아래에서 푼 문제를 [이전]·[다음]으로 다시 볼 수 있습니다.</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>나 · 내 답 말풍선</div>
+      <ul><li>아직 안 골랐으면 「…」(점 3개), 고르거나 제출하면 그 답(O 파랑 / X 빨강)이 보입니다.</li></ul></div>
   </div></div>
   </div>
 </section>
 
 <section class="sec zsec" id="zD">
   <div class="unit">
-  <div class="zone-hd"><span class="zl">D</span><h2>규칙 안내</h2></div>
-  <div class="shots-row"><div class="sw"><div class="lb">F-QUIZ-D1</div><figure class="shot" data-id="F-QUIZ-D1" data-base="../"></figure></div></div>
+  <div class="zone-hd"><span class="zl">D</span><h2>O / X</h2></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-QUIZ-D1L <small>안 고름</small></div><figure class="shot" data-id="F-QUIZ-D1L" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-QUIZ-D2 <small>O를 한 번 누름</small></div><figure class="shot" data-id="F-QUIZ-D2" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-QUIZ-D3 <small>X로 바꿈</small></div><figure class="shot" data-id="F-QUIZ-D3" data-base="../"></figure></div>
+  </div>
   <div class="detail"><div class="ann">
-    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「이렇게 쌓여요」</div>
-      <ul><li>하루 한 번, 3문제를 풀 수 있어요. (한국 시간 기준)</li>
-          <li>맞히면 문항당 10P, 모두 맞히면 30P예요.</li>
-          <li>한 문제당 한 번만 답할 수 있어요. 고르면 바꿀 수 없어요.</li>
-          <li>틀리면 그 문항은 0P예요. 대신 정답과 해설을 알려드려요.</li>
-          <li>포인트는 마지막 문제를 푼 순간 한 번에 들어와요.</li>
-          <li>마지막 문제를 풀면 바로 적립되고, 푼 문제는 다시 볼 수 있어요.</li></ul>
-      <div class="data"><b>데이터</b> ← 문제 수·문항당 포인트는 설정값으로 채움 · 오늘 다 풀면 이 카드는 사라짐</div></div>
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>[O 맞아요]</div><ul><li>고르면 파란 테두리·옅은 파란 바탕.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>[X 아니에요]</div><ul><li>고르면 빨간 테두리·옅은 분홍 바탕.</li></ul></div>
+  </div><div class="ann">
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>제출 안내 말풍선 <span class="tag proto">실개발 기준</span></div>
+      <ul><li>한 번 누른 칸 위에 진회색 "한번 더 누르면 답안을 제출해요"(살짝 흔들림). O는 칸 왼쪽, X는 칸 오른쪽 끝에 맞춰 화면 밖으로 나가지 않습니다.</li>
+          <li><b>같은 칸을 한 번 더 누르면 제출</b> → 채점 → 아래 시트. 다른 칸을 누르면 고른 답과 말풍선이 그쪽으로 옮겨 갑니다.</li>
+          <li>제출하는 동안·제출 뒤에는 두 칸 모두 눌러지지 않습니다.</li></ul>
+      <div class="rule"><b>근거</b> 한 문제 한 번 · 제출하면 못 바꿈 (<a href="../policy/pol_earn.html#s3-3">3-3절</a>) · 두 번 눌러 제출은 C49</div></div>
   </div></div>
   </div>
 </section>
 
+<section class="sec zsec" id="zE">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">E</span><h2>이렇게 적립돼요</h2></div>
+  <div class="shots-row"><div class="sw"><div class="lb">F-QUIZ-D1 <small>비로그인·문제 풀기 같음</small></div><figure class="shot" data-id="F-QUIZ-D1" data-base="../"></figure></div></div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>안내 6줄</div>
+      <ul><li><b style="color:#356beb">문제를 다 풀고 [포인트 받기]를 눌러야 포인트가 적립돼요!</b> (파랑 굵게)</li>
+          <li><b style="color:#cc3d5c">받지 않은 포인트는 다음날 소멸돼요.</b> (빨강)</li>
+          <li>하루 한 번, 3문제를 풀 수 있어요. (한국 시간 기준)</li>
+          <li>맞히면 문항당 10P, 모두 맞히면 30P예요.</li>
+          <li>한 문제당 한 번만 제출할 수 있어요. 제출하면 바꿀 수 없어요.</li>
+          <li>틀리면 그 문항은 0P예요. 대신 정답과 해설을 알려드려요.</li></ul>
+      <div class="data"><b>데이터</b> ← 문제 수·문항당 포인트는 설정값으로 채움</div>
+      <ul><li>비로그인은 화면 아래에 [로그인하고 시작하기]가 고정됩니다 → 로그인 안내 모달(X1).</li></ul></div>
+  </div></div>
+  </div>
+</section>
+
+<section class="sec zsec" id="zF">
+  <div class="unit">
+  <div class="zone-hd"><span class="zl">F</span><h2>결과</h2></div>
+  <div class="shots-row">
+    <div class="sw"><div class="lb">F-QUIZ-F1 <small>받기 전 · 결과 문장</small></div><figure class="shot" data-id="F-QUIZ-F1" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-QUIZ-F2 <small>받기 전 · 오늘의 결과</small></div><figure class="shot" data-id="F-QUIZ-F2" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-QUIZ-F3 <small>문항 펼침</small></div><figure class="shot" data-id="F-QUIZ-F3" data-base="../"></figure></div>
+  </div>
+  <div class="shots-row" style="margin-top:10px">
+    <div class="sw"><div class="lb">F-QUIZ-F5 <small>받은 뒤</small></div><figure class="shot" data-id="F-QUIZ-F5" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-QUIZ-F6 <small>받은 뒤 · 버튼 없음</small></div><figure class="shot" data-id="F-QUIZ-F6" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-QUIZ-F7 <small>0문제</small></div><figure class="shot" data-id="F-QUIZ-F7" data-base="../"></figure></div>
+  </div>
+  <div class="detail"><div class="ann">
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>결과 문장(말풍선)</div>
+      <div class="box wrapx"><table class="t"><tr><th>상태</th><th>문구</th></tr>
+        <tr><td>받기 전</td><td>"3문제 중 N문제 맞혔어요! / +NP 받으세요!"</td></tr>
+        <tr><td>받은 뒤</td><td>"3문제 중 N문제를 맞혔어요. / +NP를 적립했어요"</td></tr>
+        <tr><td>0문제</td><td>"3문제 중 0문제를 맞혔어요. / 내일 다시 도전해요!"</td></tr></table></div></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>동전 든 공작새</div></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>"내일 새로운 문제로 만나요"</div></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>「오늘의 결과」</div></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>"문제를 누르면 해설을 다시 볼 수 있어요"</div></div>
+  </div><div class="ann">
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>맞힌 문항 「정답 +10P」</div><ul><li>Q번호 · 문제 · 파란 알약 · 아래 화살표.</li></ul></div>
+    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>틀린 문항 「오답」</div><ul><li>흰 알약(회색 테두리).</li></ul></div>
+    <div class="cn" data-n="8"><div class="cn-hd"><span class="no">8</span>펼친 문항</div>
+      <ul><li>줄을 누르면 펼침/접힘 — 한 번에 한 줄만 펼쳐집니다.</li><li>"내 답 X" · 회색 칸(「정답 O」 · 「해설 …」 · 광고 줄이 있으면 「광고 · 이름 ›」).</li><li>포인트를 받으면 모든 줄이 접힌 상태로 돌아갑니다.</li></ul></div>
+    <div class="cn" data-n="9"><div class="cn-hd"><span class="no">9</span>[포인트 받기]</div>
+      <ul><li>받기 전에만 보입니다. 누르면 서버가 그날 몫만 적립 → 흰 적립 연출(X5).</li>
+          <li>받은 뒤 · 맞힌 문제가 0개면 <b>버튼이 없습니다</b>(F6 · F7).</li>
+          <li>받지 않고 나갔다가 <b>같은 날 다시 들어오면</b> 바로 이 결과 화면과 [포인트 받기]가 다시 보입니다(F4). 다음 날에는 사라집니다.</li></ul>
+      <div class="rule"><b>근거</b> [포인트 받기]로 적립 · 그날만 (C49 · 정책서 반영 대기)</div></div>
+  </div></div>
+  <div class="shots-row" style="margin-top:10px">
+    <div class="sw"><div class="lb">F-QUIZ-F4 <small>같은 날 다시 들어옴 · 받기 전</small></div><figure class="shot" data-id="F-QUIZ-F4" data-base="../"></figure></div>
+  </div>
+  </div>
+</section>
+
 <section class="sec major" id="over">
-  <div class="sec-hd"><h2>④ 팝업·시트</h2></div>
+  <div class="sec-hd"><h2>④ 시트 · 연출</h2></div>
   <p class="sec-sub">전체 화면을 덮으므로 자르지 않습니다. 공통 동작은 <a href="../common/c_layer.html">C-LAYER</a>를 따릅니다.</p>
   <div class="two-col unit sub-item">
-    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-QUIZ-X1 <small style="font-weight:400">적립 연출 (3문제 중 1개 맞힘)</small></div><figure class="shot" data-id="F-QUIZ-X1" data-base="../" data-only="-"></figure></div>
-    <div class="ann"><div class="cn"><div class="cn-hd">적립 화면</div>
-      <ul><li>화면 전체 진한 파랑 · 춤추는 공작 · 「+NP」 · 내 포인트 · 아래 띠 "🎉 NP 적립! / 여행상식 퀴즈 N문제 정답".</li>
-          <li>마지막 문제를 푼 뒤 2초 기다렸다가 나오고, 약 2.4초 뒤 저절로 닫혀 「오늘 퀴즈 완료」 카드가 보입니다.</li>
-          <li>함께 알림함에 퀴즈 적립 알림이 쌓입니다(하나도 못 맞히면 "정답이 없었어요" 알림).</li></ul>
-      <div class="rule"><b>근거</b> 적립 연출 (<a href="../common/c_layer.html#L-EARN">C-LAYER L-EARN</a>) · 지급 시점 (<a href="../policy/pol_earn.html#s3-4">3-4절</a>)</div></div></div>
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-QUIZ-X1 <small style="font-weight:400">비로그인 — 로그인 안내 모달</small></div><figure class="shot" data-id="F-QUIZ-X1" data-base="../" data-only="-"></figure></div>
+    <div class="ann"><div class="cn"><div class="cn-hd">로그인 안내 모달 <span class="tag proto">실개발 기준</span></div>
+      <ul><li>출석체크와 같은 모달 — "로그인 후 포인트를 받을 수 있어요" · [다음에] [로그인하기] (<a href="f_attend.html#over">F-ATT X1</a>).</li>
+          <li>[로그인하기] → 로그인 시트 → 마치면 이 화면에서 오늘 문제가 바로 열립니다.</li></ul>
+      <div class="rule"><b>근거</b> C37 · 정책서 반영 대기</div></div></div>
   </div>
   <div class="two-col unit sub-item">
-    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-QUIZ-X2 <small style="font-weight:400">본인인증 전 — 들어오자마자</small></div><figure class="shot" data-id="F-QUIZ-X2" data-base="../" data-only="-"></figure></div>
-    <div class="ann"><div class="cn"><div class="cn-hd">휴대폰 본인인증</div>
-      <ul><li>퀴즈 화면을 열면 문제보다 먼저 시트가 뜹니다. 통신사 · 이름 · 휴대폰 번호 · [인증하기] — 자세한 규칙은 <a href="f_auth.html">F-AUTH</a>.</li>
-          <li>마치면 시트가 닫히고 오늘 문제가 나옵니다. 적립대기 포인트가 있었으면 먼저 적립 연출 "NP 적립! · 적립대기 포인트가 지급됐어요", 없으면 토스트 "본인인증이 완료됐어요".</li>
-          <li>[✕] → "본인인증을 그만둘까요?" → [닫기]를 고르면 <b>홈으로</b> 돌아갑니다(출석체크는 화면에 남는 것과 다름).</li></ul>
-      <div class="rule"><b>근거</b> 첫 적립 때 본인인증 (<a href="../policy/pol_earn.html#s1-6">1-6절</a>) <span class="tag proto">실개발 기준</span> 들어오자마자 뜨는 방식</div></div></div>
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-QUIZ-X2 <small style="font-weight:400">답한 뒤 시트 — 정답</small></div><figure class="shot" data-id="F-QUIZ-X2" data-base="../"></figure></div>
+    <div class="ann">
+      <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>정답 / 오답</div><ul><li>정답 = 파랑 "정답이에요!" — <b>포인트 숫자는 쓰지 않습니다</b>(아직 적립 전이라 헷갈리지 않게). 오답 = "아쉬워요, 정답은 O예요".</li></ul></div>
+      <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>아래 줄</div><ul><li>1·2번 문제 "3문제를 다 풀고 [포인트 받기]를 누르면 들어와요" / 마지막 "3문제를 다 풀었어요. 결과에서 포인트를 받아요".</li></ul></div>
+      <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>해설</div><ul><li>회색 칸 「해설」 + 설명.</li></ul></div>
+      <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>[다음 문제] / [결과 확인하기]</div><ul><li>시트를 닫고 다음 문제로. 마지막 문제면 [결과 확인하기] → 결과 화면. 바깥을 눌러도 닫히지 않습니다.</li></ul></div>
+    </div>
+  </div>
+  <div class="two-col unit sub-item">
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-QUIZ-X3 <small style="font-weight:400">답한 뒤 시트 — 오답 · 광고 있음</small></div><figure class="shot" data-id="F-QUIZ-X3" data-base="../"></figure></div>
+    <div class="ann">
+      <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>광고 줄</div><ul><li>그 문제에 광고 주소가 있을 때만 「광고 · 이름 ›」(이름이 없으면 「자세히 보기」). 누르면 새 창으로 광고 페이지. 포인트와 무관.</li><li>광고 주소·이름은 어드민 퀴즈 문제에서 넣습니다(<a href="../admin/a_quiz.html">A-QUIZ</a>).</li></ul></div>
+    </div>
+  </div>
+  <div class="two-col unit sub-item">
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-QUIZ-X4 <small style="font-weight:400">마지막 문제 시트</small></div><figure class="shot" data-id="F-QUIZ-X4" data-base="../" data-only="-"></figure></div>
+    <div class="ann"><div class="cn"><div class="cn-hd">마지막 문제</div><ul><li>아래 줄 "3문제를 다 풀었어요. 결과에서 포인트를 받아요" · 버튼 [결과 확인하기].</li><li>이 시점에도 포인트는 아직 들어오지 않습니다.</li></ul></div></div>
+  </div>
+  <div class="two-col unit sub-item">
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-QUIZ-X5 <small style="font-weight:400">[포인트 받기] → 흰 적립 연출</small></div><figure class="shot" data-id="F-QUIZ-X5" data-base="../" data-only="-"></figure></div>
+    <div class="ann"><div class="cn"><div class="cn-hd">적립 연출 <span class="tag proto">실개발 기준</span></div>
+      <ul><li>출석과 같은 흰 화면(<a href="f_attend.html#over">F-ATT X2</a>) · 큰 「+NP」 · 회색 칸 「여행상식 퀴즈 N문제 정답 +NP」.</li>
+          <li>6초 뒤 스스로 닫힘([✕]로 먼저 닫을 수 있음) → 결과 「+NP를 적립했어요」 · 버튼 없음 · 모든 줄 접힘.</li></ul>
+      <div class="rule"><b>근거</b> 흰 적립 연출 (C50 · <a href="../common/c_layer.html#L-EARN">C-LAYER L-EARN</a>)</div></div></div>
   </div>
 </section>
 
@@ -235,13 +285,14 @@
   <div class="sec-hd"><h2>예외 케이스</h2></div>
   <div class="box wrapx"><table class="t">
     <tr><th>#</th><th>상황</th><th>화면·서버 동작</th></tr>
-    <tr><td>E1</td><td>이미 푼 문제에 다시 답함(두 기기 등)</td><td>서버 409 → 토스트 "이미 참여했어요" · 문제를 새로 받음</td></tr>
-    <tr><td>E2</td><td>버튼을 빨리 두 번 누름</td><td>채점하는 동안 O/X가 잠겨 한 번만</td></tr>
-    <tr><td>E3</td><td>채점 실패</td><td>고른 표시를 되돌려 다시 고를 수 있게 하고, 확인창 "채점하지 못했어요"(본문 = 서버가 보낸 사유, 없으면 "잠시 후 다시 시도해 주세요") + [다시 시도](같은 답으로 다시 보냄) [닫기]</td></tr>
-    <tr><td>E4</td><td>1·2문제만 풀고 나감</td><td>지급 전 상태로 남음 · 같은 날 다시 열면 이어서 풀기 · 다 풀지 않고 자정이 지나면 그날 세트는 무효 — 맞힌 문제도 <b>지급되지 않음</b> (<a href="../policy/pol_earn.html#s3-8">3-8절</a> E1·E2)</td></tr>
-    <tr><td>E5</td><td>3문제 모두 틀림</td><td>0P · 적립 연출 없이 토스트 "아쉽게 정답이 없었어요"</td></tr>
-    <tr><td>E6</td><td>출제할 문제가 없음(안 푼 문제가 바닥남)</td><td>카드 안에 "출제할 문제가 없어요" — 서버 설정값 「다시 출제 허용」(<code>quiz_allow_repeat</code>)을 켜면 푼 문제도 다시 나옴 · 어드민 화면에는 아직 이 설정 항목이 없음</td></tr>
-    <tr><td>E7</td><td>문제를 불러오지 못함</td><td>카드 안에 "문제를 불러오지 못했어요" (불러오는 동안은 "잠시만 기다려 주세요")</td></tr>
+    <tr><td>E1</td><td>1~2문제만 풀고 나갔다가 같은 날 다시 들어옴</td><td>처음 안 푼 문제부터 이어서. 이미 제출한 답은 그대로</td></tr>
+    <tr><td>E2</td><td>다 풀고 [포인트 받기]를 안 누르고 나감</td><td>같은 날 다시 들어오면 결과 + [포인트 받기]. <b>다음 날에는 받을 수 없음</b>(받지 않은 포인트 소멸)</td></tr>
+    <tr><td>E3</td><td>이미 답한 문제를 다른 기기에서 또 제출</td><td>서버가 막음 → 토스트 후 오늘 문제를 새로 받음</td></tr>
+    <tr><td>E4</td><td>[포인트 받기]를 두 번 누르거나 다른 기기에서 이미 받음</td><td>누르는 동안 버튼이 꺼짐 · 이미 받았으면 토스트 후 「받은 뒤」 상태로</td></tr>
+    <tr><td>E5</td><td>채점 실패</td><td>확인창 "채점하지 못했어요"(본문 = 서버 사유, 없으면 "잠시 후 다시 시도해 주세요") + [다시 시도] [닫기] · 고른 답은 풀림</td></tr>
+    <tr><td>E6</td><td>낼 문제가 없음(사용 중 문제 부족)</td><td>"출제할 문제가 없어요" 안내 + 같은 문구 토스트 1회</td></tr>
+    <tr><td>E7</td><td>오늘 문제를 받기 전 · 못 받음</td><td>"잠시만 기다려 주세요" / "문제를 불러오지 못했어요" 한 줄</td></tr>
+    <tr><td>E8</td><td>맞힌 문제 0개</td><td>결과에 [포인트 받기] 없음 · "내일 다시 도전해요!" — 적립·알림 없음(서버는 0문제 알림만 보냄 · 받기를 누를 일이 없어 실제로는 안 감) <span class="tag open">미결</span> 0문제 알림을 보낼지 확인</td></tr>
   </table></div>
 </section>
 

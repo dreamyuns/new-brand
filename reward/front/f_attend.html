@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>F-ATT 출석체크 — 픽콕 리워드 화면기획서</title>
 <link rel="stylesheet" href="../wf-reward.css">
-<!-- 2026-10-30 실개발 기준으로 다시 씀(PO). 근거: pickoq-front feature/reward src/features/reward/ui/AttendanceScreen.tsx ·
-     GiftBoxOverlay.tsx · EarnOverlay.tsx · IdentitySheet.tsx · messages/ko-KR.json reward.attend / pickoq-backend RewardActivityController
-     (GET·POST /api/v1/member/{m}/reward/attendance) · AttendanceService · errors_ko(alreadyDone · identity.notVerified)
-     캡처: 캡처 사본 dev 계정 — 출석 기록을 사본 DB에서 바꿔 상태를 만들고, 적립 연출은 실제로 눌러 찍은 뒤 되돌림(_capture/cap_r_attend.py) -->
+<!-- 2026-11-12 디자인 반영 개발 화면 기준으로 다시 씀(PO 「화면은 지금 개발에 바뀐 것 그대로」). 근거: pickoq-front feature/attend-quiz-design 97ad05b
+     src/features/reward/ui/AttendanceScreen.tsx · GiftBoxOverlay.tsx · EarnPage.tsx · LoginGuideModal.tsx · AqParts.tsx · messages/ko-KR.json reward.attend·earnPage·home.loginGuide /
+     pickoq-backend feat/quiz-claim d91c762 AttendanceService(칸 = 지금까지 출석 횟수 ÷ 칸 수의 나머지 · 연속 = 오늘/어제부터 이어진 날) ·
+     대사 가이드 20261112_대이전달_프런트화면기획서_업데이트가이드_v0.1.md 4절 (C37 · C49 · C50)
+     캡처: 캡처 사본 dev 계정 — 출석 기록을 사본 DB에서 바꿔 상태를 만들고, 적립 연출·선물상자는 실제로 눌러 찍은 뒤 되돌림(_capture/cap_r_attend.py) -->
 </head>
 <body data-key="f_attend" data-base="../">
 <script src="../wf-nav.js"></script>
@@ -16,13 +17,13 @@
 
 <div class="top"><span class="sid">F-ATT</span><h1>출석체크</h1></div>
 <div class="meta">
-  <span>기준 <b>실개발</b> 고객 웹 <code>feature/reward</code> (2026-10-30) · 정책 <b><a href="../policy/pol_earn.html#s2">참여형 적립 v0.8 · 2절</a></b></span>
-  <span>캡처 <b>2026-10-30</b> · 390×844 · 시연 데이터</span>
-  <span>최종수정 <b>2026-10-30</b></span>
+  <span>기준 <b>실개발</b> 고객 웹 <code>feature/attend-quiz-design</code> (2026-11-12) · 정책 <b><a href="../policy/pol_earn.html#s2">참여형 적립 · 2절</a></b></span>
+  <span>캡처 <b>2026-11-12</b> · 390×844 · 시연 데이터</span>
+  <span>최종수정 <b>2026-11-12</b></span>
 </div>
-<p class="lead">하루 한 번 [출석하기]를 누르면 도장이 쌓이고, 6번째 출석에 선물상자(추가 포인트)가 열리는 화면입니다. 홈의 「오늘의 적립」에서 들어옵니다.</p>
+<p class="lead">하루 한 번 [출석하기]를 누르면 도장이 쌓이고, 6번째 출석에 선물상자(추가 포인트)가 열리는 화면입니다. 홈 「매일 포인트 GET!」의 출석 칸에서 들어옵니다(비로그인도 바로 들어옴).</p>
 
-<div class="box note-design"><b>화면 모습은 디자인 확정 전입니다.</b> 색·글꼴·크기·배치는 리워드 디자인이 나오면 바뀝니다. 이 문서는 <b>기능과 정책</b>을 기준으로 읽어 주세요. 캡처 속 숫자는 시연 데이터입니다.</div>
+<div class="box note-design"><b>디자인 시안이 반영된 개발 화면입니다.</b> 시안과 다른 곳은 <b>개발 화면이 기준</b>입니다(PO 결정으로 바뀐 문구·칸 등). 캡처 속 숫자는 시연 데이터입니다.</div>
 
 <div class="box">
   <h3>읽는 법</h3>
@@ -39,20 +40,23 @@
 <!-- 변경이력: 개발자 공유 이후부터 노출 -->
 <div class="box hist"><h3>변경이력</h3>
   <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
-    <tr><td>v0.4</td><td>2026-10-30</td><td>실개발 기준으로 다시 씀 — 캡처 17장 (재점검: 가입 권유 생략 · 실패 확인창 [닫기] · E7 정보 못 받음)</td></tr>
+    <tr><td>v0.5</td><td>2026-11-12</td><td>디자인 반영 개발 화면으로 다시 씀 — 말풍선 · 6칸 카드(불꽃·점선) · 로그인 안내 모달 · 흰 적립 연출 · 새 선물상자 · 본인인증 시트 삭제 · 캡처 18장</td></tr>
+    <tr><td>v0.4</td><td>2026-10-30</td><td>실개발 기준으로 다시 씀</td></tr>
     <tr><td>v0.3</td><td>2026-10-27</td><td>프로토 기준 (기준 예시 페이지)</td></tr></table></div>
 
 <div class="sec-policy">
   <h3>⚙ 공통 정책 — 출석체크 전체</h3>
   <ul>
-    <li><b>하루 한 번</b>, 한국 시간 자정에 새 날이 됩니다. 이미 출석한 날 다시 요청하면 서버가 막고 토스트 "이미 참여했어요". (<a href="../policy/pol_earn.html#s2-2">2-2절</a>)</li>
-    <li>출석 카드는 <b>6칸</b> — 1~5번째 출석은 각 <b>10P</b>, <b>6번째 출석에 선물상자</b>(출석 10P + 추가 10~100P · 꽝 없음). 6번째를 채우면 다음 카드가 새로 시작됩니다. 칸 수·포인트는 어드민 설정값. (<a href="../policy/pol_earn.html#s2-3">2-3</a> · <a href="../policy/pol_earn.html#s2-4">2-4절</a>)</li>
-    <li><b>추가 포인트는 [출석하기]를 누른 순간 서버가 정합니다.</b> 선물상자는 결과를 보여 주는 연출일 뿐이라, 상자를 열기 전에 앱을 닫아도 포인트는 이미 들어가 있습니다. (<a href="../policy/pol_earn.html#s2-4">2-4절</a>)</li>
-    <li>하루 빠져도 도장은 사라지지 않습니다. 「N일 연속」은 재미로만 보여 주고 보상과 무관합니다.</li>
-    <li><b>본인인증 전 회원</b>이 누르면 본인인증 시트가 먼저 뜨고, 마치면 출석을 이어서 합니다. (<a href="../policy/pol_earn.html#s1-6">1-6절</a>)</li>
+    <li><b>하루 한 번</b>, 한국 시간 자정에 새 날이 됩니다. 이미 출석한 날 다시 요청하면 서버가 막고 토스트로 알립니다. (<a href="../policy/pol_earn.html#s2-2">2-2절</a>)</li>
+    <li>출석 카드는 <b>6칸</b> — 1~5번째 출석은 각 <b>10P</b>, <b>6번째 출석에 선물상자</b>(출석 10P + 추가 10~100P · 꽝 없음). 6번째를 채우면 다음 카드가 새로 시작됩니다. 칸 = 지금까지 출석한 횟수를 6으로 나눈 나머지. 칸 수·포인트는 어드민 설정값. (<a href="../policy/pol_earn.html#s2-3">2-3</a> · <a href="../policy/pol_earn.html#s2-4">2-4절</a>)</li>
+    <li><b>추가 포인트는 [출석하기]를 누른 순간 서버가 정합니다.</b> 선물상자는 결과를 보여 주는 연출일 뿐이라, 상자를 열기 전에 나가도 포인트는 이미 들어가 있습니다. (<a href="../policy/pol_earn.html#s2-4">2-4절</a>)</li>
+    <li>하루 빠져도 도장은 사라지지 않습니다. 「N일 연속 출석」은 오늘(또는 어제)부터 이어진 날 수로, 보상과 무관합니다.</li>
+    <li><b>적립은 본인인증 없이</b> 됩니다(본인인증은 포인트를 쓸 때만). <span class="tag proto">실개발 기준</span> C48</li>
+    <li><b>비로그인</b>도 화면에 들어올 수 있고, [로그인 후 출석하기]를 누르면 <b>로그인 안내 모달</b>이 먼저 뜹니다 → [로그인하기]면 로그인 시트. 로그인한 뒤에는 이 화면에 그대로 머물고, 출석은 다시 눌러야 합니다(자동 진행 없음). <span class="tag proto">실개발 기준</span> C37</li>
+    <li>적립 뒤에는 <b>흰 적립 연출</b>이 뜨고 <b>6초 뒤 스스로 닫힙니다</b>([✕]로 먼저 닫을 수 있음 · [확인] 버튼 없음). <span class="tag proto">실개발 기준</span> C50</li>
     <li>서버 처리 실패는 확인창 "출석하지 못했어요" + [다시 시도] — 같은 요청을 한 번 더 보내고, 이미 지급됐으면 서버가 막습니다(<a href="../common/c_layer.html#R3">C-LAYER R3</a>).</li>
   </ul>
-  <div class="src">기준: 참여형 적립 v0.8 · 1-6 · 2절 / 화면은 실개발 고객 웹(2026-10-30)</div>
+  <div class="src">기준: 참여형 적립 · 2절 + 정책 반영 대기 C37 · C48 · C49 · C50 / 화면은 실개발 고객 웹(2026-11-12)</div>
 </div>
 
 <nav class="toc" aria-label="이 페이지 바로가기">
@@ -61,47 +65,46 @@
   <a href="#layout"><b>②</b>페이지 구성</a>
   <span class="toc-sep"></span>
   <a class="z" href="#zA"><b>A</b>위쪽 바</a>
-  <a class="z" href="#zB"><b>B</b>공작·연속</a>
+  <a class="z" href="#zB"><b>B</b>말풍선·연속</a>
   <a class="z" href="#zC"><b>C</b>출석 카드</a>
-  <a class="z" href="#zD"><b>D</b>규칙 안내</a>
+  <a class="z" href="#zD"><b>D</b>이렇게 적립돼요</a>
   <span class="toc-sep"></span>
-  <a href="#over"><b>④</b>팝업·시트</a>
+  <a href="#over"><b>④</b>팝업·연출</a>
   <a href="#exc">예외 케이스</a>
 </nav>
 
 <section class="sec major" id="flow">
   <div class="sec-hd"><h2>① 화면 흐름 · 데이터</h2></div>
   <div class="box">
-    <div class="flow"><span>홈 「오늘의 적립」 출석체크</span><i>→</i><span>출석체크</span><i>→</i><span>[출석하고 10P 받기]</span><i>→</i><span>적립 연출 (X1)</span><i>→</i><span>「오늘 출석 완료」</span></div>
-    <div class="flow" style="margin-top:8px"><i>6번째:</i><span>[출석하고 선물상자 열기]</span><i>→</i><span>선물상자 — 눌러서 열기 (X2)</span><i>→</i><span>결과 「선물상자 NP」 (X3)</span></div>
-    <div class="flow" style="margin-top:8px"><i>본인인증 전:</i><span>[출석하기]</span><i>→</i><span>본인인증 시트 (X4)</span><i>→</i><span>마치면 출석 이어서 / [✕] → "그만둘까요?" (X5)</span></div>
-    <div class="flow" style="margin-top:8px"><i>비로그인:</i><span>[🔒 로그인하고 출석하기]</span><i>→</i><span>로그인 시트 (<a href="f_auth.html">F-AUTH</a>)</span></div>
+    <div class="flow"><span>홈 「매일 포인트 GET!」 출석</span><i>→</i><span>출석체크</span><i>→</i><span>[출석하기]</span><i>→</i><span>흰 적립 연출 (X2) · 6초</span><i>→</i><span>「오늘 출석 완료!」 · [내일도 출석하기] 꺼짐</span></div>
+    <div class="flow" style="margin-top:8px"><i>6번째:</i><span>[출석하고 선물상자 열기]</span><i>→</i><span>선물상자 — 눌러서 열기 (X3)</span><i>→</i><span>「NP를 받았어요!」 (X4)</span><i>→</i><span>흰 적립 연출 「6번째 출석 선물상자」 (X5)</span></div>
+    <div class="flow" style="margin-top:8px"><i>비로그인:</i><span>[로그인 후 출석하기]</span><i>→</i><span>로그인 안내 모달 (X1)</span><i>→</i><span>[로그인하기] → 로그인 시트 (<a href="f_auth.html">F-AUTH</a>) / [다음에]·바깥 → 닫힘</span></div>
   </div>
   <div class="box wrapx"><table class="t">
     <tr><th>요청</th><th>언제</th><th>받는 값 (화면에 쓰는 것)</th></tr>
-    <tr><td><code>GET /api/v1/member/{회원}/reward/home</code></td><td>화면을 열 때 · 출석 뒤</td><td><code>attendance</code> — <code>attendedToday</code> 오늘 출석 · <code>doneInCard</code> 채운 칸 · <code>cardSize</code> 칸 수 · <code>streak</code> 연속 일수 · <code>pointEach</code> 칸당 포인트 / <code>identityVerified</code></td></tr>
-    <tr><td><code>POST /api/v1/member/{회원}/reward/attendance</code></td><td>[출석하기]</td><td>지급 포인트 · 추가(보너스) 포인트 · 채운 칸 → 적립 연출 · 선물상자</td></tr>
-    <tr><td><code>GET /api/v1/reward/config</code></td><td>비로그인일 때</td><td>칸 수 · 칸당 포인트(안내 문구 숫자)</td></tr>
-    <tr><td colspan="3">오류: 409 이미 출석 → 토스트 "이미 참여했어요" · 403 본인인증 전 → 본인인증 시트 · 그 밖 → 확인창 "출석하지 못했어요" + [다시 시도]</td></tr>
+    <tr><td><code>GET /api/v1/member/{회원}/reward/home</code></td><td>화면을 열 때 · 출석 뒤</td><td><code>attendance</code> — <code>attendedToday</code> 오늘 출석 · <code>doneInCard</code> 채운 칸 · <code>cardSize</code> 칸 수 · <code>streak</code> 연속 일수 · <code>pointEach</code> 칸당 포인트 / <code>balance</code> 잔액(적립 연출 위 칩)</td></tr>
+    <tr><td><code>POST /api/v1/member/{회원}/reward/attendance</code></td><td>[출석하기]</td><td><code>point</code> 지급 포인트 · <code>bonus</code> 추가 포인트 · <code>bonusSlot</code> 선물상자 칸인지 · <code>status</code>(연속 일수 등) → 선물상자 · 적립 연출</td></tr>
+    <tr><td><code>GET /api/v1/reward/config</code></td><td>비로그인일 때</td><td>칸 수 · 칸당 포인트(「출석시 +10P」·안내 문구 숫자)</td></tr>
+    <tr><td colspan="3">오류: 이미 출석 → 토스트(서버 문구) 후 화면을 새로 받음 · 그 밖 → 확인창 "출석하지 못했어요" + [다시 시도] [닫기]</td></tr>
   </table></div>
 </section>
 
 <section class="sec major" id="layout">
   <div class="sec-hd"><span class="sid">F-ATT-L</span><h2>② 페이지 구성</h2></div>
-  <p class="sec-sub">왼쪽 = 로그인 · 2칸 채움 · 오늘 미참여, 오른쪽 = 비로그인.</p>
+  <p class="sec-sub">왼쪽 = 비로그인, 오른쪽 = 로그인 · 2일 연속 · 2칸 채움 · 오늘 미참여.</p>
   <div class="shots-row">
-    <div class="sw"><div class="lb">F-ATT-L <small>로그인</small></div><figure class="shot" data-id="F-ATT-L" data-base="../"></figure></div>
     <div class="sw"><div class="lb">F-ATT-L0 <small>비로그인</small></div><figure class="shot" data-id="F-ATT-L0" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-ATT-L <small>로그인</small></div><figure class="shot" data-id="F-ATT-L" data-base="../"></figure></div>
   </div>
   <div class="box wrapx" style="margin-top:12px"><table class="t">
     <tr><th>영역</th><th>들어가는 요소</th><th>배치·동작</th><th>상태에 따라 바뀌는 것</th></tr>
-    <tr class="zrow" data-n="A"><td><b>A</b> 위쪽 바</td><td>[←] · 「출석체크」 · 알림 종</td><td>파란 머리 맨 위</td><td>알림 종은 로그인만</td></tr>
-    <tr class="zrow" data-n="B"><td><b>B</b> 공작·연속</td><td>공작 · 🔥 N일 연속 · 안내</td><td>파란 머리</td><td>비로그인은 로그인 안내</td></tr>
-    <tr class="zrow" data-n="C"><td><b>C</b> 출석 카드</td><td>「내 출석 카드」 · N/5칸 · 칸 6개 · 버튼 · 안내 한 줄</td><td>흰 카드</td><td>미참여 / 선물상자 차례 / 완료 / 비로그인</td></tr>
-    <tr class="zrow" data-n="D"><td><b>D</b> 규칙 안내</td><td>「이렇게 쌓여요」 5줄</td><td>흰 카드</td><td>숫자는 설정값</td></tr>
+    <tr class="zrow" data-n="A"><td><b>A</b> 위쪽 바</td><td>[‹] · 「출석체크」</td><td>맨 위 가운데 제목</td><td>— (알림 종 없음)</td></tr>
+    <tr class="zrow" data-n="B"><td><b>B</b> 말풍선·연속</td><td>흰 말풍선 · 공작새 · 큰 숫자 · 한 줄</td><td>가운데 정렬</td><td>말풍선 5가지 · 비로그인은 「출석시 +10P」</td></tr>
+    <tr class="zrow" data-n="C"><td><b>C</b> 출석 카드</td><td>「내 출석 카드」 · N/6칸 · 칸 6개 · 버튼 · 안내 한 줄</td><td>흰 카드</td><td>비로그인 / 미참여 / 선물상자 차례 / 오늘 완료</td></tr>
+    <tr class="zrow" data-n="D"><td><b>D</b> 이렇게 적립돼요</td><td>안내 3줄</td><td>흰 카드</td><td>숫자는 설정값</td></tr>
   </table></div>
   <div class="cn"><div class="cn-hd">화면 공통 규칙</div>
-    <ul><li>2뎁스 — 하단 탭이 없고 [←]로 돌아갑니다.</li><li>화면 전체가 한 번에 스크롤됩니다.</li></ul></div>
+    <ul><li>2뎁스 — 하단 탭이 없고 [‹]로 돌아갑니다(이전 화면이 없으면 홈).</li><li>화면 전체가 한 번에 스크롤됩니다.</li></ul></div>
 </section>
 
 <section class="sec major" id="detail" style="margin-bottom:0">
@@ -113,35 +116,45 @@
   <div class="unit">
   <div class="zone-hd"><span class="zl">A</span><h2>위쪽 바</h2></div>
   <div class="shots-row">
-    <div class="sw"><div class="lb">F-ATT-A1 <small>비로그인</small></div><figure class="shot" data-id="F-ATT-A1" data-base="../"></figure></div>
-    <div class="sw"><div class="lb">F-ATT-A2 <small>로그인</small></div><figure class="shot" data-id="F-ATT-A2" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-ATT-A1 <small>비로그인·로그인 같음</small></div><figure class="shot" data-id="F-ATT-A1" data-base="../"></figure></div>
   </div>
   <div class="detail"><div class="ann">
-    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>[←]</div><ul><li>이전 화면(보통 홈)으로.</li></ul></div>
-    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>「출석체크」</div></div>
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>[‹]</div><ul><li>이전 화면(보통 홈)으로. 이전 화면이 없으면(주소로 바로 들어옴) 홈으로.</li></ul></div>
   </div><div class="ann">
-    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>알림 종 — 로그인만</div><ul><li>안 읽은 알림 수 배지 · 누르면 알림함.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>「출석체크」</div><ul><li>예전 화면의 알림 종은 없습니다. <span class="tag proto">실개발 기준</span></li></ul></div>
   </div></div>
   </div>
 </section>
 
 <section class="sec zsec" id="zB">
   <div class="unit">
-  <div class="zone-hd"><span class="zl">B</span><h2>공작 · 연속 일수</h2></div>
+  <div class="zone-hd"><span class="zl">B</span><h2>말풍선 · 공작새 · 연속 출석</h2></div>
   <div class="shots-row">
     <div class="sw"><div class="lb">F-ATT-B1 <small>비로그인</small></div><figure class="shot" data-id="F-ATT-B1" data-base="../"></figure></div>
-    <div class="sw"><div class="lb">F-ATT-B2 <small>2일 연속</small></div><figure class="shot" data-id="F-ATT-B2" data-base="../"></figure></div>
-    <div class="sw"><div class="lb">F-ATT-B3 <small>출석 뒤 3일 연속</small></div><figure class="shot" data-id="F-ATT-B3" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-ATT-B2 <small>연속 0일(어제 빠짐)</small></div><figure class="shot" data-id="F-ATT-B2" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-ATT-B3 <small>2일 연속 · 오늘 미참여</small></div><figure class="shot" data-id="F-ATT-B3" data-base="../"></figure></div>
+  </div>
+  <div class="shots-row" style="margin-top:10px">
+    <div class="sw"><div class="lb">F-ATT-B4 <small>오늘 출석 완료</small></div><figure class="shot" data-id="F-ATT-B4" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-ATT-B5 <small>선물상자 차례</small></div><figure class="shot" data-id="F-ATT-B5" data-base="../"></figure></div>
   </div>
   <div class="detail"><div class="ann">
-    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>공작</div><ul><li>비로그인 = 누워 자는 모습 / 로그인 = 기대는 모습. 누를 수 없습니다.</li></ul></div>
-    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>「🔥 N일 연속」</div>
-      <ul><li>오늘까지 이어진 날 수. 하루 빠지면 다시 셉니다(도장은 그대로).</li>
-          <li>비로그인은 숫자 대신 "로그인이 필요해요".</li></ul>
-      <div class="rule"><b>근거</b> 연속 일수는 표시용 · 보상 무관 (<a href="../policy/pol_earn.html#s2-2">2-2절</a>)</div></div>
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>말풍선</div>
+      <div class="box wrapx"><table class="t"><tr><th>상태</th><th>문구</th></tr>
+        <tr><td>비로그인</td><td>"로그인하고 출석 포인트 받으세요"</td></tr>
+        <tr><td>로그인 · 연속 0일</td><td>"출석 찍고 10P 받아가세요"</td></tr>
+        <tr><td>로그인 · 연속 1일 이상</td><td>"오늘도 오셨네요! 출석 찍고 10P 받아가세요"</td></tr>
+        <tr><td>선물상자 차례</td><td>"출석하고 선물상자 열어 보세요"</td></tr>
+        <tr><td>오늘 출석 완료</td><td>"오늘 출석 완료! 내일 또 만나요"</td></tr></table></div>
+      <ul><li>위 순서대로 먼저 맞는 것 하나만 보입니다(예: 선물상자 차례면 연속 일수와 상관없이 선물상자 문구).</li><li>「10P」는 칸당 포인트 설정값.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>공작새</div><ul><li>손 흔드는 그림. 누를 수 없습니다.</li></ul></div>
   </div><div class="ann">
-    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>안내</div>
-      <ul><li>로그인 "한국 시간 기준 · 매일 자정에 새로워져요" / 비로그인 "로그인하면 매일 출석하고 포인트를 받을 수 있어요".</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>큰 숫자</div>
+      <ul><li>로그인 = 「N일 연속 출석」 — 오늘 출석했으면 오늘부터, 안 했으면 어제부터 거꾸로 이어진 날 수. 어제 빠졌으면 0.</li>
+          <li>비로그인 = 「출석시 +10P」.</li></ul>
+      <div class="rule"><b>근거</b> 연속 일수는 표시용 · 보상 무관 (<a href="../policy/pol_earn.html#s2-2">2-2절</a>)</div></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>한 줄</div>
+      <ul><li>로그인 "한국 시간 기준 · 매일 자정에 새로워져요" / 비로그인 "로그인하고 출석하면 바로 적립돼요".</li></ul></div>
   </div></div>
   </div>
 </section>
@@ -152,81 +165,86 @@
   <div class="shots-row">
     <div class="sw"><div class="lb">F-ATT-C1 <small>비로그인</small></div><figure class="shot" data-id="F-ATT-C1" data-base="../"></figure></div>
     <div class="sw"><div class="lb">F-ATT-C2 <small>미참여 · 2칸</small></div><figure class="shot" data-id="F-ATT-C2" data-base="../"></figure></div>
-    <div class="sw"><div class="lb">F-ATT-C3 <small>선물상자 차례 · 5칸</small></div><figure class="shot" data-id="F-ATT-C3" data-base="../"></figure></div>
-    <div class="sw"><div class="lb">F-ATT-C4 <small>오늘 출석 완료</small></div><figure class="shot" data-id="F-ATT-C4" data-base="../"></figure></div>
+  </div>
+  <div class="shots-row" style="margin-top:10px">
+    <div class="sw"><div class="lb">F-ATT-C3 <small>오늘 출석 완료 · 3칸</small></div><figure class="shot" data-id="F-ATT-C3" data-base="../"></figure></div>
+    <div class="sw"><div class="lb">F-ATT-C4 <small>선물상자 차례 · 5칸</small></div><figure class="shot" data-id="F-ATT-C4" data-base="../"></figure></div>
   </div>
   <div class="detail"><div class="ann">
-    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「N/5칸」</div><ul><li>이번 카드에서 채운 칸 수(6번째 선물상자 칸은 세지 않음). 비로그인 0/5칸.</li></ul></div>
-    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>채운 칸 「✓ 완료」</div><ul><li>노란 칸. 빈 칸은 숫자와 「10P」.</li></ul></div>
-    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>오늘 칸 「! 오늘」</div><ul><li>오늘 미참여일 때 다음 칸이 파랗게 강조됩니다.</li></ul></div>
-    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>6번째 칸 「🎁 랜덤」</div><ul><li>항상 선물상자. 5칸을 다 채웠고 오늘 미참여면 깜빡이며 강조(C3).</li></ul></div>
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「N/6칸」</div><ul><li>이번 카드에서 채운 칸 수 / 전체 칸 수(선물상자 칸 포함). 비로그인 0/6칸.</li><li>6번째를 채우면 0/6칸으로 다시 시작합니다.</li></ul></div>
+    <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>채운 칸 — 불꽃 「완료」</div><ul><li>회색 실선 테두리.</li></ul></div>
+    <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>오늘 칸 — 파란 점선 「오늘」</div><ul><li>로그인 · 오늘 미참여일 때 다음 칸. 비로그인은 항상 1번째 칸.</li><li>오늘 출석을 마치면 「오늘」 칸이 사라집니다(C3).</li></ul></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>남은 칸 — 회색 점선</div><ul><li>칸 번호 + 「10P」.</li></ul></div>
+    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>마지막 칸 — 선물 그림 「선물」</div><ul><li>항상 선물상자 칸. 선물상자 차례(5칸 채움 · 오늘 미참여)면 이 칸이 파란 점선 「오늘」이 됩니다(C4).</li></ul></div>
   </div><div class="ann">
-    <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>버튼</div>
+    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>버튼</div>
       <div class="box wrapx"><table class="t"><tr><th>상태</th><th>버튼</th><th>누르면</th></tr>
-        <tr><td>비로그인</td><td>[🔒 로그인하고 출석하기] 파랑</td><td>로그인 시트 — 여기서 새로 가입해도 「가입 직후 본인인증 권유 팝업」은 뜨지 않음(출석을 누를 때 바로 묻기 때문 · <a href="f_home.html#over">F-HOME X3</a>)</td></tr>
-        <tr><td>미참여</td><td>[✓ 출석하고 10P 받기] 노랑</td><td>서버 지급 → 적립 연출(X1)</td></tr>
-        <tr><td>선물상자 차례</td><td>[✓ 출석하고 선물상자 열기] 노랑</td><td>서버가 10P + 추가 포인트를 정해 지급 → 선물상자(X2)</td></tr>
-        <tr><td>오늘 완료</td><td>[✓ 오늘 출석 완료] 초록 · 누를 수 없음</td><td>—</td></tr>
-        <tr><td>본인인증 전</td><td>미참여·선물상자와 같은 버튼</td><td>본인인증 시트(X4) → 마치면 출석 이어서</td></tr></table></div>
-      <ul><li>처리하는 동안은 버튼이 잠겨 두 번 눌리지 않습니다.</li></ul></div>
-    <div class="cn" data-n="6"><div class="cn-hd"><span class="no">6</span>안내 한 줄</div>
-      <ul><li>평소·비로그인 "도장 5개를 모으면 6번째에 선물상자가 열려요" / 선물상자 차례 "이번 출석은 10P + 추가 10~100P · 꽝 없이 최소 20P" / 완료 "내일 다시 오면 다음 칸이 열려요".</li></ul></div>
+        <tr><td>비로그인</td><td>[로그인 후 출석하기] 파랑</td><td>로그인 안내 모달(X1)</td></tr>
+        <tr><td>미참여</td><td>[출석하기] 파랑</td><td>서버 지급 → 흰 적립 연출(X2)</td></tr>
+        <tr><td>선물상자 차례</td><td>[출석하고 선물상자 열기] 파랑</td><td>서버가 10P + 추가 포인트를 정해 지급 → 선물상자(X3)</td></tr>
+        <tr><td>오늘 완료</td><td>[내일도 출석하기] 회색 · 누를 수 없음</td><td>—</td></tr></table></div>
+      <ul><li>처리하는 동안과 출석 정보를 받기 전에는 버튼이 꺼져 두 번 눌리지 않습니다(비로그인은 항상 켜짐).</li></ul></div>
+    <div class="cn" data-n="7"><div class="cn-hd"><span class="no">7</span>안내 한 줄</div>
+      <ul><li>모든 상태에서 같은 문구 "도장 5개를 모으면 6번째에 선물상자가 열려요".</li></ul></div>
   </div></div>
   </div>
 </section>
 
 <section class="sec zsec" id="zD">
   <div class="unit">
-  <div class="zone-hd"><span class="zl">D</span><h2>규칙 안내</h2></div>
+  <div class="zone-hd"><span class="zl">D</span><h2>이렇게 적립돼요</h2></div>
   <div class="shots-row"><div class="sw"><div class="lb">F-ATT-D1</div><figure class="shot" data-id="F-ATT-D1" data-base="../"></figure></div></div>
   <div class="detail"><div class="ann">
-    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「이렇게 쌓여요」</div>
-      <ul><li>하루 한 번 출석할 수 있어요. (한국 시간 기준)</li>
-          <li>도장 1~5칸은 각 10P, 6번째 출석에 선물상자가 열려요.</li>
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>「이렇게 적립돼요」 3줄</div>
+      <ul><li>도장 1~5칸은 각 10P, 6번째 출석에 선물상자가 열려요.</li>
           <li>선물상자는 출석 10P + 추가 10~100P, 꽝이 없어요.</li>
-          <li>하루 빠져도 도장은 사라지지 않아요. 이어서 모으면 돼요.</li>
-          <li>연속 일수는 재미로 보여드리는 것이고, 보상과는 상관없어요.</li></ul>
-      <div class="data"><b>데이터</b> ← 칸 수·칸당 포인트는 설정값으로 채움</div></div>
+          <li>하루 빠져도 도장은 사라지지 않아요. 이어서 모으면 돼요.</li></ul>
+      <div class="data"><b>데이터</b> ← 칸 수·칸당 포인트는 설정값으로 채움</div>
+      <ul><li>예전 「하루 한 번 출석」·「연속 일수는 재미로」 두 줄은 빠졌습니다. <span class="tag proto">실개발 기준</span></li></ul></div>
   </div></div>
   </div>
 </section>
 
 <section class="sec major" id="over">
-  <div class="sec-hd"><h2>④ 팝업·시트</h2></div>
+  <div class="sec-hd"><h2>④ 팝업 · 연출</h2></div>
   <p class="sec-sub">전체 화면을 덮으므로 자르지 않습니다. 공통 동작은 <a href="../common/c_layer.html">C-LAYER</a>를 따릅니다.</p>
   <div class="two-col unit sub-item">
-    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-ATT-X1 <small style="font-weight:400">적립 연출</small></div><figure class="shot" data-id="F-ATT-X1" data-base="../" data-only="-"></figure></div>
-    <div class="ann"><div class="cn"><div class="cn-hd">적립 화면</div>
-      <ul><li>화면 전체 진한 파랑 · 춤추는 공작 · 「+10P」 · 내 포인트 · 아래 띠 "🎉 10P 적립! / 출석체크 완료 · 도장 N/5".</li>
-          <li>약 2.4초 뒤 저절로 닫히고 카드가 「오늘 출석 완료」로 바뀝니다.</li></ul>
-      <div class="rule"><b>근거</b> 적립 연출 (<a href="../common/c_layer.html#L-EARN">C-LAYER L-EARN</a>)</div></div></div>
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-ATT-X1 <small style="font-weight:400">비로그인 — 로그인 안내 모달</small></div><figure class="shot" data-id="F-ATT-X1" data-base="../" data-only="-"></figure></div>
+    <div class="ann"><div class="cn"><div class="cn-hd">로그인 안내 모달 <span class="tag proto">실개발 기준</span></div>
+      <ul><li>공작새 · "로그인 후 포인트를 받을 수 있어요" · "로그인 하면 다양한 혜택에 참여하고 / 매일 포인트를 받을 수 있어요" · [다음에] [로그인하기].</li>
+          <li>[로그인하기] → 로그인 시트(<a href="f_auth.html">F-AUTH</a>). [다음에] · 바깥 · Esc → 닫힘.</li>
+          <li>로그인을 마치면 출석체크 화면에 그대로 머뭅니다 — 출석은 다시 눌러야 합니다.</li>
+          <li>같은 모달을 혜택 상세 · 퀴즈 · 친구초대의 비로그인 버튼에서도 씁니다.</li></ul>
+      <div class="rule"><b>근거</b> 로그인 안내 모달 (C37 · 정책서 반영 대기)</div></div></div>
   </div>
   <div class="two-col unit sub-item">
-    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-ATT-X2 <small style="font-weight:400">6번째 출석 — 선물상자</small></div><figure class="shot" data-id="F-ATT-X2" data-base="../" data-only="-"></figure></div>
-    <div class="ann"><div class="cn"><div class="cn-hd">선물상자</div>
-      <ul><li>「6번째 출석 선물상자」 · 상자 · "상자를 눌러 열어 보세요" · "출석 10P + 추가 10~100P · 꽝 없이 최소 20P".</li>
-          <li>상자를 누르면 약 1초 열리는 모습 → 결과(X3).</li>
-          <li>포인트는 이미 지급된 상태 — 열지 않고 나가도 받습니다.</li></ul></div></div>
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-ATT-X2 <small style="font-weight:400">흰 적립 연출 — 연속 출석</small></div><figure class="shot" data-id="F-ATT-X2" data-base="../" data-only="-"></figure></div>
+    <div class="ann"><div class="cn"><div class="cn-hd">적립 연출 <span class="tag proto">실개발 기준</span></div>
+      <ul><li>흰 전체 화면 · 왼쪽 위 [✕] · 오른쪽 위 잔액 칩(이전 잔액 → 새 잔액으로 올라감) · 움직이는 공작새 · 「적립 완료」 · 큰 「+10P」(0부터 올라감) · "포인트가 바로 적립됐어요" · 회색 칸 「N일 연속 출석 +10P」.</li>
+          <li>회색 칸의 N = 이번 출석까지 이어진 연속 일수(예: 어제까지 2일 → 「3일 연속 출석」).</li>
+          <li><b>6초 뒤 스스로 닫힙니다.</b> 그 전에는 [✕] · Esc로만 닫고, [확인] 버튼 · 남은 시간 표시는 없습니다.</li>
+          <li>닫히면 카드가 「오늘 출석 완료」 상태로 바뀝니다.</li></ul>
+      <div class="rule"><b>근거</b> 흰 적립 연출 (C50 · 출석·퀴즈·혜택 상세 공용 · <a href="../common/c_layer.html#L-EARN">C-LAYER L-EARN</a>)</div></div></div>
   </div>
   <div class="two-col unit sub-item">
-    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-ATT-X3 <small style="font-weight:400">선물상자 결과 (예: 10P + 16P)</small></div><figure class="shot" data-id="F-ATT-X3" data-base="../" data-only="-"></figure></div>
-    <div class="ann"><div class="cn"><div class="cn-hd">결과</div>
-      <ul><li>"🎉 선물상자 NP" · "6번째 출석 · 꽝 없이 최소 20P" · 「출석 +10P」「추가 +NP」 · "내 포인트 NP".</li>
-          <li>잠시 뒤 저절로 닫힙니다. 포인트 내역에는 출석 · 출석 보너스 두 줄.</li></ul>
-      <div class="rule"><b>근거</b> 선물상자 = 결과 연출 (<a href="../policy/pol_earn.html#s2-4">2-4절</a>)</div></div></div>
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-ATT-X3 <small style="font-weight:400">6번째 출석 — 선물상자(닫힘)</small></div><figure class="shot" data-id="F-ATT-X3" data-base="../" data-only="-"></figure></div>
+    <div class="ann"><div class="cn"><div class="cn-hd">선물상자 <span class="tag proto">실개발 기준</span></div>
+      <ul><li>검은 바탕 · 「6번째 출석 선물상자」 · "상자를 눌러 열어 보세요" · 파란 카드 안 닫힌 상자 · 「눌러서 열기」 · 아래 노란 "출석 10P + 추가 10~100P" · "꽝 없이 최소 20P".</li>
+          <li>파란 카드를 누르면 상자가 흔들린 뒤 열립니다(X4). 닫기 버튼은 없습니다.</li>
+          <li>포인트는 [출석하고 선물상자 열기]를 누른 순간 이미 지급된 상태 — 열지 않고 나가도 받습니다.</li></ul>
+      <div class="rule"><b>근거</b> 선물상자 = 결과 연출 (<a href="../policy/pol_earn.html#s2-4">2-4절</a> · 모양은 C49)</div></div></div>
   </div>
   <div class="two-col unit sub-item">
-    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-ATT-X4 <small style="font-weight:400">본인인증 전 — 본인인증 시트</small></div><figure class="shot" data-id="F-ATT-X4" data-base="../" data-only="-"></figure></div>
-    <div class="ann"><div class="cn"><div class="cn-hd">휴대폰 본인인증</div>
-      <ul><li>통신사 · 이름 · 휴대폰 번호 · [인증하기] — 한 화면. 자세한 규칙은 <a href="f_auth.html">F-AUTH</a>.</li>
-          <li>마치면 적립대기가 있으면 그 적립 연출("NP 적립! · 적립대기 포인트가 지급됐어요")이 먼저, 없으면 토스트 "본인인증이 완료됐어요" → <b>출석을 이어서</b> 합니다.</li></ul>
-      <div class="rule"><b>근거</b> 첫 적립 때 본인인증 (<a href="../policy/pol_earn.html#s1-6">1-6절</a>)</div></div></div>
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-ATT-X4 <small style="font-weight:400">선물상자 열림 (예: 42P)</small></div><figure class="shot" data-id="F-ATT-X4" data-base="../" data-only="-"></figure></div>
+    <div class="ann"><div class="cn"><div class="cn-hd">열린 상자</div>
+      <ul><li>열린 상자 + 빛 · 「NP를 받았어요!」 — N = 출석 10P + 추가 포인트 합계, 0부터 올라갑니다.</li>
+          <li>약 2.3초 뒤 저절로 흰 적립 연출(X5)로 넘어갑니다.</li></ul></div></div>
   </div>
   <div class="two-col unit sub-item">
-    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-ATT-X5 <small style="font-weight:400">본인인증 시트 [✕]</small></div><figure class="shot" data-id="F-ATT-X5" data-base="../" data-only="-"></figure></div>
-    <div class="ann"><div class="cn"><div class="cn-hd">확인창</div>
-      <ul><li>"본인인증을 그만둘까요? — 지금 닫으면 이번 참여는 하지 않은 상태로 남아요." · [계속하기] [닫기].</li>
-          <li>[닫기] → 출석하지 않은 채 출석체크 화면에 남습니다.</li></ul></div></div>
+    <div><div class="lb" style="font-weight:700;margin-bottom:6px">F-ATT-X5 <small style="font-weight:400">흰 적립 연출 — 선물상자</small></div><figure class="shot" data-id="F-ATT-X5" data-base="../" data-only="-"></figure></div>
+    <div class="ann"><div class="cn"><div class="cn-hd">선물상자 뒤 적립 연출</div>
+      <ul><li>X2와 같은 화면 · 큰 숫자 = 합계(예: +42P) · 회색 칸 「6번째 출석 선물상자 +42P」.</li>
+          <li>6초 뒤 스스로 닫힘. 포인트 내역에는 출석 · 출석 보너스 두 줄로 남습니다.</li></ul></div></div>
   </div>
 </section>
 
@@ -234,13 +252,14 @@
   <div class="sec-hd"><h2>예외 케이스</h2></div>
   <div class="box wrapx"><table class="t">
     <tr><th>#</th><th>상황</th><th>화면·서버 동작</th></tr>
-    <tr><td>E1</td><td>오늘 이미 출석했는데 다시 요청(두 기기 등)</td><td>서버 409 → 토스트 "이미 참여했어요" · 화면을 새로 받음</td></tr>
-    <tr><td>E2</td><td>버튼을 빨리 두 번 누름</td><td>처리하는 동안 버튼이 잠겨 한 번만 · 서버도 같은 날 두 번 지급하지 않음</td></tr>
+    <tr><td>E1</td><td>오늘 이미 출석했는데 다시 요청(두 기기 등)</td><td>서버가 막음 → 토스트(서버 문구 "이미 참여했어요") · 화면을 새로 받음</td></tr>
+    <tr><td>E2</td><td>버튼을 빨리 두 번 누름</td><td>처리하는 동안 버튼이 꺼져 한 번만 · 서버도 같은 날 두 번 지급하지 않음</td></tr>
     <tr><td>E3</td><td>서버 처리 실패</td><td>확인창 "출석하지 못했어요"(본문 = 서버가 보낸 사유, 없으면 "잠시 후 다시 시도해 주세요") + [다시 시도] [닫기]</td></tr>
-    <tr><td>E4</td><td>선물상자를 열기 전에 앱을 닫음</td><td>포인트는 이미 지급 · 포인트 내역에 남음</td></tr>
+    <tr><td>E4</td><td>선물상자를 열기 전에 나감</td><td>포인트는 이미 지급 · 포인트 내역에 남음</td></tr>
     <tr><td>E5</td><td>자정을 넘김</td><td>한국 시간 자정 기준으로 새 날 — 다시 열면 미참여</td></tr>
-    <tr><td>E6</td><td>하루 이상 빠짐</td><td>도장 그대로 · 연속 일수만 다시 셈</td></tr>
-    <tr><td>E7</td><td>출석 정보를 받기 전 · 못 받음</td><td>버튼이 잠긴 채 「🔥 0일 연속」 · 빈 카드로 보임 — 따로 오류 안내는 없음(실개발 현재 동작) <span class="tag open">미결</span> 홈처럼 「다시 시도」 안내가 필요한지 확인</td></tr>
+    <tr><td>E6</td><td>하루 이상 빠짐</td><td>도장 그대로 · 연속 일수만 0부터 다시 셈 · 말풍선 "출석 찍고 10P 받아가세요"</td></tr>
+    <tr><td>E7</td><td>출석 정보를 받기 전 · 못 받음(로그인)</td><td>버튼이 꺼진 채 「0일 연속 출석」 · 빈 카드로 보임 — 따로 오류 안내는 없음(실개발 현재 동작) <span class="tag open">미결</span> 「다시 시도」 안내가 필요한지 확인</td></tr>
+    <tr><td>E8</td><td>적립 연출을 [✕]로 먼저 닫음</td><td>바로 닫히고 카드가 「오늘 출석 완료」로 바뀜 · 포인트는 이미 지급</td></tr>
   </table></div>
 </section>
 

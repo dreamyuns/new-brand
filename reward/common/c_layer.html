@@ -33,7 +33,7 @@
   <span>적용 범위 <b>고객 웹 전 화면</b> (어드민은 8절 · 프로토 기준 그대로)</span>
   <span>기준 <b>실개발</b> 고객 웹 <code>feature/reward</code> (2026-11-02) — 호출 전수 조사</span>
   <span>규칙 R1~R10 결정 <b>PO 2026-10-26</b>(시범 적용)</span>
-  <span>최종수정 <b>2026-11-03</b></span>
+  <span>최종수정 <b>2026-11-12</b></span>
 </div>
 <p class="lead">화면 위에 잠깐 뜨거나 화면을 덮는 모든 요소(토스트·확인창·바텀시트·적립 연출·로딩·브라우저 알림창)를 <b>언제 어떤 것을 쓰는지</b> 한곳에 정리했습니다. 각 화면기획서는 이 규칙을 따르고 예외만 따로 적습니다. 규칙(3절)마다 <b>실개발이 지금 어떻게 되어 있는지</b>를 함께 적었습니다.</p>
 
@@ -43,6 +43,7 @@
 <div class="box hist">
   <h3>변경이력</h3>
   <table class="t"><tr><th>버전</th><th>날짜</th><th>내용</th></tr>
+    <tr><td>v0.6</td><td>2026-11-12</td><td>디자인 반영 1묶음 — L-EARN 흰 적립 연출(6초 자동 닫힘) · 로그인 안내 모달(L-LOGIN-GUIDE) 추가 · 「적립 전 본인인증」 폐지 표시 · 예시 캡처 교체</td></tr>
     <tr><td>v0.5</td><td>2026-11-03</td><td>AI 검색 보완 — 안내창 「숙소 검색만 도와드릴 수 있어요」 추가 · 예전 토스트 「저는 호텔 검색만…」 삭제(실소스에서 안 씀) · AI 검색 조건 풀기 토스트 추가</td></tr>
     <tr><td>v0.4</td><td>2026-11-02</td><td>실개발 기준으로 다시 확인 — 종류 표·규칙별 실개발 상태·겹침 순서(층 번호)·호출 목록을 실소스로 교체 · 알림 토스트·권한 창은 실개발 없음 · 브라우저 알림창 2곳 추가 · 예시 캡처를 실개발 캡처로</td></tr>
     <tr><td>v0.3</td><td>2026-10-27</td><td>프로토 수정 ①② 반영(P1~P24)</td></tr>
@@ -69,7 +70,8 @@
   <div class="box wrapx"><table class="t">
     <tr><th>ID</th><th>종류</th><th>언제 쓰나</th><th>노출</th><th>닫기</th><th>배경</th></tr>
     <tr id="L-TOAST"><td><code>L-TOAST</code></td><td><b>토스트</b></td><td>내 동작 직후의 가벼운 결과·안내 · 입력 실수 · 규칙상 막힘 · 일부 서버 실패</td><td>하단 중앙(아래에서 100px) · 아이콘 2종(✓ 완료 / ! 안내·오류) · <b>2초</b> · <b>한 번에 하나</b>(새 토스트가 앞 것을 바꿈)</td><td>자동</td><td>어둡게 하지 않음 · 누를 수 없음</td></tr>
-    <tr id="L-EARN"><td><code>L-EARN</code></td><td><b>적립 연출</b></td><td>포인트가 실제로 늘어나는 순간 — 출석 · 퀴즈 · 혜택 · 뽑기 · 본인인증 후 적립대기 지급(대부분 화면). 연출이 알려 주므로 토스트는 생략</td><td>전체 화면 진한 파랑 · 춤추는 공작 · 「+NP」 · 내 포인트 · 아래 띠(제목·한 줄) · <b>2.4초</b>(뽑기 결과 3초 · 기본/뽑기 나눔 표시 가능)</td><td>자동</td><td>전체를 덮음</td></tr>
+    <tr id="L-EARN"><td><code>L-EARN</code></td><td><b>적립 연출</b></td><td>포인트가 실제로 늘어나는 순간. 연출이 알려 주므로 토스트는 생략.<br><b>흰 연출(11-12 디자인)</b> = 출석 · 퀴즈 · 혜택 상세 / <b>예전 파란 연출</b> = 뽑기 · 친구 추천(디자인이 오면 흰 연출로 바뀜)</td><td><b>흰 연출</b>: 흰 전체 화면 · 왼쪽 위 [✕] · 오른쪽 위 잔액 칩(이전 → 새 잔액) · 움직이는 공작새 · 「적립 완료」 · 큰 「+NP」 · "포인트가 바로 적립됐어요" · 회색 칸(이름 +NP) · <b>6초 뒤 스스로 닫힘</b> · [확인] 없음<br>예전 파란 연출: 진한 파랑 · 춤추는 공작 · 아래 띠 · 2.4초(뽑기 3초)</td><td>자동(6초) · [✕] · ESC</td><td>전체를 덮음</td></tr>
+    <tr id="L-LOGIN-GUIDE"><td><code>L-LOGIN-GUIDE</code></td><td><b>로그인 안내 모달</b> <span class="tag proto">실개발 기준</span></td><td>비로그인이 <b>포인트를 받는 버튼</b>을 누를 때 — 출석 [로그인 후 출석하기] · 퀴즈 [로그인하고 시작하기] · 혜택 상세 [로그인하고 +NP 받기] · 친구초대(C37)</td><td>화면 가운데 흰 카드 · 공작새 · "로그인 후 포인트를 받을 수 있어요" · 한 줄 · [다음에] [로그인하기] → 로그인 시트. 로그인 뒤 그 화면에 머묾(자동 진행 없음)</td><td>[다음에] · 배경 · ESC</td><td>어둡게</td></tr>
     <tr id="L-DIALOG"><td><code>L-DIALOG</code></td><td><b>중앙 확인창</b></td><td>① 그만두기 확인(본인인증) ② 되돌릴 수 없는 작업 전 확인(탈퇴) ③ 권유(가입 직후 본인인증) ④ 처리 실패 + [다시 시도](출석·퀴즈 채점) ⑤ 안내 한 개(AI 검색 범위 밖)</td><td>화면 가운데 · 아이콘(기본 느낌표) · 제목 · 본문 · 버튼 1~2개 · <b>여러 개면 차례로</b>(대기열)</td><td>버튼 · <b>배경 누르기 · ESC = [취소]</b></td><td>어둡게</td></tr>
     <tr id="L-SHEET-PICK"><td><code>L-SHEET-PICK</code></td><td><b>바텀시트 (선택형)</b></td><td>목록에서 고르기 · 긴 부가 정보 — 국적·국가 코드 · 필터 · 편의시설 · 약관 보기 · 로그인 유도</td><td>하단에서 올라옴 · [✕] 또는 손잡이</td><td>[✕] · 배경 누르기 · ESC</td><td>어둡게</td></tr>
     <tr id="L-SHEET-STEP"><td><code>L-SHEET-STEP</code></td><td><b>바텀시트 (단계형)</b></td><td>여러 단계를 이어서 입력 — 가입·로그인 · 본인인증 · 탈퇴</td><td>화면 위까지 올라오는 시트 · 단계마다 내용 교체</td><td>[✕] · 배경 · ESC — <b>본인인증만</b> 「그만둘까요?」 확인을 거침, 가입·탈퇴는 바로 닫힘(진행 중 요청은 끊음)</td><td>어둡게</td></tr>
@@ -97,8 +99,9 @@
     <tr><td>진행 중인 입력을 버리고 나가려 한다</td><td><b>L-DIALOG</b> (본인인증만)</td><td>"본인인증을 그만둘까요?" [계속하기][닫기]</td></tr>
     <tr><td>목록에서 하나 고른다 · 긴 정보</td><td><b>L-SHEET-PICK</b></td><td>국적 · 국가 코드 · 필터 · 약관 보기</td></tr>
     <tr><td>여러 단계를 이어서 입력한다</td><td><b>L-SHEET-STEP</b></td><td>가입·로그인 · 본인인증 · 탈퇴</td></tr>
-    <tr><td>적립하려는데 본인인증 전이다</td><td><b>L-SHEET-STEP</b> 본인인증 → 마치면 하려던 참여를 이어서</td><td>출석 · 퀴즈 · 혜택 · 뽑기 · 홈 안내 띠</td></tr>
-    <tr><td>로그인이 필요한 버튼을 비로그인이 눌렀다</td><td><b>L-SHEET-STEP</b> 로그인 시트를 바로 엶(토스트 없음)</td><td>[로그인하고 ~] · 출석 · 퀴즈 · 혜택 카드</td></tr>
+    <tr><td>적립하려는데 본인인증 전이다</td><td><b>폐지</b> — 적립은 본인인증 없이(C48 · 출석·퀴즈·혜택은 11-12 반영)</td><td>본인인증은 포인트를 쓸 때만(기프티샵 교환·친구 추천 보상) — 2묶음에서 F-AUTH 정리</td></tr>
+    <tr><td>비로그인이 포인트를 받는 버튼을 눌렀다</td><td><b>L-LOGIN-GUIDE</b> → [로그인하기] → 로그인 시트</td><td>출석 · 퀴즈 · 혜택 상세 · 친구초대 (C37)</td></tr>
+    <tr><td>비로그인이 그 밖의 로그인 버튼을 눌렀다</td><td><b>L-SHEET-STEP</b> 로그인 시트를 바로 엶(토스트 없음)</td><td>홈·혜택 탭 위 [로그인] · 포인트 내역·쿠폰함·알림 · 기프티샵 교환</td></tr>
     <tr><td>로그인이 만료됐다</td><td><b>L-ALERT</b> → 첫 화면</td><td>다른 탭에서 로그아웃 · 세션 끝남</td></tr>
   </table></div>
 </section>
@@ -192,7 +195,8 @@
   <div class="gallery">
     <div class="g unit"><figure class="shot" data-id="F-INV-T4" data-base="../" data-only="-"></figure><b>L-TOAST ✓ 완료</b><span>친구 추천 — 추천코드 입력 (<a href="../front/f_invite.html#over">F-INV</a>)</span></div>
     <div class="g unit"><figure class="shot" data-id="F-SHOP-T1" data-base="../" data-only="-"></figure><b>L-TOAST ! 안내</b><span>기프티샵 — 구매 준비 중 (<a href="../front/f_shop.html#item">F-SHOP</a>)</span></div>
-    <div class="g unit"><figure class="shot" data-id="F-OFFER-X1" data-base="../" data-only="-"></figure><b>L-EARN 적립 연출</b><span>혜택 홍보 페이지 적립 (<a href="../front/f_offer.html#over">F-OFFER</a>)</span></div>
+    <div class="g unit"><figure class="shot" data-id="F-ATT-X2" data-base="../" data-only="-"></figure><b>L-EARN 흰 적립 연출</b><span>출석 적립 (<a href="../front/f_attend.html#over">F-ATT</a>)</span></div>
+    <div class="g unit"><figure class="shot" data-id="F-ATT-X1" data-base="../" data-only="-"></figure><b>L-LOGIN-GUIDE 로그인 안내 모달</b><span>비로그인 출석 (<a href="../front/f_attend.html#over">F-ATT</a>)</span></div>
     <div class="g unit"><figure class="shot" data-id="F-POINT-X3" data-base="../" data-only="-"></figure><b>L-EARN 나눔 표시</b><span>예약 뽑기 — 기본 적립 / 뽑기 추가 (<a href="../front/f_point.html#over">F-POINT</a>)</span></div>
     <div class="g unit"><figure class="shot" data-id="F-AUTH-I3" data-base="../" data-only="-"></figure><b>L-DIALOG 그만두기 확인</b><span>본인인증 시트 [✕] (<a href="../front/f_auth.html#zS6">F-AUTH</a>)</span></div>
     <div class="g unit"><figure class="shot" data-id="F-ACC-W4" data-base="../" data-only="-"></figure><b>L-DIALOG 되돌릴 수 없음</b><span>회원탈퇴 마지막 확인 (<a href="../front/f_acc.html#wd">F-ACC</a>)</span></div>
@@ -201,7 +205,7 @@
     <div class="g unit"><figure class="shot" data-id="F-FIND-X3" data-base="../" data-only="-"></figure><b>L-OVERLAY 검색 풀시트</b><span>검색 탭 — 날짜</span></div>
     <div class="g unit"><figure class="shot" data-id="C-AILOAD" data-base="../" data-only="-"></figure><b>L-LOADING 전체화면 로딩</b><span>AI 검색 — "AI가 검색조건을 분석중이에요"</span></div>
     <div class="g unit"><figure class="shot" data-id="C-SKEL" data-base="../" data-only="-"></figure><b>L-INLINE 뼈대(스켈레톤)</b><span>검색 결과를 받는 동안</span></div>
-    <div class="g unit"><figure class="shot" data-id="F-QUIZ-X2" data-base="../" data-only="-"></figure><b>L-SHEET-STEP 본인인증</b><span>퀴즈에 들어오자마자 (<a href="../front/f_quiz.html#over">F-QUIZ</a>)</span></div>
+    <div class="g unit"><figure class="shot" data-id="F-QUIZ-X2" data-base="../" data-only="-"></figure><b>바텀시트 — 퀴즈 답한 뒤</b><span>정답/오답 · 해설 · [다음 문제] (<a href="../front/f_quiz.html#over">F-QUIZ</a>)</span></div>
   </div>
 </section>
 
