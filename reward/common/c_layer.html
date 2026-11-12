@@ -80,8 +80,10 @@
     <tr id="L-ALERT"><td><code>L-ALERT</code></td><td><b>브라우저 알림창</b></td><td><b>2곳만</b> — 로그인 만료 "로그인이 유효하지 않습니다. 다시 로그인해주세요." · 아웃링크 라벨 실패 "일시적인 오류로 이동할 수 없어요…"</td><td>브라우저가 그림</td><td>[확인] → 첫 화면 이동 / 창 닫기</td><td>브라우저</td></tr>
   </table></div>
   <div class="note open" style="margin-top:10px"><h4>실개발에 없는 것 (프로토에는 있었음)</h4><ul>
-    <li><b>L-NOTI 알림 토스트</b>(운영자 지급·공지 등이 오면 화면 아래에 뜸) — 없음. 알림은 알림 종 배지 + 알림함으로만(<a href="../front/f_noti.html">F-NOTI</a>).</li>
-    <li><b>L-OS 권한 창</b>(알림 권한) — 없음. 휴대폰 푸시와 함께 앱 출시 때(C22 · 앱은 개발자 인계).</li></ul></div>
+    <li><b>L-NOTI 알림 토스트</b>(운영자 지급·공지 등이 오면 화면 아래에 뜸) — 없음.<br>
+알림은 알림 종 배지 + 알림함으로만(<a href="../front/f_noti.html">F-NOTI</a>).</li>
+    <li><b>L-OS 권한 창</b>(알림 권한) — 없음.<br>
+휴대폰 푸시와 함께 앱 출시 때(C22 · 앱은 개발자 인계).</li></ul></div>
 </section>
 
 <!-- ═════════ 2 무엇을 쓰나 ═════════ -->
@@ -116,7 +118,8 @@
 
   <div class="rule-card" id="R2"><h4><span class="rid">R2</span>토스트가 연달아 오면 순서대로 하나씩</h4>
     앞 토스트를 덮어쓰지 않고 2초씩 차례로 보여 줍니다(대기 최대 3개).
-    <div class="now">실개발: <b>대기열 없음 — 새 토스트가 앞 토스트를 바로 바꿉니다</b>(2초 다시 셈). 예: 필터 초기화 직후 검색 오류가 오면 앞 문구는 사라짐. <span class="tag open">미결</span></div></div>
+    <div class="now">실개발: <b>대기열 없음 — 새 토스트가 앞 토스트를 바로 바꿉니다</b>(2초 다시 셈).<br>
+예: 필터 초기화 직후 검색 오류가 오면 앞 문구는 사라짐. <span class="tag open">미결</span></div></div>
 
   <div class="rule-card" id="R3"><h4><span class="rid">R3</span>오류 표시 기준 — 입력 실수는 토스트, 처리 실패는 확인창 + [다시 시도]</h4>
     <ul><li><b>입력 실수</b>: 토스트 또는 입력칸 아래 빨간 글씨</li>
@@ -128,13 +131,17 @@
     <div class="now">실개발: 본인인증 그만두기 · 가입 직후 권유 · 탈퇴 마지막 확인 = 중앙 확인창 / 가입·본인인증·탈퇴 = 단계형 시트. <span class="tag ok">같음</span> (SNS 연결 해제는 C21로 화면 없음)</div></div>
 
   <div class="rule-card" id="R5"><h4><span class="rid">R5</span>되돌릴 수 없는 작업은 확인을 받는다 · 로그아웃은 확인 없이</h4>
-    <div class="now">실개발: 탈퇴는 이메일 재인증 + 사유 + 확인창 · 로그아웃은 확인 없이 바로. 쿠폰 사용 완료는 쿠폰함이 없어 해당 없음. <span class="tag ok">같음</span></div></div>
+    <div class="now">실개발: 탈퇴는 이메일 재인증 + 사유 + 확인창 · 로그아웃은 확인 없이 바로.<br>
+쿠폰 사용 완료는 쿠폰함이 없어 해당 없음. <span class="tag ok">같음</span></div></div>
 
   <div class="rule-card" id="R6"><h4><span class="rid">R6</span>기기 뒤로가기 — 맨 위 층부터 하나씩 닫는다</h4>
-    <div class="now">실개발(웹): 기기 뒤로가기 처리 없음 — 브라우저 뒤로가기는 화면 이동. ESC는 시트·확인창을 닫음. 안드로이드 앱에서 필수 → 앱 인계(C22). <span class="tag proto">앱 개발 때</span></div></div>
+    <div class="now">실개발(웹): 기기 뒤로가기 처리 없음 — 브라우저 뒤로가기는 화면 이동.<br>
+ESC는 시트·확인창을 닫음.<br>
+안드로이드 앱에서 필수 → 앱 인계(C22). <span class="tag proto">앱 개발 때</span></div></div>
 
   <div class="rule-card" id="R7"><h4><span class="rid">R7</span>버튼 연타 방지 — 화면은 누르는 즉시 잠그고, 서버도 두 번 처리하지 않는다</h4>
-    <div class="now">실개발 화면: 출석·퀴즈 O/X·추천코드 [입력]·가입·본인인증·탈퇴·뽑기 상자 — 요청 중 잠금. 서버: 출석·퀴즈(하루·문항당 1회) · 혜택(회원당 1회) · 뽑기(예약당 1회 조건부 저장) · 추천코드(회원당 1회) · 홍보 페이지 시작(한 문장 저장) 모두 두 번째 요청을 막음. <span class="tag ok">같음</span></div></div>
+    <div class="now">실개발 화면: 출석·퀴즈 O/X·추천코드 [입력]·가입·본인인증·탈퇴·뽑기 상자 — 요청 중 잠금.<br>
+서버: 출석·퀴즈(하루·문항당 1회) · 혜택(회원당 1회) · 뽑기(예약당 1회 조건부 저장) · 추천코드(회원당 1회) · 홍보 페이지 시작(한 문장 저장) 모두 두 번째 요청을 막음. <span class="tag ok">같음</span></div></div>
 
   <div class="rule-card" id="R8"><h4><span class="rid">R8</span>문구는 해요체로 통일</h4>
     5절 참고.
@@ -145,7 +152,8 @@
     <div class="now">실개발 고객 웹 확인창: 왼쪽 취소 · 오른쪽 실행. <span class="tag ok">같음</span> · 어드민은 8절(어드민 차례에 확인)</div></div>
 
   <div class="rule-card" id="R10"><h4><span class="rid">R10</span>어드민은 자체 모달만 · 입력 모달은 배경 클릭으로 닫히지 않음</h4>
-    <div class="now">어드민 실개발 확인은 어드민 화면기획서를 다시 쓸 때 함께 합니다(8절). 참고: <b>고객 웹 확인창은 배경 누르기·ESC로 [취소]처럼 닫힙니다</b>(입력이 있는 확인창은 없음). <span class="tag proto">어드민 차례</span></div></div>
+    <div class="now">어드민 실개발 확인은 어드민 화면기획서를 다시 쓸 때 함께 합니다(8절).<br>
+참고: <b>고객 웹 확인창은 배경 누르기·ESC로 [취소]처럼 닫힙니다</b>(입력이 있는 확인창은 없음). <span class="tag proto">어드민 차례</span></div></div>
 </section>
 
 <!-- ═════════ 4 겹칠 때 ═════════ -->

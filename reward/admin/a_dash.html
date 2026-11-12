@@ -42,8 +42,10 @@
     <li>구성은 <b>전체 현황 · 기간별 현황 · 처리 대기 · 최근 목록(각 8건)</b> 네 묶음입니다. (<a href="../policy/pol_admin.html#s4-1">4-1절</a>)</li>
     <li>기간은 <b>오늘 / 최근 7일 / 최근 30일</b> 중 고릅니다 — 하루치만 보면 많은 날인지 적은 날인지 알 수 없어서. (<a href="../policy/pol_admin.html#s4-1">4-1절</a>)</li>
     <li>처리할 출금 신청이 있으면 왼쪽 메뉴 「출금 신청」에 <b>빨간 숫자</b>, 위 막대에 「송금 대기 N」이 붙습니다. (<a href="../policy/pol_admin.html#s4-1">4-1절</a>)</li>
-    <li>각 목록 끝의 버튼으로 해당 메뉴로 이동합니다. 대시보드에서는 아무것도 수정하지 않습니다(보기 전용).</li>
-    <li>숫자는 화면을 열 때마다 서버에서 다시 계산합니다. 자동 새로고침은 없습니다. <span class="tag proto">프로토 기준</span></li>
+    <li>각 목록 끝의 버튼으로 해당 메뉴로 이동합니다.<br>
+대시보드에서는 아무것도 수정하지 않습니다(보기 전용).</li>
+    <li>숫자는 화면을 열 때마다 서버에서 다시 계산합니다.<br>
+자동 새로고침은 없습니다. <span class="tag proto">프로토 기준</span></li>
   </ul>
   <div class="src">기준: 리워드 어드민 정책서 v0.3 · 제4조</div>
 </div>
@@ -114,12 +116,14 @@
   <div class="shots-row"><div class="sw pc"><div class="lb">A-DASH-D1 <small>최근 7일 선택</small></div><figure class="shot" data-id="A-DASH-D1" data-base="../"></figure></div></div>
   <div class="detail"><div class="ann">
     <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>기간 버튼 [오늘] [최근 7일] [최근 30일]</div>
-      <ul><li>고른 버튼이 파랗게 채워지고 ②~⑤ 숫자가 바뀝니다. 처음 열면 「최근 7일」.</li></ul>
+      <ul><li>고른 버튼이 파랗게 채워지고 ②~⑤ 숫자가 바뀝니다.<br>
+처음 열면 「최근 7일」.</li></ul>
       <div class="rule"><b>근거</b> <a href="../policy/pol_admin.html#s4-1">4-1절</a></div></div>
     <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>가입</div><ul><li>그 기간에 가입한 회원 수.</li></ul></div>
     <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>적립</div><ul><li>그 기간에 지급한 포인트(초록 +).</li></ul></div>
   </div><div class="ann">
-    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>사용</div><ul><li>그 기간에 나간 포인트(빨강 −). ③·④도 전체 현황과 같은 계산 규칙(적립 유형만 / 출금+픽샵−환불)을 따릅니다.</li></ul></div>
+    <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>사용</div><ul><li>그 기간에 나간 포인트(빨강 −).<br>
+③·④도 전체 현황과 같은 계산 규칙(적립 유형만 / 출금+픽샵−환불)을 따릅니다.</li></ul></div>
     <div class="cn" data-n="5"><div class="cn-hd"><span class="no">5</span>예약 · 픽샵 · 출금</div><ul><li>그 기간의 예약 적립 · 픽샵 구매 · 출금 신청 <b>건수</b>.</li></ul>
       <div class="data"><b>데이터</b> ← <code>periods.{d1|d7|d30}</code> — <code>joined</code> · <code>earned</code> · <code>used</code> · <code>bookings</code> · <code>orders</code> · <code>withdrawals</code></div></div>
   </div></div>

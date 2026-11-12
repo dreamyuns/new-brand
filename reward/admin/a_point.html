@@ -38,10 +38,13 @@
   <h3>⚙ 공통 정책 — 전체 포인트 내역</h3>
   <ul>
     <li><b>잔액은 저장하지 않고 이 기록을 더해서</b> 계산합니다. <b>기록은 고치거나 지우지 않습니다</b> — 지우면 「왜 줄었는지」에 답할 수 없습니다. (<a href="../policy/pol_admin.html#s6-1">6-1절</a> · <a href="../policy/pol_point.html#s1-2">포인트 1-2절</a>)</li>
-    <li><b>조회 전용</b>입니다. 지급·회수는 회원 목록·상세에서 합니다(<a href="a_user.html">A-USER</a>).</li>
+    <li><b>조회 전용</b>입니다.<br>
+지급·회수는 회원 목록·상세에서 합니다(<a href="a_user.html">A-USER</a>).</li>
     <li>적립 성격 기록에는 <b>적립일 + 1년</b>의 소멸 예정일이 붙습니다. (<a href="../policy/pol_point.html#s6">포인트 6절</a>)</li>
-    <li>본인인증 전 회원의 <b>적립대기는 원장에 없습니다</b>(지급 전) — 인증해서 지급되는 순간 한 줄이 생깁니다. 회원별 적립대기는 회원 목록·상세에서 봅니다.</li>
-      <li><b>실개발 어드민(11-10)</b>: 혜택 적립 줄의 「사유」에 출처 코드가 붙습니다 — 「혜택 OF-001」, 메인 배너로 들어와 받았으면 「혜택 OF-001 · 배너 BN-003」(<a href="a_banner.html">A-BANNER</a>). 이 페이지의 나머지는 아직 프로토 기준입니다. (C36④)</li>
+    <li>본인인증 전 회원의 <b>적립대기는 원장에 없습니다</b>(지급 전) — 인증해서 지급되는 순간 한 줄이 생깁니다.<br>
+회원별 적립대기는 회원 목록·상세에서 봅니다.</li>
+      <li><b>실개발 어드민(11-10)</b>: 혜택 적립 줄의 「사유」에 출처 코드가 붙습니다 — 「혜택 OF-001」, 메인 배너로 들어와 받았으면 「혜택 OF-001 · 배너 BN-003」(<a href="a_banner.html">A-BANNER</a>).<br>
+이 페이지의 나머지는 아직 프로토 기준입니다. (C36④)</li>
   </ul>
   <div class="src">기준: 리워드 어드민 정책서 v0.3 · 제6조 / 리워드 포인트 정책서 v0.2 · 1-2 · 2 · 6절</div>
 </div>
@@ -104,7 +107,8 @@
       <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>설명 / [취소] [실행] (X1)</div>
         <ul><li>[실행] → 토스트 "소멸 NP · 소멸 예정 알림 N건 · 지난 알림 정리 N건" → 전체 포인트 내역 다시 열림.</li></ul></div>
       <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>[하루 처리 지금 실행] — 시연용</div>
-        <ul><li>실제 서비스는 서버가 하루 1회 자동으로 돌립니다(시연은 화면을 열 때 10분에 한 번도 돎). 실서비스에서는 이 버튼을 두지 않습니다.</li></ul>
+        <ul><li>실제 서비스는 서버가 하루 1회 자동으로 돌립니다(시연은 화면을 열 때 10분에 한 번도 돎).<br>
+실서비스에서는 이 버튼을 두지 않습니다.</li></ul>
         <div class="rule"><b>근거</b> 소멸·소멸 예정 알림·알림 정리 (#41 #45 #46 · 10-28 · <a href="../policy/pol_point.html#s6">포인트 6절</a> · <a href="../policy/pol_noti.html#s3">알림 3절</a>)</div></div>
     </div>
   </div>
@@ -119,7 +123,8 @@
     <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>총 적립 포인트 "+NP · 지금까지 들어온 것 전부"</div></div>
     <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>총 사용 포인트 "−NP · 출금 · 픽샵 · 회수 · 소멸"</div></div>
     <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>현재 잔액 "NP · 전 회원이 아직 가지고 있는 것" (= ① + ②)</div>
-      <div class="case">세 숫자는 <b>모든 + 기록 / 모든 − 기록</b>을 더한 값이라, 환불(+)이 「적립」에, 소멸·회수(−)가 「사용」에 섞입니다. 어떻게 나눌지는 대시보드 숫자 정의와 함께 정합니다 <span class="tag open">미결</span></div></div>
+      <div class="case">세 숫자는 <b>모든 + 기록 / 모든 − 기록</b>을 더한 값이라, 환불(+)이 「적립」에, 소멸·회수(−)가 「사용」에 섞입니다.<br>
+어떻게 나눌지는 대시보드 숫자 정의와 함께 정합니다 <span class="tag open">미결</span></div></div>
   </div><div class="ann">
     <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>「📌 이 화면을 읽는 법 — 잔액은 저장하지 않습니다」</div>
       <ul><li>내역을 더해서 계산 · 기록은 지우지 않음 · 바꾸려면 회원 상세에서 사유를 적어 처리(그것도 한 줄로 쌓임).</li>
@@ -138,7 +143,8 @@
     <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>유형 칩 9개 — 옆에 건수</div>
       <ul><li>출석체크(출석·보너스) · 숙소예약(기본·뽑기) · 혜택참여 · 퀴즈 · 친구추천 · 픽샵구매(구매 취소 환불 포함) · 출금 · 관리자처리(지급·회수·신청 취소 환불) · 소멸.</li>
           <li>누르면 바로 그 묶음만 — 1쪽으로 돌아갑니다.</li></ul>
-      <div class="case">고객 화면 필터(4개)와 묶는 법이 다릅니다 — 어드민은 기록 종류별, 고객은 「생긴 곳/나간 곳」별 (<a href="../policy/pol_point.html#s2">포인트 2절 표</a>). 「픽샵 구매 취소 환불」은 <b>「픽샵구매」 묶음</b>에 들어 있습니다.</div></div>
+      <div class="case">고객 화면 필터(4개)와 묶는 법이 다릅니다 — 어드민은 기록 종류별, 고객은 「생긴 곳/나간 곳」별 (<a href="../policy/pol_point.html#s2">포인트 2절 표</a>).<br>
+「픽샵 구매 취소 환불」은 <b>「픽샵구매」 묶음</b>에 들어 있습니다.</div></div>
   </div><div class="ann">
     <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>날짜 기준 — 적립일 / 소멸예정일</div><ul><li>소멸예정일로 고르면 「곧 사라질 포인트」를 기간으로 볼 수 있습니다.</li></ul></div>
     <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>기간</div></div>
@@ -153,7 +159,8 @@
   <div class="zone-hd"><span class="zl">E</span><h2>목록</h2></div>
   <div class="shots-row"><div class="sw pc"><div class="lb">A-POINT-E1 <small>열 제목에 번호 · 8행</small></div><figure class="shot" data-id="A-POINT-E1" data-base="../"></figure></div></div>
   <div class="detail"><div class="ann">
-    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>#</div><ul><li>기록 번호. 최신이 위.</li></ul></div>
+    <div class="cn" data-n="1"><div class="cn-hd"><span class="no">1</span>#</div><ul><li>기록 번호.<br>
+최신이 위.</li></ul></div>
     <div class="cn" data-n="2"><div class="cn-hd"><span class="no">2</span>유형</div><ul><li>묶음 이름 꼬리표(②의 칩과 같은 이름).</li></ul></div>
     <div class="cn" data-n="3"><div class="cn-hd"><span class="no">3</span>회원</div><ul><li>이름 + 아래 작게 이메일.</li></ul></div>
     <div class="cn" data-n="4"><div class="cn-hd"><span class="no">4</span>증감</div><ul><li>+NP 초록 / −NP 빨강.</li></ul></div>
