@@ -1,0 +1,22 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>픽콕 AI 검색 개발 화면</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>html,body{margin:0;background:#eceef2;font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;color:#3b3b3e}
+.top{display:flex;align-items:center;gap:12px;padding:16px 24px 0;font-size:13px}
+.top a{color:#356beb;text-decoration:none}
+h1{font-size:20px;line-height:28px;margin:0;padding:16px 24px 8px;text-align:center}
+.desc{margin:0 auto;max-width:760px;padding:0 16px;text-align:center;font-size:14px;line-height:21px;color:#686a72}
+.meta{margin:8px 0 0;text-align:center;font-size:12px;line-height:18px;color:#8c8f97}
+.wrap{display:grid;grid-template-columns:repeat(auto-fit,440px);gap:40px;justify-content:center;align-items:start;padding:24px 16px 64px}
+@media(max-width:960px){.wrap{grid-template-columns:minmax(0,440px)}}
+.ph{display:flex;flex-direction:column;align-items:center;gap:12px;min-width:0}
+.ph b{font-size:16px;line-height:24px;text-align:center}
+.ph iframe{width:440px;max-width:calc(100vw - 32px);border:0;border-radius:24px;background:#fff;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.ph .none{width:440px;max-width:calc(100vw - 32px);height:956px;border-radius:24px;border:2px dashed #c9ccd3;display:flex;align-items:center;justify-content:center;color:#8c8f97;font-size:15px;box-sizing:border-box}
+.ph .re{font-size:12px;color:#356beb;background:none;border:0;cursor:pointer;padding:0}
+</style></head><body>
+<div class="top"><a href="index.html">← 개발 화면 모음</a></div>
+<h1>픽콕 AI 검색 개발 화면</h1>
+<p class="desc">홈 AI 검색칸을 누르면 열리는 화면이에요. 마이크 버튼을 누르면 음성 검색으로 바뀌어요. 마지막 칸은 AI로 검색한 결과예요.</p>
+<p class="meta">지금 개발 화면을 그대로 떠낸 것이에요 · 파란 테두리가 잠깐 비치는 곳을 누르면 다음 화면으로 바뀌어요 · 촬영 2026-11-13</p>
+<div class="wrap"><div class="ph"><b>AI 검색 · 디폴트</b><iframe title="AI 검색 · 디폴트" src="s/ai-default.html" style="height:956px" loading="lazy"></iframe><button class="re" type="button" onclick="this.previousElementSibling.src='s/ai-default.html'">처음 화면으로</button></div><div class="ph"><b>AI 검색 · 입력 중</b><iframe title="AI 검색 · 입력 중" src="s/ai-typing.html" style="height:956px" loading="lazy"></iframe><button class="re" type="button" onclick="this.previousElementSibling.src='s/ai-typing.html'">처음 화면으로</button></div><div class="ph"><b>AI 검색 · 마이크 권한 거절</b><iframe title="AI 검색 · 마이크 권한 거절" src="s/ai-mic-denied.html" style="height:956px" loading="lazy"></iframe><button class="re" type="button" onclick="this.previousElementSibling.src='s/ai-mic-denied.html'">처음 화면으로</button></div><div class="ph"><b>음성 검색 · 디폴트</b><iframe title="음성 검색 · 디폴트" src="s/voice-default.html" style="height:956px" loading="lazy"></iframe><button class="re" type="button" onclick="this.previousElementSibling.src='s/voice-default.html'">처음 화면으로</button></div><div class="ph"><b>음성 검색 · 듣는 중 1</b><iframe title="음성 검색 · 듣는 중 1" src="s/voice-listen-1.html" style="height:956px" loading="lazy"></iframe><button class="re" type="button" onclick="this.previousElementSibling.src='s/voice-listen-1.html'">처음 화면으로</button></div><div class="ph"><b>음성 검색 · 듣는 중 2</b><iframe title="음성 검색 · 듣는 중 2" src="s/voice-listen-2.html" style="height:956px" loading="lazy"></iframe><button class="re" type="button" onclick="this.previousElementSibling.src='s/voice-listen-2.html'">처음 화면으로</button></div><div class="ph"><b>음성 검색 · 오류</b><iframe title="음성 검색 · 오류" src="s/voice-error.html" style="height:956px" loading="lazy"></iframe><button class="re" type="button" onclick="this.previousElementSibling.src='s/voice-error.html'">처음 화면으로</button></div><div class="ph"><b>검색 결과 · AI로 검색</b><iframe title="검색 결과 · AI로 검색" src="s/sres-ai.html" style="height:956px" loading="lazy"></iframe><button class="re" type="button" onclick="this.previousElementSibling.src='s/sres-ai.html'">처음 화면으로</button></div></div></body></html>

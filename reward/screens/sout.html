@@ -1,0 +1,22 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>픽콕 아웃링크 개발 화면</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>html,body{margin:0;background:#eceef2;font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;color:#3b3b3e}
+.top{display:flex;align-items:center;gap:12px;padding:16px 24px 0;font-size:13px}
+.top a{color:#356beb;text-decoration:none}
+h1{font-size:20px;line-height:28px;margin:0;padding:16px 24px 8px;text-align:center}
+.desc{margin:0 auto;max-width:760px;padding:0 16px;text-align:center;font-size:14px;line-height:21px;color:#686a72}
+.meta{margin:8px 0 0;text-align:center;font-size:12px;line-height:18px;color:#8c8f97}
+.wrap{display:grid;grid-template-columns:repeat(auto-fit,440px);gap:40px;justify-content:center;align-items:start;padding:24px 16px 64px}
+@media(max-width:960px){.wrap{grid-template-columns:minmax(0,440px)}}
+.ph{display:flex;flex-direction:column;align-items:center;gap:12px;min-width:0}
+.ph b{font-size:16px;line-height:24px;text-align:center}
+.ph iframe{width:440px;max-width:calc(100vw - 32px);border:0;border-radius:24px;background:#fff;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.ph .none{width:440px;max-width:calc(100vw - 32px);height:956px;border-radius:24px;border:2px dashed #c9ccd3;display:flex;align-items:center;justify-content:center;color:#8c8f97;font-size:15px;box-sizing:border-box}
+.ph .re{font-size:12px;color:#356beb;background:none;border:0;cursor:pointer;padding:0}
+</style></head><body>
+<div class="top"><a href="index.html">← 개발 화면 모음</a></div>
+<h1>픽콕 아웃링크 개발 화면</h1>
+<p class="desc">숙소 상세에서 [예약]을 누르면 열리는 예약처 이동 화면이에요. 6초 타이머를 멈춰 두고 찍어서 예약처로 넘어가지 않아요.</p>
+<p class="meta">지금 개발 화면을 그대로 떠낸 것이에요 · 파란 테두리가 잠깐 비치는 곳을 누르면 다음 화면으로 바뀌어요 · 촬영 2026-11-13</p>
+<div class="wrap"><div class="ph"><b>비로그인 · 포인트 있음</b><iframe title="비로그인 · 포인트 있음" src="s/sout-guest-point.html" style="height:956px" loading="lazy"></iframe><button class="re" type="button" onclick="this.previousElementSibling.src='s/sout-guest-point.html'">처음 화면으로</button></div><div class="ph"><b>비로그인 · 포인트 없음</b><iframe title="비로그인 · 포인트 없음" src="s/sout-guest-none.html" style="height:956px" loading="lazy"></iframe><button class="re" type="button" onclick="this.previousElementSibling.src='s/sout-guest-none.html'">처음 화면으로</button></div><div class="ph"><b>로그인 · 포인트 있음</b><iframe title="로그인 · 포인트 있음" src="s/sout-member-point.html" style="height:956px" loading="lazy"></iframe><button class="re" type="button" onclick="this.previousElementSibling.src='s/sout-member-point.html'">처음 화면으로</button></div><div class="ph"><b>로그인 · 포인트 없음</b><iframe title="로그인 · 포인트 없음" src="s/sout-member-none.html" style="height:956px" loading="lazy"></iframe><button class="re" type="button" onclick="this.previousElementSibling.src='s/sout-member-none.html'">처음 화면으로</button></div><div class="ph"><b>연결 실패</b><iframe title="연결 실패" src="s/sout-fail.html" style="height:956px" loading="lazy"></iframe><button class="re" type="button" onclick="this.previousElementSibling.src='s/sout-fail.html'">처음 화면으로</button></div></div></body></html>
