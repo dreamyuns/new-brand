@@ -1,0 +1,35 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>픽콕 개발 화면 모음</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{--bg:#eceef2;--card:#fff;--tx:#3b3b3e;--sub:#686a72;--mute:#8c8f97;--brand:#356beb;--line:#e1e4ea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16181d;--card:#22252c;--tx:#eceef2;--sub:#b3b6be;--mute:#8c8f97;--brand:#7aa2ff;--line:#30343c}}
+:root[data-theme="dark"]{--bg:#16181d;--card:#22252c;--tx:#eceef2;--sub:#b3b6be;--mute:#8c8f97;--brand:#7aa2ff;--line:#30343c}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif}
+header{max-width:1120px;margin:0 auto;padding:40px 16px 8px}
+h1{margin:0;font-size:24px;line-height:32px}
+header p{margin:8px 0 0;font-size:14px;line-height:22px;color:var(--sub);max-width:70ch}
+header .links{margin-top:12px;display:flex;gap:16px;flex-wrap:wrap;font-size:13px}
+header a{color:var(--brand);text-decoration:none}
+main{max-width:1120px;margin:0 auto;padding:8px 16px 64px}
+h2{font-size:16px;line-height:24px;margin:32px 0 12px;color:var(--sub);letter-spacing:.02em}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.card{display:flex;flex-direction:column;background:var(--card);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;box-shadow:0 2px 12px rgba(0,0,0,.06);transition:transform .15s}
+.card:hover{transform:translateY(-2px)}
+.card:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.card img,.card .noimg{width:100%;aspect-ratio:440/560;object-fit:cover;object-position:top;background:var(--line);display:block}
+.tx{display:flex;flex-direction:column;gap:4px;padding:12px 14px 14px}
+.tx b{font-size:16px;line-height:24px}
+.tx .d{font-size:13px;line-height:19px;color:var(--sub)}
+.tx .m{font-size:12px;line-height:18px;color:var(--mute);font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){.card{transition:none}}
+</style></head><body>
+<header><h1>픽콕 개발 화면 모음</h1>
+<p>지금 개발된 고객 화면을 디자이너 시안과 같은 크기(440×956)와 상태 이름으로 모았어요.<br>
+화면 안에서 파란 테두리가 잠깐 비치는 곳을 누르면 다음 화면으로 바뀌어요.<br>
+개발이 바뀌면 다시 떠서 같은 주소에 올려요.</p>
+<div class="links"><a href="../index.html">화면기획서(주석 포함) 보기 →</a><span style="color:var(--mute);font-size:12px">고객 웹 기준 46a085f 2026-11-13 12:21 · 목록 갱신 2026-11-13</span></div></header>
+<main><section><h2>리워드</h2><div class="grid"><a class="card" href="home.html"><img src="thumbs/home-guest.jpg" alt="" loading="lazy"><div class="tx"><b>홈</b>
+<span class="d">로그인 · 비로그인 · 체험 후 적립완료 화면이에요. 인기숙소 카드는 카약 실제 값이라 날마다 바뀌어요.</span><span class="m">상태 3/4 · 촬영 2026-11-13</span></div></a><a class="card" href="offers.html"><img src="thumbs/offers-guest.jpg" alt="" loading="lazy"><div class="tx"><b>혜택</b>
+<span class="d">메인 페이지 · 혜택 탭 화면이에요. 화면 안에서 스크롤해 보세요.</span><span class="m">상태 3/3 · 촬영 2026-11-13</span></div></a></div></section><section><h2>마이페이지</h2><div class="grid"><a class="card" href="my.html"><img src="thumbs/my-guest.jpg" alt="" loading="lazy"><div class="tx"><b>마이페이지</b>
+<span class="d">비로그인 · 로그인 화면이에요. 로그인 화면을 아래로 내리면 위쪽 「마이페이지」가 포인트 칩으로 바뀌어요.</span><span class="m">상태 2/2 · 촬영 2026-11-13</span></div></a></div></section></main></body></html>
