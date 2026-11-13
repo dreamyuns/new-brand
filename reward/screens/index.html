@@ -2,9 +2,9 @@
 <title>픽콕 개발 화면 모음</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
-:root{--bg:#eceef2;--card:#fff;--tx:#3b3b3e;--sub:#686a72;--mute:#8c8f97;--brand:#356beb;--line:#e1e4ea}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16181d;--card:#22252c;--tx:#eceef2;--sub:#b3b6be;--mute:#8c8f97;--brand:#7aa2ff;--line:#30343c}}
-:root[data-theme="dark"]{--bg:#16181d;--card:#22252c;--tx:#eceef2;--sub:#b3b6be;--mute:#8c8f97;--brand:#7aa2ff;--line:#30343c}
+:root{--bg:#eceef2;--card:#fff;--tx:#3b3b3e;--sub:#5f626b;--mute:#7d808a;--brand:#356beb;--line:#e1e4ea;--txbg:#eaf0fd;--txline:#356beb}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16181d;--card:#22252c;--tx:#eceef2;--sub:#b3b6be;--mute:#8c8f97;--brand:#7aa2ff;--line:#30343c;--txbg:#1d2638;--txline:#7aa2ff}}
+:root[data-theme="dark"]{--bg:#16181d;--card:#22252c;--tx:#eceef2;--sub:#b3b6be;--mute:#8c8f97;--brand:#7aa2ff;--line:#30343c;--txbg:#1d2638;--txline:#7aa2ff}
 html,body{margin:0;background:var(--bg);color:var(--tx);font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif}
 header{max-width:1120px;margin:0 auto;padding:40px 16px 8px}
 h1{margin:0;font-size:24px;line-height:32px}
@@ -17,8 +17,8 @@ h2{font-size:16px;line-height:24px;margin:32px 0 12px;color:var(--sub);letter-sp
 .card{display:flex;flex-direction:column;background:var(--card);border-radius:16px;overflow:hidden;text-decoration:none;color:inherit;box-shadow:0 2px 12px rgba(0,0,0,.06);transition:transform .15s}
 .card:hover{transform:translateY(-2px)}
 .card:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
-.card img,.card .noimg{width:100%;aspect-ratio:440/560;object-fit:cover;object-position:top;background:var(--line);display:block}
-.tx{display:flex;flex-direction:column;gap:4px;padding:12px 14px 14px}
+.card img,.card .noimg{width:100%;aspect-ratio:440/400;object-fit:cover;object-position:top;background:var(--line);display:block}
+.tx{flex:1;display:flex;flex-direction:column;gap:4px;padding:12px 14px 14px;background:var(--txbg);border-top:2px solid var(--txline)}
 .tx b{font-size:16px;line-height:24px}
 .tx .d{font-size:13px;line-height:19px;color:var(--sub)}
 .tx .m{font-size:12px;line-height:18px;color:var(--mute);font-variant-numeric:tabular-nums}
